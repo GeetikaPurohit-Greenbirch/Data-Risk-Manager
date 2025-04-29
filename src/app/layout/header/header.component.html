@@ -1,0 +1,23 @@
+<mat-toolbar color="primary" class="header">
+  <span class="title">DATA RISK MANAGER</span>
+  <span class="spacer"></span>
+
+  <mat-icon class="icon">notifications</mat-icon>
+
+  <!-- Account Icon with Menu Trigger -->
+  <button mat-icon-button [matMenuTriggerFor]="userMenu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+
+  <!-- User Menu -->
+  <mat-menu #userMenu="matMenu">
+    <div class="user-info">
+      <span class="user-name">John Doe</span>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

@@ -1,0 +1,138 @@
+/* dashboard.component.scss */
+/* app.component.scss */
+.main-container {
+  display: flex;
+}
+.dashboard-container {
+  flex-grow: 1;
+  padding: 1rem;
+  background: #f5f7fa;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.welcome-banner {
+    background: linear-gradient(to right, #4f46e5, #6366f1);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  
+  .status-card {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    .statuses {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      span {
+        &.not-started { color: red; }
+        &.expired { color: orange; }
+        &.complete { color: green; }
+      }
+    }
+  }
+
+  .table-container {
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+  }
+  
+  .search-box {
+    width: 300px;
+    margin-bottom: 16px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  .status-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  
+  .status-badge.in\ process {
+    background-color: #fff7e6;
+    color: #ff9800;
+  }
+  
+  .status-badge.overdue {
+    background-color: #fdecea;
+    color: #f44336;
+  }
+  
+  .status-badge.done {
+    background-color: #e6ffed;
+    color: #4caf50;
+  }
+  ::ng-deep .mat-tab-labels {
+    justify-content: space-around;
+    border-bottom: 1px solid #eee;
+  }
+  
+  ::ng-deep .mat-tab-label {
+    font-weight: 500;
+    color: #607d8b;
+    font-size: 14px;
+  }
+  
+  ::ng-deep .mat-tab-label-active {
+    color: #263238;
+    font-weight: 600;
+  }
+  
+  ::ng-deep .mat-ink-bar {
+    background-color: #263238;
+    height: 3px;
+    border-radius: 2px;
+  }
+  
+  .tab-placeholder {
+    padding: 1rem;
+    color: #888;
+    font-style: italic;
+  }
+  .icon{
+    margin:0 auto;
+  }
+  .icon span{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e8f0fe;     /* Background color */
+    border-radius: 8px;            /* Rounded corners */
+    width: 40px;                   /* Square size */
+    height: 40px;
+    float: left;
+    font-size: 20px;
+  }
+  i.fa{
+    font-size: 20px !important;
+     color: #1a237e;
+  }
+
+  .icon h3{
+    float: left;
+    margin-left: 12px;
+    margin-top: 8px;
+  }
+  

@@ -1,0 +1,144 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sidebar></app-sidebar>
+  
+  <main class="dashboard-container">
+<section class="welcome-banner">
+    <h2>Dashboard</h2>
+    <p>Welcome to London Stock Exchange Data Quality</p>
+  </section>
+  
+  <div class="card-grid">
+    <mat-card *ngFor="let item of stats" class="status-card">
+      <div class="icon" >
+        <span [ngStyle]="{ 'background-color': item.bgColor }" [innerHTML]="item.icon">
+  <!-- {{item.icon}} -->
+</span>
+<h3>{{ item.title }}</h3>
+</div>
+      
+      <h1>{{ item.total }}</h1>
+      <div class="statuses">
+        <span class="not-started">{{ item.notStarted }} Not Started</span>
+        <span class="expired">{{ item.expired }} Expired</span>
+        <span class="complete">{{ item.complete }} Complete</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-tab-group>
+    <!-- Use Cases Tab -->
+    <mat-tab label="Use Cases">
+      <div class="table-container">
+        <mat-form-field appearance="outline" class="search-box">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="searchText" placeholder="Search">
+        </mat-form-field>
+  
+        <table mat-table [dataSource]="filteredData" matSort class="mat-elevation-z1">
+  
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox></mat-checkbox>
+            </td>
+          </ng-container>
+  
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+          </ng-container>
+  
+          <!-- Description Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+            <td mat-cell *matCellDef="let row">{{ row.description }}</td>
+          </ng-container>
+  
+          <!-- Owner Column -->
+          <ng-container matColumnDef="owner">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+            <td mat-cell *matCellDef="let row">
+              <img [src]="row.ownerImg" class="avatar" alt="owner" />
+              {{ row.owner }}
+            </td>
+          </ng-container>
+  
+          <!-- Count Columns -->
+          <ng-container matColumnDef="sys">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sys</th>
+            <td mat-cell *matCellDef="let row">{{ row.sys }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="src">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Src</th>
+            <td mat-cell *matCellDef="let row">{{ row.src }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="int">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Int</th>
+            <td mat-cell *matCellDef="let row">{{ row.int }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="ctrls">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ctrls</th>
+            <td mat-cell *matCellDef="let row">{{ row.ctrls }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="trgts">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Trgts</th>
+            <td mat-cell *matCellDef="let row">{{ row.trgts }}</td>
+          </ng-container>
+  
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="status-badge" [ngClass]="row.status.toLowerCase()">{{ row.status }}</span>
+            </td>
+          </ng-container>
+  
+          <!-- Action Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button>
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+  
+          <!-- Table Header & Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+  
+    <!-- Other Tabs -->
+    <mat-tab label="Systems">
+      <p class="tab-placeholder">Systems content goes here.</p>
+    </mat-tab>
+  
+    <mat-tab label="Sources">
+      <p class="tab-placeholder">Sources content goes here.</p>
+    </mat-tab>
+  
+    <mat-tab label="Controls">
+      <p class="tab-placeholder">Controls content goes here.</p>
+    </mat-tab>
+  
+    <mat-tab label="Targets">
+      <p class="tab-placeholder">Targets content goes here.</p>
+    </mat-tab>
+  
+    <mat-tab label="Interfaces">
+      <p class="tab-placeholder">Interfaces content goes here.</p>
+    </mat-tab>
+  </mat-tab-group>
+</main>
+</div>
+  

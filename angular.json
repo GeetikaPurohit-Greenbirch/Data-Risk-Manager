@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/font-awesome/css/font-awesome.min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -69,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Data-Risk-Manager:build:production"
+              "buildTarget": "Data-Risk-Manager:build:production"
             },
             "development": {
-              "browserTarget": "Data-Risk-Manager:build:development"
+              "buildTarget": "Data-Risk-Manager:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +81,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Data-Risk-Manager:build"
+            "buildTarget": "Data-Risk-Manager:build"
           }
         },
         "test": {
@@ -96,6 +97,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -103,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "01e2fb89-280a-4520-89e5-fd1f5131abaa"
   }
 }
