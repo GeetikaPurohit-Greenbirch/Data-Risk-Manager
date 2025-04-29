@@ -1,0 +1,47 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sidebar></app-sidebar>
+  
+  <main class="dashboard-container">
+    <section class="welcome-banner">
+        <h2>Create User</h2>
+      </section>
+<form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="user-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+      <mat-error *ngIf="createUserForm.get('email')?.hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="createUserForm.get('email')?.hasError('email')">
+        Please enter a valid email
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" required>
+      <mat-error *ngIf="createUserForm.get('password')?.hasError('required')">
+        Password is required
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>User Role</mat-label>
+      <mat-select formControlName="role" required>
+        <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{ role.label }}
+          </mat-option>
+      </mat-select>
+      <mat-error *ngIf="createUserForm.get('role')?.hasError('required')">
+        User Role is required
+      </mat-error>
+    </mat-form-field>
+  
+    <button mat-raised-button color="primary" type="submit" [disabled]="createUserForm.invalid">
+      Create User
+    </button>
+  </form>
+</main>
+</div>

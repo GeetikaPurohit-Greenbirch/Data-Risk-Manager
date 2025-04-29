@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.user-info {
+  padding: 12px 16px;
+}
+
+.user-name {
+  font-weight: 500;
+}

@@ -1,0 +1,12 @@
+/* app.component.scss */
+.main-container {
+    display: flex;
+  }
+  .dashboard-container {
+    flex-grow: 1;
+    padding: 1rem;
+    background: #f5f7fa;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
