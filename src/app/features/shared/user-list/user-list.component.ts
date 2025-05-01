@@ -19,6 +19,7 @@ interface User {
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
+  isLoading = true; // 👈 flag for loading
   userRole = localStorage.getItem('userRole'); 
   username = localStorage.getItem('userID'); 
   displayedColumns: string[] = ['id','username', 'userRole', 'actions'];
@@ -103,11 +104,15 @@ export class UserListComponent implements OnInit {
   
   deleteFromDatabase(user:string)
   {
+    this
     this.userService.deleteUser(user).subscribe({
-      next: (privileges) => {
-        console.log('Fetched privileges:', privileges);
-        this.privilegeService.setPrivileges(privileges);
-        // ✅ Now everything is loaded - Sidebar will also load correctly
+      next: (response) => {
+      if(response)
+      {
+        alert("User Deleted Successfully !");
+        window.location.reload();
+      }
+      
       },
       error: (err) => {
         console.error('Error fetching privileges:', err);

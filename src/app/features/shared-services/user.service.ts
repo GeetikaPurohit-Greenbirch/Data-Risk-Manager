@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface User {
   id: string;
@@ -14,7 +15,7 @@ export interface User {
 })
 export class UserService {
 
-  private apiUrl = 'http://18.175.147.85:8080/users'; // Base URL
+  private apiUrl = environment.apiBaseUrl + 'users'; // Base URL
 
   private _currentUserEmail: string = '';
 

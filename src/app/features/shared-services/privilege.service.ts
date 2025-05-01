@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrivilegeService {
   
-  private apiUrl = 'http://18.175.147.85:8080/role-privileges';
+  private apiUrl = environment.apiBaseUrl + 'role-privileges';
   private privileges: any[] = []; // Store the privileges list
 
   constructor(private http: HttpClient) {}

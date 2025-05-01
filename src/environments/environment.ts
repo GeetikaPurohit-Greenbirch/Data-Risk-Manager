@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+
   production: false,
+  apiBaseUrl: 'http://34.241.86.24:8080/',
+
 
   // okta: {
   //   clientId: 'kdqcweVMIWwiYtZtIvJmfrLUJ8LVXKor',
