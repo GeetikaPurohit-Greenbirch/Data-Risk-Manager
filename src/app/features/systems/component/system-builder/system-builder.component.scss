@@ -16,3 +16,10 @@
     border-radius: 0.5rem;
     margin-bottom: 2rem;
   }
+  .form-grid {
+    display: grid;
+    gap: 16px;
+    padding:20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  

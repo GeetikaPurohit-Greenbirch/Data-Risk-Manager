@@ -7,7 +7,83 @@
     <section class="welcome-banner">
         <h2>System Builder</h2>
       </section>
+      <mat-card>
+        <form [formGroup]="systemForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>System Name</mat-label>
+              <input matInput formControlName="systemName">
+              <mat-error *ngIf="systemForm.get('systemName')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>System ID</mat-label>
+              <input matInput formControlName="systemId">
+              <mat-error *ngIf="systemForm.get('systemId')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>LeanIX ID</mat-label>
+              <input matInput formControlName="leanixId">
+              <mat-error *ngIf="systemForm.get('leanixId')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>System Description</mat-label>
+              <textarea matInput formControlName="description" rows="1"></textarea>
+              <mat-error *ngIf="systemForm.get('description')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>System Owner</mat-label>
+              <input matInput formControlName="owner">
+              <mat-error *ngIf="systemForm.get('owner')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="ownerEmail">
+              <mat-error *ngIf="systemForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="systemForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Version Number - Current</mat-label>
+              <input matInput formControlName="version">
+              <mat-error *ngIf="systemForm.get('version')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>System Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="systemForm.get('status')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Data Accuracy Risk</mat-label>
+              <mat-select formControlName="accuracyRisk">
+                <mat-option *ngFor="let option of accuracyRiskOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="systemForm.get('accuracyRisk')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data Timliness Risk</mat-label>
+              <mat-select formControlName="timlinessRisk">
+                <mat-option *ngFor="let option of timlinessRiskOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="systemForm.get('timlinessRisk')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-grid">
+          <button mat-raised-button color="primary" type="submit" style="width: 10%;
+    margin: 0 auto;">Create System</button>
+          </div>
+        </form>
+      </mat-card>
+      
 </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->

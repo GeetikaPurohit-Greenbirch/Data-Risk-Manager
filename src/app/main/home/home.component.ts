@@ -1,9 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { PrivilegeService } from 'src/app/features/shared-services/privilege.service';
 import { UserService } from 'src/app/features/shared-services/user.service';
+import { SystemsModel } from 'src/app/features/systems/models/systems-model.model';
+import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
 
 @Component({
   selector: 'app-home',
@@ -11,14 +16,21 @@ import { UserService } from 'src/app/features/shared-services/user.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+    displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'accuracyRisk', 'timelinessRisk', 'version', 'status'];
+    dataSource: MatTableDataSource<SystemsModel>;
   user:any;
   userRole: string ='';
+  systems: SystemsModel[] = []; // ✅ correct
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 // dashboard.component.ts
 constructor(private router: Router,private http: HttpClient,
   private authService: AuthService,
   private userService : UserService,
-  private privilegeService: PrivilegeService
+  private privilegeService: PrivilegeService,
+  private systemService: SystemServiceService,
 ) { 
+  this.dataSource = new MatTableDataSource(this.systems);
 
  }
 ngOnInit(): void{
@@ -40,6 +52,7 @@ ngOnInit(): void{
     }
   });
 
+  this.getSystemList();
 }
 searchText:string = '';
 stats = [
@@ -124,5 +137,16 @@ private fetchUserRoleAndPrivileges(username: string) {
   });
 }
 
+
+getSystemList()
+{
+  this.systemService.getSystems().subscribe((data: SystemsModel[]) => {
+    this.systems = data;
+    this.dataSource.data = this.systems;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  });
+  
+}
 
 }

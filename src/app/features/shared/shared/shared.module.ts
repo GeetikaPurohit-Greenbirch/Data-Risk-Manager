@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SidebarComponent } from 'src/app/layout/sidebar/sidebar.component';
 import { HeaderComponent } from 'src/app/layout/header/header.component';
 import { RouterModule } from '@angular/router';   // 👈 Import RouterModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +19,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -26,6 +29,7 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatTabsModule,
     MatIconModule,
@@ -41,10 +45,32 @@ import { MatSelectModule } from '@angular/material/select';
     MatCheckboxModule,
     MatMenuModule,
     MatSelectModule,
+    MatDialogModule,
+    FormsModule
   ],
   exports: [
     HeaderComponent,
-    SidebarComponent    // 👈 Export so other modules can use
+    SidebarComponent,    // 👈 Export so other modules can use
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatTabsModule,
+    MatIconModule,
+    MatCardModule,
+    MatTableModule,
+    MatChipsModule,
+    MatToolbarModule,
+    MatListModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatDialogModule,
+    FormsModule
   ]
 })
 export class SharedModule {}
