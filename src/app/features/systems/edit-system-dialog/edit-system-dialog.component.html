@@ -1,0 +1,71 @@
+<h2 mat-dialog-title>Edit System</h2>
+<mat-dialog-content>
+  <form>
+    <div class="form-grid">
+      <!-- Row 1 -->
+      <mat-form-field appearance="outline" class="form-field" style="padding: 5px;">
+        <mat-label>System Name*</mat-label>
+        <input matInput [(ngModel)]="data.system_name" name="name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>System ID*</mat-label>
+        <input matInput [(ngModel)]="data.system_id" name="systemid" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>System Status*</mat-label>
+        <mat-select [(ngModel)]="data.status" name="status">
+          <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>LeanIX ID*</mat-label>
+        <input matInput [(ngModel)]="data.leanix_id" name="leanixId" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Version Number - Current*</mat-label>
+        <input matInput [(ngModel)]="data.version_number" name="version" required>
+      </mat-form-field>
+
+      <!-- Row 2 -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Owner*</mat-label>
+        <input matInput [(ngModel)]="data.owner" name="owner" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Owner Email*</mat-label>
+        <input matInput [(ngModel)]="data.owner_email" name="owner_email" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Data Accuracy Risk*</mat-label>
+        <mat-select [(ngModel)]="data.accuracy_risk" name="accuracyRisk">
+            <mat-option *ngFor="let data of accuracyRiskOptions" [value]="data">{{ data }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Data Timeliness Risk*</mat-label>
+        <mat-select [(ngModel)]="data.timeliness_risk" name="timelinessRisk">
+            <mat-option *ngFor="let data of timlinessRiskOptions" [value]="data">{{ data }}</mat-option>
+
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Row 3 -->
+      <mat-form-field appearance="outline" class="form-field full-width">
+        <mat-label>System Description*</mat-label>
+        <textarea matInput [(ngModel)]="data.description" name="description" rows="2" required></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()">Update</button>
+</mat-dialog-actions>

@@ -1,0 +1,16 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 8px 0;
+  }
+  
+  .form-field {
+    width: 100%;
+    padding: 5px !important;
+  }
+  
+  .full-width {
+    grid-column: 1 / -1; /* span full width */
+  }
+  
