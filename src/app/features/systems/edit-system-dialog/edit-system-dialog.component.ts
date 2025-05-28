@@ -23,7 +23,7 @@ export class EditSystemDialogComponent {
 
   onSave(): void {
     console.log(this.data, "updated data");
-    this.systemModel.id = this.data.id;
+    this.systemModel.id = this.data.id
     this.systemModel.system_id = this.data.system_id;
     this.systemModel.system_name = this.data.system_name;
     this.systemModel.leanix_id = this.data.leanix_id;
@@ -32,8 +32,8 @@ export class EditSystemDialogComponent {
     this.systemModel.owner_email = this.data.owner_email;
     this.systemModel.version_number = this.data.version_number;
     this.systemModel.status = this.data.status;
-    this.systemModel.accuracy_risk = this.data.accuracy_risk;
-    this.systemModel.timeliness_risk = this.data.timeliness_risk;
+    // this.systemModel.accuracy_risk = this.data.accuracy_risk;
+    // this.systemModel.timeliness_risk = this.data.timeliness_risk;
     this.systemService.updateSystem(this.systemModel).subscribe(res => {
       if(res)
       {

@@ -8,6 +8,6 @@ export class SystemsModel {
     owner_email!:string;
     version_number!:string;
     status!:string;
-    accuracy_risk!:string;
-    timeliness_risk!:string;
+    // accuracy_risk!:string;
+    // timeliness_risk!:string;
 }

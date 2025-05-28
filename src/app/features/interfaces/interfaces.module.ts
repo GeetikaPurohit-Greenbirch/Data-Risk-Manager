@@ -5,12 +5,14 @@ import { InterfacesRoutingModule } from './interfaces-routing.module';
 import { InterfacesComponent } from '../interfaces/component/interfaces.component';
 import { InterfaceBuilderComponent } from './component/interface-builder/interface-builder.component';
 import { SharedModule } from '../shared/shared/shared.module';
+import { EditInterfaceComponent } from './component/edit-interface/edit-interface.component';
 
 
 @NgModule({
   declarations: [
     InterfacesComponent,
-    InterfaceBuilderComponent
+    InterfaceBuilderComponent,
+    EditInterfaceComponent
   ],
   imports: [
     CommonModule,

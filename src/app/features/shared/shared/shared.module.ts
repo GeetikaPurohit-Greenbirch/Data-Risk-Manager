@@ -20,6 +20,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry } from 'ag-grid-community'; 
+import { ClientSideRowModelModule } from 'ag-grid-community'; 
+import { AgGridAngular } from 'ag-grid-angular';
+
+ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
 
 @NgModule({
   declarations: [
@@ -46,7 +52,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     MatSelectModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    AgGridModule
   ],
   exports: [
     HeaderComponent,
@@ -70,7 +77,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     MatSelectModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    AgGridModule
   ]
 })
 export class SharedModule {}

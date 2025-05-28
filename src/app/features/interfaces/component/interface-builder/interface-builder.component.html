@@ -7,6 +7,107 @@
     <section class="welcome-banner">
         <h2>Interface Builder</h2>
       </section>
+      <mat-card>
+        <div class="container">
+          <!-- Left: Edit Interface Form -->
+          <div class="left-panel">
+        <form [formGroup]="interfaceForm" (ngSubmit)="onSubmit()">
+          <!-- <div class="form-grid"> -->
+            <mat-form-field appearance="outline">
+              <mat-label>Interface Name</mat-label>
+              <input matInput formControlName="interfaceName">
+              <mat-error *ngIf="interfaceForm.get('interfaceName')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Quality Of Service</mat-label>
+              <mat-select formControlName="serviceQuality">
+                <mat-option *ngFor="let option of serviceQualityOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="interfaceForm.get('serviceQuality')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+           <!-- Frequency Of Update -->
+            <mat-form-field appearance="outline">
+              <mat-label>Frequency Of Update</mat-label>
+              <input matInput type="number" formControlName="frequencyUpdate" (input)="onFrequencyChange()" min="1" />
+              <mat-error *ngIf="interfaceForm.get('frequencyUpdate')?.hasError('required')">
+                Required
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Schedule Of Update (Multi-select Dropdown) -->
+            <mat-form-field appearance="outline">
+              <mat-label>Schedule Of Update</mat-label>
+              <mat-select
+                formControlName="updateSchedule"
+                multiple
+                (selectionChange)="onScheduleSelectionChange($event)"
+              >
+                <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+              </mat-select>
+              <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+                You can only select {{ frequencyLimit }} time(s)
+              </mat-hint>
+              <mat-error *ngIf="interfaceForm.get('updateSchedule')?.hasError('required')">
+                Required
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline">
+              <mat-label>Methodology of Transfer</mat-label>
+              <input matInput formControlName="transferMethodology">
+              <mat-error *ngIf="interfaceForm.get('transferMethodology')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Interface Type</mat-label>
+              <mat-select formControlName="interfaceType">
+                <mat-option *ngFor="let option of interfaceTypeOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="interfaceForm.get('interfaceType')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Version Number - Current</mat-label>
+              <input matInput formControlName="version">
+              <mat-error *ngIf="interfaceForm.get('version')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Interface Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="interfaceForm.get('status')?.hasError('required')">Required</mat-error>
+            </mat-form-field>      
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Interface Owner</mat-label>
+              <input matInput formControlName="owner">
+              <mat-error *ngIf="interfaceForm.get('owner')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="ownerEmail">
+              <mat-error *ngIf="interfaceForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="interfaceForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
+            </mat-form-field>
+      
+            
+          <!-- </div> -->
+          <div class="form-grid">
+          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+    margin: 0 auto;">Create Interface</button>
+          </div>
+        </form>
+        </div>
+        </div>
+      </mat-card>
+      
 </main>
 </div>
+<!-- <router-outlet></router-outlet> child pages like builder will open here -->

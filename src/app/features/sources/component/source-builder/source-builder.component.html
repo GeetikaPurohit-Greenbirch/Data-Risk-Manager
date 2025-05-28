@@ -5,9 +5,106 @@
   
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Sources</h2>
+        <h2>Source Builder</h2>
       </section>
+      <mat-card>
+        <div class="container">
+          <!-- Left: Edit Interface Form -->
+          <div class="left-panel">
+            <form [formGroup]="sourceForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="outline">
+                  <mat-label>Source Name</mat-label>
+                  <input matInput formControlName="sourceName">
+                  <mat-error *ngIf="sourceForm.get('sourceName')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                  <mat-label>Quality Of Service</mat-label>
+                  <mat-select formControlName="serviceQuality">
+                    <mat-option *ngFor="let option of serviceQualityOptions" [value]="option">{{ option }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sourceForm.get('serviceQuality')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+
+              <!-- Frequency Of Update -->
+    <mat-form-field appearance="outline">
+      <mat-label>Frequency Of Update</mat-label>
+      <input matInput type="number" formControlName="frequencyUpdate" (input)="onFrequencyChange()" min="1" />
+      <mat-error *ngIf="sourceForm.get('frequencyUpdate')?.hasError('required')">
+        Required
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Schedule Of Update (Multi-select Dropdown) -->
+    <mat-form-field appearance="outline">
+      <mat-label>Schedule Of Update</mat-label>
+      <mat-select
+        formControlName="updateSchedule"
+        multiple
+        (selectionChange)="onScheduleSelectionChange($event)"
+      >
+        <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+      </mat-select>
+      <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+        You can only select {{ frequencyLimit }} time(s)
+      </mat-hint>
+      <mat-error *ngIf="sourceForm.get('updateSchedule')?.hasError('required')">
+        Required
+      </mat-error>
+    </mat-form-field>
+
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Methodology of Transfer</mat-label>
+                  <input matInput formControlName="transferMethodology">
+                  <mat-error *ngIf="sourceForm.get('transferMethodology')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Source Type</mat-label>
+                  <mat-select formControlName="sourceType">
+                    <mat-option *ngFor="let option of sourceTypeOptions" [value]="option">{{ option }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sourceForm.get('sourceType')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Version Number - Current</mat-label>
+                  <input matInput formControlName="version">
+                  <mat-error *ngIf="sourceForm.get('version')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Source Status</mat-label>
+                  <mat-select formControlName="status">
+                    <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sourceForm.get('status')?.hasError('required')">Required</mat-error>
+                </mat-form-field>      
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Source Owner</mat-label>
+                  <input matInput formControlName="owner">
+                  <mat-error *ngIf="sourceForm.get('owner')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+          
+                <mat-form-field appearance="outline">
+                  <mat-label>Owner Email</mat-label>
+                  <input matInput formControlName="ownerEmail">
+                  <mat-error *ngIf="sourceForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="sourceForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
+                </mat-form-field>
+          
+              <div class="form-grid">
+              <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+        margin: 0 auto;">Create Source</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </mat-card>
+      
 </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->

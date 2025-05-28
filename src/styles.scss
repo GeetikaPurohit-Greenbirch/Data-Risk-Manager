@@ -1,20 +1,247 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~ag-grid-community/styles/ag-theme-alpine.css";
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    padding: 8px 0;
-  }
-  
-  .form-field {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 8px 0;
+}
+
+
+//////////// System builder design //////////////////////
+.main-container {
+  display: flex;
+}
+.dashboard-container {
+  flex-grow: 1;
+  padding: 1rem;
+  background: #f5f7fa;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.welcome-banner {
+  background: linear-gradient(to right, #4f46e5, #6366f1);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+.form-grid {
+  display: grid;
+  gap: 10px;
+  padding:12px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+///// 4 -column design /// 
+mat-card.mat-mdc-card.mdc-card{
     width: 100%;
-    // padding: 5px !important;
+    margin: 0 auto;
   }
-  
-  .full-width {
-    grid-column: 1 / -1; /* span full width */
+  .create-btn{
+    width: 30%;
+    margin: 0 auto;
   }
-  
+//// 3-column design ////
+// mat-card.mat-mdc-card.mdc-card{
+//   width: 60%;
+//   margin: 0 auto;
+// }
+// .create-btn{
+//   width: 30%;
+//   margin: 0 auto;
+// }
+
+//// 1-column design ////
+// mat-card.mat-mdc-card.mdc-card{
+//   width: 36%;
+//   margin: 0 auto;
+// }
+// .create-btn{
+//   width: 30%;
+//   margin: 0 auto;
+// }
+
+.editable-sub-table {
+  margin-top: 12px;
+}
+
+.form-cell {
+  width: 100%;
+  min-width: 120px;
+  padding: 0 4px;
+}
+
+.action-bar {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+.editable-sub-table tr td{
+  padding: 2px !important;
+  width: 192px !important;
+}
+
+//// Edit Interface /////
+
+.left-column {
+  flex: 1;
+  border-right: 1px solid #ddd;
+  padding-right: 20px;
+}
+
+.right-column {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.form-field {
+  flex: 1;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  background-color: #3366cc;
+  padding: 20px;
+  color: white;
+}
+
+.left-panel {
+  width: 26.5%;
+  background-color: #eeeeee;
+  padding: 11px;
+  border-radius: 8px;
+  color: black;
+
+  h2 {
+    margin-bottom: 15px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    input {
+      padding: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+
+  .button-group {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.right-panel {
+  width: 69%;
+  background-color: #dddddd;
+  padding: 12px;
+  border-radius: 8px;
+  color: black;
+
+  .datafields-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+}
+.mdc-text-field--outlined .mdc-notched-outline{
+  padding: 5px !important;
+}
+
+
+///// Datafields Table /////
+.datafieldTable{
+  width: 100% !important;
+  white-space: nowrap !important;
+}
+.datafieldTable .mdc-data-table__cell, .mdc-data-table__header-cell
+{
+  padding:0 5px 0 5px !important;
+}
+//// Info box ////
+.info-box-table {
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  width:56%
+}
+
+.info-box-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+  width:58%
+}
+
+.info-box-table th,
+.info-box-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+.info-box-table th {
+  background-color: #427fb5;
+  color: white;
+}
+
+.low-orange {
+  color: #d97904; /* Orange */
+  font-weight: bold;
+}
+
+.low-blue {
+  color: #207dc0; /* Blue */
+  font-weight: bold;
+}
+
+.low-pink {
+  color: #db42c0; /* Pink */
+  font-weight: bold;
+}
+
+//// ag grid /// 
+.ag-theme-alpine {
+  --ag-foreground-color: #333;
+  --ag-background-color: #fff;
+  --ag-header-background-color: #f0f0f0;
+}
+
+.add-btn {
+  margin-bottom: 10px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+

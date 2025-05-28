@@ -16,3 +16,9 @@
     border-radius: 0.5rem;
     margin-bottom: 2rem;
   }
+  .mat-select[disabled] {
+    color: black;
+    -webkit-text-fill-color: black; /* For Safari */
+    opacity: 1; /* Remove default opacity */
+  }
+  

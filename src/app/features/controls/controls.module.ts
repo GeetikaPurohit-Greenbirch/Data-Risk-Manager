@@ -7,12 +7,14 @@ import { ControlBuilderComponent } from './component/control-builder/control-bui
 import { SidebarComponent } from 'src/app/layout/sidebar/sidebar.component';
 import { HeaderComponent } from 'src/app/layout/header/header.component';
 import { SharedModule } from '../shared/shared/shared.module';
+import { EditControlComponent } from './component/edit-control/edit-control.component';
 
 
 @NgModule({
   declarations: [    
     ControlsComponent,
-    ControlBuilderComponent
+    ControlBuilderComponent,
+    EditControlComponent,
   ],
   imports: [
     CommonModule,

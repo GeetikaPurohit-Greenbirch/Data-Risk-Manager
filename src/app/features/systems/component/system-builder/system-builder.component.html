@@ -8,8 +8,10 @@
         <h2>System Builder</h2>
       </section>
       <mat-card>
+        <div class="container">
+          <!-- Left: Edit Interface Form -->
+          <div class="left-panel">
         <form [formGroup]="systemForm" (ngSubmit)="onSubmit()">
-          <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>System Name</mat-label>
               <input matInput formControlName="systemName">
@@ -17,21 +19,15 @@
             </mat-form-field>
       
             <mat-form-field appearance="outline">
-              <mat-label>System ID</mat-label>
-              <input matInput formControlName="systemId">
-              <mat-error *ngIf="systemForm.get('systemId')?.hasError('required')">Required</mat-error>
+              <mat-label>System Description</mat-label>
+              <textarea matInput formControlName="description" rows="1"></textarea>
+              <mat-error *ngIf="systemForm.get('description')?.hasError('required')">Required</mat-error>
             </mat-form-field>
       
             <mat-form-field appearance="outline">
               <mat-label>LeanIX ID</mat-label>
               <input matInput formControlName="leanixId">
               <mat-error *ngIf="systemForm.get('leanixId')?.hasError('required')">Required</mat-error>
-            </mat-form-field>
-      
-            <mat-form-field appearance="outline">
-              <mat-label>System Description</mat-label>
-              <textarea matInput formControlName="description" rows="1"></textarea>
-              <mat-error *ngIf="systemForm.get('description')?.hasError('required')">Required</mat-error>
             </mat-form-field>
       
             <mat-form-field appearance="outline">
@@ -61,7 +57,7 @@
               <mat-error *ngIf="systemForm.get('status')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <!-- <mat-form-field appearance="outline">
               <mat-label>Data Accuracy Risk</mat-label>
               <mat-select formControlName="accuracyRisk">
                 <mat-option *ngFor="let option of accuracyRiskOptions" [value]="option">{{ option }}</mat-option>
@@ -75,13 +71,15 @@
                 <mat-option *ngFor="let option of timlinessRiskOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
               <mat-error *ngIf="systemForm.get('timlinessRisk')?.hasError('required')">Required</mat-error>
-            </mat-form-field>
-          </div>
+            </mat-form-field> -->
+
           <div class="form-grid">
-          <button mat-raised-button color="primary" type="submit" style="width: 10%;
+          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
     margin: 0 auto;">Create System</button>
           </div>
         </form>
+        </div>
+        </div>
       </mat-card>
       
 </main>

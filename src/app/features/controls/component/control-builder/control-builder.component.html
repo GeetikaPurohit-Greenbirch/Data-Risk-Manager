@@ -7,6 +7,73 @@
     <section class="welcome-banner">
         <h2>Control Builder</h2>
       </section>
+      <mat-card>
+        <div class="container">
+          <!-- Left: Edit Control Form -->
+          <div class="left-panel">
+        <form [formGroup]="controlForm" (ngSubmit)="onSubmit()">
+          <!-- <div class="form-grid"> -->
+            <mat-form-field appearance="outline">
+              <mat-label>Control Name</mat-label>
+              <input matInput formControlName="controlName">
+              <mat-error *ngIf="controlForm.get('controlName')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Control Description</mat-label>
+              <input matInput formControlName="controlDescription">
+              <mat-error *ngIf="controlForm.get('controlDescription')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Control Type</mat-label>
+              <mat-select formControlName="controlType">
+                <mat-option *ngFor="let option of controlTypeOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="controlForm.get('controlType')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Version Number - Current</mat-label>
+              <input matInput formControlName="version">
+              <mat-error *ngIf="controlForm.get('version')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Control Status</mat-label>
+              <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
+                <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="controlForm.get('status')?.hasError('required')">Required</mat-error>
+            </mat-form-field>      
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Control Effect</mat-label>
+              <mat-select formControlName="controlEffect">
+                <mat-option *ngFor="let option of controlEffectOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="controlForm.get('controlEffect')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Control Application</mat-label>
+              <mat-select formControlName="controlApplication" [disabled]="true">
+                <mat-option *ngFor="let option of controlApplicationOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="controlForm.get('controlApplication')?.hasError('required')">Required</mat-error> -->
+            </mat-form-field>
+            
+          <!-- </div> -->
+          <div class="form-grid">
+          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+    margin: 0 auto;">Create Control</button>
+          </div>
+        </form>
+        </div>
+        </div>
+      </mat-card>
+      
 </main>
 </div>
+<!-- <router-outlet></router-outlet> child pages like builder will open here -->
