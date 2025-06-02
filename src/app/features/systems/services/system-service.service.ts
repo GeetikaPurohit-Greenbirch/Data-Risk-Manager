@@ -39,11 +39,11 @@ export class SystemServiceService {
     return this.http.get<SystemsModel[]>(url);
   }
 
-  public updateSystem(systemModel: SystemsModel): Observable<any> {
+  public updateSystem(payload:any): Observable<any> {
     const url: string = this.apiUrl + 'systems';
-    console.log(systemModel)
+    console.log(payload)
 
-    return this.http.post<SystemsModel[]>(url, systemModel);
+    return this.http.post<SystemsModel[]>(url, payload);
   }
 
     public getSystemById(id:number):Observable<SystemsModel[]> {

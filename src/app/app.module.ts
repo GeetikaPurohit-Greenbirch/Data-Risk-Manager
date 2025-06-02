@@ -35,7 +35,15 @@ import { AuthInterceptor } from './features/shared-interceptors/auth.interceptor
 import { UserListComponent } from './features/shared/user-list/user-list.component';
 import { UseCasesComponent } from './features/use-cases/use-cases.component';
 import { SharedModule } from './features/shared/shared/shared.module';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 // const oktaAuth  = new OktaAuth({
 //   clientId: environment.okta.clientId,
@@ -61,6 +69,19 @@ import { SharedModule } from './features/shared/shared/shared.module';
     AppRoutingModule,
     SharedModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    BrowserAnimationsModule, // Required for Toastr animations
+    ToastrModule.forRoot({
+      timeOut: 2000, // 5 seconds
+      positionClass: 'toast-bottom-center',
+      preventDuplicates: true
+    }),
     AuthModule.forRoot({
       domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
       clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID

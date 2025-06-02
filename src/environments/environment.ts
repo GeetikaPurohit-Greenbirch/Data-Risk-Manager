@@ -6,7 +6,7 @@ export const environment = {
 
   production: false,
   apiBaseUrl: 'http://54.170.83.99:8080/', /// for user module
-  apiAllBaseUrl: 'http://34.245.236.128:8080/', /// for other modules
+  apiAllBaseUrl: 'http://34.247.159.104:8080/', /// for other modules
 
 
   // okta: {

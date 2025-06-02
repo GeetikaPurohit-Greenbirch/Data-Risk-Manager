@@ -244,4 +244,16 @@ mat-card.mat-mdc-card.mdc-card{
   border-radius: 4px;
 }
 
+.ag-header-cell[col-id="dqaC"],
+.ag-cell[col-id="dqaC"],
+.ag-header-cell[col-id="dqaT"],
+.ag-cell[col-id="dqaT"],
+.ag-header-cell[col-id="dqaA"],
+.ag-cell[col-id="dqaA"] {
+  width: 65px !important;
+  max-width: 65px !important;
+  min-width: 65px !important;
+}
+
+
 

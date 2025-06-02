@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { Interface } from '../../models/interface.model';
 import { InterfaceService } from '../../services/interface.service';
 import { Router } from '@angular/router';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-interface-builder',
@@ -22,7 +23,8 @@ interfaceForm!: FormGroup;
   frequencyLimit = 1;
   scheduleLimitReached = false;
   constructor(private fb: FormBuilder, private interfaceService: InterfaceService,
-    private router: Router
+    private router: Router,
+    private toastNotificationService: ToastnotificationService,
   ) {} 
 
   ngOnInit(): void {
@@ -99,7 +101,9 @@ interfaceForm!: FormGroup;
         if(res)
         {
           console.log(res, "Interface builder created");
-          alert("Interface Created Successfully. Your Interface ID is "+ res.interfaceEntity.interface_id);
+          // alert("Interface Created Successfully. Your Interface ID is "+ res.interfaceEntity.interface_id);
+          this.toastNotificationService.success("Interface Created Successfully. Your Interface ID is "+ res.interfaceEntity.interface_id);
+
           // Navigate to Edit Interface page with the ID
           this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
         }

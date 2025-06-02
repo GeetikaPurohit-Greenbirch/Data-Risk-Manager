@@ -6,6 +6,7 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter } from 'rxjs';
 import { SystemServiceService } from '../../services/system-service.service';
+import { SystemsModel } from '../../models/systems-model.model';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -20,6 +21,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class EditSystemComponent {
  systemForm!: FormGroup;
   showDataFields = false;
+  systemModel : SystemsModel = new SystemsModel();
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -157,7 +159,28 @@ export class EditSystemComponent {
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.systemForm.value);
-    // Submit or save logic here
+    const payload = {
+      systemEntity: {
+    // this.systemModel.system_id = this.systemForm.value.systemId;
+    system_id: this.systemId,
+   system_name : this.systemForm.value.system_name,
+    leanix_id : this.systemForm.value.leanix_id,
+    description : this.systemForm.value.description,
+    owner : this.systemForm.value.owner,
+    owner_email : this.systemForm.value.owner_email,
+    version_number : this.systemForm.value.version_number,
+    status : this.systemForm.value.status,
+    // this.systemModel.accuracy_risk = this.systemForm.value.accuracyRisk;
+    // this.systemModel.timeliness_risk = this.systemForm.value.timlinessRisk;
+      }
+    }
+    this.systemService.updateSystem(payload).subscribe(res => {
+      if(res)
+      {
+        alert("System Updated Successfully. Your System ID is "+ this.systemId);
+        window.location.reload();
+      }
+    })
   }
 
   saveDatafields(data:any)

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Interface } from '../models/interface.model';
 import { InterfaceService } from '../services/interface.service';
 import { Router } from '@angular/router';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 
 
@@ -29,8 +30,8 @@ export class InterfacesComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private interfaceService: InterfaceService,
-    private router: Router
-
+    private router: Router,
+    private toastNotificationService: ToastnotificationService,
   ) { }
 
   
@@ -67,8 +68,11 @@ export class InterfacesComponent {
 
   deleteInterface(interfaces:any) {
     this.interfaceService.deleteInterface(interfaces.interface_id).subscribe(() => {
-        alert("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
-        this.getInterfaceList(); // refresh
+        // alert("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
+        this.toastNotificationService.success("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
+        setTimeout(() => {
+          this.getInterfaceList(); // refresh
+        }, 1000);
     })
   }
 
