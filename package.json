@@ -32,6 +32,8 @@
     "cytoscape-dagre": "^2.5.0",
     "d3": "^7.9.0",
     "font-awesome": "^4.7.0",
+    "highcharts": "^12.2.0",
+    "highcharts-angular": "^4.0.1",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

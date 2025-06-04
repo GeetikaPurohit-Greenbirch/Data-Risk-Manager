@@ -54,6 +54,19 @@ export function HttpLoaderFactory(http: HttpClient) {
 //   pkce: environment.okta.pkce,
 // });
 
+// Highcharts imports Sankey module
+import * as Highcharts from 'highcharts';
+import { HighchartsChartModule } from 'highcharts-angular';
+import SankeyModule from 'highcharts/modules/sankey';
+import { LineageChartComponent } from "./features/lineage/component/lineage-chart/lineage-chart.component";
+// import { provideHttpClient } from '@angular/common/http';
+// import { provideAnimations } from '@angular/platform-browser/animations';
+// import { provideHttpClientWithInterceptors } from '@angular/common/http';
+
+// Initialize the Sankey module with Highcharts
+// SankeyModule(Highcharts);
+// console.log(SankeyModule)
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,7 +75,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UseCasesComponent,
     CreateUserComponent,
     UserListComponent,
-
+    LineageChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,29 +83,28 @@ export function HttpLoaderFactory(http: HttpClient) {
     SharedModule,
     HttpClientModule,
     TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+        }
     }),
     BrowserAnimationsModule, // Required for Toastr animations
     ToastrModule.forRoot({
-      timeOut: 2000, // 5 seconds
-      positionClass: 'toast-bottom-center',
-      preventDuplicates: true
+        timeOut: 2000, // 5 seconds
+        positionClass: 'toast-bottom-center',
+        preventDuplicates: true
     }),
     AuthModule.forRoot({
-      domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
-      clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID
-      authorizationParams: {
-        redirect_uri: window.location.origin+ '/callback',
-        audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/', // Replace with your API identifier from Auth0
-        scope: 'openid profile email offline_access',
-      },
-      cacheLocation: 'localstorage', // Persist tokens across page reloads
-      useRefreshTokens: true, // Ensure tokens are refreshed when they expire
-
+        domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
+        clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID
+        authorizationParams: {
+            redirect_uri: window.location.origin + '/callback',
+            audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/', // Replace with your API identifier from Auth0
+            scope: 'openid profile email offline_access',
+        },
+        cacheLocation: 'localstorage', // Persist tokens across page reloads
+        useRefreshTokens: true, // Ensure tokens are refreshed when they expire
     }),
     MatFormFieldModule,
     MatTabsModule,
@@ -111,7 +123,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-  ],
+    // Highcharts
+    HighchartsChartModule,
+],
 
   providers: [
     provideAnimationsAsync(),
