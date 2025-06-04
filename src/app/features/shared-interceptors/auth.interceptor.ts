@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { UserService } from '../shared-services/user.service'; // ⬅️ import
 
 @Injectable()
+
+// NOTE: This interceptor: Skips Auth0 domain requests, Adds a custom header (X-User-ID) with a user identifier from localStorage, Ensures Content-Type is set to application/json if missing
+
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private userService: UserService) {}

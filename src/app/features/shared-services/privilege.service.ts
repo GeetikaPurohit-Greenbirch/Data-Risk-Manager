@@ -7,6 +7,10 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
+// NOTE: This PrivilegeService is the bouncer at the club — it checks if your user role has access to certain features. It fetches privileges from the backend based on your role, stores them, and later checks if you’re allowed to see/do stuff. ( UserService — one knows who you are, the other knows what you can do!)
+
+
 export class PrivilegeService {
   
   private apiUrl = environment.apiBaseUrl + 'role-privileges';

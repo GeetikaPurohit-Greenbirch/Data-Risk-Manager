@@ -13,6 +13,10 @@ export interface User {
 @Injectable({
   providedIn: 'root'
 })
+
+  // NOTE: This UserService is like our control room for anything user-related — fetch, add, delete users, or check their roles stores the currently logged-in user's email temporarily
+
+
 export class UserService {
 
   private apiUrl = environment.apiBaseUrl + 'users'; // Base URL

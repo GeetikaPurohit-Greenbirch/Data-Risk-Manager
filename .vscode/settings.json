@@ -1,7 +1,16 @@
 {
-    "workbench.colorCustomizations": {
-        "activityBar.background": "#03286F",
-        "titleBar.activeBackground": "#04389B",
-        "titleBar.activeForeground": "#F7FAFF"
-    }
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#03286F",
+    "titleBar.activeBackground": "#04389B",
+    "titleBar.activeForeground": "#F7FAFF"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.exclude": {
+    "**/.angular": true,
+    "**/.vscode": false
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
