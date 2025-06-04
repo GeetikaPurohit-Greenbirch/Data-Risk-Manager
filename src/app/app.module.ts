@@ -33,7 +33,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
 import { AuthInterceptor } from './features/shared-interceptors/auth.interceptor';
 import { UserListComponent } from './features/shared/user-list/user-list.component';
-import { UseCasesComponent } from './features/use-cases/use-cases.component';
 import { SharedModule } from './features/shared/shared/shared.module';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -59,7 +58,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     LoginComponent,
     HomeComponent,
-    UseCasesComponent,
     CreateUserComponent,
     UserListComponent,
 

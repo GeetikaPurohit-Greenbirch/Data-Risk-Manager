@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { PrivilegeService } from 'src/app/features/shared-services/privilege.service';
 import { UserService } from 'src/app/features/shared-services/user.service';
+import { Sources } from 'src/app/features/sources/models/sources.model';
+import { SourceService } from 'src/app/features/sources/services/source.service';
 import { SystemsModel } from 'src/app/features/systems/models/systems-model.model';
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
 
@@ -17,10 +19,14 @@ import { SystemServiceService } from 'src/app/features/systems/services/system-s
 })
 export class HomeComponent implements OnInit {
     displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'accuracyRisk', 'timelinessRisk', 'version', 'status'];
-    dataSource: MatTableDataSource<SystemsModel>;
+    displayedColumnsSource: string[] = ['sourceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email'];
+
+  dataSource: MatTableDataSource<SystemsModel>;
+  dataSource_1!: MatTableDataSource<Sources>;
   user:any;
   userRole: string ='';
   systems: SystemsModel[] = []; // ✅ correct
+  sources: Sources[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 // dashboard.component.ts
@@ -29,8 +35,10 @@ constructor(private router: Router,private http: HttpClient,
   private userService : UserService,
   private privilegeService: PrivilegeService,
   private systemService: SystemServiceService,
+  private sourceService: SourceService,
 ) { 
   this.dataSource = new MatTableDataSource(this.systems);
+  this.dataSource_1 = new MatTableDataSource(this.sources);
 
  }
 ngOnInit(): void{
@@ -53,6 +61,7 @@ ngOnInit(): void{
   });
 
   this.getSystemList();
+  this.getSourceList();
 }
 searchText:string = '';
 stats = [
@@ -140,8 +149,16 @@ private fetchUserRoleAndPrivileges(username: string) {
 
 getSystemList()
 {
-  this.systemService.getSystems().subscribe((data: SystemsModel[]) => {
-    this.systems = data;
+  this.systemService.getSystems().subscribe((data: any) => {
+    // this.systems = data.systemEntity;
+    const systemsWithChildData = data.map((system: any) => {
+    const sys = {
+      ...system.systemEntity,
+    };
+    return sys;
+  });
+
+  this.systems = systemsWithChildData;
     this.dataSource.data = this.systems;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -149,4 +166,26 @@ getSystemList()
   
 }
 
+
+getSourceList() {
+  this.sourceService.getSources().subscribe({
+    next: (sources: any[]) => {
+      // Map and extract the sourceEntity from each item
+      const patchedSources = sources.map(data => ({
+        ...data.sourceEntity
+      }));
+
+      this.dataSource_1.data = patchedSources;
+      this.dataSource_1.paginator = this.paginator;
+      this.dataSource_1.sort = this.sort;
+
+      console.log(this.dataSource_1.data, "Sources");
+    },
+    error: (err) => {
+      console.error('Error fetching sources:', err);
+    }
+  });
 }
+
+}
+

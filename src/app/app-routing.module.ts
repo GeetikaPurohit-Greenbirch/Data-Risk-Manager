@@ -5,7 +5,6 @@ import { CallbackComponent } from './auth/callback/callback.component';
 import { HomeComponent } from './main/home/home.component';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
 import { UserListComponent } from './features/shared/user-list/user-list.component';
-import { UseCasesComponent } from './features/use-cases/use-cases.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,10 +12,10 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'callback', component: CallbackComponent },
   { path: 'home', component: HomeComponent,  },
-  {path:'use-cases', component:UseCasesComponent},
   {path:'create-user', component:CreateUserComponent},
   {path:'user-list', component:UserListComponent},
   
+  { path: 'use-cases', loadChildren: () => import('./features/use-cases/use-case.module').then(m => m.UseCaseModule) },
   { path: 'sources', loadChildren: () => import('./features/sources/sources.module').then(m => m.SourcesModule) },
   { path: 'systems', loadChildren: () => import('./features/systems/systems.module').then(m => m.SystemsModule) },
   { path: 'interfaces', loadChildren: () => import('./features/interfaces/interfaces.module').then(m => m.InterfacesModule) },
