@@ -5,7 +5,8 @@ import { LineageChartComponent } from './component/lineage-chart/lineage-chart.c
 
 const routes: Routes = [
     { path:'', component: LineageChartComponent },
-    // { path:'/lineage-chart', component: LineageChartComponent },
+    // { path:'/lineage-tree', component: LineageChartTreeComponent },
+    // { path:'/lineage-sankey', component: LineageChartSankeyComponent },
 ];
 
 @NgModule({
