@@ -6,6 +6,7 @@ import { HomeComponent } from './main/home/home.component';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
 import { UserListComponent } from './features/shared/user-list/user-list.component';
 import { UseCasesComponent } from './features/use-cases/use-cases.component';
+import { LineageChartComponent } from './features/lineage/component/lineage-chart/lineage-chart.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,10 +23,15 @@ const routes: Routes = [
   { path: 'interfaces', loadChildren: () => import('./features/interfaces/interfaces.module').then(m => m.InterfacesModule) },
   { path: 'controls', loadChildren: () => import('./features/controls/controls.module').then(m => m.ControlsModule) },
   { path: 'targets', loadChildren: () => import('./features/targets/targets.module').then(m => m.TargetsModule) },
+
+  // Lazy loading for lineage feature
+  { path: 'lineage', component: LineageChartComponent },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

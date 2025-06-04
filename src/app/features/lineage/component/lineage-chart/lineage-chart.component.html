@@ -1,0 +1,45 @@
+<!-- Header -->
+<app-header></app-header>
+
+<!-- Main Container -->
+<div class="main-container">
+  <!-- SideBar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Dashbaord Container -->
+  <main class="dashboard-container">
+    <!-- Welcome Banner -->
+    <section class="welcome-banner">
+      <h2>Lineage Chart</h2>
+      <p>Visualize the lineage of data entities</p>
+    </section>
+
+    <!-- Highcharts Container -->
+    <div class="chart-container chart-grid">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 100%; height: 600px; display: block"
+      >
+      </highcharts-chart>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 100%; height: 600px; display: block"
+      >
+      </highcharts-chart>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 100%; height: 600px; display: block"
+      >
+      </highcharts-chart>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 100%; height: 600px; display: block"
+      >
+      </highcharts-chart>
+    </div>
+  </main>
+</div>
