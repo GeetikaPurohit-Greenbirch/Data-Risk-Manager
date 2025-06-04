@@ -25,7 +25,7 @@ const routes: Routes = [
   { path: 'targets', loadChildren: () => import('./features/targets/targets.module').then(m => m.TargetsModule) },
 
   // Lazy loading for lineage feature
-  { path: 'lineage', component: LineageChartComponent },
+  { path: 'lineage', loadChildren: () => import('./features/lineage/lineages.module').then(m => m.LineagesModule)},
 
 ];
 
