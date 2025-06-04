@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SourcesComponent } from '../sources/component/sources.component';
+import { LineageChartComponent } from './component/lineage-chart/lineage-chart.component';
 
-const routes: Routes = [];
+
+const routes: Routes = [
+    { path:'', component: LineageChartComponent },
+    // { path:'/lineage-chart', component: LineageChartComponent },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

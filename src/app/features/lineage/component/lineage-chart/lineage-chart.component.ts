@@ -6,6 +6,7 @@ import * as Highcharts from 'highcharts';
   templateUrl: './lineage-chart.component.html',
   styleUrls: ['./lineage-chart.component.scss'],
 })
+
 export class LineageChartComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
