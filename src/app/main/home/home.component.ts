@@ -5,12 +5,16 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { Control } from 'src/app/features/controls/models/control.model';
+import { ControlService } from 'src/app/features/controls/services/control.service';
 import { PrivilegeService } from 'src/app/features/shared-services/privilege.service';
 import { UserService } from 'src/app/features/shared-services/user.service';
 import { Sources } from 'src/app/features/sources/models/sources.model';
 import { SourceService } from 'src/app/features/sources/services/source.service';
 import { SystemsModel } from 'src/app/features/systems/models/systems-model.model';
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
+import { Target } from 'src/app/features/targets/models/target.model';
+import { TargetService } from 'src/app/features/targets/services/target.service';
 
 @Component({
   selector: 'app-home',
@@ -20,13 +24,19 @@ import { SystemServiceService } from 'src/app/features/systems/services/system-s
 export class HomeComponent implements OnInit {
     displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'accuracyRisk', 'timelinessRisk', 'version', 'status'];
     displayedColumnsSource: string[] = ['sourceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email'];
+    displayedColumnsControls: string[] = ['controlid', 'name', 'controltype', 'version', 'status', 'controleffect', 'controlapplication'];
+    displayedColumnsTargets: string[] = ['targetid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'targettype', 'targetentity' ,'version', 'status', 'owner', 'owner_email'];
 
   dataSource: MatTableDataSource<SystemsModel>;
   dataSource_1!: MatTableDataSource<Sources>;
+  dataSource_2!: MatTableDataSource<Control>;
+  dataSource_3!: MatTableDataSource<Target>;
   user:any;
   userRole: string ='';
   systems: SystemsModel[] = []; // ✅ correct
   sources: Sources[] = [];
+  controls: Control[] =[];
+  targets: Target[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 // dashboard.component.ts
@@ -36,9 +46,13 @@ constructor(private router: Router,private http: HttpClient,
   private privilegeService: PrivilegeService,
   private systemService: SystemServiceService,
   private sourceService: SourceService,
+  private controlService: ControlService,
+  private targetService: TargetService,
 ) { 
   this.dataSource = new MatTableDataSource(this.systems);
   this.dataSource_1 = new MatTableDataSource(this.sources);
+  this.dataSource_2 = new MatTableDataSource(this.controls);
+  this.dataSource_3 = new MatTableDataSource(this.targets);
 
  }
 ngOnInit(): void{
@@ -62,6 +76,8 @@ ngOnInit(): void{
 
   this.getSystemList();
   this.getSourceList();
+  this.getControlList();
+  this.getTargetList();
 }
 searchText:string = '';
 stats = [
@@ -186,6 +202,47 @@ getSourceList() {
     }
   });
 }
+
+getControlList() {
+  this.controlService.getControl().subscribe({
+    next: (controls: any[]) => {
+      // Map and extract the controlEntity from each item
+      const patchedControls = controls.map(data => ({
+        ...data.controlEntity
+      }));
+
+      this.dataSource_2.data = patchedControls;
+      this.dataSource_2.paginator = this.paginator;
+      this.dataSource_2.sort = this.sort;
+
+      console.log(this.dataSource_2.data, "Controls");
+    },
+    error: (err) => {
+      console.error('Error fetching controls:', err);
+    }
+  });
+}
+
+getTargetList() {
+  this.targetService.getTarget().subscribe({
+    next: (targets: any[]) => {
+      // Map and extract the targetEntity from each item
+      const patchedTargets = targets.map(data => ({
+        ...data.targetEntity
+      }));
+
+      this.dataSource_3.data = patchedTargets;
+      this.dataSource_3.paginator = this.paginator;
+      this.dataSource_3.sort = this.sort;
+
+      console.log(this.dataSource_3.data, "Targets");
+    },
+    error: (err) => {
+      console.error('Error fetching targets:', err);
+    }
+  });
+}
+
 
 }
 
