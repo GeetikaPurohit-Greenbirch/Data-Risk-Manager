@@ -5,7 +5,6 @@ import { LineagesRoutingModule } from './lineages-routing.module';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { LineageChartComponent } from './component/lineage-chart/lineage-chart.component';
 
-
 @NgModule({
   declarations: [],
   imports: [
@@ -13,8 +12,7 @@ import { LineageChartComponent } from './component/lineage-chart/lineage-chart.c
     SharedModule,
     HighchartsChartModule,
     LineagesRoutingModule,
-    LineageChartComponent
-  ]
+    LineageChartComponent,
+  ],
 })
-
-export class LineagesModule { }
+export class LineagesModule {}

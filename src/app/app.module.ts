@@ -58,10 +58,10 @@ export function HttpLoaderFactory(http: HttpClient) {
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { HighchartsChartComponent } from 'highcharts-angular';
-import { LineagesComponent } from "./features/lineages/component/lineages.component";
-import { LineageChartComponent } from "./features/lineages/component/lineage-chart/lineage-chart.component";
-import { LineagesTreeComponent } from "./features/lineages/component/lineages-tree/lineages-tree.component";
-
+import { LineagesComponent } from './features/lineages/component/lineages.component';
+import { LineageChartComponent } from './features/lineages/component/lineage-chart/lineage-chart.component';
+import { LineageTreeComponent } from './features/lineages/component/lineage-tree/lineage-tree.component';
+import { LineageTreegraphComponent } from './features/lineages/component/lineage-treegraph/lineage-treegraph.component';
 
 @NgModule({
   declarations: [
@@ -79,28 +79,28 @@ import { LineagesTreeComponent } from "./features/lineages/component/lineages-tr
     SharedModule,
     HttpClientModule,
     TranslateModule.forRoot({
-        loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient]
-        }
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
     }),
     BrowserAnimationsModule, // Required for Toastr animations
     ToastrModule.forRoot({
-        timeOut: 2000, // 5 seconds
-        positionClass: 'toast-bottom-center',
-        preventDuplicates: true
+      timeOut: 2000, // 5 seconds
+      positionClass: 'toast-bottom-center',
+      preventDuplicates: true,
     }),
     AuthModule.forRoot({
-        domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
-        clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID
-        authorizationParams: {
-            redirect_uri: window.location.origin + '/callback',
-            audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/', // Replace with your API identifier from Auth0
-            scope: 'openid profile email offline_access',
-        },
-        cacheLocation: 'localstorage', // Persist tokens across page reloads
-        useRefreshTokens: true, // Ensure tokens are refreshed when they expire
+      domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
+      clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID
+      authorizationParams: {
+        redirect_uri: window.location.origin + '/callback',
+        audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/', // Replace with your API identifier from Auth0
+        scope: 'openid profile email offline_access',
+      },
+      cacheLocation: 'localstorage', // Persist tokens across page reloads
+      useRefreshTokens: true, // Ensure tokens are refreshed when they expire
     }),
     MatFormFieldModule,
     MatTabsModule,
@@ -119,21 +119,22 @@ import { LineagesTreeComponent } from "./features/lineages/component/lineages-tr
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
+
     // Highcharts
     HighchartsChartModule,
     LineageChartComponent,
-    LineagesTreeComponent
-],
+    LineageTreeComponent,
+    LineageTreegraphComponent,
+  ],
 
   providers: [
     provideAnimationsAsync(),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
-
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

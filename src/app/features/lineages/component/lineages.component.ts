@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { LineageChartComponent } from './lineage-chart/lineage-chart.component';
-import { SharedModule } from "../../shared/shared/shared.module";
 
 @Component({
   selector: 'app-lineages',

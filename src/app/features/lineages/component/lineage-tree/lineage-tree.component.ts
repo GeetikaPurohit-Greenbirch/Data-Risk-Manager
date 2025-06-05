@@ -23,11 +23,11 @@ try {
   standalone: true,
   imports: [HighchartsChartModule, SharedModule],
   selector: 'app-lineages-tree',
-  templateUrl: './lineages-tree.component.html',
-  styleUrls: ['./lineages-tree.component.scss'],
+  templateUrl: './lineage-tree.component.html',
+  styleUrls: ['./lineage-tree.component.scss'],
 })
 
-export class LineagesTreeComponent {
+export class LineageTreeComponent {
   Highcharts: typeof Highcharts = Highcharts;
   HC_3D: typeof HC_3D = HC_3D; // 3D enable
 
