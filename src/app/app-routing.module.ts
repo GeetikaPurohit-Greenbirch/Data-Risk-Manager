@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'controls', loadChildren: () => import('./features/controls/controls.module').then(m => m.ControlsModule) },
   { path: 'targets', loadChildren: () => import('./features/targets/targets.module').then(m => m.TargetsModule) },
 
-  { path: 'lineage', loadChildren: () => import('./features/lineage/lineages.module').then(m => m.LineagesModule) },
+  { path: 'lineages', loadChildren: () => import('./features/lineages/lineages.module').then(m => m.LineagesModule) },
 
 ];
 
