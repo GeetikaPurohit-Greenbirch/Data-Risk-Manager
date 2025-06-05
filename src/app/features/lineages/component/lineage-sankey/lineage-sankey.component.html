@@ -15,5 +15,25 @@
       >
       </highcharts-chart>
     </div>
+
+    <div class="data-table">
+      <h3>Chart Data Table</h3>
+      <table>
+        <thead>
+          <tr class="table-header">
+            <th>From</th>
+            <th>To</th>
+            <th>Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of chartData">
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 </div>
