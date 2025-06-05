@@ -1,21 +1,48 @@
+<!-- Header -->
 <app-header></app-header>
 
+<!-- Main Container -->
 <div class="main-container">
+  <!-- SideBar -->
   <app-sidebar></app-sidebar>
 
+  <!-- Dashbaord Container -->
   <main class="dashboard-container">
+    <!-- Welcome Banner -->
     <section class="welcome-banner">
-      <h2>Lineage Chart</h2>
+      <h2>Tree Lineage Chart</h2>
       <p>Visualize the lineages of data entities</p>
     </section>
 
     <div class="chart-container chart-grid">
+      <!-- Chart 1 - Sankey -->
       <highcharts-chart
         [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 50%; height: 300px"
+        [options]="SankeyChartOptions"
+        style="width: 100%; height: 400px; display: block"
       >
       </highcharts-chart>
+
+      <!-- Chart 2 - Organization -->
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="OrganizationChartOptions"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
+
+      <!-- Chart 3 - Treegraph -->
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="TreegraphChartOptions"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
+
+      <!-- Chart 3 - Networkgraph -->
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="NetworkgraphChartOptions"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
     </div>
   </main>
 </div>
