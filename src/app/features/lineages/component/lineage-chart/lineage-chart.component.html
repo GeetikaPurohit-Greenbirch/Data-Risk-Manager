@@ -14,32 +14,35 @@
       <p>Visualize the lineages of data entities</p>
     </section>
 
-    <!-- Highcharts Container -->
     <div class="chart-container chart-grid">
+      <!-- Chart 0 - Line -->
       <highcharts-chart
         [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 600px; display: block"
+        [options]="chartOptionsLine"
+        style="width: 100%; height: 400px; display: block"
       >
       </highcharts-chart>
+
+      <!-- Chart 1 - Column  -->
       <highcharts-chart
         [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 600px; display: block"
-      >
-      </highcharts-chart>
+        [options]="chartOptionsOne"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
+
+      <!-- Chart 2 - 3D -->
       <highcharts-chart
         [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 600px; display: block"
-      >
-      </highcharts-chart>
+        [options]="threeDChartOptions"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
+
+      <!-- Chart 3 - Stock Line -->
       <highcharts-chart
         [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 600px; display: block"
-      >
-      </highcharts-chart>
+        [options]="stockChartOptions"
+        style="width: 100%; height: 400px; display: block"
+      ></highcharts-chart>
     </div>
   </main>
 </div>
