@@ -57,15 +57,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 // Highcharts imports Sankey module
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
-import SankeyModule from 'highcharts/modules/sankey';
-import { LineageChartComponent } from "./features/lineage/component/lineage-chart/lineage-chart.component";
-// import { provideHttpClient } from '@angular/common/http';
-// import { provideAnimations } from '@angular/platform-browser/animations';
-// import { provideHttpClientWithInterceptors } from '@angular/common/http';
+import { LineagesComponent } from "./features/lineages/component/lineages.component";
+import { LineageChartComponent } from "./features/lineages/component/lineage-chart/lineage-chart.component";
 
-// Initialize the Sankey module with Highcharts
-// SankeyModule(Highcharts);
-// console.log(SankeyModule)
 
 @NgModule({
   declarations: [
@@ -75,7 +69,7 @@ import { LineageChartComponent } from "./features/lineage/component/lineage-char
     UseCasesComponent,
     CreateUserComponent,
     UserListComponent,
-    LineageChartComponent,
+    LineagesComponent,
   ],
   imports: [
     BrowserModule,
@@ -125,6 +119,7 @@ import { LineageChartComponent } from "./features/lineage/component/lineage-char
     ReactiveFormsModule,
     // Highcharts
     HighchartsChartModule,
+    LineageChartComponent
 ],
 
   providers: [
