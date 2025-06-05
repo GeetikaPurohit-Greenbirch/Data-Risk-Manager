@@ -55,6 +55,11 @@
               ],
               "outputHashing": "all"
             },
+            "allowedCommonJsDependencies": [
+              "highcharts",
+              "highcharts/modules/organization",
+              "highcharts/modules/exporting"
+            ],
             "development": {
               "buildOptimizer": false,
               "optimization": false,
