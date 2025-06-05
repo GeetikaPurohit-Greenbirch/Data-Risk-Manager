@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { SharedModule } from "../../../shared/shared/shared.module";
 
 @Component({
   selector: 'app-lineage-chart',
   templateUrl: './lineage-chart.component.html',
   styleUrls: ['./lineage-chart.component.scss'],
+  imports: [HighchartsChartModule, SharedModule],
+  standalone: true,
 })
 
 export class LineageChartComponent implements OnInit {

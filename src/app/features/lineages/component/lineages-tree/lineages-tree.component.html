@@ -1,0 +1,21 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sidebar></app-sidebar>
+
+  <main class="dashboard-container">
+    <section class="welcome-banner">
+      <h2>Lineage Chart</h2>
+      <p>Visualize the lineages of data entities</p>
+    </section>
+
+    <div class="chart-container chart-grid">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 50%; height: 300px"
+      >
+      </highcharts-chart>
+    </div>
+  </main>
+</div>

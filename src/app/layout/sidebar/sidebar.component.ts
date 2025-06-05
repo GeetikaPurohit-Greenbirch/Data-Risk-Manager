@@ -28,6 +28,7 @@ export class SidebarComponent implements OnInit {
     { label: 'Sources', route: '/sources', icon: 'fa-database', feature: 'sb_sources' },
     { label: 'Targets', route: '/targets', icon: 'fa-bullseye', feature: 'sb_targets' },
     { label: 'Controls', route: '/controls', icon: 'fa-sliders', feature: 'sb_controls' },
+    { label: 'Lineages', route: '/lineages', icon: 'fa-database', feature: 'sb_sources' },
     { label: 'System Builder', route: '/systems/system-builder', icon: 'fa-cogs', subIcon: 'fa-plus', feature: 'sb_system_builder' },
     { label: 'Interface Builder', route: '/interfaces/interface-builder', icon: 'fa-random', subIcon: 'fa-plus', feature: 'sb_interface_builder' },
     { label: 'Source Builder', route: '/sources/source-builder', icon: 'fa-database', subIcon: 'fa-plus', feature: 'sb_source_builder' },

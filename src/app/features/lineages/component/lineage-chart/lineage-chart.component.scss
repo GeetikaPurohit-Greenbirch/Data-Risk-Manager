@@ -1,0 +1,8 @@
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); // 👈 Wider min size for 2-per-row layout
+  gap: 1rem;
+  padding: 0 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

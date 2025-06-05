@@ -1,4 +1,4 @@
-import { Lineages } from "./lineage.model";
+import { Lineages } from "./lineages.model";
 
 describe('Lineages', () => {
   it('should create an instance', () => {
