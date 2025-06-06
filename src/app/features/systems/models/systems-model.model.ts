@@ -1,13 +1,15 @@
-export class SystemsModel {
-    public id!: number;
-    system_id!: string;
+export class SystemEntity {
+    system_id!: number;
     system_name!: string;
-    leanix_id!:string;
+    leanix_id!: string;
     description!: string;
     owner!: string;
-    owner_email!:string;
-    version_number!:string;
-    status!:string;
-    // accuracy_risk!:string;
-    // timeliness_risk!:string;
-}
+    owner_email!: string;
+    version_number!: string;
+    status!: string;
+  }
+  
+  export class SystemsModel {
+    systemEntity!: SystemEntity;
+  }
+  

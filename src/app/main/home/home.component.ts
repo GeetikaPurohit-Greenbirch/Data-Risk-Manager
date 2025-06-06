@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { Control } from 'src/app/features/controls/models/control.model';
 import { ControlService } from 'src/app/features/controls/services/control.service';
+import { Interface } from 'src/app/features/interfaces/models/interface.model';
+import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { PrivilegeService } from 'src/app/features/shared-services/privilege.service';
 import { UserService } from 'src/app/features/shared-services/user.service';
 import { Sources } from 'src/app/features/sources/models/sources.model';
@@ -15,6 +17,7 @@ import { SystemsModel } from 'src/app/features/systems/models/systems-model.mode
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
 import { Target } from 'src/app/features/targets/models/target.model';
 import { TargetService } from 'src/app/features/targets/services/target.service';
+import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
 
 @Component({
   selector: 'app-home',
@@ -22,21 +25,28 @@ import { TargetService } from 'src/app/features/targets/services/target.service'
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-    displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'accuracyRisk', 'timelinessRisk', 'version', 'status'];
+  displayedColumnsUsecase: string[] = ['usecaseid', 'name', 'description', 'owner', 'owner_email', 'version', 'status', 'last_review_date', 'reviewed_by', 'next_review_date', 'reviewer'];
+    displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'version', 'status'];
     displayedColumnsSource: string[] = ['sourceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email'];
     displayedColumnsControls: string[] = ['controlid', 'name', 'controltype', 'version', 'status', 'controleffect', 'controlapplication'];
     displayedColumnsTargets: string[] = ['targetid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'targettype', 'targetentity' ,'version', 'status', 'owner', 'owner_email'];
+    displayedColumnsInterface: string[] = ['interfaceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'interfacetype', 'version', 'status', 'owner', 'owner_email'];
+
 
   dataSource: MatTableDataSource<SystemsModel>;
   dataSource_1!: MatTableDataSource<Sources>;
   dataSource_2!: MatTableDataSource<Control>;
   dataSource_3!: MatTableDataSource<Target>;
+  dataSource_4!: MatTableDataSource<Interface>;
+  dataSource_5!: MatTableDataSource<UsecaseService>;
   user:any;
   userRole: string ='';
   systems: SystemsModel[] = []; // ✅ correct
   sources: Sources[] = [];
   controls: Control[] =[];
   targets: Target[] = [];
+  interfaces: Interface[] = [];
+  usecases: UsecaseService[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 // dashboard.component.ts
@@ -48,11 +58,15 @@ constructor(private router: Router,private http: HttpClient,
   private sourceService: SourceService,
   private controlService: ControlService,
   private targetService: TargetService,
+  private interfaceService: InterfaceService,
+  private usecaseService: UsecaseService,
 ) { 
   this.dataSource = new MatTableDataSource(this.systems);
   this.dataSource_1 = new MatTableDataSource(this.sources);
   this.dataSource_2 = new MatTableDataSource(this.controls);
   this.dataSource_3 = new MatTableDataSource(this.targets);
+  this.dataSource_4 = new MatTableDataSource(this.interfaces);
+  this.dataSource_5 = new MatTableDataSource(this.usecases);
 
  }
 ngOnInit(): void{
@@ -78,6 +92,8 @@ ngOnInit(): void{
   this.getSourceList();
   this.getControlList();
   this.getTargetList();
+  this.getInterfaceList();
+  this.getUsecaseList();
 }
 searchText:string = '';
 stats = [
@@ -239,6 +255,46 @@ getTargetList() {
     },
     error: (err) => {
       console.error('Error fetching targets:', err);
+    }
+  });
+}
+
+getInterfaceList() {
+  this.interfaceService.getInterface().subscribe({
+    next: (interfaces: any[]) => {
+      // Map and extract the interfaceEntity from each item
+      const patchedInterfaces = interfaces.map(data => ({
+        ...data.interfaceEntity
+      }));
+
+      this.dataSource_4.data = patchedInterfaces;
+      this.dataSource_4.paginator = this.paginator;
+      this.dataSource_4.sort = this.sort;
+
+      console.log(this.dataSource_4.data, "Interfaces");
+    },
+    error: (err) => {
+      console.error('Error fetching interfaces:', err);
+    }
+  });
+}
+
+getUsecaseList() {
+  this.usecaseService.getUsecase().subscribe({
+    next: (usecases: any[]) => {
+      // Map and extract the usecaseEntity from each item
+      const patchedUsecases = usecases.map(data => ({
+        ...data.useCaseEntity
+      }));
+
+      this.dataSource_5.data = patchedUsecases;
+      this.dataSource_5.paginator = this.paginator;
+      this.dataSource_5.sort = this.sort;
+
+      console.log(this.dataSource_5.data, "Usecases");
+    },
+    error: (err) => {
+      console.error('Error fetching usecases:', err);
     }
   });
 }

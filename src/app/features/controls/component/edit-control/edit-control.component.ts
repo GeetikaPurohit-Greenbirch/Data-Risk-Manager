@@ -6,6 +6,9 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter } from 'rxjs';
 import { ControlService } from '../../services/control.service';
+import { SourceService } from 'src/app/features/sources/services/source.service';
+import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -31,10 +34,17 @@ controlForm!: FormGroup;
   controlId!: any;
   gridApi: any;
   gridColumnApi: any;
+  attachToOptions = ['SYSTEM', 'SOURCE'];
+  statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED','PRODUCTION'];
+  applicationStatusOptions= ['TARGET', 'PLANNED', 'COMMITTED', 'DELAYED'];
+  filteredAttachToIdOptions: { id: number, name: string }[] = [];
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private controlService: ControlService
+    private controlService: ControlService,
+        private sourceService: SourceService,
+        private systemService: SystemServiceService,
+        private toastNotificationService: ToastnotificationService,
   ) {}
 
 
@@ -107,16 +117,20 @@ controlForm!: FormGroup;
 
   }
 
+ 
   ngOnInit(): void {
     console.log('Editing control with ID:', this.controlId);
     this.controlForm = this.fb.group({
-      control_name: [''],
+        control_name: [''],
          control_description:[''],
-         control_type:[''],
+         attach_to:[''],
+         attach_to_id:[''],
+         control_owner:[''],
+         control_owner_email:[''],
          version_number: [''],
          status: [''],
-         control_effect: [''],
-         control_application: [''],
+         application_date: [''],
+         application_date_status: [''],
          });
     this.controlId = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -133,6 +147,28 @@ controlForm!: FormGroup;
     
   }
 
+
+  onChange(attachTo: string): void
+  {
+    this.filteredAttachToIdOptions = []; // Clear previous list
+  this.controlForm.get('attachToId')?.setValue(null); // Reset selection
+
+  if (attachTo === 'SOURCE') {
+    this.sourceService.getSources().subscribe(data =>{
+      this.filteredAttachToIdOptions = data.map(item => ({
+        id: item.sourceEntity.source_id,
+        name: item.sourceEntity.source_name
+      }));
+    });
+  } else if (attachTo === 'SYSTEM') {
+    this.systemService.getSystems().subscribe((data) => {
+      this.filteredAttachToIdOptions = data.map(item => ({
+         id: item.systemEntity.system_id,
+        name: item.systemEntity.system_name
+      }));
+    });
+  }
+  }
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
@@ -155,6 +191,32 @@ controlForm!: FormGroup;
   onUpdate(): void {
     console.log('Form data:', this.controlForm.value);
     // Submit or save logic here
+    const payload = {
+      controlEntity: {
+   
+    
+          control_id: this.controlId,
+          control_name:this.controlForm.value.controlName, 
+          control_description:this.controlForm.value.controlDescription,
+          attach_to:this.controlForm.value.attachto,
+          attach_to_id:this.controlForm.value.attachToId,
+          control_owner:this.controlForm.value.owner,
+          control_owner_email:this.controlForm.value.ownerEmail,
+          version_number : this.controlForm.value.version,
+          status : this.controlForm.value.status,
+          application_date:this.controlForm.value.applicationDate,
+          application_date_status:this.controlForm.value.applicationStatus,
+            
+      }
+    }
+    this.controlService.updateControl(payload).subscribe(res => {
+      if(res)
+      {
+        // alert("Control Updated Successfully. Your Control ID is "+ this.targetId);
+        this.toastNotificationService.success("Control Updated Successfully. Your Control ID is "+ this.controlId);
+        // window.location.reload();
+      }
+    })
   }
 
   saveDatafields(data:any)

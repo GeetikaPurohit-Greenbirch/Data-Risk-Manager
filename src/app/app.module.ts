@@ -28,6 +28,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'; // Or MatMomentDateModule if using moment.js
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
@@ -107,6 +110,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatCheckboxModule,
     MatMenuModule,
     MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
   ],

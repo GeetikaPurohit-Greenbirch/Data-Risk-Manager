@@ -1,9 +1,13 @@
 export class Control {
+    control_id!:number;
     control_name!:string; 
     control_description!:string; 
-    control_type!:string;
+    attach_to!:string;
+    attach_to_id!:string;
+    control_owner!:string;
+    control_owner_email!:string;
     version_number!:string;
-    status!:string;
-    control_effect!:string;
-    control_application!:string; 
+    status!:string;   
+    application_date!:Date;
+    application_date_status!:string;
 }

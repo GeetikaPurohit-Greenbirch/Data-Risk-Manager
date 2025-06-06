@@ -26,10 +26,35 @@
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Control Type</mat-label>
-          <input matInput formControlName="control_type" />
+          <mat-label>Attach To</mat-label>
+          <!-- <input matInput formControlName="attach_to" /> -->
+          <mat-select formControlName="attach_to" (selectionChange)="onChange($event.value)">
+            <mat-option *ngFor="let data of attachToOptions" [value]="data">
+              {{ data }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Attach To ID</mat-label>
+          <!-- <input matInput formControlName="attach_to_id" /> -->
+          <mat-select formControlName="attach_to_id">
+            <mat-option *ngFor="let data of attachToOptions" [value]="data">
+              {{ data }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
   
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Control Owner</mat-label>
+          <input matInput formControlName="control_owner" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Owner Email</mat-label>
+          <input matInput formControlName="control_owner_email" />
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Version</mat-label>
           <input matInput formControlName="version_number" />
@@ -41,13 +66,13 @@
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Control Effect</mat-label>
-          <input matInput formControlName="control_effect" />
+          <mat-label>Application Date</mat-label>
+          <input matInput formControlName="application_date" />
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Control Application</mat-label>
-          <input matInput formControlName="control_application" />
+          <mat-label>Application Status</mat-label>
+          <input matInput formControlName="application_date_status" />
         </mat-form-field>
         <!-- Add remaining fields similarly -->
         <br>

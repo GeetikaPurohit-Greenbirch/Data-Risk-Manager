@@ -176,8 +176,8 @@ saveChildGrid(parentRow: any) {
 // }
 
   deleteSystem(system: SystemsModel) {
-    this.systemService.deleteSystem(system.id).subscribe(res => {
-        alert("System Deleted Successfully. Deleted System ID is "+ system.system_id);
+    this.systemService.deleteSystem(system.systemEntity.system_id).subscribe(res => {
+        alert("System Deleted Successfully. Deleted System ID is "+ system.systemEntity.system_id);
         this.getSystemList(); // refresh
     })
   }

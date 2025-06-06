@@ -1,4 +1,4 @@
-export class Sources {
+export class SourceEntity {
     id!:number;
     source_name!:string;
     quality_of_service!:string;
@@ -10,5 +10,11 @@ export class Sources {
     source_status!:string;
     source_owner!:string;
     source_owner_email!:string;
+  source_id: any;
  
 }
+
+ export class Sources {
+    sourceEntity!: SourceEntity;
+  }
+  

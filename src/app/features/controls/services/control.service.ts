@@ -34,4 +34,11 @@ private apiUrl = environment.apiAllBaseUrl // Base URL
       const url: string = this.apiUrl + 'controls/'+id;
       return this.http.delete<Control[]>(url);
     }
+
+       public updateControl(payload:any): Observable<any> {
+            const url: string = this.apiUrl + 'controls';
+            console.log(payload)
+        
+            return this.http.post<Control[]>(url, payload);
+          }
 }

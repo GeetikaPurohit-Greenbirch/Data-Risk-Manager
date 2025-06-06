@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SystemsModel } from '../models/systems-model.model';
+import { SystemEntity, SystemsModel } from '../models/systems-model.model';
 import { SystemServiceService } from '../services/system-service.service';
 
 @Component({
@@ -11,11 +11,11 @@ export class EditSystemDialogComponent {
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION'];
   accuracyRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   timlinessRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
-  systemModel : SystemsModel = new SystemsModel();
+  systemModel : SystemEntity = new SystemEntity();
 
   constructor(
     public dialogRef: MatDialogRef<EditSystemDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: SystemsModel,
+    @Inject(MAT_DIALOG_DATA) public data: SystemEntity,
     private systemService: SystemServiceService
   ) {
     console.log(data, "row data to edit");
@@ -23,7 +23,7 @@ export class EditSystemDialogComponent {
 
   onSave(): void {
     console.log(this.data, "updated data");
-    this.systemModel.id = this.data.id
+    this.systemModel.system_id = this.data.system_id
     this.systemModel.system_id = this.data.system_id;
     this.systemModel.system_name = this.data.system_name;
     this.systemModel.leanix_id = this.data.leanix_id;

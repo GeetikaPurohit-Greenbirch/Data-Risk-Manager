@@ -26,11 +26,35 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Control Type</mat-label>
-              <mat-select formControlName="controlType">
-                <mat-option *ngFor="let option of controlTypeOptions" [value]="option">{{ option }}</mat-option>
+              <mat-label>Attach To</mat-label>
+              <mat-select formControlName="attachto" (selectionChange)="onChange($event.value)">
+                <mat-option *ngFor="let option of attachToOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
-              <mat-error *ngIf="controlForm.get('controlType')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="controlForm.get('attachto')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <!-- Attach To ID Dropdown (Populated from API) -->
+            <mat-form-field appearance="outline">
+              <mat-label>Attach To ID</mat-label>
+              <mat-select formControlName="attachToId">
+                <mat-option *ngFor="let item of filteredAttachToIdOptions" [value]="item.id">
+                  {{ item.id }} - {{ item.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="controlForm.get('attachToId')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Control Owner</mat-label>
+              <input matInput formControlName="owner">
+              <mat-error *ngIf="controlForm.get('owner')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="ownerEmail">
+              <mat-error *ngIf="controlForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="controlForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -42,26 +66,26 @@
             
             <mat-form-field appearance="outline">
               <mat-label>Control Status</mat-label>
-              <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
+              <mat-select formControlName="status">
                 <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
               <mat-error *ngIf="controlForm.get('status')?.hasError('required')">Required</mat-error>
             </mat-form-field>      
             
-            <mat-form-field appearance="outline">
-              <mat-label>Control Effect</mat-label>
-              <mat-select formControlName="controlEffect">
-                <mat-option *ngFor="let option of controlEffectOptions" [value]="option">{{ option }}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="controlForm.get('controlEffect')?.hasError('required')">Required</mat-error>
+            <mat-form-field appearance="outline" style="width: 50%;">
+              <mat-label>Application Date</mat-label>
+              <input matInput [matDatepicker]="nextPicker" formControlName="applicationDate">
+              <mat-datepicker-toggle matSuffix [for]="nextPicker"></mat-datepicker-toggle>
+              <mat-datepicker #nextPicker></mat-datepicker>
+              <mat-error *ngIf="controlForm.get('applicationDate')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Control Application</mat-label>
-              <mat-select formControlName="controlApplication" [disabled]="true">
-                <mat-option *ngFor="let option of controlApplicationOptions" [value]="option">{{ option }}</mat-option>
+              <mat-label>Application Status</mat-label>
+              <mat-select formControlName="applicationStatus" [disabled]="true">
+                <mat-option *ngFor="let option of applicationStatusOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
-              <!-- <mat-error *ngIf="controlForm.get('controlApplication')?.hasError('required')">Required</mat-error> -->
+               <mat-error *ngIf="controlForm.get('applicationStatus')?.hasError('required')">Required</mat-error>
             </mat-form-field>
             
           <!-- </div> -->
