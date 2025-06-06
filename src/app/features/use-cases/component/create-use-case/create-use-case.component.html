@@ -1,0 +1,100 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sidebar></app-sidebar>
+  
+  <main class="dashboard-container">
+    <section class="welcome-banner">
+        <h2>Create Use Case</h2>
+      </section>
+      <mat-card>
+        <div class="container">
+          <!-- Left: Edit Interface Form -->
+          <div class="left-panel">
+        <form [formGroup]="usecaseForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Use Case Name</mat-label>
+              <input matInput formControlName="usecaseName">
+              <mat-error *ngIf="usecaseForm.get('usecaseName')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Use Case Description</mat-label>
+              <textarea matInput formControlName="description" rows="1"></textarea>
+              <mat-error *ngIf="usecaseForm.get('description')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <!-- <mat-form-field appearance="outline">
+              <mat-label>LeanIX ID</mat-label>
+              <input matInput formControlName="leanixId">
+              <mat-error *ngIf="usecaseForm.get('leanixId')?.hasError('required')">Required</mat-error>
+            </mat-form-field> -->
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Use Case Owner</mat-label>
+              <input matInput formControlName="owner">
+              <mat-error *ngIf="usecaseForm.get('owner')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="ownerEmail">
+              <mat-error *ngIf="usecaseForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="usecaseForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Version Number - Current</mat-label>
+              <input matInput formControlName="version">
+              <mat-error *ngIf="usecaseForm.get('version')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+      
+            <mat-form-field appearance="outline">
+              <mat-label>Use Case Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="usecaseForm.get('status')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 50%;">
+              <mat-label>Last Review Date</mat-label>
+              <input matInput [matDatepicker]="lastPicker" formControlName="lastreviewdate">
+              <mat-datepicker-toggle matSuffix [for]="lastPicker"></mat-datepicker-toggle>
+              <mat-datepicker #lastPicker></mat-datepicker>
+              <mat-error *ngIf="usecaseForm.get('lastreviewdate')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Reviewed By</mat-label>
+              <input matInput formControlName="reviewedby">
+              <mat-error *ngIf="usecaseForm.get('reviewedby')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 50%;">
+              <mat-label>Next Review Date</mat-label>
+              <input matInput [matDatepicker]="nextPicker" formControlName="nextreviewdate">
+              <mat-datepicker-toggle matSuffix [for]="nextPicker"></mat-datepicker-toggle>
+              <mat-datepicker #nextPicker></mat-datepicker>
+              <mat-error *ngIf="usecaseForm.get('nextreviewdate')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Reviewer</mat-label>
+              <input matInput formControlName="reviewer">
+              <mat-error *ngIf="usecaseForm.get('reviewer')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+            
+
+          <div class="form-grid">
+          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+    margin: 0 auto;">Create Use Case</button>
+          </div>
+        </form>
+        </div>
+        </div>
+      </mat-card>
+      
+</main>
+</div>
+<!-- <router-outlet></router-outlet> child pages like builder will open here -->

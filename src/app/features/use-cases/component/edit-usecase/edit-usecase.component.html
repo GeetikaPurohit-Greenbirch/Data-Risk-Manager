@@ -1,0 +1,187 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sidebar></app-sidebar>
+  
+  <main class="dashboard-container">
+    <section class="welcome-banner">
+        <h2>Edit Use Case</h2>
+      </section>
+      <mat-card>
+
+<div class="container">
+    <!-- Left: Edit Use Case Form -->
+    <div class="left-panel">
+      <!-- <h2>Use Case</h2> -->
+      <form [formGroup]="usecaseForm">
+        <!-- Your form use_cases for editing the use_case -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Use Case Name</mat-label>
+          <input matInput formControlName="use_case_name" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Use Case Description</mat-label>
+          <input matInput formControlName="use_case_description" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Owner</mat-label>
+          <input matInput formControlName="use_case_owner" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Owner Email</mat-label>
+            <input matInput formControlName="use_case_owner_email" />
+          </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Version</mat-label>
+          <input matInput formControlName="version" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <input matInput formControlName="status" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Review Date</mat-label>
+          <input matInput formControlName="last_review_date" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Reviewed By</mat-label>
+          <input matInput formControlName="reviewed_by" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Next Review Date</mat-label>
+            <input matInput formControlName="next_review_date" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Reviewer</mat-label>
+            <input matInput formControlName="reviewer" />
+          </mat-form-field>
+        <!-- Add remaining fields similarly -->
+        <br>
+        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Use Case</button>
+<!-- Toggle Button -->
+<!-- <button mat-stroked-button color="accent" (click)="showDataFields = !showDataFields">
+    Add DataFields
+  </button> -->
+      </form>
+
+    </div>
+  
+    <!-- Right: DataFields Table -->
+    <div class="right-panel" *ngIf="showDataFields">
+              <!-- Information Box -->
+        <!-- <div class="info-box-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Completeness</th>
+                  <th>Completeness Commentary</th>
+                  <th>Timeliness</th>
+                  <th>Timeliness Commentary</th>
+                  <th>Accuracy</th>
+                  <th>Accuracy Commentary</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let i of [1]">
+                  <td class="low-orange">Low</td>
+                  <td>System Generated</td>
+                  <td class="low-blue">Low</td>
+                  <td>Capacity Managed</td>
+                  <td class="low-pink">Low</td>
+                  <td>System Generated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
+
+          <div class="datafields-header">
+            <!-- <h3>DataFields</h3> -->
+            <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
+            <button (click)="addRow()" class="add-btn">Add Row</button>
+
+          </div>
+          
+      <div class="datafields-table">
+        <ag-grid-angular
+        class="ag-theme-alpine"
+        style="width: 100%; height: 400px;"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        (cellValueChanged)="onCellValueChanged($event)"
+        rowSelection="single"
+        >
+        </ag-grid-angular>
+      <!-- <table mat-table [dataSource]="dataFields" class="mat-elevation-z2 datafieldTable">
+        <ng-container matColumnDef="fieldId">
+          <th mat-header-cell *matHeaderCellDef> Field ID </th>
+          <td mat-cell *matCellDef="let row"> {{ row.fieldId }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="fieldName">
+          <th mat-header-cell *matHeaderCellDef> Field Name </th>
+          <td mat-cell *matCellDef="let row">
+            <input matInput [(ngModel)]="row.fieldName" />
+          </td>
+        </ng-container>
+
+
+          <ng-container matColumnDef="dataType">
+            <th mat-header-cell *matHeaderCellDef> Data Type </th>
+            <td mat-cell *matCellDef="let row">
+              <input matInput [(ngModel)]="row.dataType" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fieldLength">
+            <th mat-header-cell *matHeaderCellDef>Length </th>
+            <td mat-cell *matCellDef="let row">
+              <input matInput [(ngModel)]="row.fieldLength" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="riskLevel">
+            <th mat-header-cell *matHeaderCellDef>DQA CTA</th>
+            <td mat-cell *matCellDef="let row">
+              <input matInput [(ngModel)]="row.riskLevel" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="criticality">
+            <th mat-header-cell *matHeaderCellDef>Criticality </th>
+            <td mat-cell *matCellDef="let row">
+              <input matInput [(ngModel)]="row.criticality" />
+            </td>
+          </ng-container>
+  
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              <button mat-icon-button color="success" matTooltip="Save" (click)="saveDatafields(row)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteDAtaFields(row, i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+  
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table> -->
+    </div>
+    </div>
+  </div>
+  </mat-card>
+  </main>
+  </div>
