@@ -25,6 +25,7 @@ import { ModuleRegistry } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community'; 
 import { AgGridAngular } from 'ag-grid-angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -57,6 +58,9 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     FormsModule,
     AgGridModule,
     TranslateModule,
+
+    // highcharts-angular
+    HighchartsChartModule
   ],
   exports: [
     HeaderComponent,
@@ -81,7 +85,10 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatSelectModule,
     MatDialogModule,
     FormsModule,
-    AgGridModule
+    AgGridModule,
+
+    // highcharts-angular
+    HighchartsChartModule
   ]
 })
 export class SharedModule {}

@@ -8,8 +8,6 @@ import Treegraph from 'highcharts/modules/treegraph';
 
 @Component({
   selector: 'app-lineages-treegraphbox',
-  standalone: true,
-  imports: [HighchartsChartModule, SharedModule],
   templateUrl: './lineages-treegraphbox.component.html',
   styleUrl: './lineages-treegraphbox.component.scss',
 })

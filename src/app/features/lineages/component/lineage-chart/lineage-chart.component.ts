@@ -11,8 +11,6 @@ try {
 }
 
 @Component({
-  standalone: true,
-  imports: [HighchartsChartModule, SharedModule],
   selector: 'app-lineage-chart',
   templateUrl: './lineage-chart.component.html',
   styleUrls: ['./lineage-chart.component.scss'],

@@ -20,8 +20,6 @@ try {
 }
 
 @Component({
-  standalone: true,
-  imports: [HighchartsChartModule, SharedModule],
   selector: 'app-lineages-tree',
   templateUrl: './lineage-tree.component.html',
   styleUrls: ['./lineage-tree.component.scss'],

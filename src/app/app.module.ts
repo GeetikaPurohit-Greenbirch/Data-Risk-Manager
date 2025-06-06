@@ -121,10 +121,10 @@ import { LineageTreegraphComponent } from './features/lineages/component/lineage
     ReactiveFormsModule,
 
     // Highcharts
-    HighchartsChartModule,
-    LineageChartComponent,
-    LineageTreeComponent,
-    LineageTreegraphComponent,
+    // HighchartsChartModule,
+    // LineageChartComponent,
+    // LineageTreeComponent,
+    // LineageTreegraphComponent,
   ],
 
   providers: [

@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { HighchartsChartModule } from 'highcharts-angular';
-import { SharedModule } from 'src/app/features/shared/shared/shared.module';
 
 const Sankey = require('highcharts/modules/sankey');
 try {
@@ -12,8 +10,6 @@ try {
 
 @Component({
   selector: 'app-lineage-sankey',
-  standalone: true,
-  imports: [HighchartsChartModule, SharedModule],
   templateUrl: './lineage-sankey.component.html',
   styleUrl: './lineage-sankey.component.scss',
 })
