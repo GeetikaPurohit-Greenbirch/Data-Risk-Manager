@@ -7,6 +7,8 @@ import { LineageSankeyComponent } from './component/lineage-sankey/lineage-sanke
 import { LineageTreeComponent } from './component/lineage-tree/lineage-tree.component';
 import { LineageTreegraphComponent } from './component/lineage-treegraph/lineage-treegraph.component';
 import { LineagesTreegraphboxComponent } from './component/lineages-treegraphbox/lineages-treegraphbox.component';
+import { EchartSankeyComponent } from './component/echart-sankey/echart-sankey.component';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   declarations: [
@@ -15,11 +17,13 @@ import { LineagesTreegraphboxComponent } from './component/lineages-treegraphbox
     LineageSankeyComponent,
     LineageTreegraphComponent,
     LineagesTreegraphboxComponent,
+    EchartSankeyComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     LineagesRoutingModule,
+    NgxEchartsModule,
   ],
 })
 export class LineagesModule {}

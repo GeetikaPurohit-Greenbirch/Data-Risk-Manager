@@ -1,0 +1,16 @@
+{
+  "nodes": [
+    { "name": "Revenue" },
+    { "name": "Operations" },
+    { "name": "R&D" },
+    { "name": "Marketing" },
+    { "name": "Profit" }
+  ],
+  "links": [
+    { "source": "Revenue", "target": "Operations", "value": 3000 },
+    { "source": "Revenue", "target": "R&D", "value": 1500 },
+    { "source": "Revenue", "target": "Marketing", "value": 1200 },
+    { "source": "Operations", "target": "Profit", "value": 1000 },
+    { "source": "R&D", "target": "Profit", "value": 500 }
+  ]
+}

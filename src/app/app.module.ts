@@ -63,6 +63,9 @@ import { LineageChartComponent } from './features/lineages/component/lineage-cha
 import { LineageTreeComponent } from './features/lineages/component/lineage-tree/lineage-tree.component';
 import { LineageTreegraphComponent } from './features/lineages/component/lineage-treegraph/lineage-treegraph.component';
 
+// Ng Charts 
+import { NgxEchartsModule } from 'ngx-echarts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +128,12 @@ import { LineageTreegraphComponent } from './features/lineages/component/lineage
     // LineageChartComponent,
     // LineageTreeComponent,
     // LineageTreegraphComponent,
+
+    // Ng Charts
+    //  NgxEchartsModule.forRoot({
+    //   echarts: () => import('echarts')
+    // })
+    NgxEchartsModule.forRoot({ echarts: () => import('echarts') })
   ],
 
   providers: [
