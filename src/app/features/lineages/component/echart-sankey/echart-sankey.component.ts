@@ -5,47 +5,52 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-echart-sankey',
   templateUrl: './echart-sankey.component.html',
-  styleUrl: './echart-sankey.component.scss',
+  styleUrls: ['./echart-sankey.component.scss'],
 })
-
 export class EchartSankeyComponent implements OnInit {
-  chartOptions: EChartsOption = {};
-  isLoading = true;
-
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadSankeyData();
   }
 
+  chartOptions: EChartsOption = {};
+  tableData: { name: string }[] = [];
+  isLoading = true;
+  isExpanded = false;
+
+  toggleExpand(): void {
+    this.isExpanded = !this.isExpanded;
+  }
+
   loadSankeyData(): void {
-    this.http.get<any>('assets/mock/sankey-data.json').subscribe((data) => {
-      this.chartOptions = {
-        title: {
-          text: 'Financial Flow (Sankey)',
-          left: 'center',
+    this.http
+      .get<{ nodes: any[]; links: any[] }>('assets/mock/chart-data.json')
+      .subscribe({
+        next: (data) => {
+          console.log('mock data loaded:', data);
+          this.tableData = data.nodes;
+          console.log('mock tableData loaded:', this.tableData);
+          this.chartOptions = {
+            title: { text: 'Energy Flow Lineage', left: 'center' },
+            tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+            series: [
+              {
+                type: 'sankey',
+                data: data.nodes,
+                links: data.links,
+                emphasis: { focus: 'adjacency' },
+                lineStyle: { color: 'gradient', curveness: 0.5 },
+                label: { color: '#333' },
+              },
+            ],
+          };
+          this.isLoading = false;
         },
-        tooltip: {
-          trigger: 'item',
-          triggerOn: 'mousemove',
+        error: (err) => {
+          console.error('Failed to load mock data', err);
+          this.isLoading = false;
         },
-        series: [
-          {
-            type: 'sankey',
-            emphasis: { focus: 'adjacency' },
-            data: data.nodes,
-            links: data.links,
-            lineStyle: {
-              color: 'gradient',
-              curveness: 0.5,
-            },
-            label: {
-              color: '#333',
-            },
-          },
-        ],
-      };
-      this.isLoading = false;
-    });
+      });
   }
 }

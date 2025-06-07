@@ -3,18 +3,57 @@
   <app-sidebar></app-sidebar>
   <main class="dashboard-container">
     <section class="welcome-banner">
-      <h2>Sankey Chart</h2>
-      <p>Visualize the lineages of data entities</p>
+      <h2>Energy Flow Lineage</h2>
+      <p>Visualize the lineages of mock data entities from real energy flow</p>
     </section>
 
-    <div class="chart-container chart-grid">
-      <div *ngIf="isLoading" class="text-center">Loading Sankey Chart...</div>
-      <div
-        echarts
-        class="w-full h-[500px]"
-        *ngIf="!isLoading"
-        [options]="chartOptions"
-      ></div>
+    <div
+      class="chart-grid"
+      [ngClass]="{ 'expanded': isExpanded }"
+    >
+      <!-- Chart Card -->
+      <div class="card chart-card relative">
+        <button
+          class="expand-btn"
+          (click)="toggleExpand()"
+          title="Expand chart"
+        >
+          <i class="material-icons">{{ isExpanded ? 'close_fullscreen' : 'open_in_full' }}</i>
+        </button>
+
+        <div *ngIf="isLoading" class="loading">Loading data...</div>
+        <div
+          echarts
+          *ngIf="!isLoading"
+          class="echart h-[500px]"
+          [options]="chartOptions"
+        ></div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="card table-card" *ngIf="!isExpanded">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Target</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let link of tableData">
+              <td>{{ link.source }}</td>
+              <td>{{ link.target }}</td>
+              <td>{{ link.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Collapsed Table Placeholder -->
+      <div class="collapsed-placeholder" *ngIf="isExpanded" (click)="toggleExpand()">
+        <i class="material-icons">chevron_left</i>
+      </div>
     </div>
   </main>
 </div>
