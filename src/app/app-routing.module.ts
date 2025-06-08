@@ -6,6 +6,7 @@ import { HomeComponent } from './main/home/home.component';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
 import { UserListComponent } from './features/shared/user-list/user-list.component';
 import { UseCasesComponent } from './features/use-cases/use-cases.component';
+import { LineagesModule } from './features/lineages/lineages.module';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,8 +26,11 @@ const routes: Routes = [
 
 
   // # Multi-line lazy loading format more readable [O]
-  { path: 'lineages', loadChildren: () => import('./features/lineages/lineages.module').then((m) => m.LineagesModule), },
-
+  // { path: 'lineages', loadChildren: () => import('./features/lineages/lineages.module').then((m) => m.LineagesModule), },
+ { 
+    path: 'lineages',
+    loadChildren: () => import('./features/lineages/lineages.module').then(m => m.LineagesModule)
+  },
 ];
 
 @NgModule({
