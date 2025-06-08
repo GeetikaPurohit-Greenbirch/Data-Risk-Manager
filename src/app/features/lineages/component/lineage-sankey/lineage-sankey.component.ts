@@ -62,24 +62,6 @@ export class LineageSankeyComponent {
     ['Transportation', 'Energy Services', 5.77],
   ];
 
-  // Dummy data for Sankey chart
-  // SankeyChartOptions: Highcharts.Options = {
-  //   title: { text: 'Simple Sankey Diagram' },
-  //   series: [
-  //     {
-  //       type: 'sankey',
-  //       keys: ['from', 'to', 'weight'],
-  //       data: [
-  //         ['A', 'B', 5],
-  //         ['A', 'C', 3],
-  //         ['B', 'D', 2],
-  //         ['C', 'D', 2],
-  //       ],
-  //       name: 'Sankey flow',
-  //     },
-  //   ],
-  // };
-
   // Dummy data for Sankey chart from Highcharts Docs
   SankeyChartOptions: Highcharts.Options = {
     chart: {
