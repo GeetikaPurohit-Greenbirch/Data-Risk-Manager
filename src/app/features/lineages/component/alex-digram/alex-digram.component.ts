@@ -11,7 +11,7 @@ TreegraphModule(Highcharts);
 @Component({
   selector: 'app-alex-digram',
   templateUrl: './alex-digram.component.html',
-  styleUrl: './alex-digram.component.scss'
+  styleUrl: './alex-digram.component.scss',
 })
 export class AlexDigramComponent implements OnInit, AfterViewInit {
   Highcharts = Highcharts;
@@ -27,50 +27,118 @@ export class AlexDigramComponent implements OnInit, AfterViewInit {
 
     // Data in [parent, id, optionalValue] format
     const rawData: any[][] = [
-      [undefined, 'Source', 'source'],
-      ['Source', 'Interface 1', 'interface'],
-      ['Interface 1', 'System A', 'system'],
-      ['Interface 1', 'Interface 2', 'Interface'],
-      ['Interface 2', 'Target', 'target'],
+      [undefined, 'A \n B \n C \n D \n E \n (Source)', 'source'],
+      // [undefined, 'A - (Source)', 'source'],
+      // [undefined, 'B - (Source)', 'source'],
+      // [undefined, 'C - (Source)', 'source'],
+      // [undefined, 'D - (Source)', 'source'],
+      // [undefined, 'E - (Source)', 'source'],
+
+      [
+        'A \n B \n C \n D \n E \n (Source)',
+        'A \n B \n C \n D \n E \n (Interface1)',
+        'interface',
+      ],
+      // ['A - (Source)', 'A - (Interface 1)', 'interface'],
+      // ['B - (Source)', 'B - (Interface 1)', 'interface'],
+      // ['C - (Source)', 'C - (Interface 1)', 'interface'],
+      // ['D - (Source)', 'D - (Interface 1)', 'interface'],
+      // ['E - (Source)', 'E - (Interface 1)', 'interface'],
+
+      [
+        'A \n B \n C \n D \n E \n (Interface1)',
+        'A \n B \n C \n D \n E \n (System)',
+        'system',
+      ],
+      // ['A - (Interface 1)', 'A - (System)', 'system'],
+      // ['B - (Interface 1)', 'B - (System)', 'system'],
+      // ['C - (Interface 1)', 'C - (System)', 'system'],
+      // ['D - (Interface 1)', 'D - (System)', 'system'],
+      // ['E - (Interface 1)', 'E - (System)', 'system'],
+
+      [
+        'A \n B \n C \n D \n E \n (System)',
+        'A \n B \n C \n D \n E \n (Interface2)',
+        'interface',
+      ],
+      // ['A - (System)', 'A - (Interface 2)', 'interface'],
+      // ['B - (System)', 'B - (Interface 2)', 'interface'],
+      // ['C - (System)', 'C - (Interface 2)', 'interface'],
+      // ['D - (System)', 'D - (Interface 2)', 'interface'],
+      // ['E - (System)', 'E - (Interface 2)', 'interface'],
+
+      [
+        'A \n B \n C \n D \n E \n (Interface2)',
+        'A \n B \n C \n D \n E \n (Target)',
+        'target',
+      ],
+      // ['A - (Interface 2)', 'A - (Target)', 'target'],
+      // ['B - (Interface 2)', 'B - (Target)', 'target'],
+      // ['C - (Interface 2)', 'C - (Target)', 'target'],
+      // ['D - (Interface 2)', 'D - (Target)', 'target'],
+      // ['E - (Interface 2)', 'E - (Target)', 'target'],
     ];
 
     // Transform to Highcharts format
-    const data = rawData.map(([parent, id, val]) => { 
+    const data = rawData.map(([parent, id, type]) => {
       let markerSymbol = 'circle';
-      if (!parent) markerSymbol = 'triangle';
-      else if (!val && rawData.some(([p]) => p === id)) markerSymbol = 'square';
-      else if (!val) markerSymbol = 'circle';
-      else markerSymbol = 'circle';
+      let nodeColor = '#29b6f6'; // Default: system (blue)
+      let customMarker = {};
+
+      switch (type.toLowerCase()) {
+        case 'source':
+          markerSymbol = 'triangle';
+          nodeColor = '#c742a8'; // Purple
+          break;
+        case 'interface':
+          markerSymbol = 'square';
+          nodeColor = '#7ac74f'; // Green
+          break;
+        case 'system':
+          markerSymbol = 'circle';
+          nodeColor = '#29b6f6'; // Blue
+          break;
+        case 'target':
+          markerSymbol = 'circle';
+          nodeColor = '#ff9800'; // Orange
+          customMarker = {
+            // radius: 14,
+            // lineWidth: 3,
+            // lineColor: '#000', // Outer pulse border
+          };
+          break;
+      }
 
       return {
         id,
         parent,
-        marker: { symbol: markerSymbol },
-        color:
-          markerSymbol === 'triangle'
-            ? '#c742a8'
-            : markerSymbol === 'square'
-            ? '#7ac74f'
-            : '#29b6f6',
+        marker: {
+          symbol: markerSymbol,
+          ...customMarker,
+          radius: 90,
+          lineWidth: 3,
+          lineColor: '#000',
+        },
+        color: nodeColor,
       };
     });
 
     Highcharts.chart('treegraph-container', {
       chart: {
         type: 'treegraph',
-        height: '50%',
-        animation: true,
+        // height: '60%',
         backgroundColor: '#fff',
+        animation: true,
       },
       title: {
-        text: '🌐 Basic Lineage Example with flow through of Risk',
-        style: { fontSize: '20px', color: '#333' },
+        text: '🌐 Custom TreeGraph with Node Types',
+        style: { fontSize: '16px', color: '#333' },
       },
       tooltip: {
         formatter: function () {
           const point = this.point.options;
           if (point.parent)
-            return `🌱 <b>${point.parent}</b> ➡ <b>${point.id}</b>`;
+            return `🔁 <b>${point.parent}</b> ➡ <b>${point.id}</b>`;
           return `🧠 <b>${point.id}</b>`;
         },
       },
@@ -80,24 +148,21 @@ export class AlexDigramComponent implements OnInit, AfterViewInit {
           keys: ['parent', 'id'],
           data,
           marker: {
-            radius: 10,
-            height: 20,
-            width: 30,
-            lineWidth: 1,
-            lineColor: originalLineColor,
+            radius: 90,
+            lineWidth: 10,
+            lineColor: '#ff0000',
           },
           dataLabels: {
             enabled: true,
-            align: 'left',
-            x: 35,
-            crop: false,
+            align: 'center',
+            x: 0,
+            y: 0,
+            inside: true,
             style: {
               color: '#000',
-              fontSize: '13px',
+              fontSize: '14px',
               fontWeight: 'normal',
               textOutline: '2px #fff',
-              whiteSpace: 'nowrap',
-              fontFamily: 'Segoe UI, sans-serif',
             },
             formatter: function () {
               return `<span style="color:${this.point.color}">${this.point.options.id}</span>`;
@@ -114,7 +179,7 @@ export class AlexDigramComponent implements OnInit, AfterViewInit {
                   p.update(
                     {
                       marker: {
-                        lineColor: originalLineColor,
+                        lineColor: '#000',
                         symbol: p.options.marker?.symbol,
                       },
                     },
@@ -129,7 +194,7 @@ export class AlexDigramComponent implements OnInit, AfterViewInit {
                   current.update(
                     {
                       marker: {
-                        lineColor: highlightColor,
+                        lineColor: '#2e7d32', // green
                         symbol: current.options.marker?.symbol,
                       },
                     },
