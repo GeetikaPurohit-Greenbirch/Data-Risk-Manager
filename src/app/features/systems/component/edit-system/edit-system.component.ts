@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter } from 'rxjs';
 import { SystemServiceService } from '../../services/system-service.service';
 import { SystemsModel } from '../../models/systems-model.model';
+import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { Datafields } from 'src/app/features/shared-models/datafields.model';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -34,18 +37,85 @@ export class EditSystemComponent {
   systemId!: any;
   gridApi: any;
   gridColumnApi: any;
+   dataFieldsModel : Datafields = new Datafields();
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private systemService: SystemServiceService
+    private systemService: SystemServiceService,
+     private datafieldsService: DatafieldsService,
+        private cdr: ChangeDetectorRef,
+        private toastNotificationService: ToastnotificationService,
+
   ) {}
 
 
-  columnDefs: ColDef[]= [
-    { field: 'fieldName', headerName: 'Field Name', editable: true },
-    { field: 'dataType', headerName: 'Data Type', editable: true },
-    { field: 'value', headerName: 'Value', editable: true },
-    { field: 'description', headerName: 'Description', editable: true },
+  columnDefs:(ColDef | ColGroupDef)[]= [
+    { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'field_name', headerName: 'Field Name', editable: true },
+    { field: 'data_type', headerName: 'Data Type', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+      },
+    },
+    { field: 'field_length', headerName: 'Length', editable: true },
+    {
+      headerName: 'DQA',
+      children: [
+        {
+          headerName: 'C',
+          field: 'dqa_c',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'T',
+          field: 'dqa_t',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A',
+          field: 'dqa_a',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        }
+      ],
+
+    },
+    { field: 'criticality', headerName: 'Criticality', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+      },
+     },
     {
       headerName: 'Actions',
       editable: false,
@@ -54,25 +124,41 @@ export class EditSystemComponent {
       minWidth: 100, 
       flex:1,
       cellRenderer: (params: any) => {
-        const value = params.value || '';
-
         const div = document.createElement('div');
-        div.className = 'model-cell-renderer';  
-        const buttonar = document.createElement('button');
-        buttonar.className = 'fa fa-trash';
-        // buttonar.style.marginRight = '5px';
-        buttonar.style.border = '1px solid lightGrey';
-        buttonar.style.borderRadius = '5px';
-        buttonar.style.lineHeight = '22px';
-        buttonar.style.height = '32px';
-        buttonar.innerHTML = '';
-        buttonar.addEventListener('click', () => {
-          this.onDeleteRecord();
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafields(params.node);
         });
-
-        // div.appendChild(buttonwip);
-        div.appendChild(buttonar);
-
+    
+        const deleteDataFields = document.createElement('button');
+        deleteDataFields.className = 'fa fa-trash';
+        deleteDataFields.style.color = 'red';
+        deleteDataFields.style.border = '1px solid lightGrey';
+        deleteDataFields.style.borderRadius = '5px';
+        deleteDataFields.style.lineHeight = '22px';
+        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.title = 'Delete';
+    
+        deleteDataFields.addEventListener('click', () => {
+          // this.deleteDAtaFields(params.node);
+        });
+    
+        div.appendChild(saveDataFields);
+        div.appendChild(deleteDataFields);
+    
         return div;
       }
     },
@@ -82,12 +168,10 @@ export class EditSystemComponent {
     flex: 1,
     resizable: true,
     filter:true,
+    suppressSizeToFit: true
   };
 
-  rowData = [
-    { fieldName: 'Name', dataType: 'String', value: 'John Doe', description: 'User full name' },
-    { fieldName: 'Age', dataType: 'Number', value: 30, description: 'User age' }
-  ];
+  rowData: any;
 
   
   onGridReady(params: any) {
@@ -135,7 +219,28 @@ export class EditSystemComponent {
           console.error('Failed to load system:', err);
         }
       });
+      this.getDataFields();
+  }
+
+  getDataFields()
+  { 
+    this.datafieldsService.getDataFieldsById(this.systemId, 'SYSTEM').subscribe({
+      next: (res: any) => {
+        this.rowData = [...res]; // triggers change
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowData);
+        }
+  
+        this.cdr.detectChanges(); // trigger Angular change detection
+        
+        error: (err: any) => {
+          console.error('Failed to load interface:', err);
+        }
+      }
+         // Force refresh with setRowData
     
+    });
   }
 
 
@@ -185,11 +290,48 @@ export class EditSystemComponent {
 
   saveDatafields(data:any)
   {
+    console.log(data, "Interface Data Fields");
 
+  // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
+  this.dataFieldsModel.field_name = data.data.field_name;
+  this.dataFieldsModel.dqa_c = "L";
+  this.dataFieldsModel.dqa_t = "L";
+  this.dataFieldsModel.dqa_a = "L";
+  this.dataFieldsModel.data_type = data.data.data_type;
+  this.dataFieldsModel.field_length = data.data.field_length;
+  this.dataFieldsModel.criticality = data.data.criticality;
+  this.dataFieldsModel.entity_type = 'SYSTEM';
+  this.dataFieldsModel.entity_id = this.systemId;
+
+  this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
+ 
+      // alert("Data field added Successfully.");
+      if(!data.data.field_id)
+      {
+        this.toastNotificationService.success("Data field added Successfully.");
+      } 
+      else
+      {
+        this.toastNotificationService.success("Data field updated Successfully.");
+      }
+      setTimeout(() => {
+        this.getDataFields(); // refresh
+
+      }, 1000);
+    
+  })
   }
 
-  deleteDAtaFields(data:any, id:number)
-  {
 
+  deleteDAtaFields(data:any)
+  {
+    this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
+      // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+      this.toastNotificationService.success("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+      setTimeout(() => {
+        this.getDataFields(); // refresh
+
+      }, 1000);
+  })
   }
 }

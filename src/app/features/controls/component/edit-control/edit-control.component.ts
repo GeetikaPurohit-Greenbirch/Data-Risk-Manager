@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter } from 'rxjs';
@@ -9,6 +9,7 @@ import { ControlService } from '../../services/control.service';
 import { SourceService } from 'src/app/features/sources/services/source.service';
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,7 +23,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class EditControlComponent {
 controlForm!: FormGroup;
   showDataFields = false;
-
+  
   // ✅ DataFields table data
   dataFields: any[] = [
     { fieldId: 1, fieldName: 'A', dataType: 'Num' },
@@ -38,6 +39,8 @@ controlForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED','PRODUCTION'];
   applicationStatusOptions= ['TARGET', 'PLANNED', 'COMMITTED', 'DELAYED'];
   filteredAttachToIdOptions: { id: number, name: string }[] = [];
+  attachTo!:string;
+  attachToId!:number;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -45,14 +48,78 @@ controlForm!: FormGroup;
         private sourceService: SourceService,
         private systemService: SystemServiceService,
         private toastNotificationService: ToastnotificationService,
+        private datafieldsService: DatafieldsService,
+        private cdr: ChangeDetectorRef
   ) {}
 
 
-  columnDefs: ColDef[]= [
-    { field: 'fieldName', headerName: 'Field Name', editable: true },
-    { field: 'dataType', headerName: 'Data Type', editable: true },
-    { field: 'value', headerName: 'Value', editable: true },
-    { field: 'description', headerName: 'Description', editable: true },
+  columnDefs:(ColDef | ColGroupDef)[]= [
+    { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'field_name', headerName: 'Field Name', editable: true },
+    { field: 'data_type', headerName: 'Data Type', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+      },
+    },
+    { field: 'field_length', headerName: 'Length', editable: true },
+    {
+      headerName: 'DQA',
+      children: [
+        {
+          headerName: 'C',
+          field: 'dqa_c',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'T',
+          field: 'dqa_t',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A',
+          field: 'dqa_a',
+          editable: false,
+          valueGetter: () => 'L', // Always returns 'L'
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        }
+      ],
+
+    },
+    { field: 'criticality', headerName: 'Criticality', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+      },
+     },
     {
       headerName: 'Actions',
       editable: false,
@@ -61,25 +128,41 @@ controlForm!: FormGroup;
       minWidth: 100, 
       flex:1,
       cellRenderer: (params: any) => {
-        const value = params.value || '';
-
         const div = document.createElement('div');
-        div.className = 'model-cell-renderer';  
-        const buttonar = document.createElement('button');
-        buttonar.className = 'fa fa-trash';
-        // buttonar.style.marginRight = '5px';
-        buttonar.style.border = '1px solid lightGrey';
-        buttonar.style.borderRadius = '5px';
-        buttonar.style.lineHeight = '22px';
-        buttonar.style.height = '32px';
-        buttonar.innerHTML = '';
-        buttonar.addEventListener('click', () => {
-          this.onDeleteRecord();
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafields(params.node);
         });
-
-        // div.appendChild(buttonwip);
-        div.appendChild(buttonar);
-
+    
+        const deleteDataFields = document.createElement('button');
+        deleteDataFields.className = 'fa fa-trash';
+        deleteDataFields.style.color = 'red';
+        deleteDataFields.style.border = '1px solid lightGrey';
+        deleteDataFields.style.borderRadius = '5px';
+        deleteDataFields.style.lineHeight = '22px';
+        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.title = 'Delete';
+    
+        deleteDataFields.addEventListener('click', () => {
+          // this.deleteDAtaFields(params.node);
+        });
+    
+        div.appendChild(saveDataFields);
+        div.appendChild(deleteDataFields);
+    
         return div;
       }
     },
@@ -89,12 +172,10 @@ controlForm!: FormGroup;
     flex: 1,
     resizable: true,
     filter:true,
+    suppressSizeToFit: true
   };
 
-  rowData = [
-    { fieldName: 'Name', dataType: 'String', value: 'John Doe', description: 'User full name' },
-    { fieldName: 'Age', dataType: 'Number', value: 30, description: 'User age' }
-  ];
+  rowData: any;
 
   
   onGridReady(params: any) {
@@ -139,6 +220,14 @@ controlForm!: FormGroup;
         next: (res: any) => {
           const data = res.controlEntity;
           this.controlForm.patchValue(data);
+          this.controlForm.patchValue({
+            application_date: new Date(data.application_date),
+            attach_to: data.attach_to
+          });
+          this.attachTo = data.attach_to;
+          this.attachToId = data.attach_to_id;
+          this.onChange(data.attach_to, data.attach_to_id); // Load options & set selected value
+
         },
         error: (err: any) => {
           console.error('Failed to load control:', err);
@@ -148,33 +237,65 @@ controlForm!: FormGroup;
   }
 
 
-  onChange(attachTo: string): void
-  {
+  onChange(attachTo: string, preselectedId?: string): void {
     this.filteredAttachToIdOptions = []; // Clear previous list
-  this.controlForm.get('attachToId')?.setValue(null); // Reset selection
-
-  if (attachTo === 'SOURCE') {
-    this.sourceService.getSources().subscribe(data =>{
-      this.filteredAttachToIdOptions = data.map(item => ({
-        id: item.sourceEntity.source_id,
-        name: item.sourceEntity.source_name
-      }));
-    });
-  } else if (attachTo === 'SYSTEM') {
-    this.systemService.getSystems().subscribe((data) => {
-      this.filteredAttachToIdOptions = data.map(item => ({
-         id: item.systemEntity.system_id,
-        name: item.systemEntity.system_name
-      }));
-    });
+    this.controlForm.get('attach_to_id')?.setValue(null); // Reset selection
+  
+    if (attachTo === 'SOURCE') {
+      this.sourceService.getSources().subscribe(data => {
+        this.filteredAttachToIdOptions = data.map(item => ({
+          id: item.sourceEntity.source_id,
+          name: item.sourceEntity.source_name
+        }));
+  
+        // Set preselected ID if available
+        if (preselectedId) {
+          this.controlForm.get('attach_to_id')?.setValue(preselectedId);
+        }
+      });
+    } else if (attachTo === 'SYSTEM') {
+      this.systemService.getSystems().subscribe(data => {
+        this.filteredAttachToIdOptions = data.map(item => ({
+          id: item.systemEntity.system_id,
+          name: item.systemEntity.system_name
+        }));
+  
+        // Set preselected ID if available
+        if (preselectedId) {
+          this.controlForm.get('attach_to_id')?.setValue(preselectedId);
+        }
+      });
+    }
   }
-  }
+  
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
     console.log('Cell Value Changed:', event);
   }
 
+  addDatafields()
+  {
+    this.showDataFields = true;
+    alert(this.attachTo +','+ this.attachToId);
+      this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
+        next: (res: any) => {
+          this.rowData = [...res]; // triggers change
+          if (this.gridApi) {
+            this.gridApi.setRowData([]); // Clear first to ensure refresh
+            this.gridApi.setRowData(this.rowData);
+          }
+    
+          this.cdr.detectChanges(); // trigger Angular change detection
+          
+          error: (err: any) => {
+            console.error('Failed to load interface:', err);
+          }
+        }
+           // Force refresh with setRowData
+      
+      });
+  }
 
   // ✅ Add a new DataField row
   addField(): void {
@@ -196,16 +317,16 @@ controlForm!: FormGroup;
    
     
           control_id: this.controlId,
-          control_name:this.controlForm.value.controlName, 
-          control_description:this.controlForm.value.controlDescription,
-          attach_to:this.controlForm.value.attachto,
-          attach_to_id:this.controlForm.value.attachToId,
-          control_owner:this.controlForm.value.owner,
-          control_owner_email:this.controlForm.value.ownerEmail,
-          version_number : this.controlForm.value.version,
+          control_name:this.controlForm.value.control_name, 
+          control_description:this.controlForm.value.control_description,
+          attach_to:this.controlForm.value.attach_to,
+          attach_to_id:this.controlForm.value.attach_to_id,
+          control_owner:this.controlForm.value.control_owner,
+          control_owner_email:this.controlForm.value.control_owner_email,
+          version_number : this.controlForm.value.version_number,
           status : this.controlForm.value.status,
-          application_date:this.controlForm.value.applicationDate,
-          application_date_status:this.controlForm.value.applicationStatus,
+          application_date:this.controlForm.value.application_date,
+          application_date_status:this.controlForm.value.application_date_status,
             
       }
     }

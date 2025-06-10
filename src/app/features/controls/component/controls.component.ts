@@ -13,7 +13,7 @@ import { ControlService } from '../services/control.service';
   styleUrl: './controls.component.scss'
 })
 export class ControlsComponent {
- displayedColumns: string[] = ['controlid', 'name', 'controltype', 'version', 'status', 'controleffect', 'controlapplication', 'actions'];
+ displayedColumns: string[] = ['controlid', 'name', 'controldesc', 'attachto', 'attachtoid', 'owner', 'owneremail', 'version', 'status', 'applicationdate', 'applicationdatestatus', 'actions'];
   public rowData: any;
   dataSource = new MatTableDataSource<Control>();
 

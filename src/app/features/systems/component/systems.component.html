@@ -106,113 +106,7 @@
           </ng-container>
 
           <!-- Hidden column for expanded row content -->
-          <ng-container matColumnDef="expandedDetail">
-            <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
-              <div class="element-detail" *ngIf="expandedElement === row">
-                <button mat-stroked-button color="primary" (click)="addRow(row)">Add Row</button>
-                <table mat-table [dataSource]="row.childGridData" class="mat-elevation-z2 editable-sub-table" style="width: 100%;">
-                  <!-- Column Definitions -->
-                
-                  <ng-container matColumnDef="fieldName">
-                    <th mat-header-cell *matHeaderCellDef>Field Name</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" floatLabel="auto" class="form-cell">
-                        <input matInput [(ngModel)]="element.field_name">
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="fieldDescription">
-                    <th mat-header-cell *matHeaderCellDef>Field Description</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" floatLabel="auto" class="form-cell">
-                        <input matInput [(ngModel)]="element.field_description">
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="dataType">
-                    <th mat-header-cell *matHeaderCellDef>Data Type</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" class="form-cell">
-                        <mat-select [(ngModel)]="element.data_type">
-                          <mat-option *ngFor="let type of dataTypes" [value]="type">{{ type }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="fieldLength">
-                    <th mat-header-cell *matHeaderCellDef>Field Length</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" class="form-cell">
-                        <input matInput type="number" [(ngModel)]="element.field_length">
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="dqaRiskLevel">
-                    <th mat-header-cell *matHeaderCellDef>DQA Risk Level</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" class="form-cell">
-                        <mat-select [(ngModel)]="element.risk_level">
-                          <mat-option *ngFor="let level of dqaRiskLevels" [value]="level">{{ level }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="criticality">
-                    <th mat-header-cell *matHeaderCellDef>Criticality</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" class="form-cell">
-                        <mat-select [(ngModel)]="element.criticality">
-                          <mat-option *ngFor="let crit of criticalityOptions" [value]="crit">{{ crit }}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="riskLevelStatement">
-                    <th mat-header-cell *matHeaderCellDef>Risk Level Statement</th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field appearance="fill" floatLabel="auto" class="form-cell">
-                        <input matInput [(ngModel)]="element.risk_level_statement">
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-                
-                  <!-- Actions -->
-                  <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td mat-cell *matCellDef="let element; let i = index">
-                      <button mat-icon-button color="success" matTooltip="Save" (click)="saveChildGrid(row)">
-                        <mat-icon>save</mat-icon>
-                      </button>
-                      <button mat-icon-button color="warn" matTooltip="Delete" (click)="removeSubRow(row, i)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </td>
-                  </ng-container>
-                
-                  <!-- Header & Row -->
-                  <tr mat-header-row *matHeaderRowDef="editableColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: editableColumns"></tr>
-                </table>
-                
-                <!-- Action Buttons -->
-                <!-- <div class="action-bar">
-                  <button mat-stroked-button color="primary" (click)="addSubRow(row)">
-                    <mat-icon>add</mat-icon> Add Row
-                  </button>
-                  <button mat-flat-button color="accent" (click)="saveChildGrid(row)">
-                    <mat-icon>save</mat-icon> Save
-                  </button>
-                </div> -->
-                </div>
-            </td>
-          </ng-container>
-       
+         
           
       
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -225,7 +119,7 @@
 </tr>
 
 <!-- Expanded Detail Row -->
-<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+<!-- <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr> -->
 
           
         </table>
