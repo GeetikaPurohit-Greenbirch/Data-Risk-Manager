@@ -9,6 +9,7 @@ import { LineageTreeComponent } from './component/lineage-tree/lineage-tree.comp
 import { LineageTreegraphComponent } from './component/lineage-treegraph/lineage-treegraph.component';
 import { LineagesTreegraphboxComponent } from './component/lineages-treegraphbox/lineages-treegraphbox.component';
 import { EchartSankeyComponent } from './component/echart-sankey/echart-sankey.component';
+import { AlexDigramComponent } from './component/alex-digram/alex-digram.component';
 
 import { NgxEchartsModule } from 'ngx-echarts';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -20,7 +21,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     LineageSankeyComponent,
     LineageTreegraphComponent,
     LineagesTreegraphboxComponent,
-    EchartSankeyComponent
+    EchartSankeyComponent,
+    AlexDigramComponent,
   ],
   imports: [
     CommonModule,

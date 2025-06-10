@@ -7,6 +7,7 @@ import { LineageTreegraphComponent } from './component/lineage-treegraph/lineage
 import { LineageSankeyComponent } from './component/lineage-sankey/lineage-sankey.component';
 import { LineagesTreegraphboxComponent } from './component/lineages-treegraphbox/lineages-treegraphbox.component';
 import { EchartSankeyComponent } from './component/echart-sankey/echart-sankey.component';
+import { AlexDigramComponent } from './component/alex-digram/alex-digram.component';
 
 const routes: Routes = [
   { path: '', component: LineagesComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'lineage-treegraphbox', component: LineagesTreegraphboxComponent },
   { path: 'lineage-sankey', component: LineageSankeyComponent },
   { path: 'lineage-echarts-sankey', component: EchartSankeyComponent },
+  { path: 'lineage-alex', component: AlexDigramComponent },
 ];
 
 @NgModule({
