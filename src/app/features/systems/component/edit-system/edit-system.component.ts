@@ -1,15 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 import { SystemServiceService } from '../../services/system-service.service';
 import { SystemsModel } from '../../models/systems-model.model';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
+import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
+import { TargetService } from 'src/app/features/targets/services/target.service';
+import * as joint from 'jointjs';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -21,16 +24,168 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   templateUrl: './edit-system.component.html',
   styleUrl: './edit-system.component.scss'
 })
-export class EditSystemComponent {
+export class EditSystemComponent implements AfterViewInit{
  systemForm!: FormGroup;
-  showDataFields = false;
   systemModel : SystemsModel = new SystemsModel();
-
+  showDataFieldsTable = false;
+  showDataFields = false;
+  showInbound = false;
+  showoutbound = false;
+  showsystemMapping = false;
   // ✅ DataFields table data
   dataFields: any[] = [
     { fieldId: 1, fieldName: 'A', dataType: 'Num' },
     { fieldId: 2, fieldName: 'B', dataType: 'Alpha' }
   ];
+
+  @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
+
+  private graph!: joint.dia.Graph;
+  private paper!: joint.dia.Paper;
+  private elementsMap: { [id: string]: joint.dia.Element } = {};
+  inboundFields = [
+    { interface: 'Interface 1', fieldId: 1, fieldName: 'A', dataType: 'Num', length: 10 },
+    { interface: 'Interface 1', fieldId: 2, fieldName: 'B', dataType: 'Alphanum', length: 28 },
+    { interface: 'Interface 2', fieldId: 2, fieldName: 'H', dataType: 'Alphanum', length: 28 },
+    { interface: 'System', fieldId: 1, fieldName: 'K', dataType: 'Num', length: 25 },
+    { interface: 'System', fieldId: 2, fieldName: 'L', dataType: 'Alphanum', length: 28 },
+  ];
+  
+  outboundFields = [
+    { interface: 'Interface 1', fieldId: 1, fieldName: 'A', dataType: 'Num', length: 10 },
+    { interface: 'Interface 3', fieldId: 1, fieldName: 'G', dataType: 'Num', length: 10 },
+    { interface: 'Target 1', fieldId: 1, fieldName: 'G', dataType: 'Num', length: 10 },
+    { interface: 'Target 2', fieldId: 2, fieldName: 'H', dataType: 'Alphanum', length: 28 },
+  ];
+  
+  links: any[] = []; // Store link data
+  
+  ngAfterViewInit(): void {
+    this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
+  
+    this.paper = new joint.dia.Paper({
+      el: this.paperContainer.nativeElement,
+      model: this.graph,
+      width: 1000,
+      height: 600,
+      gridSize: 10,
+      interactive: true,
+      linkPinning: false,
+      snapLinks: { radius: 75 },
+      defaultConnector: { name: 'rounded' },
+      defaultConnectionPoint: { name: 'boundary' },
+      defaultLink: () =>
+        new joint.shapes.standard.Link({
+          attrs: {
+            line: {
+              stroke: '#5c9ded',
+              strokeWidth: 2,
+              targetMarker: {
+                type: 'path',
+                d: 'M 10 -5 0 0 10 5 z',
+              },
+            },
+          },
+        }),
+    });
+  
+    this.renderFields();
+  
+    // 🔗 Listen for link creation
+    this.paper.on('link:connect', (linkView: any) => {
+      const sourceId = linkView.model.get('source').id;
+      const targetId = linkView.model.get('target').id;
+  
+      const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+      const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+  
+      const from = sourceElement?.attributes?.attrs?.['label']?.text;
+      const to = targetElement?.attributes?.attrs?.['label']?.text;
+  
+      if (from && to) {
+        this.links.push({ from, to });
+        console.log('🔗 New mapping:', from, '→', to);
+      }
+    });
+  
+    // 🧹 Optional: delete link on double click
+    this.paper.on('link:pointerdblclick', (linkView: any) => {
+      linkView.model.remove();
+    });
+  }
+  
+  renderFields(): void {
+    const leftX = 50;
+    const rightX = 800;
+    const startY = 50;
+    const spacing = 80;
+  
+    this.inboundFields.forEach((field, i) => {
+      const label = `${field.interface} | ${field.fieldName}`;
+      const rect = new joint.shapes.standard.Rectangle({
+        position: { x: leftX, y: startY + i * spacing },
+        size: { width: 150, height: 40 },
+        attrs: {
+          body: { fill: '#d1e8ff', stroke: '#333' },
+          label: { text: label, fill: '#000' },
+        },
+        ports: {
+          groups: {
+            out: {
+              position: 'right',
+              attrs: {
+                circle: {
+                  r: 6,
+                  magnet: true,
+                  stroke: '#000',
+                  fill: '#fff',
+                },
+              },
+            },
+          },
+          items: [{ id: 'out', group: 'out' }],
+        },
+      });
+      rect.addTo(this.graph);
+      this.elementsMap['in-' + i] = rect;
+    });
+  
+    this.outboundFields.forEach((field, i) => {
+      const label = `${field.interface} | ${field.fieldName}`;
+      const rect = new joint.shapes.standard.Rectangle({
+        position: { x: rightX, y: startY + i * spacing },
+        size: { width: 150, height: 40 },
+        attrs: {
+          body: { fill: '#d1ffd1', stroke: '#333' },
+          label: { text: label, fill: '#000' },
+        },
+        ports: {
+          groups: {
+            in: {
+              position: 'left',
+              attrs: {
+                circle: {
+                  r: 6,
+                  magnet: true,
+                  stroke: '#000',
+                  fill: '#fff',
+                },
+              },
+            },
+          },
+          items: [{ id: 'in', group: 'in' }],
+        },
+      });
+      rect.addTo(this.graph);
+      this.elementsMap['out-' + i] = rect;
+    });
+  }
+  
+  saveMappings(): void {
+    console.log('💾 Saved Mappings:', this.links);
+    alert('Mappings saved. '+  this.links[0].from +' - '+ this.links[0].to +' || '+ this.links[1].from +' - '+ this.links[1].to+' || '+ this.links[2].from +' - '+ this.links[2].to+' || '+ this.links[3].from +' - '+ this.links[3].to+' || '+ this.links[4].from +'-'+ this.links[4].to);
+  }
+  
 
   // ✅ Table column names
   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
@@ -45,6 +200,8 @@ export class EditSystemComponent {
      private datafieldsService: DatafieldsService,
         private cdr: ChangeDetectorRef,
         private toastNotificationService: ToastnotificationService,
+        private interfaceService: InterfaceService,
+        private targetService : TargetService,
 
   ) {}
 
@@ -164,6 +321,220 @@ export class EditSystemComponent {
     },
   ];
 
+  inboundColumnDefs:(ColDef)[]= [
+    { field: 'interface', headerName: 'Interface', editable: true,
+      cellEditor: 'agSelectCellEditor',
+    cellEditorParams: (params: any) => {
+      return {
+        values: this.interfaceOptionList
+      };
+    }
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveInterface = document.createElement('button');
+        saveInterface.className = 'fa fa-save';
+        saveInterface.style.color = 'green';
+        saveInterface.style.border = '1px solid lightGrey';
+        saveInterface.style.borderRadius = '5px';
+        saveInterface.style.lineHeight = '22px';
+        saveInterface.style.height = '32px';
+        saveInterface.style.cursor = 'pointer';
+        saveInterface.title = 'Save';
+    
+        // Pass row data or node to save
+        saveInterface.addEventListener('click', () => {
+          this.saveInboundInterface(params.node);
+        });
+    
+        // const deleteDataFields = document.createElement('button');
+        // deleteDataFields.className = 'fa fa-trash';
+        // deleteDataFields.style.color = 'red';
+        // deleteDataFields.style.border = '1px solid lightGrey';
+        // deleteDataFields.style.borderRadius = '5px';
+        // deleteDataFields.style.lineHeight = '22px';
+        // deleteDataFields.style.height = '32px';
+        // deleteDataFields.style.cursor = 'pointer';
+        // deleteDataFields.title = 'Delete';
+    
+        // deleteDataFields.addEventListener('click', () => {
+        //   // this.deleteDAtaFields(params.node);
+        // });
+    
+        div.appendChild(saveInterface);
+        // div.appendChild(deleteDataFields);
+    
+        return div;
+      }
+    },
+  ];
+
+  outBoundColumnDefs:(ColDef)[]= [
+    { field: 'interface', headerName: 'Interface', editable: true,
+      cellEditor: 'agSelectCellEditor',
+    cellEditorParams: (params: any) => {
+      return {
+        values: this.interfaceOptionList
+      };
+    }
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveInterface = document.createElement('button');
+        saveInterface.className = 'fa fa-save';
+        saveInterface.style.color = 'green';
+        saveInterface.style.border = '1px solid lightGrey';
+        saveInterface.style.borderRadius = '5px';
+        saveInterface.style.lineHeight = '22px';
+        saveInterface.style.height = '32px';
+        saveInterface.style.cursor = 'pointer';
+        saveInterface.title = 'Save';
+    
+        // Pass row data or node to save
+        saveInterface.addEventListener('click', () => {
+          this.saveInboundInterface(params.node);
+        });
+    
+        // const deleteDataFields = document.createElement('button');
+        // deleteDataFields.className = 'fa fa-trash';
+        // deleteDataFields.style.color = 'red';
+        // deleteDataFields.style.border = '1px solid lightGrey';
+        // deleteDataFields.style.borderRadius = '5px';
+        // deleteDataFields.style.lineHeight = '22px';
+        // deleteDataFields.style.height = '32px';
+        // deleteDataFields.style.cursor = 'pointer';
+        // deleteDataFields.title = 'Delete';
+    
+        // deleteDataFields.addEventListener('click', () => {
+        //   // this.deleteDAtaFields(params.node);
+        // });
+    
+        div.appendChild(saveInterface);
+        // div.appendChild(deleteDataFields);
+    
+        return div;
+      }
+    },
+  ];
+
+  combinedColumnDefs: ColDef[] = [
+    {
+      field: 'source',
+      headerName: 'Interface / Target',
+      editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: () => {
+        return {
+          values: this.combinedOptions
+        };
+      }
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100,
+      flex: 1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+  
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'fa fa-save';
+        saveBtn.style.color = 'green';
+        saveBtn.style.border = '1px solid lightGrey';
+        saveBtn.style.borderRadius = '5px';
+        saveBtn.style.lineHeight = '22px';
+        saveBtn.style.height = '32px';
+        saveBtn.style.cursor = 'pointer';
+        saveBtn.title = 'Save';
+  
+        saveBtn.addEventListener('click', () => {
+          this.saveInboundInterface(params.node);
+        });
+  
+        div.appendChild(saveBtn);
+        return div;
+      }
+    }
+  ];
+  
+  outBoundTargetColumnDefs:(ColDef)[]= [
+    { field: 'target', headerName: 'Target', editable: true,
+      cellEditor: 'agSelectCellEditor',
+    cellEditorParams: (params: any) => {
+      return {
+        values: this.targetOptionList
+      };
+    }
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveInterface = document.createElement('button');
+        saveInterface.className = 'fa fa-save';
+        saveInterface.style.color = 'green';
+        saveInterface.style.border = '1px solid lightGrey';
+        saveInterface.style.borderRadius = '5px';
+        saveInterface.style.lineHeight = '22px';
+        saveInterface.style.height = '32px';
+        saveInterface.style.cursor = 'pointer';
+        saveInterface.title = 'Save';
+    
+        // Pass row data or node to save
+        saveInterface.addEventListener('click', () => {
+          this.saveInboundInterface(params.node);
+        });
+    
+        // const deleteDataFields = document.createElement('button');
+        // deleteDataFields.className = 'fa fa-trash';
+        // deleteDataFields.style.color = 'red';
+        // deleteDataFields.style.border = '1px solid lightGrey';
+        // deleteDataFields.style.borderRadius = '5px';
+        // deleteDataFields.style.lineHeight = '22px';
+        // deleteDataFields.style.height = '32px';
+        // deleteDataFields.style.cursor = 'pointer';
+        // deleteDataFields.title = 'Delete';
+    
+        // deleteDataFields.addEventListener('click', () => {
+        //   // this.deleteDAtaFields(params.node);
+        // });
+    
+        div.appendChild(saveInterface);
+        // div.appendChild(deleteDataFields);
+    
+        return div;
+      }
+    },
+  ];
+
   defaultColDef = {
     flex: 1,
     resizable: true,
@@ -172,6 +543,10 @@ export class EditSystemComponent {
   };
 
   rowData: any;
+  rowDataInbound: any;
+  rowDataOutbound: any;
+  rowDataOutboundTarget: any;
+  rowDataCombined:any;
 
   
   onGridReady(params: any) {
@@ -220,6 +595,13 @@ export class EditSystemComponent {
         }
       });
       this.getDataFields();
+      this.getInboundInterface();
+      this.rowDataInbound = [{}]; // Initialize with one blank row
+      this.getOutboundTarget();
+      this.rowDataOutboundTarget = [{}];
+      this.loadDropdownOptions();
+      this.rowDataCombined = [{}];
+
   }
 
   getDataFields()
@@ -243,10 +625,110 @@ export class EditSystemComponent {
     });
   }
 
+  // rowDataInbound: string[] = [];
+
+  interfaceOptionList: string[] = [];
+
+getInboundInterface() {
+  this.interfaceService.getInterface().subscribe({
+    next: (res: any) => {
+      if (res?.length > 0) {
+        this.interfaceOptionList = res.map(
+          (item: { interfaceEntity: { interface_id: any; interface_name: any; } }) =>
+            `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
+        );
+      }
+
+      // Show only one row in the grid initially
+      this.rowDataInbound = [{}];
+      this.rowDataOutbound = [{}];
+
+      this.cdr.detectChanges();
+    },
+    error: (err: any) => {
+      console.error('Failed to load interface:', err);
+    }
+  });
+}
+
+targetOptionList: string[] = [];
+
+getOutboundTarget() {
+  this.targetService.getTarget().subscribe({
+    next: (res: any) => {
+      if (res?.length > 0) {
+        this.targetOptionList = res.map(
+          (item: { targetEntity: { target_id: any; target_name: any; } }) =>
+            `${item.targetEntity.target_id} - ${item.targetEntity.target_name}`
+        );
+      }
+
+      // Show only one row in the grid initially
+      this.rowDataOutboundTarget = [{}];
+
+      this.cdr.detectChanges();
+    },
+    error: (err: any) => {
+      console.error('Failed to load interface:', err);
+    }
+  });
+}
+
+
+combinedOptions: string[] = [];
+
+loadDropdownOptions(): void {
+  forkJoin([
+    this.interfaceService.getInterface(),
+    this.targetService.getTarget()
+  ]).subscribe(([interfaces, targets]: [any[], any[]]) => {
+    const interfaceOptions = interfaces?.map(
+      (item: { interfaceEntity: { interface_id: any; interface_name: any } }) =>
+        `Interface: ${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
+    ) || [];
+
+    const targetOptions = targets?.map(
+      (item: { targetEntity: { target_id: any; target_name: any } }) =>
+        `Target: ${item.targetEntity.target_id} - ${item.targetEntity.target_name}`
+    ) || [];
+
+    this.combinedOptions = [...interfaceOptions, ...targetOptions];
+    console.log(this.combinedOptions, "Combined options")
+    this.rowDataCombined = [{}]; // show one empty row in grid
+    this.cdr.detectChanges();
+  });
+}
+
+  addDatafields()
+  {
+    this.showDataFieldsTable = true;
+    this.showDataFields = true;
+    this.showInbound = false;
+    this.showoutbound = false;
+    this.showsystemMapping = false;
+  }
+  
+
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
     console.log('Cell Value Changed:', event);
+  }
+
+  inboundOnCellValueChanged(event: any): void
+  {
+    console.log('Cell Value Changed:', event);
+
+  }
+  outboundOnCellValueChanged(event: any): void
+  {
+    console.log('Cell Value Changed:', event);
+
+  }
+  outboundTaregtOnCellValueChanged(event: any): void
+  {
+    console.log('Cell Value Changed:', event);
+
   }
 
 
@@ -333,5 +815,59 @@ export class EditSystemComponent {
 
       }, 1000);
   })
+  }
+
+  addInbound()
+  {
+    this.showDataFieldsTable = true;
+    this.showDataFields = false;
+    this.showInbound = true;
+    this.showoutbound = false;
+    this.showsystemMapping = false;
+  }
+
+  addOutBound()
+  {
+    this.showDataFieldsTable = true;
+    this.showDataFields = false;
+    this.showInbound = false;
+    this.showoutbound = true;
+    this.showsystemMapping = false;
+  }
+
+  sysMapping()
+  {
+    this.showDataFieldsTable = true;
+    this.showDataFields = false;
+    this.showInbound = false;
+    this.showoutbound = false;
+    this.showsystemMapping = true;
+  }
+
+  addInterface(interfaceType:string)
+  {
+    const newRow = {}; // or prefill with defaults
+    if(interfaceType === 'Inbound')
+    {
+    this.rowDataInbound = [...this.rowDataInbound, newRow]; // Add new row
+  }
+  else
+  {
+    this.rowDataCombined = [...this.rowDataCombined, newRow]; // Add new row
+  }
+  }
+
+
+  addOutTarget()
+  {
+    const newRow = {}; // or prefill with defaults
+
+    this.rowDataOutboundTarget = [...this.rowDataOutboundTarget, newRow]; // Add new row
+  
+  }
+
+  saveInboundInterface(data:any)
+  {
+
   }
 }

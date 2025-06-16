@@ -255,5 +255,34 @@ mat-card.mat-mdc-card.mdc-card{
   min-width: 65px !important;
 }
 
+.lineage-wrapper {
+  display: flex;
+  flex-direction: column;
+}
 
+.tables-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+table {
+  border-collapse: collapse;
+  width: 250px;
+  font-size: 12px;
+  background-color: #f9f9f9;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
+}
+
+.diagram-canvas {
+  width: 500px;
+  height: 600px;
+  background-color: #e0e0e0;
+  margin: 0 10px;
+  position: relative;
+}
 

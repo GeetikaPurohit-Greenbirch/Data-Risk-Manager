@@ -54,49 +54,51 @@
         <br>
         <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update System</button>
 <!-- Toggle Button -->
-<button mat-stroked-button color="accent" (click)="showDataFields = !showDataFields">
-    Add DataFields
-  </button>
+<!-- Toggle Button -->
+<button mat-stroked-button color="accent" (click)="addDatafields()">
+  Add DataFields
+</button><br><br>
+<button mat-stroked-button color="accent" (click)="addInbound()">
+  Add Inbound Interface
+</button>&nbsp;&nbsp;
+<button mat-stroked-button color="accent" (click)="addOutBound()">
+  Add Outbound
+</button>
+<br>
+<button mat-stroked-button color="accent" (click)="sysMapping()">
+  System Mapping
+</button>
       </form>
 
     </div>
   
     <!-- Right: DataFields Table -->
-    <div class="right-panel" *ngIf="showDataFields">
+    <div class="right-panel" >
               <!-- Information Box -->
-        <!-- <div class="info-box-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Completeness</th>
-                  <th>Completeness Commentary</th>
-                  <th>Timeliness</th>
-                  <th>Timeliness Commentary</th>
-                  <th>Accuracy</th>
-                  <th>Accuracy Commentary</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let i of [1]">
-                  <td class="low-orange">Low</td>
-                  <td>System Generated</td>
-                  <td class="low-blue">Low</td>
-                  <td>Capacity Managed</td>
-                  <td class="low-pink">Low</td>
-                  <td>System Generated</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
-
+           
+        <div class="info-box-table" *ngIf="showInbound">
           <div class="datafields-header">
-            <!-- <h3>DataFields</h3> -->
-            <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
-            <button (click)="addRow()" class="add-btn">Add Row</button>
+            <button (click)="addInterface('Inbound')" class="add-btn">Add Interface</button>
 
           </div>
-          
-      <div class="datafields-table">
+          <ag-grid-angular
+          class="ag-theme-alpine"
+          style="width: 100%; height: 400px;"
+          [rowData]="rowDataInbound"
+          [columnDefs]="inboundColumnDefs"
+          [defaultColDef]="defaultColDef"
+          (cellValueChanged)="inboundOnCellValueChanged($event)"
+          rowSelection="single"
+          >
+          </ag-grid-angular>
+          </div>
+
+                 
+      <div class="datafields-table" *ngIf="showDataFields">
+        <div class="datafields-header">
+          <button (click)="addRow()" class="add-btn">Add Row</button>
+
+        </div>
         <ag-grid-angular
         class="ag-theme-alpine"
         style="width: 100%; height: 400px;"
@@ -107,65 +109,100 @@
         rowSelection="single"
         >
         </ag-grid-angular>
-      <!-- <table mat-table [dataSource]="dataFields" class="mat-elevation-z2 datafieldTable">
-        <ng-container matColumnDef="fieldId">
-          <th mat-header-cell *matHeaderCellDef> Field ID </th>
-          <td mat-cell *matCellDef="let row"> {{ row.fieldId }} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="fieldName">
-          <th mat-header-cell *matHeaderCellDef> Field Name </th>
-          <td mat-cell *matCellDef="let row">
-            <input matInput [(ngModel)]="row.fieldName" />
-          </td>
-        </ng-container>
-
-
-          <ng-container matColumnDef="dataType">
-            <th mat-header-cell *matHeaderCellDef> Data Type </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.dataType" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="fieldLength">
-            <th mat-header-cell *matHeaderCellDef>Length </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.fieldLength" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="riskLevel">
-            <th mat-header-cell *matHeaderCellDef>DQA CTA</th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.riskLevel" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="criticality">
-            <th mat-header-cell *matHeaderCellDef>Criticality </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.criticality" />
-            </td>
-          </ng-container>
-  
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row; let i = index">
-              <button mat-icon-button color="success" matTooltip="Save" (click)="saveDatafields(row)">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteDAtaFields(row, i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-  
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table> -->
+     
     </div>
+
+    <div class="info-box-table" *ngIf="showoutbound">
+      <div class="datafields-header">
+        <button (click)="addInterface('Outbound')" class="add-btn">Add Interface / Target</button>
+        &nbsp;&nbsp;&nbsp;
+        <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
+      </div>
+      <ag-grid-angular
+      class="ag-theme-alpine"
+      style="width: 100%; height: 200px;"
+      [rowData]="rowDataCombined"
+      [columnDefs]="combinedColumnDefs"
+      [defaultColDef]="defaultColDef"
+      (cellValueChanged)="outboundOnCellValueChanged($event)"
+      rowSelection="single"
+      >
+      </ag-grid-angular>
+      <br>
+      <!-- <ag-grid-angular
+      class="ag-theme-alpine"
+      style="width: 100%; height: 200px;"
+      [rowData]="rowDataOutboundTarget"
+      [columnDefs]="outBoundTargetColumnDefs"
+      [defaultColDef]="defaultColDef"
+      (cellValueChanged)="outboundTaregtOnCellValueChanged($event)"
+      rowSelection="single"
+      >
+      </ag-grid-angular> -->
+    </div>
+
+
+    <div class="lineage-wrapper">
+      <div class="tables-wrapper">
+        <!-- Inbound Table -->
+        <!-- <table class="inbound-table">
+          <thead>
+            <tr>
+              <th>Interface</th>
+              <th>Field ID</th>
+              <th>Field Name</th>
+              <th>Data Type</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let field of inboundFields; let i = index" [attr.data-field-id]="'in-' + i">
+              <td>{{ field.interface }}</td>
+              <td>{{ field.fieldId }}</td>
+              <td>{{ field.fieldName }}</td>
+              <td>{{ field.dataType }}</td>
+              <td>{{ field.length }}</td>
+            </tr>
+          </tbody>
+        </table> -->
+    
+        <!-- Mapping Canvas -->
+        <div #paperContainer class="diagram-canvas"></div>
+    
+        <!-- Outbound Table -->
+        <!-- <table class="outbound-table">
+          <thead>
+            <tr>
+              <th>Interface</th>
+              <th>Field ID</th>
+              <th>Field Name</th>
+              <th>Data Type</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let field of outboundFields; let i = index" [attr.data-field-id]="'out-' + i">
+              <td>{{ field.interface }}</td>
+              <td>{{ field.fieldId }}</td>
+              <td>{{ field.fieldName }}</td>
+              <td>{{ field.dataType }}</td>
+              <td>{{ field.length }}</td>
+            </tr>
+          </tbody>
+        </table> -->
+      </div>
+      <button mat-raised-button color="primary" (click)="saveMappings()" style="    margin: 0 auto;
+    width: 15%;">Save Mappings</button>
+
+      <!-- <button class="save-btn" (click)="saveMappings()">Save Mappings</button> -->
+    </div>
+    
+
+    <!-- <div class="datafields-header">
+     
+      <button (click)="addRow()" class="add-btn">Add Row</button>
+
+    </div> -->
     </div>
   </div>
   </mat-card>

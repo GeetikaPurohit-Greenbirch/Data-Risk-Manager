@@ -55,69 +55,77 @@ controlForm!: FormGroup;
 
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'field_name', headerName: 'Field Name', editable: true },
-    { field: 'data_type', headerName: 'Data Type', editable: true,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+    // { field: 'field_name', headerName: 'Field Name', editable: true },
+    // { field: 'data_type', headerName: 'Data Type', editable: true,
+    //   cellEditor: 'agSelectCellEditor',
+    //   cellEditorParams: {
+    //     values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+    //   },
+    // },
+    {
+      headerName: 'Before Control Completeness',
+      field: 'dqa_c',
+      editable: false,
+      // valueGetter: () => 'L', // Always returns 'L'
+      width:65,
+      minWidth: 65,
+      maxWidth: 65,
+      resizable: true,
+      suppressSizeToFit: true,
+      cellStyle: {
+        color: 'red',
+        fontWeight: 'bold'
       },
     },
-    { field: 'field_length', headerName: 'Length', editable: true },
-    {
-      headerName: 'DQA',
-      children: [
-        {
-          headerName: 'C',
-          field: 'dqa_c',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
-          },
-        },
-        {
-          headerName: 'T',
-          field: 'dqa_t',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          headerName: 'A',
-          field: 'dqa_a',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'purple',
-            fontWeight: 'bold'
-          }
-        }
-      ],
-
-    },
-    { field: 'criticality', headerName: 'Criticality', editable: true,
+    { field: 'completeness', headerName: 'Completeness Commentary', editable: true },
+    { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+        values: ["HIGH", "LOW", "MEDIUM"]
+      },
+     },
+    {
+      headerName: 'Before Control Timeliness',
+      field: 'dqa_t',
+      editable: false,
+      // valueGetter: () => 'L', // Always returns 'L'
+      width:65,
+      minWidth: 65,
+      maxWidth: 65,
+      resizable: true,
+      suppressSizeToFit: true,
+      cellStyle: {
+        color: 'blue',
+        fontWeight: 'bold'
+      }
+    },
+    { field: 'timliness', headerName: 'Timeliness Commentary', editable: true },
+    { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["HIGH", "LOW", "MEDIUM"]
+      },
+     },
+    {
+      headerName: 'After Control Accuracy',
+      field: 'dqa_a',
+      editable: false,
+      // valueGetter: () => 'L', // Always returns 'L'
+      width:65,
+      minWidth: 65,
+      maxWidth: 65,
+      resizable: true,
+      suppressSizeToFit: true,
+      cellStyle: {
+        color: 'purple',
+        fontWeight: 'bold'
+      }
+    },
+    { field: 'accuracy', headerName: 'Accuracy Commentary', editable: true },
+    { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["HIGH", "LOW", "MEDIUM"]
       },
      },
     {
