@@ -77,6 +77,17 @@ export class EditInterfaceComponent implements OnInit {
           },
         },
         {
+          headerName: 'C Commentary',
+          field: 'commentary_p',
+          editable: true,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
           headerName: 'T',
           field: 'dqa_t',
           editable: false,
@@ -92,6 +103,17 @@ export class EditInterfaceComponent implements OnInit {
           }
         },
         {
+          headerName: 'T Commentary',
+          field: 'commentary_t',
+          editable: true,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
           headerName: 'A',
           field: 'dqa_a',
           editable: false,
@@ -105,7 +127,18 @@ export class EditInterfaceComponent implements OnInit {
             color: 'purple',
             fontWeight: 'bold'
           }
-        }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'commentary_a',
+          editable: true,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
       ],
 
     },
@@ -312,34 +345,43 @@ export class EditInterfaceComponent implements OnInit {
   {
     console.log(data, "Interface Data Fields");
 
-  // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
+    this.dataFieldsModel.field_id = data.data.field_id;
   this.dataFieldsModel.field_name = data.data.field_name;
   this.dataFieldsModel.dqa_c = "L";
   this.dataFieldsModel.dqa_t = "L";
   this.dataFieldsModel.dqa_a = "L";
+  this.dataFieldsModel.commentary_a = data.data.commentary_a;
+  this.dataFieldsModel.commentary_t = data.data.commentary_t;
+  this.dataFieldsModel.commentary_p = data.data.commentary_p;
   this.dataFieldsModel.data_type = data.data.data_type;
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;
   this.dataFieldsModel.entity_type = 'INTERFACE';
   this.dataFieldsModel.entity_id = this.interfaceId;
 
-  this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
- 
-      // alert("Data field added Successfully.");
-      if(!data.data.field_id)
-      {
-        this.toastNotificationService.success("Data field added Successfully.");
-      } 
-      else
-      {
-        this.toastNotificationService.success("Data field updated Successfully.");
-      }
+  if(!data.data.field_id)
+    {
+      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
+
+      this.toastNotificationService.success("Data field added Successfully.");
       setTimeout(() => {
         this.getDataFields(); // refresh
 
       }, 1000);
-    
-  })
+    });
+  }
+    else
+    {
+      this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
+
+        this.toastNotificationService.success("Data field updated Successfully.");
+        setTimeout(() => {
+          this.getDataFields(); // refresh
+  
+        }, 1000);
+      });
+    }
+   
   }
 
 

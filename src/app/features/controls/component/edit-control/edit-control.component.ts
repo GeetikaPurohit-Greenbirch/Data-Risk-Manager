@@ -77,7 +77,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       },
     },
-    { field: 'completeness', headerName: 'Completeness Commentary', editable: true },
+    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: true },
     { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -99,7 +99,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'timliness', headerName: 'Timeliness Commentary', editable: true },
+    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: true },
     { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -121,7 +121,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'accuracy', headerName: 'Accuracy Commentary', editable: true },
+    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: true },
     { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {

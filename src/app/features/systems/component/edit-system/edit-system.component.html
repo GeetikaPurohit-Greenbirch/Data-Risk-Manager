@@ -78,7 +78,7 @@
            
         <div class="info-box-table" *ngIf="showInbound">
           <div class="datafields-header">
-            <button (click)="addInterface('Inbound')" class="add-btn">Add Interface</button>
+            <button (click)="addInterface()" class="add-btn">Add Inbound Interface</button>
 
           </div>
           <ag-grid-angular
@@ -114,15 +114,15 @@
 
     <div class="info-box-table" *ngIf="showoutbound">
       <div class="datafields-header">
-        <button (click)="addInterface('Outbound')" class="add-btn">Add Interface / Target</button>
+        <button (click)="addOutInterface()" class="add-btn">Add Outbound Interface</button>
         &nbsp;&nbsp;&nbsp;
         <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
       </div>
       <ag-grid-angular
       class="ag-theme-alpine"
       style="width: 100%; height: 200px;"
-      [rowData]="rowDataCombined"
-      [columnDefs]="combinedColumnDefs"
+      [rowData]="rowDataOutbound"
+      [columnDefs]="outBoundColumnDefs"
       [defaultColDef]="defaultColDef"
       (cellValueChanged)="outboundOnCellValueChanged($event)"
       rowSelection="single"
@@ -142,7 +142,7 @@
     </div>
 
 
-    <div class="lineage-wrapper">
+    <div class="lineage-wrapper" *ngIf="showsystemMapping">
       <div class="tables-wrapper">
         <!-- Inbound Table -->
         <!-- <table class="inbound-table">
@@ -167,8 +167,11 @@
         </table> -->
     
         <!-- Mapping Canvas -->
-        <div #paperContainer class="diagram-canvas"></div>
-    
+        <!-- <div #paperContainer class="diagram-canvas"></div> -->
+    <app-create-lineage
+    [inboundFields]="inboundFields"
+  [outboundFields]="outboundFields"
+  ></app-create-lineage>
         <!-- Outbound Table -->
         <!-- <table class="outbound-table">
           <thead>

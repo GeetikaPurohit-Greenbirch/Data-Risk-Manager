@@ -9,6 +9,7 @@ import { Interface } from '../models/interface.model';
 })
 export class InterfaceService {
 private apiUrl = environment.apiAllBaseUrl // Base URL
+private lineageUrl = environment.apiLineageBaseUrl
 
 
   constructor(private http: HttpClient) { }
@@ -18,6 +19,23 @@ private apiUrl = environment.apiAllBaseUrl // Base URL
     console.log(payload)
 
     return this.http.post<any>(url, payload);
+  }
+
+  ///// save inbound interface ////
+
+
+  public saveInboundInterface(payload:any): Observable<any> {
+    const url: string = this.lineageUrl + 'mapping/entity';
+    console.log(payload)
+
+    return this.http.post<any>(url, payload);
+  }
+
+  //// get inbound data /////
+  
+  public getInboundData(systemid:any): Observable<Interface[]> {
+    const url: string = this.lineageUrl + 'mapping/entity/'+systemid;
+    return this.http.get<Interface[]>(url);
   }
 
    public getInterface(): Observable<Interface[]> {

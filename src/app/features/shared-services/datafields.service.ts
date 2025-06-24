@@ -20,6 +20,13 @@ export class DatafieldsService {
       return this.http.post<Datafields[]>(url, dataFieldsModel);
     }
 
+  public updateInterface(dataFieldsModel: Datafields): Observable<any> {
+        const url: string = this.apiUrl + 'fields';
+        console.log(dataFieldsModel)
+    
+        return this.http.post<Datafields[]>(url, dataFieldsModel);
+      }
+
    public getDataFieldsById(id:number, entity_type:any):Observable<Datafields[]> {
         const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
         return this.http.get<Datafields[]>(url);
