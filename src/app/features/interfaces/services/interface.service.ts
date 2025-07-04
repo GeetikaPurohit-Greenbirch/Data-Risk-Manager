@@ -24,13 +24,17 @@ private lineageUrl = environment.apiLineageBaseUrl
   ///// save inbound interface ////
 
 
-  public saveInboundInterface(payload:any): Observable<any> {
+  public saveInboundInterface(payload: any, systemId: any): Observable<any> {
     const url: string = this.lineageUrl + 'mapping/entity';
     console.log(payload)
 
     return this.http.post<any>(url, payload);
   }
 
+  public deleteInboundInterface(interface_id:any, system_id:any): Observable<any> {
+    const url: string = this.lineageUrl + 'mapping/entity/system/'+system_id+'/interface/'+interface_id;
+    return this.http.delete<any>(url);
+  }
   //// get inbound data /////
   
   public getInboundData(systemid:any): Observable<Interface[]> {

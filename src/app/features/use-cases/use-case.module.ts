@@ -6,11 +6,16 @@ import { CreateUseCaseComponent } from './component/create-use-case/create-use-c
 import { UseCasesComponent } from './use-cases.component';
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditUsecaseComponent } from './component/edit-usecase/edit-usecase.component';
+import { ShareDialogComponent } from './component/share-dialog/share-dialog.component';
+import { ShareAccessComponent } from './component/share-access/share-access.component';
 
 
 @NgModule({
   declarations: [UseCasesComponent,
-    CreateUseCaseComponent,EditUsecaseComponent],
+    CreateUseCaseComponent,EditUsecaseComponent,
+    ShareDialogComponent,
+    ShareAccessComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

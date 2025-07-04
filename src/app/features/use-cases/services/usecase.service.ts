@@ -24,6 +24,13 @@ export class UsecaseService {
         const url: string = this.apiUrl + 'use_cases';
         return this.http.get<Usecase[]>(url);
       }
+    
+    public getPermissionsForUsecases(useCaseIds:any): Observable<any> {
+      const url: string = this.apiUrl + 'user-use-case/permission';
+      console.log(useCaseIds)
+  
+      return this.http.post<any>(url, useCaseIds);
+    }
   
      public updateInterface(payload:any): Observable<any> {
         const url: string = this.apiUrl + 'use_cases';
@@ -40,5 +47,36 @@ export class UsecaseService {
       public deleteUsecase(id:number):Observable<Usecase[]> {
         const url: string = this.apiUrl + 'use_cases/'+id;
         return this.http.delete<Usecase[]>(url);
+      }
+
+      getShareableUsers(usecase_id:any): Observable<Usecase[]>
+      {
+        const url: string = this.apiUrl + 'use_cases';
+        return this.http.get<Usecase[]>(url);
+      }
+
+      shareUseCase(payload:any): Observable<any> {
+        const url: string = this.apiUrl + 'use_cases';
+        console.log(payload)
+    
+        return this.http.post<Usecase[]>(url, payload);
+
+      }
+
+      public getAccessFlags(id:string):Observable<Usecase[]> {
+        const url: string = this.apiUrl + 'user-use-case/access-flag/'+id;
+        return this.http.get<Usecase[]>(url);
+      }
+
+      public assignUseCase(payload:any): Observable<any> {
+        const url: string = this.apiUrl + 'user-use-case/assign';
+        console.log(payload)
+    
+        return this.http.post(url, payload, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });      
       }
 }

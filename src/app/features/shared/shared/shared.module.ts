@@ -27,6 +27,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Or MatMomentDateModule if using moment.js
+import { MatRadioModule } from '@angular/material/radio';
 
 
 
@@ -61,7 +62,8 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     AgGridModule,
     TranslateModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatRadioModule
   ],
   exports: [
     HeaderComponent,
@@ -88,7 +90,8 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     FormsModule,
     AgGridModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatRadioModule
   ]
 })
 export class SharedModule {}

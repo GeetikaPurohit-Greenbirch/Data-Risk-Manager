@@ -87,8 +87,11 @@ export class EditSystemComponent implements AfterViewInit{
         {
           headerName: 'C',
           field: 'dqa_c',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
           width:65,
           minWidth: 65,
           maxWidth: 65,
@@ -113,8 +116,11 @@ export class EditSystemComponent implements AfterViewInit{
         {
           headerName: 'T',
           field: 'dqa_t',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
           width:65,
           minWidth: 65,
           maxWidth: 65,
@@ -139,8 +145,11 @@ export class EditSystemComponent implements AfterViewInit{
         {
           headerName: 'A',
           field: 'dqa_a',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
           width:65,
           minWidth: 65,
           maxWidth: 65,
@@ -207,8 +216,17 @@ export class EditSystemComponent implements AfterViewInit{
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
+         // ✅ Disable if entity_type is 'INTERFACE'
+        if (params.data.entity_type === 'INTERFACE') {
+          deleteDataFields.disabled = true;
+          deleteDataFields.style.opacity = '0.5';
+          deleteDataFields.style.cursor = 'not-allowed';
+        }
+
         deleteDataFields.addEventListener('click', () => {
-          this.deleteDAtaFields(params.node);
+          if (!deleteDataFields.disabled) {
+            this.deleteDAtaFields(params.node);
+          }
         });
     
         div.appendChild(saveDataFields);
@@ -254,22 +272,22 @@ export class EditSystemComponent implements AfterViewInit{
           this.saveInboundInterface(params.node, 'INBOUND');
         });
     
-        // const deleteDataFields = document.createElement('button');
-        // deleteDataFields.className = 'fa fa-trash';
-        // deleteDataFields.style.color = 'red';
-        // deleteDataFields.style.border = '1px solid lightGrey';
-        // deleteDataFields.style.borderRadius = '5px';
-        // deleteDataFields.style.lineHeight = '22px';
-        // deleteDataFields.style.height = '32px';
-        // deleteDataFields.style.cursor = 'pointer';
-        // deleteDataFields.title = 'Delete';
+        const deleteInterface = document.createElement('button');
+        deleteInterface.className = 'fa fa-trash';
+        deleteInterface.style.color = 'red';
+        deleteInterface.style.border = '1px solid lightGrey';
+        deleteInterface.style.borderRadius = '5px';
+        deleteInterface.style.lineHeight = '22px';
+        deleteInterface.style.height = '32px';
+        deleteInterface.style.cursor = 'pointer';
+        deleteInterface.title = 'Delete';
     
-        // deleteDataFields.addEventListener('click', () => {
-        //   // this.deleteDAtaFields(params.node);
-        // });
+        deleteInterface.addEventListener('click', () => {
+          this.deleteInboundInterface(params.node, 'INBOUND');
+        });
     
         div.appendChild(saveInterface);
-        // div.appendChild(deleteDataFields);
+        div.appendChild(deleteInterface);
     
         return div;
       }
@@ -311,22 +329,22 @@ export class EditSystemComponent implements AfterViewInit{
           this.saveInboundInterface(params.node, 'OUTBOUND');
         });
     
-        // const deleteDataFields = document.createElement('button');
-        // deleteDataFields.className = 'fa fa-trash';
-        // deleteDataFields.style.color = 'red';
-        // deleteDataFields.style.border = '1px solid lightGrey';
-        // deleteDataFields.style.borderRadius = '5px';
-        // deleteDataFields.style.lineHeight = '22px';
-        // deleteDataFields.style.height = '32px';
-        // deleteDataFields.style.cursor = 'pointer';
-        // deleteDataFields.title = 'Delete';
+        const deleteInterface = document.createElement('button');
+        deleteInterface.className = 'fa fa-trash';
+        deleteInterface.style.color = 'red';
+        deleteInterface.style.border = '1px solid lightGrey';
+        deleteInterface.style.borderRadius = '5px';
+        deleteInterface.style.lineHeight = '22px';
+        deleteInterface.style.height = '32px';
+        deleteInterface.style.cursor = 'pointer';
+        deleteInterface.title = 'Delete';
     
-        // deleteDataFields.addEventListener('click', () => {
-        //   // this.deleteDAtaFields(params.node);
-        // });
+        deleteInterface.addEventListener('click', () => {
+          this.deleteInboundInterface(params.node, 'INBOUND');
+        });
     
         div.appendChild(saveInterface);
-        // div.appendChild(deleteDataFields);
+        div.appendChild(deleteInterface);
     
         return div;
       }
@@ -884,7 +902,7 @@ loadDropdownOptions(): void {
     this.showDataFieldsTable = true;
     this.showDataFields = false;
     this.showInbound = true;
-    this.showoutbound = false;
+    this.showoutbound = true;
     this.showsystemMapping = false;
     // this.getInboundInterfaceData();
   }
@@ -935,7 +953,33 @@ loadDropdownOptions(): void {
     interface_type: interface_type
    }
    
-      this.interfaceService.saveInboundInterface(payload).subscribe(res => {
+      this.interfaceService.saveInboundInterface(payload, this.systemId).subscribe(res => {
+        if(res)
+        {
+          // const response = JSON.stringify(res)
+          // this.rowDataInbound = response
+          if(interface_type === 'INBOUND')
+          {
+            alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
+            this.toastNotificationService.success("Inbound Interface Saved Successfully for System ID"+ this.systemId);
+          }
+          else
+          {
+            alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
+            this.toastNotificationService.success("Outbound Interface Saved Successfully for System ID"+ this.systemId);
+          }
+        }
+      })
+  }
+
+  deleteInboundInterface(data:any, interface_type:string)
+  {
+    const str = data.data.interface;
+    const interfaceId = str.split(" - ")[0]; // Extract "2", "3", etc.
+ 
+    this.getInterfaceDataFields(interfaceId);
+   
+      this.interfaceService.deleteInboundInterface(interfaceId, this.systemId).subscribe(res => {
         if(res)
         {
           // const response = JSON.stringify(res)
@@ -1013,12 +1057,18 @@ loadDropdownOptions(): void {
           const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
   
           if (parsedInboundInterfaces?.length > 0) {
-            this.rowDataInbound = parsedInboundInterfaces.flatMap((item: any) =>
-              item.fields.map((field: any) => ({
-                ...field,
-                interface: `${item.interface_id} - ${item.interface_name}`
-              }))
+            this.rowDataInbound = parsedInboundInterfaces.map(
+              (item:  { interface_id: any; interface_name: any  }) =>
+                ({                
+                  interface: `${item.interface_id} - ${item.interface_name}`
+                })
             );
+            // this.rowDataInbound = parsedInboundInterfaces.flatMap((item: any) =>
+            //   item.fields.map((field: any) => ({
+            //     ...field,
+            //     interface: `${item.interface_id} - ${item.interface_name}`
+            //   }))
+            // );
           } else {
             // Fallback: show one blank row if no data
             this.rowDataInbound = [{}];
@@ -1057,12 +1107,19 @@ loadDropdownOptions(): void {
           this.rowData = combinedFields;
 
           if (parsedOutboundInterfaces?.length > 0) {
-            this.rowDataOutbound = parsedOutboundInterfaces.flatMap((item: any) =>
-              item.fields.map((field: any) => ({
-                ...field,
+            this.rowDataOutbound = parsedOutboundInterfaces.map(
+              (item: { interface_id: any; interface_name: any; } ) =>
+              ({                
                 interface: `${item.interface_id} - ${item.interface_name}`
-              }))
+              })
             );
+
+            // this.rowDataOutbound = parsedOutboundInterfaces.flatMap((item: any) =>
+            //   item.fields.map((field: any) => ({
+            //     ...field,
+            //     interface: `${item.interface_id} - ${item.interface_name}`
+            //   }))
+            // );
           } else {
             // Fallback: show one blank row if no data
             this.rowDataOutbound = [{}];
