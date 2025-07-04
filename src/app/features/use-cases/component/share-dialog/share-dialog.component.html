@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Share Use Case</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field class="full-width">
+    <mat-label>Select Users</mat-label>
+    <mat-select formControlName="selectedUsers" multiple>
+      <mat-option *ngFor="let user of userList" [value]="user.id">
+        {{ user.name }} <span *ngIf="user.alreadyShared"> (Already Shared) </span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+<br>
+  <mat-radio-group formControlName="permission">
+    <mat-radio-button value="view">View</mat-radio-button>
+    <mat-radio-button value="edit">Edit</mat-radio-button>
+  </mat-radio-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Share</button>
+</mat-dialog-actions>
