@@ -9,6 +9,7 @@ import { Datafields } from '../shared-models/datafields.model';
 })
 export class DatafieldsService {
   private apiUrl = environment.apiAllBaseUrl // Base URL
+  private lineageUrl = environment.apiLineageBaseUrl
 
 
   constructor(private http: HttpClient) { }
@@ -36,5 +37,22 @@ export class DatafieldsService {
         const url: string = this.apiUrl + 'fields/'+id;
         return this.http.delete<Datafields[]>(url);
       }
+
+
+      ///// Save field mappings /////
+
+      public saveFieldMapping(Datafields: any): Observable<any> {
+        const url: string = this.lineageUrl + 'mapping/fields';
+        console.log(Datafields)
+    
+        // return this.http.post<Datafields[]>(url, Datafields);
+        return this.http.post(url, Datafields, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });   
+      }
+
 
 }

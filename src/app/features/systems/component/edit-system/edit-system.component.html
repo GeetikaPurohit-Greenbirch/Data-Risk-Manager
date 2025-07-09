@@ -143,58 +143,15 @@
 
     <div class="lineage-wrapper" *ngIf="showsystemMapping">
       <div class="tables-wrapper">
-        <!-- Inbound Table -->
-        <!-- <table class="inbound-table">
-          <thead>
-            <tr>
-              <th>Interface</th>
-              <th>Field ID</th>
-              <th>Field Name</th>
-              <th>Data Type</th>
-              <th>Length</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let field of inboundFields; let i = index" [attr.data-field-id]="'in-' + i">
-              <td>{{ field.interface }}</td>
-              <td>{{ field.fieldId }}</td>
-              <td>{{ field.fieldName }}</td>
-              <td>{{ field.dataType }}</td>
-              <td>{{ field.length }}</td>
-            </tr>
-          </tbody>
-        </table> -->
     
-        <!-- Mapping Canvas -->
-        <!-- <div #paperContainer class="diagram-canvas"></div> -->
     <app-create-lineage
     [inboundFields]="inboundFields"
   [outboundFields]="outboundFields"
+  systemId="{{systemId}}"
   ></app-create-lineage>
-        <!-- Outbound Table -->
-        <!-- <table class="outbound-table">
-          <thead>
-            <tr>
-              <th>Interface</th>
-              <th>Field ID</th>
-              <th>Field Name</th>
-              <th>Data Type</th>
-              <th>Length</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let field of outboundFields; let i = index" [attr.data-field-id]="'out-' + i">
-              <td>{{ field.interface }}</td>
-              <td>{{ field.fieldId }}</td>
-              <td>{{ field.fieldName }}</td>
-              <td>{{ field.dataType }}</td>
-              <td>{{ field.length }}</td>
-            </tr>
-          </tbody>
-        </table> -->
+      
       </div>
-      <button mat-raised-button color="primary" (click)="saveMappings()" style="    margin: 0 auto;
-    width: 15%;">Save Mappings</button>
+    
 
       <!-- <button class="save-btn" (click)="saveMappings()">Save Mappings</button> -->
     </div>

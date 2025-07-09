@@ -1,5 +1,7 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import * as joint from 'jointjs';
+import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-create-lineage',
@@ -12,9 +14,15 @@ export class CreateLineageComponent {
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
   @Input() inboundFields: any[] = [];
 @Input() outboundFields: any[] = [];
+@Input() systemId: any;
  private graph!: joint.dia.Graph;
   private paper!: joint.dia.Paper;
   private elementsMap: { [id: string]: joint.dia.Element } = {};
+   constructor(
+        private datafieldsService: DatafieldsService,
+          private toastNotificationService: ToastnotificationService,
+      
+    ) {}
   
   // inboundFields = [
   //   { interface: 'Interface 1', fieldId: 1, fieldName: 'A', dataType: 'Num', length: 10 },
@@ -43,7 +51,7 @@ export class CreateLineageComponent {
       this.paper = new joint.dia.Paper({
         el: this.paperContainer.nativeElement,
         model: this.graph,
-        width: 1000,
+        width: 1200,
         height: 600,
         gridSize: 10,
         // interactive: true,
@@ -108,10 +116,10 @@ export class CreateLineageComponent {
       const spacing = 80;
     
       this.inboundFields.forEach((field, i) => {
-        const label = `${field.interface} | ${field.fieldName}`;
+        const label = `${field.interface} | ${field.fieldName} | ${field.fieldId}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: leftX, y: startY + i * spacing },
-          size: { width: 150, height: 40 },
+          size: { width: 200, height: 40 },
           attrs: {
             body: { fill: '#d1e8ff', stroke: '#333' },
             label: { text: label, fill: '#000' },
@@ -142,10 +150,10 @@ export class CreateLineageComponent {
       });
     
       this.outboundFields.forEach((field, i) => {
-        const label = `${field.interface} | ${field.fieldName}`;
+        const label = `${field.interface} | ${field.fieldName} | ${field.fieldId}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: rightX, y: startY + i * spacing },
-          size: { width: 150, height: 40 },
+          size: { width: 200, height: 40 },
           attrs: {
             body: { fill: '#d1ffd1', stroke: '#333' },
             label: { text: label, fill: '#000' },
@@ -173,8 +181,40 @@ export class CreateLineageComponent {
     }
     
     saveMappings(): void {
-      console.log('💾 Saved Mappings:', this.links);
-      alert('Mappings saved. '+  this.links[0].from +' - '+ this.links[0].to +' || '+ this.links[1].from +' - '+ this.links[1].to+' || '+ this.links[2].from +' - '+ this.links[2].to+' || '+ this.links[3].from +' - '+ this.links[3].to+' || '+ this.links[4].from +'-'+ this.links[4].to);
+      const systemId = this.systemId; // Replace with your actual system ID if dynamic
+    
+      const formattedLinks = this.links.map(link => {
+        const fromField = this.inboundFields.find(
+          f => `${f.interface} | ${f.fieldName} | ${f.fieldId}` === link.from
+        );
+        const toField = this.outboundFields.find(
+          f => `${f.interface} | ${f.fieldName} | ${f.fieldId}` === link.to
+        );
+    
+        if (fromField && toField) {
+          return {
+            p_field_id: fromField.fieldId,
+            c_field_id: toField.fieldId,
+            system_id: systemId
+          };
+        }
+    
+        return null;
+      }).filter(link => link !== null); // remove nulls for unmatched
+    
+      console.log('💾 Final Mappings Payload:', formattedLinks);
+      this.datafieldsService.saveFieldMapping(formattedLinks).subscribe({
+        next: (res:string) => {
+        alert(res);
+      },
+      error: (err) => {
+        console.error('Error saving mappingd:', err);
+        alert('Failed to save field mapping.');
+      }
+    });
+  
+   
     }
+    
   
 }

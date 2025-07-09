@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 import { ControlService } from '../../services/control.service';
 import { SourceService } from 'src/app/features/sources/services/source.service';
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
+import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -49,7 +50,8 @@ controlForm!: FormGroup;
         private systemService: SystemServiceService,
         private toastNotificationService: ToastnotificationService,
         private datafieldsService: DatafieldsService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private interfaceService: InterfaceService,
   ) {}
 
 
@@ -305,6 +307,77 @@ controlForm!: FormGroup;
       });
   }
 
+  interfaceOptionList: string[] = [];
+
+
+  loadInboundInterfaces() {
+    this.showDataFields = true;
+    const interfaces$ = this.interfaceService.getInterface();
+    const interfaceDataFields$ = this.interfaceService.getInboundData(this.attachToId);
+  
+    forkJoin([interfaces$, interfaceDataFields$]).subscribe({
+      next: ([interfaces, interfaceDataFields]: [any[], any[]]) => {
+        try {
+          // Step 1: Populate dropdown from getInterface()
+          if (interfaces?.length > 0) {
+            this.interfaceOptionList = interfaces.map(
+              (item: { interfaceEntity: { interface_id: any; interface_name: any } }) =>
+                `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
+            );
+          }
+  
+          // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
+          const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
+  
+          const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
+
+          // Assuming you have only one object in the array (as per your example)
+          const rawData = interfaceDataFields[0]; // replace with your actual variable
+
+          const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+          const systemFields = JSON.parse(rawData.system_fields || '[]');
+
+          let combinedFields: any[] = [];
+
+          // From system_fields
+          systemFields.forEach((field: any) => {
+            combinedFields.push({
+              ...field,
+              interface_name: rawData.system_name,
+              source: 'System'
+            });
+          });
+
+          // From inbound_interfaces
+          inboundInterfaces.forEach((intf: any) => {
+            intf.fields.forEach((field: any) => {
+              combinedFields.push({
+                ...field,
+                interface_name: intf.interface_name,
+                source: 'Inbound'
+              });
+            });
+          });
+
+          this.rowData = combinedFields;
+          if (this.gridApi) {
+            this.gridApi.setRowData([]); // Clear first to ensure refresh
+            this.gridApi.setRowData(this.rowData);
+          }
+  
+          this.cdr.detectChanges(); // trigger Angular change detection
+        } catch (e) {
+          console.error('Error parsing interface data:', e);
+        }
+      },
+      error: (err: any) => {
+        console.error('Failed to load interface or inbound data:', err);
+      }
+    });
+  }
+
+
+
   // ✅ Add a new DataField row
   addField(): void {
     const newId = this.dataFields.length + 1;
@@ -347,6 +420,9 @@ controlForm!: FormGroup;
       }
     })
   }
+
+
+   
 
   saveDatafields(data:any)
   {
