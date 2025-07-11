@@ -84,6 +84,7 @@ controlForm!: FormGroup;
 
 
   onSubmit() {
+    console.log('Form Submitted', this.controlForm.value);
     if (this.controlForm.valid) {
       console.log('Control Data:', this.controlForm.value);
       // call API here
