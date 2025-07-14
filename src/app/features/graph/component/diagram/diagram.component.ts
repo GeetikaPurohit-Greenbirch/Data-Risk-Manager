@@ -539,7 +539,12 @@ this.paper.on('element:pointerclick', (elementView: joint.dia.ElementView) => {
 });
 
 
- 
+
+
+
+
+
+
 
 }
 
@@ -638,52 +643,52 @@ this.paper.on('element:pointerclick', (elementView: joint.dia.ElementView) => {
 
 
   // Track Path To Origin 
-tracePathToOrigin(startElement: joint.dia.Element) {
-  const visited = new Set<string>();
-  const path: joint.dia.Element[] = [];
+// tracePathToOrigin(startElement: joint.dia.Element) {
+//   const visited = new Set<string>();
+//   const path: joint.dia.Element[] = [];
 
-  const walk = (el: joint.dia.Element) => {
-    if (visited.has(String(el.id))) return;
-    visited.add(String(el.id));
-    path.push(el);
+//   const walk = (el: joint.dia.Element) => {
+//     if (visited.has(String(el.id))) return;
+//     visited.add(String(el.id));
+//     path.push(el);
 
-    const inboundLinks = this.graph.getConnectedLinks(el, { inbound: true });
-    for (const link of inboundLinks) {
-      const sourceId = link.get('source')?.id;
-      if (sourceId) {
-        const sourceEl = this.graph.getCell(sourceId) as joint.dia.Element;
-        if (sourceEl) {
-          walk(sourceEl);
-        }
-      }
-    }
-  };
+//     const inboundLinks = this.graph.getConnectedLinks(el, { inbound: true });
+//     for (const link of inboundLinks) {
+//       const sourceId = link.get('source')?.id;
+//       if (sourceId) {
+//         const sourceEl = this.graph.getCell(sourceId) as joint.dia.Element;
+//         if (sourceEl) {
+//           walk(sourceEl);
+//         }
+//       }
+//     }
+//   };
 
-  walk(startElement);
+//   walk(startElement);
 
-  // 🔶 Highlight nodes
-  path.forEach(el => {
-    el.attr('body/stroke', '#FF9800');
-    el.attr('body/strokeWidth', 3);
-  });
+//   // 🔶 Highlight nodes
+//   path.forEach(el => {
+//     el.attr('body/stroke', '#FF9800');
+//     el.attr('body/strokeWidth', 3);
+//   });
 
-  // 🔷 Highlight links
-  const highlightLink = (from: joint.dia.Element, to: joint.dia.Element) => {
-    const link = this.graph.getLinks().find(l =>
-      l.get('source')?.id === from.id && l.get('target')?.id === to.id
-    );
-    if (link) {
-      link.attr('line/stroke', '#FF9800');
-      link.attr('line/strokeWidth', 3);
-    }
-  };
+//   // 🔷 Highlight links
+//   const highlightLink = (from: joint.dia.Element, to: joint.dia.Element) => {
+//     const link = this.graph.getLinks().find(l =>
+//       l.get('source')?.id === from.id && l.get('target')?.id === to.id
+//     );
+//     if (link) {
+//       link.attr('line/stroke', '#FF9800');
+//       link.attr('line/strokeWidth', 3);
+//     }
+//   };
 
-  for (let i = 1; i < path.length; i++) {
-    highlightLink(path[i], path[i - 1]);
-  }
+//   for (let i = 1; i < path.length; i++) {
+//     highlightLink(path[i], path[i - 1]);
+//   }
 
-  console.log('🔍 Path to origin:', path.map(n => n.id));
-}
+//   console.log('🔍 Path to origin:', path.map(n => n.id));
+// }
 
 
 

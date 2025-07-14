@@ -918,20 +918,34 @@ registerCustomShapes(): void {
             fontSize: 14,
             fill: '#000'
           },
-          'remove-icon': {
-            text: '✕',
-            ref: 'body',
-            refX: '100%',
-            refY: '0%',
-            x: -12,
-            y: 4,
-            fontSize: 14,
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            event: 'element:delete',
-            visibility: 'hidden',
-            fill: 'red'
-          },
+          // 'remove-icon': {
+          //   text: '✕',
+          //   ref: 'body',
+          //   refX: '100%',
+          //   refY: '0%',
+          //   x: -12,
+          //   y: 4,
+          //   fontSize: 14,
+          //   fontWeight: 'bold',
+          //   cursor: 'pointer',
+          //   event: 'element:delete',
+          //   visibility: 'hidden',
+          //   fill: 'red'
+          // },
+      'remove-icon': {
+        d: 'M96 464c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V160H96v304zm64-240h32v208h-32V224zm96 0h32v208h-32V224zm96 0h32v208h-32V224zM432 32H312l-9.4-18.7C297.3 5.1 288.2 0 278.1 0h-44.2c-10.1 0-19.2 5.1-24.5 13.3L200 32H80C53.5 32 32 53.5 32 80v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48z',
+        fill: 'red',
+        ref: 'body',
+        refX: '95%',
+        refY: '-5%',
+        x: -18,
+        y: 0,
+        transform: 'scale(0.025)',  // Adjust scale as needed
+        cursor: 'pointer',
+        event: 'element:delete',
+        visibility: 'hidden'
+      },
+
          'resize-handle': {
           ref: 'body',
           refX: '100%',
@@ -1066,7 +1080,7 @@ registerCustomShapes(): void {
             tagName: 'g',
             selector: 'remove-group',
             children: [
-              { tagName: 'text', selector: 'remove-icon' },
+              { tagName: 'path', selector: 'remove-icon' },
               { tagName: 'title', selector: 'remove-title' }
             ]
           },
@@ -1079,6 +1093,7 @@ registerCustomShapes(): void {
 
   // You can copy the same logic to DualBlock if needed.
 }
+
 
 
 
