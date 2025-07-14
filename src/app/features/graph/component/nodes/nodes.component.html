@@ -1,0 +1,20 @@
+<div class="stencil mt-3">
+      <input [(ngModel)]="search" class="search" placeholder="🔍 Search blocks..." />
+
+      <div *ngFor="let category of categories" class="category">
+        <div class="category-title" (click)="toggleCategory(category)">
+          {{ category.label }}
+          <span class="toggle-icon">{{ category.collapsed ? '▶' : '▼' }}</span>
+        </div>
+
+        <div *ngIf="!category.collapsed">
+          <div *ngFor="let block of filteredBlocks(category)"
+               class="block"
+               draggable="true"
+               (dragstart)="dragStart($event, block)">
+            <div class="icon">{{ block.icon }}</div>
+            <div class="label">{{ block.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>

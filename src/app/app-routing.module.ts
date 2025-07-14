@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'interfaces', loadChildren: () => import('./features/interfaces/interfaces.module').then(m => m.InterfacesModule) },
   { path: 'controls', loadChildren: () => import('./features/controls/controls.module').then(m => m.ControlsModule) },
   { path: 'targets', loadChildren: () => import('./features/targets/targets.module').then(m => m.TargetsModule) },
+  { path: 'graph', loadChildren: () => import('./features/graph/graph.module').then(m => m.GraphModule) },
 ];
 
 @NgModule({

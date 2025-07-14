@@ -1,0 +1,77 @@
+ 
+    .stencil {
+      width: 240px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-right: 1px solid #ccc;
+      height: 100vh;
+      overflow-y: auto;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .search {
+      width: 100%;
+      padding: 6px 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .category-title {
+      font-weight: bold;
+      font-size: 14px;
+      margin: 10px 0 4px;
+      color: #444;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .toggle-icon {
+      font-size: 12px;
+    }
+
+    .block {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+      padding: 8px 10px;
+      background: #fff;
+      border-left: 4px solid #3498db;
+      border-radius: 4px;
+      cursor: grab;
+      user-select: none;
+      transition: background 0.2s ease;
+      font-weight:600;
+    }
+
+    .block:hover {
+      background: #eef3f7;
+    }
+
+    .block:active {
+      cursor: grabbing;
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eef2f6;
+      border-radius: 4px;
+      pointer-events: none;
+      display:none;
+    }
+
+    .label {
+      font-size: 14px;
+      color: #333;
+      pointer-events: none;
+    }
+  
