@@ -54,5 +54,30 @@ export class DatafieldsService {
         });   
       }
 
+      public deleteAllSystemMapping(systemId:number): Observable<any> {
+        const url: string = this.lineageUrl + 'mapping/fields/system/'+systemId;
+        return this.http.delete<any[]>(url,{
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });    
+      }
 
+
+      public getMappings(systemId:any):Observable<any[]> {
+        const url: string = this.lineageUrl + 'mapping/fields/'+ systemId;
+        return this.http.get<any[]>(url);
+
+      }
+
+      public deleteFieldMapping(mappingId: number): Observable<any> {
+        const url: string = this.lineageUrl + 'mapping/fields/id/'+mappingId;
+        return this.http.delete<any[]>(url,{
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });      
+      }
 }

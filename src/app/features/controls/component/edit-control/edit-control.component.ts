@@ -57,7 +57,7 @@ controlForm!: FormGroup;
 
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, },
-    // { field: 'field_name', headerName: 'Field Name', editable: true },
+    { field: 'entity_type', headerName: 'Entity Type', editable: false },
     // { field: 'data_type', headerName: 'Data Type', editable: true,
     //   cellEditor: 'agSelectCellEditor',
     //   cellEditorParams: {
@@ -67,8 +67,12 @@ controlForm!: FormGroup;
     {
       headerName: 'Before Control Completeness',
       field: 'dqa_c',
-      editable: false,
+      editable: true,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -83,14 +87,22 @@ controlForm!: FormGroup;
     { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'red',
+        fontWeight: 'bold'
       },
      },
     {
       headerName: 'Before Control Timeliness',
       field: 'dqa_t',
-      editable: false,
+      editable: true,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -105,14 +117,22 @@ controlForm!: FormGroup;
     { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'blue',
+        fontWeight: 'bold'
       },
      },
     {
       headerName: 'After Control Accuracy',
       field: 'dqa_a',
-      editable: false,
+      editable: true,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -127,7 +147,11 @@ controlForm!: FormGroup;
     { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'purple',
+        fontWeight: 'bold'
       },
      },
     {
@@ -335,6 +359,7 @@ controlForm!: FormGroup;
           const rawData = interfaceDataFields[0]; // replace with your actual variable
 
           const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
           const systemFields = JSON.parse(rawData.system_fields || '[]');
 
           let combinedFields: any[] = [];
@@ -349,12 +374,12 @@ controlForm!: FormGroup;
           });
 
           // From inbound_interfaces
-          inboundInterfaces.forEach((intf: any) => {
+          outboundInterfaces.forEach((intf: any) => {
             intf.fields.forEach((field: any) => {
               combinedFields.push({
                 ...field,
                 interface_name: intf.interface_name,
-                source: 'Inbound'
+                source: 'Outbound'
               });
             });
           });

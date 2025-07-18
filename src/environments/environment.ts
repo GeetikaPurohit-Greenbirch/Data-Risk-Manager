@@ -5,9 +5,9 @@
 export const environment = {
 
   production: false,
-  apiBaseUrl: 'http://34.246.218.206:8080/', /// for user module
-  apiAllBaseUrl: 'http://108.130.48.98:8080/', /// for other modules
-  apiLineageBaseUrl: 'http://34.251.17.138:8080/', /// for Lineage modules
+  apiBaseUrl: ' http://api.dev.greenbirchdata.com/auth/', /// for user module
+  apiAllBaseUrl: ' http://api.dev.greenbirchdata.com/entity/', /// for other modules
+  apiLineageBaseUrl: ' http://api.dev.greenbirchdata.com/lineage/', /// for Lineage modules
 
   // okta: {
   //   clientId: 'kdqcweVMIWwiYtZtIvJmfrLUJ8LVXKor',

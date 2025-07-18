@@ -55,8 +55,11 @@
         <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update System</button>
 <!-- Toggle Button -->
 <!-- Toggle Button -->
+<button mat-stroked-button color="accent" (click)="addInputDatafields()">
+  Input DataFields
+</button><br><br>
 <button mat-stroked-button color="accent" (click)="addDatafields()">
-  Add DataFields
+  Output DataFields
 </button><br><br>
 <button mat-stroked-button color="accent" (click)="addInbound()">
   Interfaces
@@ -74,6 +77,25 @@
   
     <!-- Right: DataFields Table -->
     <div class="right-panel" >
+
+
+      <div class="datafields-table" *ngIf="showInputDataFields">
+        <!-- <div class="datafields-header">
+          <button (click)="addRow()" class="add-btn">Add Row</button>
+
+        </div> -->
+        <ag-grid-angular
+        class="ag-theme-alpine"
+        style="width: 100%; height: 400px;"
+        [rowData]="rowDataInput"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        (cellValueChanged)="inputCellValueChanged($event)"
+        rowSelection="single"
+        >
+        </ag-grid-angular>
+        </div>
+
               <!-- Information Box -->
            
         <div class="info-box-table" *ngIf="showInbound">
@@ -103,7 +125,7 @@
         class="ag-theme-alpine"
         style="width: 100%; height: 400px;"
         [rowData]="rowData"
-        [columnDefs]="columnDefs"
+        [columnDefs]="columnDefsOutbound"
         [defaultColDef]="defaultColDef"
         (cellValueChanged)="onCellValueChanged($event)"
         rowSelection="single"

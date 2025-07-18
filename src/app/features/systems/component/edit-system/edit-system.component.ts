@@ -29,15 +29,11 @@ export class EditSystemComponent{
   systemModel : SystemsModel = new SystemsModel();
   showDataFieldsTable = false;
   showDataFields = false;
+  showInputDataFields = false;
   showInbound = false;
   showoutbound = false;
   showsystemMapping = false;
-  // ✅ DataFields table data
-  dataFields: any[] = [
-    { fieldId: 1, fieldName: 'A', dataType: 'Num' },
-    { fieldId: 2, fieldName: 'B', dataType: 'Alpha' }
-  ];
-
+ 
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
 
   private graph!: joint.dia.Graph;
@@ -52,7 +48,6 @@ export class EditSystemComponent{
   
 
   // ✅ Table column names
-  displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   systemId!: any;
   gridApi: any;
   gridColumnApi: any;
@@ -71,6 +66,173 @@ export class EditSystemComponent{
 
 
   columnDefs:(ColDef | ColGroupDef)[]= [
+    { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, },
+    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
+    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+      },
+    },
+    { field: 'field_length', headerName: 'Length', editable: this.isEditable },
+    {
+      headerName: 'DQA',
+      children: [
+        {
+          headerName: 'C',
+          field: 'dqa_c',
+          editable: false,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'C Commentary',
+          field: 'commentary_p',
+          editable: false,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'T',
+          field: 'dqa_t',
+          editable: false,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'T Commentary',
+          field: 'commentary_t',
+          editable: false,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'A',
+          field: 'dqa_a',
+          editable: false,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'commentary_a',
+          editable: false,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+      ],
+
+    },
+    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+      },
+     },
+    // {
+    //   headerName: 'Actions',
+    //   editable: false,
+    //   filter: false,
+    //   sortable: false,
+    //   minWidth: 100, 
+    //   flex:1,
+    //   cellRenderer: (params: any) => {
+    //     const div = document.createElement('div');
+    //     div.className = 'model-cell-renderer';
+    
+    //     const saveDataFields = document.createElement('button');
+    //     saveDataFields.className = 'fa fa-save';
+    //     saveDataFields.style.color = 'green';
+    //     saveDataFields.style.border = '1px solid lightGrey';
+    //     saveDataFields.style.borderRadius = '5px';
+    //     saveDataFields.style.lineHeight = '22px';
+    //     saveDataFields.style.height = '32px';
+    //     saveDataFields.style.cursor = 'pointer';
+    //     saveDataFields.title = 'Save';
+    
+    //     // Pass row data or node to save
+    //     saveDataFields.addEventListener('click', () => {
+    //       this.saveDatafields(params.node);
+    //     });
+    
+    //     const deleteDataFields = document.createElement('button');
+    //     deleteDataFields.className = 'fa fa-trash';
+    //     deleteDataFields.style.color = 'red';
+    //     deleteDataFields.style.border = '1px solid lightGrey';
+    //     deleteDataFields.style.borderRadius = '5px';
+    //     deleteDataFields.style.lineHeight = '22px';
+    //     deleteDataFields.style.height = '32px';
+    //     deleteDataFields.style.cursor = 'pointer';
+    //     deleteDataFields.title = 'Delete';
+    
+    //      // ✅ Disable if entity_type is 'INTERFACE'
+    //     if (params.data.entity_type === 'INTERFACE') {
+    //       deleteDataFields.disabled = true;
+    //       deleteDataFields.style.opacity = '0.5';
+    //       deleteDataFields.style.cursor = 'not-allowed';
+    //     }
+
+    //     deleteDataFields.addEventListener('click', () => {
+    //       if (!deleteDataFields.disabled) {
+    //         this.deleteDAtaFields(params.node);
+    //       }
+    //     });
+    
+    //     div.appendChild(saveDataFields);
+    //     div.appendChild(deleteDataFields);
+    
+    //     return div;
+    //   }
+    // },
+  ];
+
+  columnDefsOutbound:(ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, },
     { field: 'entity_type', headerName: 'Entity Type', editable: false, },
     { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
@@ -124,7 +286,7 @@ export class EditSystemComponent{
           width:65,
           minWidth: 65,
           maxWidth: 65,
-          resizable: true,
+          resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
             color: 'blue',
@@ -459,6 +621,7 @@ export class EditSystemComponent{
   };
 
   rowData: any;
+  rowDataInput: any;
   rowDataInbound: any;
   rowDataOutbound: any;
   rowDataOutboundTarget: any;
@@ -472,7 +635,7 @@ export class EditSystemComponent{
   }
 
   addRow() {
-    const newItem = { fieldName: '', dataType: '', value: '', description: '' };
+    const newItem = { entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
     this.rowData = [...this.rowData, newItem];
   }
 
@@ -626,13 +789,21 @@ loadDropdownOptions(): void {
   addDatafields()
   {
     this.showDataFieldsTable = true;
+    this.showInputDataFields = false;
     this.showDataFields = true;
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
   }
   
-
+  addInputDatafields()
+  {
+    this.showInputDataFields = true;
+    this.showDataFields = false;
+    this.showInbound = false;
+    this.showoutbound = false;
+    this.showsystemMapping = false;
+  }
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
@@ -655,18 +826,12 @@ loadDropdownOptions(): void {
 
   }
 
+  inputCellValueChanged(event: any): void
+  {
+    console.log('Cell Value Changed:', event);
 
-  // ✅ Add a new DataField row
-  addField(): void {
-    const newId = this.dataFields.length + 1;
-    const newField = {
-      fieldId: newId,
-      fieldName: '',
-      dataType: ''
-    };
-    this.dataFields = [...this.dataFields, newField]; // Reassign array
   }
-
+  
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.systemForm.value);
@@ -755,6 +920,7 @@ loadDropdownOptions(): void {
   addInbound()
   {
     this.showDataFieldsTable = true;
+    this.showInputDataFields = false;
     this.showDataFields = false;
     this.showInbound = true;
     this.showoutbound = true;
@@ -765,6 +931,7 @@ loadDropdownOptions(): void {
   addOutBound()
   {
     this.showDataFieldsTable = true;
+    this.showInputDataFields = false;
     this.showDataFields = false;
     this.showInbound = false;
     this.showoutbound = true;
@@ -774,6 +941,7 @@ loadDropdownOptions(): void {
   sysMapping()
   {
     this.showDataFieldsTable = true;
+    this.showInputDataFields = false;
     this.showDataFields = false;
     this.showInbound = false;
     this.showoutbound = false;
@@ -853,46 +1021,6 @@ loadDropdownOptions(): void {
       })
   }
 
-
-  // getInboundInterfaceData() {
-  //   this.interfaceService.getInboundData(this.systemId).subscribe({
-  //     next: (res: any) => {
-  //       try {
-  //         const parsedInboundInterfaces = JSON.parse(res[0]?.inbound_interfaces || '[]');
-  
-  //         // ✅ Set dropdown values
-  //         this.interfaceOptionList = parsedInboundInterfaces.map((item: any) => {
-  //           return `${item.interface_id} - ${item.interface_name}`;
-  //         });
-  
-  //         // ✅ Flatten interface fields (if needed to show in rowDataInbound)
-  //         this.rowDataInbound = parsedInboundInterfaces.flatMap((item: any) =>
-  //           item.fields.map((field: any) => ({
-  //             ...field,
-  //             interface: `${item.interface_id} - ${item.interface_name}` // optional if you want to show in grid
-  //           }))
-  //         );
-          
-  //         // this.rowDataOutbound = parsedOutboundInterfaces;
-  
-  //         // ✅ Refresh grid
-  //         if (this.gridApi) {
-  //           this.gridApi.setRowData([]); // clear first
-  //           this.gridApi.setRowData(this.rowDataInbound);
-  //         }
-  
-  //         this.cdr.detectChanges(); // trigger change detection
-  //       } catch (e) {
-  //         console.error('Error parsing interface data:', e);
-  //       }
-  //     },
-  //     error: (err: any) => {
-  //       console.error('Failed to load interface:', err);
-  //     }
-  //   });
-  // }
-  
-
   loadInboundInterfaces() {
     const interfaces$ = this.interfaceService.getInterface();
     const interfaceDataFields$ = this.interfaceService.getInboundData(this.systemId);
@@ -935,6 +1063,7 @@ loadDropdownOptions(): void {
           const rawData = interfaceDataFields[0]; // replace with your actual variable
 
           const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
           const systemFields = JSON.parse(rawData.system_fields || '[]');
 
           let combinedFields: any[] = [];
@@ -949,17 +1078,28 @@ loadDropdownOptions(): void {
           });
 
           // From inbound_interfaces
-          inboundInterfaces.forEach((intf: any) => {
+          // inboundInterfaces.forEach((intf: any) => {
+          //   intf.fields.forEach((field: any) => {
+          //     combinedFields.push({
+          //       ...field,
+          //       interface_name: intf.interface_name,
+          //       source: 'Inbound'
+          //     });
+          //   });
+          // });
+
+          outboundInterfaces.forEach((intf: any) => {
             intf.fields.forEach((field: any) => {
               combinedFields.push({
                 ...field,
                 interface_name: intf.interface_name,
-                source: 'Inbound'
+                source: 'Outbound'
               });
             });
           });
 
           this.rowData = combinedFields;
+          this.rowDataInput = inboundInterfaces[0].fields;
 
           if (parsedOutboundInterfaces?.length > 0) {
             this.rowDataOutbound = parsedOutboundInterfaces.map(
@@ -997,6 +1137,7 @@ loadDropdownOptions(): void {
             this.inboundFields.push({
               interface: intf.interface_name,
               fieldId: field.field_id,
+              entityType: field.entity_type,
               fieldName: field.field_name,
               dataType: field.data_type,
               length: field.field_length,
@@ -1010,6 +1151,7 @@ loadDropdownOptions(): void {
             this.outboundFields.push({
               interface: intf.interface_name,
               fieldId: field.field_id,
+              entityType: field.entity_type,
               fieldName: field.field_name,
               dataType: field.data_type,
               length: field.field_length,
