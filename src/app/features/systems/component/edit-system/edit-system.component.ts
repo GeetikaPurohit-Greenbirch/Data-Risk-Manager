@@ -681,6 +681,7 @@ export class EditSystemComponent{
       // this.getInboundInterface();
       this.loadInboundInterfaces();
       this.rowDataInbound = [{}];
+      this.rowDataInput = [{}];
       this.rowDataOutbound = [{}]; // Initialize with one blank row
       this.getOutboundTarget();
       this.rowDataOutboundTarget = [{}];
@@ -729,6 +730,7 @@ getInboundInterface() {
       // Show only one row in the grid initially
       this.rowDataInbound = [{}];
       this.rowDataOutbound = [{}];
+      this.rowDataInput = [{}];
 
       this.cdr.detectChanges();
     },
@@ -991,6 +993,7 @@ loadDropdownOptions(): void {
             alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
             this.toastNotificationService.success("Outbound Interface Saved Successfully for System ID"+ this.systemId);
           }
+          this.loadInboundInterfaces();
         }
       })
   }
@@ -1123,6 +1126,7 @@ loadDropdownOptions(): void {
           // Refresh grid
           if (this.gridApi) {
             this.gridApi.setRowData([]);
+            this.gridApi.setRowData(this.rowDataInput);
             this.gridApi.setRowData(this.rowDataInbound);
             this.gridApi.setRowData(this.rowDataOutbound);
           }

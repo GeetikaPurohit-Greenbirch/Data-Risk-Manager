@@ -59,16 +59,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>LeanIX ID</th>
             <td mat-cell *matCellDef="let row">{{ row.leanix_id }}</td>
           </ng-container>
-<!--       
-          <ng-container matColumnDef="accuracyRisk">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Accuracy Risk</th>
-            <td mat-cell *matCellDef="let row">{{ row.accuracy_risk }}</td>
-          </ng-container>
-      
-          <ng-container matColumnDef="timelinessRisk">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Timeliness Risk</th>
-            <td mat-cell *matCellDef="let row">{{ row.timeliness_risk }}</td>
-          </ng-container> -->
+
       
           <!-- Ctrls -->
           <ng-container matColumnDef="version">
@@ -76,11 +67,7 @@
             <td mat-cell *matCellDef="let row">{{ row.version_number }}</td>
           </ng-container>
       
-          <!-- Trgts -->
-          <!-- <ng-container matColumnDef="trgts">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Trgts</th>
-            <td mat-cell *matCellDef="let row">{{ row.trgts }}</td>
-          </ng-container> -->
+         
       
           <!-- Status -->
           <ng-container matColumnDef="status">
@@ -118,11 +105,14 @@
   (click)="toggleRow(row)">
 </tr>
 
+
 <!-- Expanded Detail Row -->
 <!-- <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr> -->
 
           
         </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+
       </div>
       
 </main>

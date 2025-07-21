@@ -75,15 +75,25 @@ editableColumns: string[] = [
   ngOnInit(): void {
     
     this.getSystemList();
-    // this.getChildGriddata ();
+    this.getChildGriddata();
     // this.rowData= [];
 
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  // }
+
+  // ngAfterViewInit() {
+  //   this.dataSource.sort = this.sort;
+  //   this.dataSource.paginator = this.paginator;
+  
+  //   // Set default sort
+  //   this.sort.active = 'systemid'; // Column name as used in matColumnDef
+  //   this.sort.direction = 'asc';   // or 'desc' for descending
+  //   this.sort.sortChange.emit();   // trigger sort
+  // }
 
   toggleRow(row: any) {
     this.expandedElement = this.expandedElement === row ? null : row;
@@ -140,44 +150,92 @@ saveChildGrid(parentRow: any) {
 }
 
 
-  getSystemList()
-  {
+  // getSystemList()
+  // {
+  //   this.systemService.getSystems().subscribe((data: any) => {
+  //     const systemsWithChildData = data.map((system: any) => {
+  //       const sys = {
+  //         ...system.systemEntity,
+  //         childGridData: [] // set for now, we'll load below
+  //       };
+  
+  //       // // Fetch child data
+  //       // this.systemService.getChildData().subscribe((childData: any[]) => {
+  //       //   sys.childGridData = childData;
+  //       // });
+  
+  //       return sys;
+  //     });
+  
+  //     this.systems = systemsWithChildData;
+  //     this.dataSource.data = this.systems;
+  //     this.dataSource.paginator = this.paginator;
+  //     this.dataSource.sort = this.sort;
+  //     this.dataSource.sortingDataAccessor = (item, property) => {
+  //       if (property === 'systemid') {
+  //         return +item.system_id; // convert to number
+  //       }
+  //       return (item as any)[property]; // type assertion bypasses strict typing
+  //     };
+  //   });
+    
+  // }
+
+  getSystemList(): void {
     this.systemService.getSystems().subscribe((data: any) => {
-      const systemsWithChildData = data.map((system: any) => {
-        const sys = {
-          ...system.systemEntity,
-          childGridData: [] // set for now, we'll load below
-        };
-  
-        // Fetch child data
-        this.systemService.getChildData().subscribe((childData: any[]) => {
-          sys.childGridData = childData;
-        });
-  
-        return sys;
-      });
-  
-      this.systems = systemsWithChildData;
-      this.dataSource.data = this.systems;
-      this.dataSource.paginator = this.paginator;
+          const systemsWithChildData = data.map((system: any) => {
+            const sys = {
+              ...system.systemEntity,
+              childGridData: [] // set for now, we'll load below
+            };
+    
+      
+            return sys;
+          });
+      
+          this.systems = systemsWithChildData;
+                this.dataSource.data = this.systems;
+
+      this.dataSource = new MatTableDataSource(this.systems);
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  
+      // Optional: sortingDataAccessor if sorting by number-as-string
+      this.dataSource.sortingDataAccessor = (item: SystemsModel, property: string) => {
+        switch (property) {
+          case 'systemid': return +item.system_id;
+          case 'name': return item.system_name;
+          case 'description': return item.description;
+          case 'owner': return item.owner;
+          case 'owner_email': return item.owner_email;
+          case 'leanixId': return item.leanix_id;
+          case 'version': return item.version_number;
+          case 'status': return item.status;
+          default: return '';
+        }
+      };
+  
+      // 👇 Set and trigger default sorting
+      this.sort.active = 'systemid';    // matColumnDef name
+      this.sort.direction = 'asc';      // or 'desc'
+      this.sort.sortChange.emit();      // <- triggers the sort to apply
     });
-    
   }
+  
 
-//   getChildGriddata()
-// {
-//   this.systemService.getChildData().subscribe((data: any) => {
-//     console.log(data, "child grid data")
+  getChildGriddata()
+{
+  this.systemService.getChildData().subscribe((data: any) => {
+    console.log(data, "child grid data")
     
-//   });
+  });
 
 
-// }
+}
 
   deleteSystem(system: SystemsModel) {
-    this.systemService.deleteSystem(system.systemEntity.system_id).subscribe(res => {
-        alert("System Deleted Successfully. Deleted System ID is "+ system.systemEntity.system_id);
+    this.systemService.deleteSystem(system.system_id).subscribe(res => {
+        alert("System Deleted Successfully. Deleted System ID is "+ system.system_id);
         this.getSystemList(); // refresh
     })
   }
