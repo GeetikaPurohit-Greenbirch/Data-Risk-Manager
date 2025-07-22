@@ -42,6 +42,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { NodeDropModalComponent } from './node-drop-modal/node-drop-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -63,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomeComponent,
     CreateUserComponent,
     UserListComponent,
+    NodeDropModalComponent
 
   ],
   imports: [

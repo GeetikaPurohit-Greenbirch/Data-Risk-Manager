@@ -210,7 +210,7 @@ registerCustomShapes12(): void {
                   // refX: 30,
                   // refY: 5,
                   yAlignment: 'top',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 0,
@@ -236,7 +236,7 @@ registerCustomShapes12(): void {
                   refX: -5,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 1,
@@ -343,7 +343,7 @@ registerCustomShapes3(): void {
                   ref: 'portBody',
                   refX: 30,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -369,7 +369,7 @@ registerCustomShapes3(): void {
                   refX: -5,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -458,7 +458,7 @@ registerCustomShapes3(): void {
                   refX: 10,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -483,7 +483,7 @@ registerCustomShapes3(): void {
                   refX: -10,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -575,7 +575,7 @@ registerCustomShapesDualNode(): void {
                   refX: 10,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -600,7 +600,7 @@ registerCustomShapesDualNode(): void {
                   refX: -10,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -625,7 +625,7 @@ registerCustomShapesDualNode(): void {
                   refX: 0,
                   refY: -10,
                   yAlignment: 'bottom',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -650,7 +650,7 @@ registerCustomShapesDualNode(): void {
                   refX: 0,
                   refY: 10,
                   yAlignment: 'top',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 4,
@@ -812,7 +812,7 @@ registerCustomShapesDualNode(): void {
       refX: 10,
       refY: 0,
       yAlignment: 'middle',
-      pointerEvents: 'none'
+      // pointerEvents: 'none'
     },
     portBody: {
       r: 4,
@@ -851,7 +851,7 @@ registerCustomShapesDualNode(): void {
       refX: -7,
       refY: 0,
       yAlignment: 'middle',
-      pointerEvents: 'none'
+      // pointerEvents: 'none'
     },
     portBody: {
       r: 4,
@@ -918,6 +918,13 @@ registerCustomShapes(): void {
             fontSize: 14,
             fill: '#000'
           },
+        icon: {
+          html:'',
+          x: 8,
+          y: 8,
+          width: 24,
+          height: 24
+        },
           // 'remove-icon': {
           //   text: '✕',
           //   ref: 'body',
@@ -932,19 +939,19 @@ registerCustomShapes(): void {
           //   visibility: 'hidden',
           //   fill: 'red'
           // },
-      'remove-icon': {
-        d: 'M96 464c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V160H96v304zm64-240h32v208h-32V224zm96 0h32v208h-32V224zm96 0h32v208h-32V224zM432 32H312l-9.4-18.7C297.3 5.1 288.2 0 278.1 0h-44.2c-10.1 0-19.2 5.1-24.5 13.3L200 32H80C53.5 32 32 53.5 32 80v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48z',
-        fill: 'red',
-        ref: 'body',
-        refX: '95%',
-        refY: '-5%',
-        x: -18,
-        y: 0,
-        transform: 'scale(0.025)',  // Adjust scale as needed
-        cursor: 'pointer',
-        event: 'element:delete',
-        visibility: 'hidden'
-      },
+          'remove-icon': {
+            d: 'M96 464c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V160H96v304zm64-240h32v208h-32V224zm96 0h32v208h-32V224zm96 0h32v208h-32V224zM432 32H312l-9.4-18.7C297.3 5.1 288.2 0 278.1 0h-44.2c-10.1 0-19.2 5.1-24.5 13.3L200 32H80C53.5 32 32 53.5 32 80v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48z',
+            fill: 'red',
+            ref: 'body',
+            refX: '95%',
+            refY: '-5%',
+            x: -18,
+            y: 0,
+            transform: 'scale(0.025)',  // Adjust scale as needed
+            cursor: 'pointer',
+            event: 'element:delete',
+            visibility: 'hidden'
+          },
 
          'resize-handle': {
           ref: 'body',
@@ -977,7 +984,7 @@ registerCustomShapes(): void {
                   refX: 10,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 5,
@@ -1002,7 +1009,7 @@ registerCustomShapes(): void {
                   refX: 12,
                   refY: 0,
                   yAlignment: 'middle',
-                  pointerEvents: 'none'
+                  // pointerEvents: 'none'
                 },
                 portBody: {
                   r: 5,
@@ -1085,6 +1092,7 @@ registerCustomShapes(): void {
             ]
           },
           { tagName: 'rect', selector: 'resize-handle' },
+            { tagName: 'image', selector: 'icon' }
 // 👈 Add this for resize
         ]
       }
@@ -1094,7 +1102,220 @@ registerCustomShapes(): void {
   // You can copy the same logic to DualBlock if needed.
 }
 
+// registerCustomShapes(): void {
+//   const shapes = (joint as any).shapes;
+//   shapes.processor = shapes.processor || {};
 
+//   if (!shapes.processor.SingleBlock) {
+//     shapes.processor.SingleBlock = joint.dia.Element.define(
+//       'processor.SingleBlock',
+//       {
+//         type: 'processor.SingleBlock',
+//         size: { width: 180, height: 160 },
+//         attrs: {
+//           body: {
+//             refWidth: '100%',
+//             refHeight: '100%',
+//             fill: '#3f51b5',
+//             stroke: '#36454F',
+//             strokeWidth: 1,
+//             rx: 4,
+//             r: 2,
+//             ry: 4
+//           },
+//           title: {
+//             text: '',
+//             refX: '50%',
+//             refY: '40%',
+//             textAnchor: 'middle',
+//             fontSize: 14,
+//             fill: '#000'
+//           },
+//            icon: {
+//       'xlink:href': 'https://cdn-icons-png.flaticon.com/512/25/25231.png',
+//       x: 8,
+//       y: 8,
+//       width: 24,
+//       height: 24
+//     }
+// ,
+//           // 'remove-icon': {
+//           //   text: '✕',
+//           //   ref: 'body',
+//           //   refX: '100%',
+//           //   refY: '0%',
+//           //   x: -12,
+//           //   y: 4,
+//           //   fontSize: 14,
+//           //   fontWeight: 'bold',
+//           //   cursor: 'pointer',
+//           //   event: 'element:delete',
+//           //   visibility: 'hidden',
+//           //   fill: 'red'
+//           // },
+//       'remove-icon': {
+//         d: 'M96 464c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V160H96v304zm64-240h32v208h-32V224zm96 0h32v208h-32V224zm96 0h32v208h-32V224zM432 32H312l-9.4-18.7C297.3 5.1 288.2 0 278.1 0h-44.2c-10.1 0-19.2 5.1-24.5 13.3L200 32H80C53.5 32 32 53.5 32 80v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48z',
+//         fill: 'red',
+//         ref: 'body',
+//         refX: '95%',
+//         refY: '-5%',
+//         x: -18,
+//         y: 0,
+//         transform: 'scale(0.025)',  // Adjust scale as needed
+//         cursor: 'pointer',
+//         event: 'element:delete',
+//         visibility: 'hidden'
+//       },
+
+//          'resize-handle': {
+//           ref: 'body',
+//           refX: '100%',
+//           refY: '100%',
+//           x: -6,
+//           y: -6,
+//           width: 7,
+//           height: 7,
+//           fill: '#999',
+//           stroke: '#fff',
+//           strokeWidth: 1,
+//           cursor: 'se-resize',
+//           event: 'resize:drag',
+//           visibility: 'visible'
+//           },
+        
+
+
+//         },
+//         ports: {
+//           groups: {
+//             in: {
+//               position: { name: 'left' },
+//               attrs: {
+//                 portLabel: {
+//                   fontSize: 12,
+//                   fill: '#fff',
+//                   textAnchor: 'start',
+//                   refX: 10,
+//                   refY: 0,
+//                   yAlignment: 'middle',
+//                   // pointerEvents: 'none'
+//                 },
+//                 portBody: {
+//                   r: 5,
+//                   fill: '#fff',
+//                   stroke: '#000',
+//                   strokeWidth: 1,
+//                   magnet: true
+//                 },
+                
+//               },
+//               markup: [
+//                 { tagName: 'circle', selector: 'portBody' },
+//                 { tagName: 'text', selector: 'portLabel' }
+//               ]
+//             },
+//             out: {
+//               position: { name: 'right' },
+//               attrs: {
+//                 portLabel: {
+//                   fontSize: 12,
+//                   fill: '#fff',
+//                   textAnchor: 'start',
+//                   refX: 12,
+//                   refY: 0,
+//                   yAlignment: 'middle',
+//                   // pointerEvents: 'none'
+//                 },
+//                 portBody: {
+//                   r: 5,
+//                   fill: '#fff',
+//                   stroke: '#000',
+//                   strokeWidth: 1,
+//                   magnet: true,
+//                   x: -10,
+//                   y: 0
+//                 }
+//               },
+//               markup: [
+//                 { tagName: 'circle', selector: 'portBody' },
+//                 { tagName: 'text', selector: 'portLabel' }
+//               ]
+//             },
+//             // verticalIn: {
+//             //   position: { name: 'top' },
+//             //   attrs: {
+//             //     portLabel: {
+//             //       fontSize: 12,
+//             //       fill: '#fff',
+//             //       textAnchor: 'middle',
+//             //       refX: 0,
+//             //       refY: -10,
+//             //       yAlignment: 'bottom',
+//             //       pointerEvents: 'none'
+//             //     },
+//             //     portBody: {
+//             //       r: 5,
+//             //       fill: '#fff',
+//             //       stroke: '#000',
+//             //       strokeWidth: 1,
+//             //       magnet: true
+//             //     }
+//             //   },
+//             //   markup: [
+//             //     { tagName: 'circle', selector: 'portBody' },
+//             //     { tagName: 'text', selector: 'portLabel' }
+//             //   ]
+//             // },
+//             // verticalOut: {
+//             //   position: { name: 'bottom' },
+//             //   attrs: {
+//             //     portLabel: {
+//             //       fontSize: 12,
+//             //       fill: '#fff',
+//             //       textAnchor: 'middle',
+//             //       refX: 0,
+//             //       refY: 10,
+//             //       yAlignment: 'top',
+//             //       pointerEvents: 'none'
+//             //     },
+//             //     portBody: {
+//             //       r: 4,
+//             //       fill: '#fff',
+//             //       stroke: '#000',
+//             //       strokeWidth: 1,
+//             //       magnet: true
+//             //     }
+//             //   },
+//             //   markup: [
+//             //     { tagName: 'circle', selector: 'portBody' },
+//             //     { tagName: 'text', selector: 'portLabel' }
+//             //   ]
+//             // }
+//           }
+//         }
+//       },
+//       {
+//         markup: [
+//           { tagName: 'rect', selector: 'body' },
+//           { tagName: 'text', selector: 'title' },
+//           {
+//             tagName: 'g',
+//             selector: 'remove-group',
+//             children: [
+//               { tagName: 'path', selector: 'remove-icon' },
+//               { tagName: 'title', selector: 'remove-title' }
+//             ]
+//           },
+//           { tagName: 'rect', selector: 'resize-handle' },
+//            { tagName: 'image', selector: 'icon' }
+// // 👈 Add this for resize
+//         ]
+//       }
+//     );
+//   }
+
+//   // You can copy the same logic to DualBlock if needed.
+// }
 
 
 
