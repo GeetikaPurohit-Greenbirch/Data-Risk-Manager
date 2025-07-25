@@ -25,6 +25,15 @@ export class ControlsComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+dataLength = 0;
+pageSizeOptions = [5, 10, 50];
+
+ngAfterViewInit() {
+  // this.dataLength = this.dataSource.data.length;
+  // if (!this.pageSizeOptions.includes(this.dataLength)) {
+  //   this.pageSizeOptions.push(this.dataLength); // for 'All'
+  // }
+}
 
   constructor(private controlService: ControlService,
     private router: Router
@@ -38,9 +47,41 @@ export class ControlsComponent {
     this.getControlList();
   }
 
-  ngAfterViewInit() {
+
+  applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+
+      
     
-  }
+      // Optional: if your table includes objects, set a custom filterPredicate
+      this.dataSource.filterPredicate = (data: Control, filter: string) => {
+        const lowerFilter = filter.trim().toLowerCase();
+
+        const formatDate = (date: any): string => {
+          return date
+            ? new Date(date).toLocaleDateString('en-CA') // yyyy-mm-dd
+            : '';
+        };
+
+        const formattedApplicationDate = formatDate(data.application_date);
+
+        return (
+          data.control_name?.toLowerCase().includes(filter) ||
+          data.control_description?.toLowerCase().includes(filter) ||
+          data.attach_to?.toLowerCase().includes(filter) ||
+          String(data.attach_to_id).includes(filter) ||
+          data.control_owner?.toLowerCase().includes(filter) ||
+          data.control_owner_email?.toLowerCase().includes(filter) ||
+          data.version_number?.toLowerCase().includes(filter) ||
+          data.status?.toLowerCase().includes(filter) ||          
+          formattedApplicationDate.includes(lowerFilter) ||
+          data.application_date_status?.toLowerCase().includes(filter) ||
+          String(data.control_id).includes(filter) 
+        );
+      };
+    }
+
 
   getControlList() {
     this.controlService.getControl().subscribe({
@@ -53,7 +94,34 @@ export class ControlsComponent {
         this.dataSource.data = patchedControls;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        this.dataLength = this.dataSource.data.length;
+        if (!this.pageSizeOptions.includes(this.dataLength)) {
+          this.pageSizeOptions.push(this.dataLength); // for 'All'
+        }
+  // Optional: sortingDataAccessor if sorting by number-as-string
+
+                this.dataSource.sortingDataAccessor = (item: Control, property: string) => {
+                  switch (property) {
+                    case 'controlid': return +item.control_id;
+                    case 'name': return item.control_name;
+                    case 'controldesc': return item.control_description;
+                    case 'attachto': return item.attach_to;
+                    case 'attachtoid': return item.attach_to_id;
+                    case 'owner': return item.control_owner;
+                    case 'owneremail': return item.control_owner_email;
+                    case 'version': return item.version_number;
+                    case 'status': return item.status;
+                    case 'applicationdate': return item.application_date ? new Date(item.application_date).getTime() : 0;
+                    case 'applicationdatestatus': return item.application_date_status;
+                    default: return '';
+                  }
+                };
   
+  // 👇 Set and trigger default sorting
+  this.sort.active = 'controlid';    // matColumnDef name
+  this.sort.direction = 'asc';      // or 'desc'
+  this.sort.sortChange.emit();      // <- triggers the sort to apply
         console.log(this.dataSource.data, "Controls");
       },
       error: (err) => {
@@ -68,6 +136,12 @@ export class ControlsComponent {
         alert("Control Deleted Successfully. Deleted Control ID is "+ controls.control_id);
         this.getControlList(); // refresh
     })
+  }
+
+  addControlScreen()
+  {
+    this.router.navigate(['/controls/control-builder']);
+
   }
 
   editControl(controls:any) {

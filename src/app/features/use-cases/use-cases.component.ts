@@ -48,6 +48,40 @@ export class UseCasesComponent {
     
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  
+    // Optional: if your table includes objects, set a custom filterPredicate
+    this.dataSource.filterPredicate = (data: Usecase, filter: string) => {
+      const lowerFilter = filter.trim().toLowerCase();
+
+      const formatDate = (date: any): string => {
+        return date
+          ? new Date(date).toLocaleDateString('en-CA') // yyyy-mm-dd
+          : '';
+      };
+    
+      const formattedLastReviewDate = formatDate(data.last_review_date);
+      const formattedNextReviewDate = formatDate(data.next_review_date);
+
+      return (
+        data.use_case_name?.toLowerCase().includes(lowerFilter) ||
+        data.use_case_description?.toLowerCase().includes(lowerFilter) ||
+        data.use_case_owner?.toLowerCase().includes(lowerFilter) ||
+        data.use_case_owner_email?.toLowerCase().includes(lowerFilter) ||
+        data.status?.toLowerCase().includes(lowerFilter) ||
+        data.reviewed_by?.toLowerCase().includes(lowerFilter) ||
+        data.reviewer?.toLowerCase().includes(lowerFilter) ||
+        String(data.use_case_id).includes(lowerFilter) ||
+        String(data.version).includes(lowerFilter) ||
+        formattedLastReviewDate.includes(lowerFilter) ||
+        formattedNextReviewDate.includes(lowerFilter)
+      );
+    };
+  }
+  
+
   getUsecaseList() {
     this.usecaseService.getUsecase().subscribe({
       next: (usecases: any[]) => {
@@ -72,6 +106,24 @@ export class UseCasesComponent {
             this.dataSource.data = finalUsecases;
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
+             // Optional: sortingDataAccessor if sorting by number-as-string
+                  this.dataSource.sortingDataAccessor = (item: Usecase, property: string) => {
+                    switch (property) {
+                      case 'usecaseid': return +item.use_case_id;
+                      case 'name': return item.use_case_name;
+                      case 'description': return item.use_case_description;
+                      case 'owner': return item.use_case_owner;
+                      case 'owner_email': return item.use_case_owner_email;
+                      case 'version': return item.version;
+                      case 'status': return item.status;
+                      case 'last_review_date': return item.last_review_date ? new Date(item.last_review_date).getTime() : 0;
+                      case 'reviewed_by': return item.reviewed_by;
+                      case 'next_review_date': return item.next_review_date ? new Date(item.next_review_date).getTime() : 0;
+                      case 'reviewer': return item.reviewer;
+                     
+                      default: return '';
+                    }
+                  };
   
             console.log(this.dataSource.data, "Usecases with Permissions");
           },
@@ -96,6 +148,12 @@ export class UseCasesComponent {
           this.getUsecaseList(); // refresh
         }, 1000);
     })
+  }
+
+  addUseCaseScreen()
+  {
+    this.router.navigate(['/use-cases/create-use-case']);
+
   }
 
   editUseCase(usecases:any) {

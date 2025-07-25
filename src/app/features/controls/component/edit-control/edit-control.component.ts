@@ -42,6 +42,8 @@ controlForm!: FormGroup;
   filteredAttachToIdOptions: { id: number, name: string }[] = [];
   attachTo!:string;
   attachToId!:number;
+  activeView!: string; // default view on load
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -308,10 +310,11 @@ controlForm!: FormGroup;
     console.log('Cell Value Changed:', event);
   }
 
-  addDatafields()
+  addDatafields(view:string)
   {
+    this.activeView = view;
     this.showDataFields = true;
-    alert(this.attachTo +','+ this.attachToId);
+    // alert(this.attachTo +','+ this.attachToId);
       this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
         next: (res: any) => {
           this.rowData = [...res]; // triggers change

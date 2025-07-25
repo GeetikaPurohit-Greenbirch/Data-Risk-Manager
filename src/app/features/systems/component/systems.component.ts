@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SystemServiceService } from '../services/system-service.service';
 import { SystemsModel } from '../models/systems-model.model';
@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
   ]
 })
 export class SystemsComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'systemid', 'name', 'description', 'owner', 'owner_email', 'leanixId', 'version', 'status', 'actions'];
+  displayedColumns: string[] = [ 'systemid', 'name', 'description', 'owner', 'owner_email', 'leanixId', 'version', 'status', 'actions'];
   expandedElement: any | null;
   expandedRow: any | null = null;
   public rowData: any;
@@ -61,6 +61,12 @@ editableColumns: string[] = [
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  pageSize = 5;
+  data: any[] = []; // example
+  // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
+  pageSizeOptions: number[] = [];
+
+
 
   constructor(private systemService: SystemServiceService,
     private dialog: MatDialog,
@@ -77,23 +83,35 @@ editableColumns: string[] = [
     this.getSystemList();
     this.getChildGriddata();
     // this.rowData= [];
+    // this.replaceLastPageSizeLabel();
+    this.pageSizeOptions = [this.systems.length, 5, 10, 50]; // "All" is first
 
   }
 
-  // ngAfterViewInit() {
-  //   this.dataSource.paginator = this.paginator;
-  //   this.dataSource.sort = this.sort;
-  // }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.patchAllLabel();
+    }, 0);
+  }
+  patchAllLabel() {
+    setTimeout(() => {
+      const options = document.querySelectorAll('mat-option span.mdc-list-item__primary-text');
+      options.forEach((opt: any) => {
+        if (opt.textContent?.trim() === String(this.systems.length)) {
+          opt.textContent = 'All';
+        }
+      });
+    }, 100);
+  }
 
-  // ngAfterViewInit() {
-  //   this.dataSource.sort = this.sort;
-  //   this.dataSource.paginator = this.paginator;
+  onPageChange(event: any) {
+    if (event.pageSize === this.systems.length || event.pageSize === 'All') {
+      this.pageSize = this.systems.length;
+    } else {
+      this.pageSize = event.pageSize;
+    }
+  }
   
-  //   // Set default sort
-  //   this.sort.active = 'systemid'; // Column name as used in matColumnDef
-  //   this.sort.direction = 'asc';   // or 'desc' for descending
-  //   this.sort.sortChange.emit();   // trigger sort
-  // }
 
   toggleRow(row: any) {
     this.expandedElement = this.expandedElement === row ? null : row;
@@ -149,37 +167,26 @@ saveChildGrid(parentRow: any) {
   
 }
 
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
 
-  // getSystemList()
-  // {
-  //   this.systemService.getSystems().subscribe((data: any) => {
-  //     const systemsWithChildData = data.map((system: any) => {
-  //       const sys = {
-  //         ...system.systemEntity,
-  //         childGridData: [] // set for now, we'll load below
-  //       };
-  
-  //       // // Fetch child data
-  //       // this.systemService.getChildData().subscribe((childData: any[]) => {
-  //       //   sys.childGridData = childData;
-  //       // });
-  
-  //       return sys;
-  //     });
-  
-  //     this.systems = systemsWithChildData;
-  //     this.dataSource.data = this.systems;
-  //     this.dataSource.paginator = this.paginator;
-  //     this.dataSource.sort = this.sort;
-  //     this.dataSource.sortingDataAccessor = (item, property) => {
-  //       if (property === 'systemid') {
-  //         return +item.system_id; // convert to number
-  //       }
-  //       return (item as any)[property]; // type assertion bypasses strict typing
-  //     };
-  //   });
-    
-  // }
+  // Optional: if your table includes objects, set a custom filterPredicate
+  this.dataSource.filterPredicate = (data: SystemsModel, filter: string) => {
+    return (
+      data.system_name?.toLowerCase().includes(filter) ||
+      data.description?.toLowerCase().includes(filter) ||
+      data.owner?.toLowerCase().includes(filter) ||
+      data.owner_email?.toLowerCase().includes(filter) ||
+      data.leanix_id?.toLowerCase().includes(filter) ||
+      data.status?.toLowerCase().includes(filter) ||
+      String(data.system_id).includes(filter) ||
+      String(data.version_number).includes(filter)
+    );
+  };
+}
+
+
 
   getSystemList(): void {
     this.systemService.getSystems().subscribe((data: any) => {
@@ -199,7 +206,9 @@ saveChildGrid(parentRow: any) {
       this.dataSource = new MatTableDataSource(this.systems);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-  
+      // this.pageSizeOptions = [2, 3, 5, this.systems.length];
+   
+
       // Optional: sortingDataAccessor if sorting by number-as-string
       this.dataSource.sortingDataAccessor = (item: SystemsModel, property: string) => {
         switch (property) {
@@ -255,6 +264,12 @@ saveChildGrid(parentRow: any) {
   //     }
   //   });
   // }
+
+  addSystemScreen()
+  {
+    this.router.navigate(['/systems/system-builder']);
+
+  }
 
   editSystem(systems:any) {
     this.router.navigate(['/systems/edit-system', systems.system_id]);

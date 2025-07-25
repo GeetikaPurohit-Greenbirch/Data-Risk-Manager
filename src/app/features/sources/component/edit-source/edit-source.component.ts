@@ -40,6 +40,8 @@ export class EditSourceComponent implements OnInit {
    gridColumnApi: any;
    // rowData: any;
    dataFieldsModel : Datafields = new Datafields();
+   activeView!: string; // default view on load
+
    constructor(
      private route: ActivatedRoute,
      private fb: FormBuilder,
@@ -280,15 +282,17 @@ export class EditSourceComponent implements OnInit {
      });
    }
  
-   addDatafields()
-   {
+   addDatafields(view:string)
+  {
+    this.activeView = view;
      this.showDataFieldsTable = true;
      this.showDataFields = true;
      this.showDataQuality = false;
    }
  
-   showDQA()
+   showDQA(view:string)
    {
+     this.activeView = view;
      this.showDataFieldsTable = true;
      this.showDataFields = false;
      this.showDataQuality = true;

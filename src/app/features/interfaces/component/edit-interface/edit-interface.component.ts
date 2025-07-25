@@ -36,6 +36,8 @@ export class EditInterfaceComponent implements OnInit {
   interfaceId!: any;
   gridApi: any;
   gridColumnApi: any;
+  activeView!: string; // default view on load
+
   // rowData: any;
   dataFieldsModel : Datafields = new Datafields();
   constructor(
@@ -280,15 +282,17 @@ export class EditInterfaceComponent implements OnInit {
     });
   }
 
-  addDatafields()
+  addDatafields(view:string)
   {
+    this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = true;
     this.showDataQuality = false;
   }
 
-  showDQA()
+  showDQA(view:string)
   {
+    this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = false;
     this.showDataQuality = true;

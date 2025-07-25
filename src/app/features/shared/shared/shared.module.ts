@@ -15,7 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,6 +28,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Or MatMomentDateModule if using moment.js
 import { MatRadioModule } from '@angular/material/radio';
+import { CustomPaginatorIntl } from '../../shared-services/custom-paginator-intl.service';
+import { CustomPaginatorComponent } from 'src/app/layout/custom-paginator/custom-paginator.component';
 
 
 
@@ -36,7 +38,8 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
 @NgModule({
   declarations: [
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    CustomPaginatorComponent,
   ],
   imports: [
     CommonModule,
@@ -68,6 +71,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
   exports: [
     HeaderComponent,
     SidebarComponent,    // 👈 Export so other modules can use
+    CustomPaginatorComponent,
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
@@ -92,6 +96,9 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule
-  ]
+  ],
+  // providers: [
+  //   { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl  }
+  // ]
 })
 export class SharedModule {}

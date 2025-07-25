@@ -11,4 +11,5 @@ export class Target {
     target_owner!:string;
     target_owner_email!:string;
     target_entity!:string;
+    target_id!:number;
 }

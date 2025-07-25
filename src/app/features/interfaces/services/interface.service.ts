@@ -33,7 +33,12 @@ private lineageUrl = environment.apiLineageBaseUrl
 
   public deleteInboundInterface(interface_id:any, system_id:any, entity_type:string): Observable<any> {
     const url: string = this.lineageUrl + 'mapping/entity/system/'+system_id+'/interface/'+interface_id+'/'+entity_type;
-    return this.http.delete<any>(url);
+    return this.http.delete<any[]>(url,{
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+    });    
   }
   //// get inbound data /////
   

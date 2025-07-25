@@ -8,17 +8,25 @@
         <h2>Systems</h2>
       </section>
       <div class="system-table-container">
+        <mat-form-field appearance="outline" class="filter-input">
+          <mat-label>Filter Systems</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter..." />
+        </mat-form-field>
+        <button mat-raised-button color="primary" style="float: right;" (click)="addSystemScreen()">
+          <i class="fa fa-cogs" style="margin-right: 8px;"></i>
+          Add System
+        </button>
         <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
           <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z2">
 
       
           <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
+          <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
-          </ng-container>
+          </ng-container> -->
           <ng-container matColumnDef="systemid">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>System ID</th>
             <td mat-cell *matCellDef="let row">{{ row.system_id }}</td>
@@ -111,7 +119,23 @@
 
           
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        <!-- <app-custom-paginator
+  [length]="data.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 50, 'all']"
+  (pageChange)="onPageChange($event)">
+</app-custom-paginator> -->
+<mat-paginator
+  [length]="data.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[systems.length, 5, 10, 50]"
+  (page)="onPageChange($event)"
+  (click)="patchAllLabel()">
+</mat-paginator>
+
+
+
+
 
       </div>
       

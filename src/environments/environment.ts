@@ -4,10 +4,10 @@
 
 export const environment = {
 
-  production: false,
-  apiBaseUrl: ' http://api.dev.greenbirchdata.com/auth/', /// for user module
-  apiAllBaseUrl: ' http://api.dev.greenbirchdata.com/entity/', /// for other modules
-  apiLineageBaseUrl: ' http://api.dev.greenbirchdata.com/lineage/', /// for Lineage modules
+  production: true,
+  apiBaseUrl: ' https://api.dev.datariskmanager.net/auth/', /// for user module
+  apiAllBaseUrl: ' https://api.dev.datariskmanager.net/entity/', /// for other modules
+  apiLineageBaseUrl: ' https://api.dev.datariskmanager.net/lineage/', /// for Lineage modules
 
   // okta: {
   //   clientId: 'kdqcweVMIWwiYtZtIvJmfrLUJ8LVXKor',
@@ -22,13 +22,10 @@ export const environment = {
   // },
 
 
-  Auth0: {
-  production: false,
-  auth0Domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com',
-  clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7',
-  clientSecret: 'NFQkJZcnhA628kcI9-9gaOKVj20UUWvIvgUZqztjqzkOtMCiDeZc3d4ZoebdHKTV', // Avoid this in production; use a backend in production
-  audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/',
-  grant_type: 'client_credentials'
+  auth: {
+    domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com',
+    clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7',
+    audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/',
   }
 
 };

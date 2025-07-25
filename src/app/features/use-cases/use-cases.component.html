@@ -8,6 +8,15 @@
         <h2>Use Cases</h2>
       </section>
       <div class="system-table-container">
+        <mat-form-field appearance="outline" class="filter-input">
+          <mat-label>Filter Use Case</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter..." />
+        </mat-form-field>
+        <button mat-raised-button color="primary" style="float: right;" (click)="addUseCaseScreen()">
+          <i class="fa fa-clipboard" style="margin-right: 8px;"></i>
+          Add Use Case
+        </button>
+
           <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z2">
 
           <!-- </ng-container> -->
@@ -113,6 +122,8 @@
 
           
         </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+
       </div>
       
 </main>

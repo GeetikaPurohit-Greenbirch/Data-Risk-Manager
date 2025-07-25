@@ -84,11 +84,11 @@ export function HttpLoaderFactory(http: HttpClient) {
       preventDuplicates: true
     }),
     AuthModule.forRoot({
-      domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com', // Replace with your Okta domain
-      clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7', // Replace with your Okta client ID
+      domain: environment.auth.domain,
+      clientId: environment.auth.clientId,
       authorizationParams: {
         redirect_uri: window.location.origin+ '/callback',
-        audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/', // Replace with your API identifier from Auth0
+        audience: environment.auth.audience, // Replace with your API identifier from Auth0
         scope: 'openid profile email offline_access',
       },
       cacheLocation: 'localstorage', // Persist tokens across page reloads

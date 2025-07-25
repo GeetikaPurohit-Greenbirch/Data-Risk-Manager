@@ -84,15 +84,30 @@
           <input matInput formControlName="interface_owner_email" />
         </mat-form-field>
         <!-- Add remaining fields similarly -->
-        <br>
-        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Interface</button>
-<!-- Toggle Button -->
-<button mat-stroked-button color="accent" (click)="addDatafields()">
-    Add DataFields
-  </button><br><br>
-  <button mat-stroked-button color="accent" (click)="showDQA()">
-    Data Quality Risk
-  </button>
+        <div class="updateBtn">
+                  <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Interface</button>
+</div>
+                  <!-- Toggle Button -->
+                  <div style="display: flex; height: 100%;">
+                    <!-- Left Side Buttons -->
+                    <div style="width: 100%; padding: 12px;">
+                      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <button mat-stroked-button
+                                style="flex: 0 0 calc(50% - 6px);"
+                                [color]="activeView === 'datafields' ? 'primary' : 'accent'"
+                                (click)="addDatafields('datafields')">
+                          Add Datafields
+                        </button>
+                  
+                        <button mat-stroked-button
+                                style="flex: 0 0 calc(50% - 6px);"
+                                [color]="activeView === 'dqa' ? 'primary' : 'accent'"
+                                (click)="showDQA('dqa')">
+                                Data Quality Risk
+                        </button>
+                        </div>
+                        </div>
+                        </div>
       </form>
 
     </div>

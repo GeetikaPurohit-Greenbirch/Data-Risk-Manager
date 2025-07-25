@@ -8,6 +8,15 @@
         <h2>Sources</h2>
       </section>
       <div class="system-table-container">
+        <mat-form-field appearance="outline" class="filter-input">
+          <mat-label>Filter Sources</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter..." />
+        </mat-form-field>
+        <button mat-raised-button color="primary" style="float: right;" (click)="addSourceScreen()">
+          <i class="fa fa-database" style="margin-right: 8px;"></i>
+          Add Source
+        </button>
+
         <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
           <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z2">
 
@@ -111,6 +120,8 @@
 
           
         </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+
       </div>
       
 </main>
