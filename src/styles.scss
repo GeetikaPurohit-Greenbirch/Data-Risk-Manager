@@ -163,7 +163,7 @@ mat-card.mat-mdc-card.mdc-card{
   color: black;
 
   .datafields-header {
-    display: flex;
+    display: content;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
@@ -303,3 +303,64 @@ mat-card.mat-mdc-card.mdc-card{
 .updateBtn{
   text-align: center;
 }
+.primary {
+  background-color: #1976d2 !important;
+  color: white !important;
+}
+
+.inverse {
+  background-color: white !important;
+  color: #1976d2 !important;
+  border: 1px solid #1976d2 !important;
+}
+
+.ag-header-group-cell.custom-parent-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.overlay-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+////// Toaster Notification ///////
+.mdc-snackbar.custom-snackbar-overlay {
+  position: fixed !important;
+  // top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  padding: 20px 30px;
+  max-width: 20%;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+}
+
+.snackbar-success {
+  background-color: #4caf50 !important;
+}
+
+.snackbar-error {
+  background-color: #f44336 !important;
+}
+
+.snackbar-info {
+  background-color: #2196f3 !important;
+}
+
+.snackbar-warn {
+  background-color: #ff9800 !important;
+}
+

@@ -1,99 +1,42 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastnotificationService {
 
-  private defaultTimeOut: number = 6000;
-  private defaultShowProgressBar: boolean = true;
-  private defaultPauseOnHover: boolean = true;
-  private defaultClickToClose: boolean = true;
-  private defaultMaxLength: number = 3000;
-  private defaultMaxStack: number = 1;
-  private defaultPreventDuplicates: string = 'visible';
-  private defaultLastPreventDuplicates: boolean = true;
-  private positionClass!: 'toast-bottom-center'
-  constructor(public translate: TranslateService, private notificationService: ToastrService) {
+  private defaultConfig: MatSnackBarConfig = {
+    duration: 3000,
+    horizontalPosition: 'center',  // Only used to keep config valid
+    verticalPosition: 'top',
+    panelClass: ['custom-snackbar-overlay']  // Default class
+  };
 
+  constructor(private snackBar: MatSnackBar) {}
+
+  success(message: string, duration: number = 3000): void {
+    this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-success']);
   }
 
-  success(content: string, title: string = "", override: any = null) {
-      this.removeAll();
-      override = {
-          timeOut: this.defaultTimeOut,
-          showProgressBar: this.defaultShowProgressBar,
-          pauseOnHover: this.defaultPauseOnHover,
-          clickToClose: this.defaultClickToClose,
-          maxStack: this.defaultMaxStack,
-          preventLastDuplicates: this.defaultPreventDuplicates,
-          preventDuplicates: this.defaultLastPreventDuplicates,
-          icon: {
-              success: '<i class="fa fa-time"></i>'
-          },
-          maxLength: this.defaultMaxLength            
-      };
-
-      this.translate.get(content).subscribe((text: string) => {
-
-          this.notificationService.success("", text, override);
-
-      });
-  }
-  removeAll() {
-      this.notificationService.clear();
+  error(message: string, duration: number = 3000): void {
+    this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-error']);
   }
 
-  error(content: string, title: string = "", override: any = null) {
-      this.removeAll();
-      override = {
-          timeOut: this.defaultTimeOut,
-          showProgressBar: this.defaultShowProgressBar,
-          pauseOnHover: this.defaultPauseOnHover,
-          clickToClose: this.defaultClickToClose,
-          maxStack: this.defaultMaxStack,
-          preventLastDuplicates: this.defaultPreventDuplicates,
-          preventDuplicates: this.defaultLastPreventDuplicates,
-          icon: {
-              // success: '<i class="fa fa-time"></i>'
-              success: '<i class="fa fa-exclamation-circle"></i>' 
-          },
-          maxLength: this.defaultMaxLength            
-      };
-
-      this.translate.get(content).subscribe((text: string) => {
-
-          this.notificationService.error("", text, override);
-
-      });
+  info(message: string, duration: number = 3000): void {
+    this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-info']);
   }
 
-  warning(content: string, title: string = "", override: any = null) {
-      
-      this.removeAll();
-      override = {
-          timeOut: this.defaultTimeOut,
-          showProgressBar: this.defaultShowProgressBar,
-          pauseOnHover: this.defaultPauseOnHover,
-          clickToClose: this.defaultClickToClose,
-          maxStack: this.defaultMaxStack,
-          preventLastDuplicates: this.defaultPreventDuplicates,
-          preventDuplicates: this.defaultLastPreventDuplicates,
-          icon: { 
-              success: '<i class="fa fa-exclamation-circle"></i>' 
-          },
-          maxLength: this.defaultMaxLength            
-      };
-
-      this.translate.get(content).subscribe((text: string) => {
-          this.notificationService.warning("", text, override);
-
-      });
+  warn(message: string, duration: number = 3000): void {
+    this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-warn']);
   }
 
-  infotoastr(content: string, title: string = "", override: any = null) {
-      this.notificationService.warning(content, override);
-    }
+  private show(message: string, duration: number, panelClass: string[]): void {
+    const config: MatSnackBarConfig = {
+      ...this.defaultConfig,
+      duration,
+      panelClass
+    };
+    this.snackBar.open(message, 'Close', config);
+  }
 }

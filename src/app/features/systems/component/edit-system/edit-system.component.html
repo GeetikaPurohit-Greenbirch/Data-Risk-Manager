@@ -8,7 +8,9 @@
         <h2>Edit System</h2>
       </section>
       <mat-card>
-
+        <div class="overlay-loader" *ngIf="isLoading">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
 <div class="container">
     <!-- Left: Edit System Form -->
     <div class="left-panel">
@@ -60,30 +62,33 @@
     <!-- Left Side Buttons -->
     <div style="width: 100%; padding: 12px;">
       <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-        <button mat-stroked-button
+        <button mat-raised-button
+        style="flex: 0 0 calc(50% - 6px);"
+        [ngClass]="{ 'inverse': activeView === 'interfaces', 'primary': activeView !== 'interfaces' }"
+        (click)="addInbound('interfaces')">
+        Interfaces
+      </button>
+        <!-- <button mat-raised-button color="primary"
                 style="flex: 0 0 calc(50% - 6px);"
                 [color]="activeView === 'interfaces' ? 'primary' : 'accent'"
                 (click)="addInbound('interfaces')">
           Interfaces
-        </button>
+        </button> -->
   
-        <button mat-stroked-button
-                style="flex: 0 0 calc(50% - 6px);"
-                [color]="activeView === 'input' ? 'primary' : 'accent'"
+        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+        [ngClass]="{ 'inverse': activeView === 'input', 'primary': activeView !== 'input' }"
                 (click)="addInputDatafields('input')">
           Input DataFields
         </button>
   
-        <button mat-stroked-button
-                style="flex: 0 0 calc(50% - 6px);"
-                [color]="activeView === 'output' ? 'primary' : 'accent'"
+        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+        [ngClass]="{ 'inverse': activeView === 'output', 'primary': activeView !== 'output' }"
                 (click)="addDatafields('output')">
           Output DataFields
         </button>
   
-        <button mat-stroked-button
-                style="flex: 0 0 calc(50% - 6px);"
-                [color]="activeView === 'mapping' ? 'primary' : 'accent'"
+        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+        [ngClass]="{ 'inverse': activeView === 'mapping', 'primary': activeView !== 'mapping' }"
                 (click)="sysMapping('mapping')">
           System Mapping
         </button>
@@ -102,8 +107,26 @@
       <div class="datafields-table" *ngIf="showInputDataFields">
         <div class="datafields-header">
           <button (click)="addRow()" class="add-btn">Add Row</button>
-
+        
+          <!-- Checkbox to toggle grid visibility -->
+          <label style="margin-left: 16px;">
+            <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound" />
+            Set Global Quality Risk
+          </label>
+        
+          <!-- Conditional rendering of the AG Grid -->
+          <ag-grid-angular
+            *ngIf="showGlobalQualityRiskGridInbound"
+            class="ag-theme-alpine"
+            style="width: 100%; height: 180px; margin-top: 10px;"
+            [rowData]="rowDataInboundDQA"
+            [columnDefs]="columnDefsInboundDQA"
+            [defaultColDef]="defaultColDef"
+            rowSelection="single"
+          >
+          </ag-grid-angular>
         </div>
+        
       <ag-grid-angular
         class="ag-theme-alpine"
         style="width: 100%; height: 400px;"
@@ -137,6 +160,24 @@
 
                  
       <div class="datafields-table" *ngIf="showDataFields">
+
+        <!-- Checkbox to toggle grid visibility -->
+        <label style="margin-left: 16px;">
+          <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound" />
+          Set Global Quality Risk
+        </label>
+      
+        <!-- Conditional rendering of the AG Grid -->
+        <ag-grid-angular
+          *ngIf="showGlobalQualityRiskGridOutbound"
+          class="ag-theme-alpine"
+          style="width: 100%; height: 180px; margin-top: 10px;"
+          [rowData]="rowDataoutboundDQA"
+          [columnDefs]="columnDefsOoutboundDQA"
+          [defaultColDef]="defaultColDef"
+          rowSelection="single"
+        >
+        </ag-grid-angular>
       
         <ag-grid-angular
         class="ag-theme-alpine"

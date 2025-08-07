@@ -22,8 +22,18 @@
   
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Quality Of Service</mat-label>
-          <input matInput formControlName="quality_of_service" />
+          <mat-select formControlName="quality_of_service">
+            <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+              {{ quality }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
+<!--         
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Quality Of Service</mat-label>
+          <input matInput formControlName="quality_of_service" />
+        </mat-form-field> -->
   
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Frequency Of Update</mat-label>
@@ -92,19 +102,18 @@
                     <!-- Left Side Buttons -->
                     <div style="width: 100%; padding: 12px;">
                       <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                        <button mat-stroked-button
-                                style="flex: 0 0 calc(50% - 6px);"
-                                [color]="activeView === 'datafields' ? 'primary' : 'accent'"
+                        <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+                        [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
                                 (click)="addDatafields('datafields')">
                           Add Datafields
-                        </button>
+                        </button> -->
                   
-                        <button mat-stroked-button
+                        <!-- <button mat-stroked-button
                                 style="flex: 0 0 calc(50% - 6px);"
                                 [color]="activeView === 'dqa' ? 'primary' : 'accent'"
                                 (click)="showDQA('dqa')">
                                 Data Quality Risk
-                        </button>
+                        </button> -->
                         </div>
                         </div>
                         </div>

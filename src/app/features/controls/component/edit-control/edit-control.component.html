@@ -101,11 +101,10 @@
 
 <div style="width: 100%; padding: 12px;">
   <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-    <button mat-stroked-button
-            style="flex: 0 0 calc(50% - 6px);"
-            [color]="activeView === 'datafields' ? 'primary' : 'accent'"
-            (click)="addDatafields('datafields')">
-      Add Datafields
+    <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+    [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
+            (click)="loadInboundInterfaces('datafields')">
+            DataField Control
     </button>
 
     </div>

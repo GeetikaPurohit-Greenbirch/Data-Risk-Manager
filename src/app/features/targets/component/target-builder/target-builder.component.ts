@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 export class TargetBuilderComponent {
 targetForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions = ['PERIODIC', 'REAL-TIME'];
+  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD-HOC'];
   targetTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
   targetModel : Target = new Target();
   timeOptions: string[] = [];

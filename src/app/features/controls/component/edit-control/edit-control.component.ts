@@ -11,6 +11,7 @@ import { SystemServiceService } from 'src/app/features/systems/services/system-s
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
+import { isRawIdxResponse } from '@okta/okta-auth-js/types/lib/idx/types/idx-js';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -59,6 +60,8 @@ controlForm!: FormGroup;
 
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'entity_id', headerName: 'Entity ID', editable: false, },
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
     { field: 'entity_type', headerName: 'Entity Type', editable: false },
     // { field: 'data_type', headerName: 'Data Type', editable: true,
     //   cellEditor: 'agSelectCellEditor',
@@ -69,7 +72,7 @@ controlForm!: FormGroup;
     {
       headerName: 'Before Control Completeness',
       field: 'dqa_c',
-      editable: true,
+      editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -85,7 +88,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       },
     },
-    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: true },
+    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
     { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -99,7 +102,7 @@ controlForm!: FormGroup;
     {
       headerName: 'Before Control Timeliness',
       field: 'dqa_t',
-      editable: true,
+      editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -115,7 +118,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: true },
+    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
     { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -129,7 +132,7 @@ controlForm!: FormGroup;
     {
       headerName: 'After Control Accuracy',
       field: 'dqa_a',
-      editable: true,
+      editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -145,7 +148,7 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: true },
+    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
     { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -337,7 +340,9 @@ controlForm!: FormGroup;
   interfaceOptionList: string[] = [];
 
 
-  loadInboundInterfaces() {
+  loadInboundInterfaces(view:string) {
+    this.activeView = view;
+
     this.showDataFields = true;
     const interfaces$ = this.interfaceService.getInterface();
     const interfaceDataFields$ = this.interfaceService.getInboundData(this.attachToId);
@@ -372,6 +377,7 @@ controlForm!: FormGroup;
             combinedFields.push({
               ...field,
               interface_name: rawData.system_name,
+              interface_id: rawData.system_id,
               source: 'System'
             });
           });
@@ -382,6 +388,7 @@ controlForm!: FormGroup;
               combinedFields.push({
                 ...field,
                 interface_name: intf.interface_name,
+                interface_id: intf.interface_id,
                 source: 'Outbound'
               });
             });

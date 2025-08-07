@@ -34,6 +34,7 @@ export class EditSystemComponent{
   showoutbound = false;
   showsystemMapping = false;
   activeView!: string; // default view on load
+  isLoading: boolean = false;
 
  
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
@@ -45,7 +46,8 @@ export class EditSystemComponent{
   inboundFields: any[] = [];
   outboundFields:any[] = [];
   links: any[] = []; // Store link data
-  
+  showGlobalQualityRiskGridInbound = false; // Controls visibility of AG Grid
+  showGlobalQualityRiskGridOutbound = false;
  
   
 
@@ -66,7 +68,265 @@ export class EditSystemComponent{
 
   ) {}
 
+  columnDefsInboundDQA:(ColDef | ColGroupDef)[]= [
+    {
+      headerName: 'DQA',
+      headerClass: 'custom-parent-header',
+      children: [
+        {
+          headerName: 'C',
+          field: 'default_dqa_c',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'C Commentary',
+          field: 'default_commentary_c',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'T',
+          field: 'default_dqa_t',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'T Commentary',
+          field: 'default_commentary_t',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'A',
+          field: 'default_dqa_a',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'default_commentary_a',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+      ],
 
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafieldsDQA(params.node, 'INBOUND');
+        });
+    
+      
+        div.appendChild(saveDataFields);
+    
+        return div;
+      }
+    },
+  ]
+
+
+  columnDefsOoutboundDQA:(ColDef | ColGroupDef)[]= [
+    {
+      headerName: 'DQA',
+      headerClass: 'custom-parent-header',
+      children: [
+        {
+          headerName: 'C',
+          field: 'default_dqa_c',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'C Commentary',
+          field: 'default_commentary_c',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'T',
+          field: 'default_dqa_t',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'T Commentary',
+          field: 'default_commentary_t',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'A',
+          field: 'default_dqa_a',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'default_commentary_a',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+      ],
+
+
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafieldsDQA(params.node, 'OUTBOUND');
+        });
+    
+      
+        div.appendChild(saveDataFields);
+    
+        return div;
+      }
+    },
+  ]
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'interface_id', headerName: 'Entity ID', editable: false, },
     { field: 'interface_name', headerName: 'Entity Name', editable: false, },
@@ -82,11 +342,12 @@ export class EditSystemComponent{
     { field: 'field_length', headerName: 'Length', editable: this.isEditable },
     {
       headerName: 'DQA',
+      headerClass: 'custom-parent-header',
       children: [
         {
           headerName: 'C',
           field: 'dqa_c',
-          editable: true,
+          editable: this.isEditable,
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -103,8 +364,8 @@ export class EditSystemComponent{
         },
         {
           headerName: 'C Commentary',
-          field: 'commentary_p',
-          editable: true,
+          field: 'commentary_c',
+          editable: this.isEditable,
           width:100,
           minWidth: 100,
           maxWidth: 100,
@@ -115,7 +376,7 @@ export class EditSystemComponent{
         {
           headerName: 'T',
           field: 'dqa_t',
-          editable: true,
+          editable: this.isEditable,
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -133,7 +394,7 @@ export class EditSystemComponent{
         {
           headerName: 'T Commentary',
           field: 'commentary_t',
-          editable: true,
+          editable: this.isEditable,
           width:100,
           minWidth: 100,
           maxWidth: 100,
@@ -144,7 +405,7 @@ export class EditSystemComponent{
         {
           headerName: 'A',
           field: 'dqa_a',
-          editable: true,
+          editable: this.isEditable,
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -162,7 +423,185 @@ export class EditSystemComponent{
         {
           headerName: 'A Commentary',
           field: 'commentary_a',
-          editable: true,
+          editable: this.isEditable,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+      ],
+
+    },
+    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+      },
+     },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+
+           // ✅ Disable if entity_type is 'INTERFACE'
+           if (params.data.entity_type === 'INTERFACE') {
+            saveDataFields.disabled = true;
+            saveDataFields.style.opacity = '0.5';
+            saveDataFields.style.cursor = 'not-allowed';
+          }
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafields(params.node);
+        });
+    
+        const deleteDataFields = document.createElement('button');
+        deleteDataFields.className = 'fa fa-trash';
+        deleteDataFields.style.color = 'red';
+        deleteDataFields.style.border = '1px solid lightGrey';
+        deleteDataFields.style.borderRadius = '5px';
+        deleteDataFields.style.lineHeight = '22px';
+        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.title = 'Delete';
+    
+         // ✅ Disable if entity_type is 'INTERFACE'
+        if (params.data.entity_type === 'INTERFACE') {
+          deleteDataFields.disabled = true;
+          deleteDataFields.style.opacity = '0.5';
+          deleteDataFields.style.cursor = 'not-allowed';
+        }
+
+        deleteDataFields.addEventListener('click', () => {
+          if (!deleteDataFields.disabled) {
+            this.deleteDAtaFields(params.node);
+          }
+        });
+    
+        div.appendChild(saveDataFields);
+        div.appendChild(deleteDataFields);
+    
+        return div;
+      }
+    },
+  ];
+
+  columnDefsOutbound:(ColDef | ColGroupDef)[]= [
+    { field: 'interface_id', headerName: 'Entity ID', editable: false, },
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, },
+
+    { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
+    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+      },
+    },
+    { field: 'field_length', headerName: 'Length', editable: this.isEditable },
+    {
+      headerName: 'DQA',
+      headerClass: 'custom-parent-header',
+      children: [
+        {
+          headerName: 'C',
+          field: 'dqa_c',
+          editable: this.isEditable,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'C Commentary',
+          field: 'commentary_c',
+          editable: this.isEditable,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'T',
+          field: 'dqa_t',
+          editable: this.isEditable,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'T Commentary',
+          field: 'commentary_t',
+          editable: this.isEditable,
+          width:100,
+          minWidth: 100,
+          maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'A',
+          field: 'dqa_a',
+          editable: this.isEditable,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          width:65,
+          minWidth: 65,
+          maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'commentary_a',
+          editable: this.isEditable,
           width:100,
           minWidth: 100,
           maxWidth: 100,
@@ -234,176 +673,6 @@ export class EditSystemComponent{
         return div;
       }
     },
-  ];
-
-  columnDefsOutbound:(ColDef | ColGroupDef)[]= [
-    { field: 'interface_id', headerName: 'Entity ID', editable: false, },
-    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-    { field: 'entity_type', headerName: 'Entity Type', editable: false, },
-
-    { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
-    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
-      },
-    },
-    { field: 'field_length', headerName: 'Length', editable: this.isEditable },
-    {
-      headerName: 'DQA',
-      children: [
-        {
-          headerName: 'C',
-          field: 'dqa_c',
-          editable: false,
-          cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"]
-      },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
-          },
-        },
-        {
-          headerName: 'C Commentary',
-          field: 'commentary_p',
-          editable: false,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
-         
-        },
-        {
-          headerName: 'T',
-          field: 'dqa_t',
-          editable: false,
-          cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"],
-      },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: false,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          headerName: 'T Commentary',
-          field: 'commentary_t',
-          editable: false,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
-         
-        },
-        {
-          headerName: 'A',
-          field: 'dqa_a',
-          editable: false,
-          cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"],
-      },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'purple',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          headerName: 'A Commentary',
-          field: 'commentary_a',
-          editable: false,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
-         
-        },
-      ],
-
-    },
-    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
-      },
-     },
-    // {
-    //   headerName: 'Actions',
-    //   editable: false,
-    //   filter: false,
-    //   sortable: false,
-    //   minWidth: 100, 
-    //   flex:1,
-    //   cellRenderer: (params: any) => {
-    //     const div = document.createElement('div');
-    //     div.className = 'model-cell-renderer';
-    
-    //     const saveDataFields = document.createElement('button');
-    //     saveDataFields.className = 'fa fa-save';
-    //     saveDataFields.style.color = 'green';
-    //     saveDataFields.style.border = '1px solid lightGrey';
-    //     saveDataFields.style.borderRadius = '5px';
-    //     saveDataFields.style.lineHeight = '22px';
-    //     saveDataFields.style.height = '32px';
-    //     saveDataFields.style.cursor = 'pointer';
-    //     saveDataFields.title = 'Save';
-    
-    //     // Pass row data or node to save
-    //     saveDataFields.addEventListener('click', () => {
-    //       this.saveDatafields(params.node);
-    //     });
-    
-    //     const deleteDataFields = document.createElement('button');
-    //     deleteDataFields.className = 'fa fa-trash';
-    //     deleteDataFields.style.color = 'red';
-    //     deleteDataFields.style.border = '1px solid lightGrey';
-    //     deleteDataFields.style.borderRadius = '5px';
-    //     deleteDataFields.style.lineHeight = '22px';
-    //     deleteDataFields.style.height = '32px';
-    //     deleteDataFields.style.cursor = 'pointer';
-    //     deleteDataFields.title = 'Delete';
-    
-    //      // ✅ Disable if entity_type is 'INTERFACE'
-    //     if (params.data.entity_type === 'INTERFACE') {
-    //       deleteDataFields.disabled = true;
-    //       deleteDataFields.style.opacity = '0.5';
-    //       deleteDataFields.style.cursor = 'not-allowed';
-    //     }
-
-    //     deleteDataFields.addEventListener('click', () => {
-    //       if (!deleteDataFields.disabled) {
-    //         this.deleteDAtaFields(params.node);
-    //       }
-    //     });
-    
-    //     div.appendChild(saveDataFields);
-    //     div.appendChild(deleteDataFields);
-    
-    //     return div;
-    //   }
-    // },
   ];
 
   inboundColumnDefs:(ColDef)[]= [
@@ -628,6 +897,8 @@ export class EditSystemComponent{
   };
 
   rowData: any;
+  rowDataInboundDQA: any;
+  rowDataoutboundDQA: any;
   rowDataInput: any;
   rowDataInbound: any;
   rowDataOutbound: any;
@@ -689,6 +960,8 @@ export class EditSystemComponent{
       this.loadInboundInterfaces();
       this.rowDataInbound = [{}];
       this.rowDataInput = [{}];
+      this.rowDataInboundDQA = [{}];
+      this.rowDataoutboundDQA = [{}];
       this.rowDataOutbound = [{}]; // Initialize with one blank row
       this.getOutboundTarget();
       this.rowDataOutboundTarget = [{}];
@@ -704,19 +977,25 @@ export class EditSystemComponent{
 
   getDataFields()
   { 
+    // this.isLoading = true; // show loader
+
     this.datafieldsService.getDataFieldsById(this.systemId, 'SYSTEM').subscribe({
       next: (res: any) => {
         this.rowData = [...res]; // triggers change
+
         if (this.gridApi) {
           this.gridApi.setRowData([]); // Clear first to ensure refresh
           this.gridApi.setRowData(this.rowData);
         }
   
         this.cdr.detectChanges(); // trigger Angular change detection
-        
-        error: (err: any) => {
-          console.error('Failed to load interface:', err);
-        }
+       
+      },
+      error: (err: any) => {
+        console.error('Failed to load data fields:', err);
+      },
+      complete: () => {
+        // this.isLoading = false; // hide loader
       }
          // Force refresh with setRowData
     
@@ -807,6 +1086,8 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
+
+    this.getDatafieldsDQA('OUTBOUND');
   }
   
   addInputDatafields(view:string)
@@ -817,6 +1098,7 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
+    this.getDatafieldsDQA('INBOUND')
   }
 
   // Handle changes in cell values
@@ -873,23 +1155,124 @@ loadDropdownOptions(): void {
     })
   }
 
+  getDatafieldsDQA(interface_type:any)
+  {
+    if(interface_type == 'OUTBOUND')
+    {
+    const entity_id = this.outboundInterfaceList.map((i: any) => i.interface_id);
+    this.datafieldsService.getDataFieldsDQA(entity_id[0], 'INTERFACE').subscribe({
+      next: (res: any) => {
+        this.rowDataoutboundDQA = [res]; // triggers change
+        this.showGlobalQualityRiskGridOutbound = res.allow_risk_update;
+        console.log('rowDataoutboundDQA:', this.rowDataoutboundDQA);
+
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowDataoutboundDQA);
+        }
+  
+        this.cdr.detectChanges(); // trigger Angular change detection
+        
+        error: (err: any) => {
+          console.error('Failed to load interface:', err);
+        }
+      }
+         // Force refresh with setRowData
+    
+    });
+  }
+  else if(interface_type == 'INBOUND')
+  {
+    this.datafieldsService.getDataFieldsDQA(this.systemId, 'SYSTEM').subscribe({
+      next: (res: any) => {
+        this.rowDataInboundDQA = [res]; // triggers change
+        this.showGlobalQualityRiskGridInbound = res.allow_risk_update;
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowDataInboundDQA);
+        }
+  
+        this.cdr.detectChanges(); // trigger Angular change detection
+        
+        error: (err: any) => {
+          console.error('Failed to load interface:', err);
+        }
+      }
+         // Force refresh with setRowData
+    
+    });
+  }
+  }
+
+  saveDatafieldsDQA(data:any, interface_type:any)
+  {
+    console.log(data, "Interface Data Fields");
+    this.dataFieldsModel.id = data.data.id;
+    if(interface_type == 'INBOUND')
+    {
+      this.dataFieldsModel.allow_risk_update = this.showGlobalQualityRiskGridInbound;
+      this.dataFieldsModel.entity_id = [this.systemId];
+      this.dataFieldsModel.entity_type = "SYSTEM";
+    }
+    else if(interface_type == 'OUTBOUND')
+    {
+      this.dataFieldsModel.allow_risk_update = this.showGlobalQualityRiskGridOutbound;
+      // this.dataFieldsModel.entity_id = data.data.entity_id;
+      this.dataFieldsModel.entity_id = this.outboundInterfaceList.map((i: any) => i.interface_id);
+      this.dataFieldsModel.entity_type = "INTERFACE";
+    }
+    this.dataFieldsModel.default_dqa_t = data.data.default_dqa_t;
+    this.dataFieldsModel.default_dqa_a = data.data.default_dqa_a;
+    this.dataFieldsModel.default_dqa_c = data.data.default_dqa_c;
+    this.dataFieldsModel.default_commentary_t = data.data.default_commentary_t;
+    this.dataFieldsModel.default_commentary_a = data.data.default_commentary_a;
+    this.dataFieldsModel.default_commentary_c = data.data.default_commentary_c;
+
+    console.log(this.outboundInterfaceList, "INTERFACE Data")
+    console.log(this.dataFieldsModel, "DQA Risk level");
+        // alert("Data field added Successfully.");
+        if(!data.data.id)
+        {
+          this.datafieldsService.createGlobalRisk(this.dataFieldsModel).subscribe(() => {
+  
+          this.toastNotificationService.success("Global Risk Added Successfully.");
+          setTimeout(() => {
+              this.loadInboundInterfaces(); // refresh
+           
+            }, 1000);
+        });
+      }
+        else
+        {
+          this.datafieldsService.updateGlobalRisk(this.dataFieldsModel).subscribe(() => {
+  
+            this.toastNotificationService.success("Global Risk updated Successfully.");
+            setTimeout(() => {
+                  this.loadInboundInterfaces();
+              
+              }, 1000);
+          });
+        }
+       
+  }
+
   saveDatafields(data:any)
   {
     console.log(data, "Interface Data Fields");
 
   this.dataFieldsModel.field_id = data.data.field_id;
   this.dataFieldsModel.field_name = data.data.field_name;
-  this.dataFieldsModel.dqa_c = "L";
-  this.dataFieldsModel.dqa_t = "L";
-  this.dataFieldsModel.dqa_a = "L";
+  this.dataFieldsModel.dqa_c = data.data.dqa_c;
+  this.dataFieldsModel.dqa_t = data.data.dqa_t;
+  this.dataFieldsModel.dqa_a = data.data.dqa_a;
   this.dataFieldsModel.commentary_a = data.data.commentary_a;
   this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  this.dataFieldsModel.commentary_p = data.data.commentary_p;
+  this.dataFieldsModel.commentary_c = data.data.commentary_c;
   this.dataFieldsModel.data_type = data.data.data_type;
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;
-  this.dataFieldsModel.entity_type = 'SYSTEM';
-  this.dataFieldsModel.entity_id = this.systemId;
+  this.dataFieldsModel.entity_type = data.data.entity_type;
+  this.dataFieldsModel.entity_id = data.data.entity_id;
  
       // alert("Data field added Successfully.");
       if(!data.data.field_id)
@@ -1038,8 +1421,10 @@ loadDropdownOptions(): void {
       })
   }
 
-  public inboundInterfaceList!:any;
+  public outboundInterfaceList!:any;
+  public systemList!:any;
   loadInboundInterfaces() {
+    // this.isLoading = true; // show loader
     const interfaces$ = this.interfaceService.getInterface();
     const interfaceDataFields$ = this.interfaceService.getInboundData(this.systemId);
   
@@ -1083,6 +1468,9 @@ loadDropdownOptions(): void {
           const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
           const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
           const systemFields = JSON.parse(rawData.system_fields || '[]');
+
+          this.systemList = systemFields;
+          this.outboundInterfaceList = outboundInterfaces;
 
           let combinedFields: any[] = [];
 
@@ -1212,6 +1600,9 @@ loadDropdownOptions(): void {
       },
       error: (err: any) => {
         console.error('Failed to load interface or inbound data:', err);
+      },
+      complete: () => {
+        // this.isLoading = false; // hide loader
       }
     });
   }

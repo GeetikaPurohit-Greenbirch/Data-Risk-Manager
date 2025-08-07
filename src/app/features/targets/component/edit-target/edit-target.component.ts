@@ -21,9 +21,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class EditTargetComponent {
   targetForm!: FormGroup;
-   showDataFields = false;
+   showDataFields = true;
    showDataQuality = false;
-   showDataFieldsTable = false;
+   showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
  

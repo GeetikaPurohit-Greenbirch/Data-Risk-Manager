@@ -14,6 +14,8 @@ import {
 import { AgGridAngular } from 'ag-grid-angular';
 import { SystemDataFields } from '../models/system-data-fields.model';
 import { Router } from '@angular/router';
+import { CdkDragDrop, moveItemInArray  } from '@angular/cdk/drag-drop';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 
 @Component({
   selector: 'app-systems',
@@ -34,6 +36,9 @@ export class SystemsComponent implements OnInit {
   public rowData: any;
   private newRows: any[] = [];
   systemDataModel : SystemDataFields = new SystemDataFields();
+
+  gridApi: any;
+  gridColumnApi: any;
   
   isExpansionDetailRow = (index: number, row: any) => row.hasOwnProperty('childGridData');
   dataTypes = ['NUMERIC', 'ALPHANUMERIC', 'DATE/TIME'];
@@ -76,7 +81,91 @@ editableColumns: string[] = [
     this.dataSource = new MatTableDataSource(this.systems);
   }
 
+  columnDefs: (ColDef | ColGroupDef)[]= [
+      { field: 'system_id', headerName: 'System ID', editable: false, sortable: true},
+      { field: 'system_name', headerName: 'Name', editable: true,  sortable: true },
+      { field: 'description', headerName: 'Description', editable: true,sortable: true },
+      { field: 'owner', headerName: 'Owner', editable: true, sortable: true },
+      { field: 'owner_email', headerName: 'Owner Email', editable: true, sortable: true },
+      { field: 'leanix_id', headerName: 'LeanIX ID', editable: true, sortable: true },
+      { field: 'version_number', headerName: 'Version', editable: true, sortable: true },
+      { field: 'status', headerName: 'Status', editable: true, sortable: true },
+      {
+        headerName: 'Actions',
+        editable: false,
+        filter: false,
+        sortable: false,
+        minWidth: 100, 
+        flex:1,
+        cellRenderer: (params: any) => {
+          const div = document.createElement('div');
+          div.className = 'model-cell-renderer';
+      
+          const saveDataFields = document.createElement('button');
+          saveDataFields.className = 'fa fa-edit';
+          saveDataFields.style.color = 'green';
+          saveDataFields.style.border = '1px solid lightGrey';
+          saveDataFields.style.borderRadius = '5px';
+          saveDataFields.style.lineHeight = '22px';
+          saveDataFields.style.height = '32px';
+          saveDataFields.style.cursor = 'pointer';
+          saveDataFields.title = 'Save';
+      
+          // Pass row data or node to save
+          saveDataFields.addEventListener('click', () => {
+            this.editSystem(params.node);
+          });
+      
+          const deleteDataFields = document.createElement('button');
+          deleteDataFields.className = 'fa fa-trash';
+          deleteDataFields.style.color = 'red';
+          deleteDataFields.style.border = '1px solid lightGrey';
+          deleteDataFields.style.borderRadius = '5px';
+          deleteDataFields.style.lineHeight = '22px';
+          deleteDataFields.style.height = '32px';
+          deleteDataFields.style.cursor = 'pointer';
+          deleteDataFields.title = 'Delete';
+      
+          deleteDataFields.addEventListener('click', () => {
+            this.deleteSystem(params.node);
+          });
+      
+          div.appendChild(saveDataFields);
+          div.appendChild(deleteDataFields);
+      
+          return div;
+        }
+      },
+    ];
   
+    defaultColDef = {
+      flex: 1,
+      sortable: true,
+      resizable: true,
+      filter:true,
+      suppressSizeToFit: true
+    };
+  
+    
+  
+    // rowData = [
+    //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
+    //     dqaT: 'L',
+    //     dqaA: 'L', criticality: 'HIGH' },
+    // ];
+  
+    
+    onGridReady(params: any) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnApi;
+      this.gridApi.sizeColumnsToFit();
+      this.getSystemList();
+    }
+  
+  
+    onCellValueChanged(event: any) {
+      console.log('Updated row:', event.data);
+    }
 
   ngOnInit(): void {
     
@@ -201,7 +290,7 @@ applyFilter(event: Event) {
           });
       
           this.systems = systemsWithChildData;
-                this.dataSource.data = this.systems;
+                this.rowData = this.systems;
 
       this.dataSource = new MatTableDataSource(this.systems);
       this.dataSource.sort = this.sort;
@@ -242,9 +331,9 @@ applyFilter(event: Event) {
 
 }
 
-  deleteSystem(system: SystemsModel) {
-    this.systemService.deleteSystem(system.system_id).subscribe(res => {
-        alert("System Deleted Successfully. Deleted System ID is "+ system.system_id);
+  deleteSystem(system: any) {
+    this.systemService.deleteSystem(system.data.system_id).subscribe(res => {
+        alert("System Deleted Successfully. Deleted System ID is "+ system.data.system_id);
         this.getSystemList(); // refresh
     })
   }
@@ -272,8 +361,9 @@ applyFilter(event: Event) {
   }
 
   editSystem(systems:any) {
-    this.router.navigate(['/systems/edit-system', systems.system_id]);
+    this.router.navigate(['/systems/edit-system', systems.data.system_id]);
 
   }
+  
   
 }

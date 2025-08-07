@@ -21,6 +21,13 @@ export class DatafieldsService {
       return this.http.post<Datafields[]>(url, dataFieldsModel);
     }
 
+    public createGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+      const url: string = this.apiUrl + 'entity-risk-config';
+      console.log(dataFieldsModel)
+  
+      return this.http.post<Datafields[]>(url, dataFieldsModel);
+    }
+
   public updateInterface(dataFieldsModel: Datafields): Observable<any> {
         const url: string = this.apiUrl + 'fields';
         console.log(dataFieldsModel)
@@ -28,8 +35,21 @@ export class DatafieldsService {
         return this.http.post<Datafields[]>(url, dataFieldsModel);
       }
 
+      public updateGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+        const url: string = this.apiUrl + 'entity-risk-config';
+        console.log(dataFieldsModel)
+    
+        return this.http.post<Datafields[]>(url, dataFieldsModel);
+      }
+
    public getDataFieldsById(id:number, entity_type:any):Observable<Datafields[]> {
         const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
+        return this.http.get<Datafields[]>(url);
+      }
+
+
+      public getDataFieldsDQA(id:number, entity_type:any):Observable<Datafields[]> {
+        const url: string = this.apiUrl + 'entity-risk-config/'+entity_type+'/'+id;
         return this.http.get<Datafields[]>(url);
       }
 

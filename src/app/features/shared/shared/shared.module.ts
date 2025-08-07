@@ -28,9 +28,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Or MatMomentDateModule if using moment.js
 import { MatRadioModule } from '@angular/material/radio';
-import { CustomPaginatorIntl } from '../../shared-services/custom-paginator-intl.service';
-import { CustomPaginatorComponent } from 'src/app/layout/custom-paginator/custom-paginator.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -39,7 +40,6 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
   declarations: [
     HeaderComponent,
     SidebarComponent,
-    CustomPaginatorComponent,
   ],
   imports: [
     CommonModule,
@@ -66,12 +66,14 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     TranslateModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    DragDropModule
   ],
   exports: [
     HeaderComponent,
     SidebarComponent,    // 👈 Export so other modules can use
-    CustomPaginatorComponent,
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
@@ -95,10 +97,11 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     AgGridModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    DragDropModule
   ],
-  // providers: [
-  //   { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl  }
-  // ]
+  
 })
 export class SharedModule {}

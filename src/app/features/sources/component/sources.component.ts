@@ -14,7 +14,7 @@ import { SourceEntity, Sources } from '../models/sources.model';
   styleUrl: './sources.component.scss'
 })
 export class SourcesComponent {
-displayedColumns: string[] = ['sourceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email', 'actions'];
+displayedColumns: string[] = ['sourceid', 'name', 'vendor', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email', 'actions'];
   public rowData: any;
   dataSource = new MatTableDataSource<Sources>();
 

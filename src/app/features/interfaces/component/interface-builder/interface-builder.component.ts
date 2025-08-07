@@ -16,7 +16,7 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 export class InterfaceBuilderComponent {
 interfaceForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions = ['PERIODIC', 'REAL-TIME'];
+  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD-HOC'];
   interfaceTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
   interfaceModel : Interface = new Interface();
   timeOptions: string[] = [];
