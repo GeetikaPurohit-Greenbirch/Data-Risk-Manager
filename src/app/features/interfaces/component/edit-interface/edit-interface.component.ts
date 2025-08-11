@@ -19,10 +19,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class EditInterfaceComponent implements OnInit {
   interfaceForm!: FormGroup;
-  showDataFields = false;
+  showDataFields = true;
   showDataQuality = false;
-  showDataFieldsTable = false;
+  showDataFieldsTable = true;
   statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD-HOC'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
 
   // ✅ DataFields table data
@@ -36,6 +37,8 @@ export class EditInterfaceComponent implements OnInit {
   interfaceId!: any;
   gridApi: any;
   gridColumnApi: any;
+  activeView!: string; // default view on load
+
   // rowData: any;
   dataFieldsModel : Datafields = new Datafields();
   constructor(
@@ -58,90 +61,90 @@ export class EditInterfaceComponent implements OnInit {
       },
     },
     { field: 'field_length', headerName: 'Length', editable: true },
-    {
-      headerName: 'DQA',
-      children: [
-        {
-          headerName: 'C',
-          field: 'dqa_c',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
-          },
-        },
-        {
-          headerName: 'C Commentary',
-          field: 'commentary_p',
-          editable: true,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+    // {
+    //   headerName: 'DQA',
+    //   children: [
+    //     {
+    //       headerName: 'C',
+    //       field: 'dqa_c',
+    //       editable: false,
+    //       // valueGetter: () => 'L', // Always returns 'L'
+    //       width:65,
+    //       minWidth: 65,
+    //       maxWidth: 65,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
+    //       cellStyle: {
+    //         color: 'red',
+    //         fontWeight: 'bold'
+    //       },
+    //     },
+    //     {
+    //       headerName: 'C Commentary',
+    //       field: 'commentary_c',
+    //       editable: false,
+    //       width:100,
+    //       minWidth: 100,
+    //       maxWidth: 100,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
          
-        },
-        {
-          headerName: 'T',
-          field: 'dqa_t',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          headerName: 'T Commentary',
-          field: 'commentary_t',
-          editable: true,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+    //     },
+    //     {
+    //       headerName: 'T',
+    //       field: 'dqa_t',
+    //       editable: false,
+    //       // valueGetter: () => 'L', // Always returns 'L'
+    //       width:65,
+    //       minWidth: 65,
+    //       maxWidth: 65,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
+    //       cellStyle: {
+    //         color: 'blue',
+    //         fontWeight: 'bold'
+    //       }
+    //     },
+    //     {
+    //       headerName: 'T Commentary',
+    //       field: 'commentary_t',
+    //       editable: false,
+    //       width:100,
+    //       minWidth: 100,
+    //       maxWidth: 100,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
          
-        },
-        {
-          headerName: 'A',
-          field: 'dqa_a',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'purple',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          headerName: 'A Commentary',
-          field: 'commentary_a',
-          editable: true,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+    //     },
+    //     {
+    //       headerName: 'A',
+    //       field: 'dqa_a',
+    //       editable: false,
+    //       // valueGetter: () => 'L', // Always returns 'L'
+    //       width:65,
+    //       minWidth: 65,
+    //       maxWidth: 65,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
+    //       cellStyle: {
+    //         color: 'purple',
+    //         fontWeight: 'bold'
+    //       }
+    //     },
+    //     {
+    //       headerName: 'A Commentary',
+    //       field: 'commentary_a',
+    //       editable: false,
+    //       width:100,
+    //       minWidth: 100,
+    //       maxWidth: 100,
+    //       resizable: true,
+    //       suppressSizeToFit: true,
          
-        },
-      ],
+    //     },
+    //   ],
 
-    },
+    // },
     { field: 'criticality', headerName: 'Criticality', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -280,15 +283,17 @@ export class EditInterfaceComponent implements OnInit {
     });
   }
 
-  addDatafields()
+  addDatafields(view:string)
   {
+    this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = true;
     this.showDataQuality = false;
   }
 
-  showDQA()
+  showDQA(view:string)
   {
+    this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = false;
     this.showDataQuality = true;
@@ -352,7 +357,7 @@ export class EditInterfaceComponent implements OnInit {
   this.dataFieldsModel.dqa_a = "L";
   this.dataFieldsModel.commentary_a = data.data.commentary_a;
   this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  this.dataFieldsModel.commentary_p = data.data.commentary_p;
+  this.dataFieldsModel.commentary_c = data.data.commentary_c;
   this.dataFieldsModel.data_type = data.data.data_type;
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;

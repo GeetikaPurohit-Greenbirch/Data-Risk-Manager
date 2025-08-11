@@ -15,7 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,7 +28,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // Or MatMomentDateModule if using moment.js
 import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -36,7 +39,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
 @NgModule({
   declarations: [
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
   ],
   imports: [
     CommonModule,
@@ -63,7 +66,10 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     TranslateModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    DragDropModule
   ],
   exports: [
     HeaderComponent,
@@ -91,7 +97,11 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     AgGridModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule
-  ]
+    MatRadioModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    DragDropModule
+  ],
+  
 })
 export class SharedModule {}

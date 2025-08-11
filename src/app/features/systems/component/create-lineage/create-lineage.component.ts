@@ -15,8 +15,10 @@ export class CreateLineageComponent {
   @Input() inboundFields: any[] = [];
 @Input() outboundFields: any[] = [];
 @Input() systemId: any;
+// @Input() showsystemMapping: any;
  private graph!: joint.dia.Graph;
   private paper!: joint.dia.Paper;
+  public mappingId:any;
   private elementsMap: { [id: string]: joint.dia.Element } = {};
    constructor(
         private datafieldsService: DatafieldsService,
@@ -38,76 +40,162 @@ export class CreateLineageComponent {
   //   { interface: 'Target 1', fieldId: 1, fieldName: 'G', dataType: 'Num', length: 10 },
   //   { interface: 'Target 2', fieldId: 2, fieldName: 'H', dataType: 'Alphanum', length: 28 },
   // ];
+
+  ngOnInIt()
+  {
+    // this.loadAndRenderSavedLinks();
+  }
+
   ngOnChanges(): void {
     if (this.inboundFields.length || this.outboundFields.length) {
       this.renderFields();
+      // setTimeout(() => this.loadAndRenderSavedLinks(), 0); // call after elements are rendered
+
     }
   }
   
   links: any[] = []; // Store link data
   ngAfterViewInit(): void {
-      this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
-    
-      this.paper = new joint.dia.Paper({
-        el: this.paperContainer.nativeElement,
-        model: this.graph,
-        width: 1200,
-        height: 600,
-        gridSize: 10,
-        // interactive: true,
-        interactive: (cellView) => {
-          const cell = cellView.model;
-      
-          // ✅ Check for custom tag
-          if (cell.get('customType') === 'inbound') {
-            return { elementMove: false }; // disable movement
-          }
-      
-          return true; // allow interaction for all others
-        },
-        linkPinning: false,
-        snapLinks: { radius: 75 },
-        defaultConnector: { name: 'rounded' },
-        defaultConnectionPoint: { name: 'boundary' },
-        defaultLink: () =>
-          new joint.shapes.standard.Link({
-            attrs: {
-              line: {
-                stroke: '#5c9ded',
-                strokeWidth: 2,
-                targetMarker: {
-                  type: 'path',
-                  d: 'M 10 -5 0 0 10 5 z',
-                },
+    // 1️⃣ Initialize graph and paper
+    this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
+  
+    this.paper = new joint.dia.Paper({
+      el: this.paperContainer.nativeElement,
+      model: this.graph,
+      width: 1200,
+      height: 600,
+      gridSize: 10,
+      interactive: (cellView) => {
+        const cell = cellView.model;
+        if (cell.get('customType') === 'inbound') {
+          return { elementMove: false }; // disable moving inbound fields
+        }
+        return true;
+      },
+      linkPinning: false,
+      snapLinks: { radius: 75 },
+      defaultConnector: { name: 'rounded' },
+      defaultConnectionPoint: { name: 'boundary' },
+      defaultLink: () =>
+        new joint.shapes.standard.Link({
+          attrs: {
+            line: {
+              stroke: '#5c9ded',
+              strokeWidth: 2,
+              targetMarker: {
+                type: 'path',
+                d: 'M 10 -5 0 0 10 5 z',
               },
             },
-          }),
-      });
+          },
+        }),
+    });
+  
+    // 2️⃣ Render fields and then load saved links
+    this.renderFields();
+    setTimeout(() => {
+      this.loadAndRenderSavedLinks(); // should populate saved mappings
+    }, 0);
+  
+    // 3️⃣ On new link creation → store mapping in `this.links`
+    this.paper.on('link:connect', (linkView: any) => {
+      const sourceId = linkView.model.get('source').id;
+      const targetId = linkView.model.get('target').id;
+  
+      const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+      const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+  
+      const from = sourceElement?.attributes?.attrs?.['label']?.text;
+      const to = targetElement?.attributes?.attrs?.['label']?.text;
+  
+      if (from && to) {
+        this.links.push({ from, to }); // mappingId will be added only after save
+        console.log('🔗 New mapping:', from, '→', to);
+      }
+    });
+  
+    // 4️⃣ Show delete (X) tool on link hover using linkTools
+    this.paper.on('link:mouseenter', (linkView: any) => {
+      const customDeleteTool = new joint.linkTools.Button({
+        markup: [{
+          tagName: 'circle',
+          selector: 'button',
+          attributes: {
+            r: 10,
+            fill: '#f44336',
+            stroke: '#fff',
+            'stroke-width': 2,
+            cursor: 'pointer'
+          }
+        }, {
+          tagName: 'text',
+          textContent: 'X',
+          selector: 'icon',
+          attributes: {
+            fill: '#fff',
+            'font-size': 12,
+            'text-anchor': 'middle',
+            y: 4,
+            cursor: 'pointer'
+          }
+        }],
+        distance: '50%',
+        action: (evt: any, linkView: any) => {
+          evt.stopPropagation(); // prevent native removal
     
-      this.renderFields();
+          const link = linkView.model;
+          const sourceId = link.get('source')?.id;
+          const targetId = link.get('target')?.id;
     
-      // 🔗 Listen for link creation
-      this.paper.on('link:connect', (linkView: any) => {
-        const sourceId = linkView.model.get('source').id;
-        const targetId = linkView.model.get('target').id;
+          const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+          const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
     
-        const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
-        const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+          const fromLabel = sourceElement?.attr('label/text');
+          const toLabel = targetElement?.attr('label/text');
     
-        const from = sourceElement?.attributes?.attrs?.['label']?.text;
-        const to = targetElement?.attributes?.attrs?.['label']?.text;
+          const mapping = this.links.find(
+            l => l.from === fromLabel && l.to === toLabel
+          );
     
-        if (from && to) {
-          this.links.push({ from, to });
-          console.log('🔗 New mapping:', from, '→', to);
+          const confirmed = confirm(`Do you really want to delete mapping:\n${fromLabel} → ${toLabel}?`);
+          if (confirmed) {
+            if (mapping?.mappingId) {
+              // ✅ Saved mapping: call delete API
+              this.datafieldsService.deleteFieldMapping(mapping?.mappingId).subscribe((res:string) => {
+                alert(res);
+                link.remove();
+                this.links = this.links.filter(l => l.mappingId !== mapping?.mappingId);
+              });
+            } else {
+              // ❌ Not yet saved: just remove
+              link.remove();
+              this.links = this.links.filter(l => l.from !== fromLabel || l.to !== toLabel);
+            }
+          }
         }
       });
     
-      // 🧹 Optional: delete link on double click
-      this.paper.on('link:pointerdblclick', (linkView: any) => {
-        linkView.model.remove();
+      const toolsView = new joint.dia.ToolsView({
+        tools: [customDeleteTool]
       });
-    }
+    
+      linkView.addTools(toolsView);
+    });
+    
+  
+    // 5️⃣ Remove delete tool on mouse leave
+    this.paper.on('link:mouseleave', (linkView: any) => {
+      linkView.removeTools();
+    });
+  
+  
+    // 7️⃣ Optional: fallback manual delete on double click
+    this.paper.on('link:pointerdblclick', (linkView: any) => {
+      linkView.model.remove();
+    });
+  }
+  
+  
     
     renderFields(): void {
       const leftX = 50;
@@ -144,6 +232,7 @@ export class CreateLineageComponent {
   
         // ✅ Tag this element as inbound
         rect.set('customType', 'inbound');
+        rect.set('customFieldId', field.fieldId);
   
         rect.addTo(this.graph);
         this.elementsMap['in-' + i] = rect;
@@ -175,6 +264,8 @@ export class CreateLineageComponent {
             items: [{ id: 'in', group: 'in' }],
           },
         });
+
+        rect.set('customFieldId', field.fieldId);
         rect.addTo(this.graph);
         this.elementsMap['out-' + i] = rect;
       });
@@ -215,6 +306,78 @@ export class CreateLineageComponent {
   
    
     }
+
+    deleteMappings()
+    {
+      const confirmed = confirm('Do you really want to delete all mappings?');
+
+      if (!confirmed) return; // User canceled
+    
+      this.datafieldsService.deleteAllSystemMapping(this.systemId).subscribe({
+        next: (res: string) => {
+          alert(res);
+    
+          // ✅ 1. Remove all links from the graph
+          this.graph.getLinks().forEach(link => {
+            link.remove();
+          });
+    
+          // ✅ 2. Clear local mapping data
+          this.links = [];
+        },
+        error: (err) => {
+          console.error('Error deleting mappings:', err);
+          alert('Failed to delete system mappings.');
+        }
+      });
+    }
+
+    loadAndRenderSavedLinks(): void {
+      
+      this.datafieldsService.getMappings(this.systemId).subscribe((mappings: any[]) => {
+        mappings.forEach(mapping => {
+          const pField = this.inboundFields.find(f => f.fieldId === mapping.p_field_id);
+          const cField = this.outboundFields.find(f => f.fieldId === mapping.c_field_id);
+    
+          if (pField && cField) {
+            const fromLabel = `${pField.interface} | ${pField.fieldName} | ${pField.fieldId}`;
+            const toLabel = `${cField.interface} | ${cField.fieldName} | ${cField.fieldId}`;
+            const mappingId = mapping.id;
+
+            this.links.push({ from: fromLabel, to: toLabel, mappingId: mappingId });
+    
+            const sourceElement = Object.values(this.elementsMap).find(el =>
+              el.get('customFieldId') === mapping.p_field_id
+            );
+            
+            const targetElement = Object.values(this.elementsMap).find(el =>
+              el.get('customFieldId') === mapping.c_field_id
+            );
+            
+    
+            if (sourceElement && targetElement) {
+              const link = new joint.shapes.standard.Link();
+              link.source(sourceElement, { port: 'out' });
+              link.target(targetElement, { port: 'in' });
+              link.attr({
+                line: {
+                  stroke: '#5c9ded',
+                  strokeWidth: 2,
+                  targetMarker: {
+                    type: 'path',
+                    d: 'M 10 -5 0 0 10 5 z',
+                  },
+                },
+              });
+              link.addTo(this.graph);
+            }
+          }
+        });
+    
+        console.log('🔄 Restored Mappings:', this.links);
+      });
+    }
+    
     
   
 }

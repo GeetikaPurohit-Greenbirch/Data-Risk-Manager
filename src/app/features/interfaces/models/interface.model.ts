@@ -1,5 +1,6 @@
 export class Interface {
     id!:number;
+    interface_id!:number;
     interface_name!:string;
     quality_of_service!:string;
     frequency_of_update!:number;

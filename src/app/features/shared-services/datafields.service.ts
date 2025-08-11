@@ -21,6 +21,13 @@ export class DatafieldsService {
       return this.http.post<Datafields[]>(url, dataFieldsModel);
     }
 
+    public createGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+      const url: string = this.apiUrl + 'entity-risk-config';
+      console.log(dataFieldsModel)
+  
+      return this.http.post<Datafields[]>(url, dataFieldsModel);
+    }
+
   public updateInterface(dataFieldsModel: Datafields): Observable<any> {
         const url: string = this.apiUrl + 'fields';
         console.log(dataFieldsModel)
@@ -28,8 +35,21 @@ export class DatafieldsService {
         return this.http.post<Datafields[]>(url, dataFieldsModel);
       }
 
+      public updateGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+        const url: string = this.apiUrl + 'entity-risk-config';
+        console.log(dataFieldsModel)
+    
+        return this.http.post<Datafields[]>(url, dataFieldsModel);
+      }
+
    public getDataFieldsById(id:number, entity_type:any):Observable<Datafields[]> {
         const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
+        return this.http.get<Datafields[]>(url);
+      }
+
+
+      public getDataFieldsDQA(id:number, entity_type:any):Observable<Datafields[]> {
+        const url: string = this.apiUrl + 'entity-risk-config/'+entity_type+'/'+id;
         return this.http.get<Datafields[]>(url);
       }
 
@@ -54,5 +74,30 @@ export class DatafieldsService {
         });   
       }
 
+      public deleteAllSystemMapping(systemId:number): Observable<any> {
+        const url: string = this.lineageUrl + 'mapping/fields/system/'+systemId;
+        return this.http.delete<any[]>(url,{
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });    
+      }
 
+
+      public getMappings(systemId:any):Observable<any[]> {
+        const url: string = this.lineageUrl + 'mapping/fields/'+ systemId;
+        return this.http.get<any[]>(url);
+
+      }
+
+      public deleteFieldMapping(mappingId: number): Observable<any> {
+        const url: string = this.lineageUrl + 'mapping/fields/id/'+mappingId;
+        return this.http.delete<any[]>(url,{
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+        });      
+      }
 }

@@ -93,15 +93,23 @@
         </mat-form-field>
   
         <!-- Add remaining fields similarly -->
-        <br>
-        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Control</button>
+        <div class="updateBtn">
+          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Control</button>
+          </div>
 <!-- Toggle Button -->
-<!-- <button mat-stroked-button color="accent" (click)="showDataFields = !showDataFields">
-    Add DataFields
-  </button> -->
-  <button mat-stroked-button color="accent" (click)="loadInboundInterfaces()">
-    Add DataFields
-  </button><br><br>
+<div style="display: flex; height: 100%;">
+
+<div style="width: 100%; padding: 12px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+    <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+    [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
+            (click)="loadInboundInterfaces('datafields')">
+            DataField Control
+    </button>
+
+    </div>
+    </div>
+    </div>
       </form>
 
     </div>
@@ -134,12 +142,11 @@
             </table>
           </div> -->
 
-          <div class="datafields-header">
-            <!-- <h3>DataFields</h3> -->
-            <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
+          <!-- <div class="datafields-header">
+       
             <button (click)="addRow()" class="add-btn">Add Row</button>
 
-          </div>
+          </div> -->
           
       <div class="datafields-table">
         <ag-grid-angular

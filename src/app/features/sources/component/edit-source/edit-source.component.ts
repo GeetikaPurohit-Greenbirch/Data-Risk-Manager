@@ -21,10 +21,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class EditSourceComponent implements OnInit {
  sourceForm!: FormGroup;
-   showDataFields = false;
+   showDataFields = true;
    showDataQuality = false;
-   showDataFieldsTable = false;
+   showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+  sourceTypeOptions: string[] = ['SYSTEM', 'MANUAL ENTRY'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
  
    // ✅ DataFields table data
@@ -34,12 +36,15 @@ export class EditSourceComponent implements OnInit {
    ];
  
    // ✅ Table column names
-   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
+   displayedColumns: string[] = ['fieldId', 'fieldName', 'fieldDesc' , 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
    sourceId!: any;
    gridApi: any;
    gridColumnApi: any;
    // rowData: any;
    dataFieldsModel : Datafields = new Datafields();
+   activeView!: string; // default view on load
+   showGlobalQualityRisk=false;
+
    constructor(
      private route: ActivatedRoute,
      private fb: FormBuilder,
@@ -48,11 +53,142 @@ export class EditSourceComponent implements OnInit {
      private datafieldsService: DatafieldsService,
      private cdr: ChangeDetectorRef
    ) {}
+
+   columnDefsDQA:(ColDef | ColGroupDef)[]= [
+    {
+      headerName: 'DQA',
+      headerClass: 'custom-parent-header',
+      children: [
+        {
+          headerName: 'C',
+          field: 'default_dqa_c',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"]
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'red',
+            fontWeight: 'bold'
+          },
+        },
+        {
+          headerName: 'C Commentary',
+          field: 'default_commentary_c',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'T',
+          field: 'default_dqa_t',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'blue',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'T Commentary',
+          field: 'default_commentary_t',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+        {
+          headerName: 'A',
+          field: 'default_dqa_a',
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: 'bold'
+          }
+        },
+        {
+          headerName: 'A Commentary',
+          field: 'default_commentary_a',
+          editable: true,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
+          resizable: true,
+          suppressSizeToFit: true,
+         
+        },
+      ],
+
+
+    },
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 100, 
+      flex:1,
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+    
+        const saveDataFields = document.createElement('button');
+        saveDataFields.className = 'fa fa-save';
+        saveDataFields.style.color = 'green';
+        saveDataFields.style.border = '1px solid lightGrey';
+        saveDataFields.style.borderRadius = '5px';
+        saveDataFields.style.lineHeight = '22px';
+        saveDataFields.style.height = '32px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.title = 'Save';
+    
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafieldsDQA(params.node, 'OUTBOUND');
+        });
+    
+      
+        div.appendChild(saveDataFields);
+    
+        return div;
+      }
+    },
+  ]
  
  
    columnDefs: (ColDef | ColGroupDef)[]= [
      { field: 'field_id', headerName: 'Field ID', editable: false, },
      { field: 'field_name', headerName: 'Field Name', editable: true },
+     { field: 'field_description', headerName: 'Field Description', editable: true },
      { field: 'data_type', headerName: 'Data Type', editable: true,
        cellEditor: 'agSelectCellEditor',
        cellEditorParams: {
@@ -66,8 +202,12 @@ export class EditSourceComponent implements OnInit {
          {
            headerName: 'C',
            field: 'dqa_c',
-           editable: false,
-           valueGetter: () => 'L', // Always returns 'L'
+           editable: true,
+          //  valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
            width:65,
            minWidth: 65,
            maxWidth: 65,
@@ -80,7 +220,7 @@ export class EditSourceComponent implements OnInit {
          },
          {
           headerName: 'C Commentary',
-          field: 'commentary_p',
+          field: 'commentary_c',
           editable: true,
           width:100,
           minWidth: 100,
@@ -92,8 +232,12 @@ export class EditSourceComponent implements OnInit {
         {
           headerName: 'T',
           field: 'dqa_t',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
+          editable: true,
+          // valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
           width:65,
           minWidth: 65,
           maxWidth: 65,
@@ -118,8 +262,12 @@ export class EditSourceComponent implements OnInit {
         {
           headerName: 'A',
           field: 'dqa_a',
-          editable: false,
-          valueGetter: () => 'L', // Always returns 'L'
+          editable: true,
+          // valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
           width:65,
           minWidth: 65,
           maxWidth: 65,
@@ -204,6 +352,7 @@ export class EditSourceComponent implements OnInit {
    };
  
    rowData: any;
+   rowDataDQA: any;
  
    // rowData = [
    //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
@@ -220,7 +369,7 @@ export class EditSourceComponent implements OnInit {
    }
  
    addRow() {
-     const newItem = {fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA:'',  criticality: '' };
+     const newItem = {fieldId: '', fieldName: '', fieldDesc:'', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA:'',  criticality: '' };
      this.rowData = [...this.rowData, newItem];
    }
  
@@ -232,6 +381,7 @@ export class EditSourceComponent implements OnInit {
      console.log('Editing source with ID:', this.sourceId);
      this.sourceForm = this.fb.group({
        source_name: [''],
+       vendor: [''],
        quality_of_service: [''],
        frequency_of_update: [''],
        schedule_of_update: [''],
@@ -257,6 +407,9 @@ export class EditSourceComponent implements OnInit {
        });
        // this.generateTimeOptions();
        this.getDataFields();
+
+       this.rowDataDQA = [{}];
+
    }
  
    getDataFields()
@@ -280,15 +433,18 @@ export class EditSourceComponent implements OnInit {
      });
    }
  
-   addDatafields()
-   {
+   addDatafields(view:string)
+  {
+    this.activeView = view;
      this.showDataFieldsTable = true;
      this.showDataFields = true;
      this.showDataQuality = false;
+     this.getDatafieldsDQA();
    }
  
-   showDQA()
+   showDQA(view:string)
    {
+     this.activeView = view;
      this.showDataFieldsTable = true;
      this.showDataFields = false;
      this.showDataQuality = true;
@@ -340,6 +496,74 @@ export class EditSourceComponent implements OnInit {
        }
      })
    }
+
+
+   getDatafieldsDQA()
+  {
+    this.datafieldsService.getDataFieldsDQA(this.sourceId, 'SOURCE').subscribe({
+      next: (res: any) => {
+        this.rowDataDQA = [res]; // triggers change
+        this.showGlobalQualityRisk = res.allow_risk_update;
+        console.log('rowDataoutboundDQA:', this.rowDataDQA);
+
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowDataDQA);
+        }
+  
+        this.cdr.detectChanges(); // trigger Angular change detection
+        
+      },
+      error: (err: any) => {
+        console.error('Failed to load interface:', err);
+      }
+         // Force refresh with setRowData
+    
+    });
+  
+  }
+
+
+   saveDatafieldsDQA(data:any, interface_type:any)
+   {
+     console.log(data, "Interface Data Fields");
+     this.dataFieldsModel.id = data.data.id;
+       this.dataFieldsModel.allow_risk_update = this.showGlobalQualityRisk;
+       this.dataFieldsModel.entity_id = [this.sourceId];
+       this.dataFieldsModel.entity_type = "SOURCE";
+     this.dataFieldsModel.default_dqa_t = data.data.default_dqa_t;
+     this.dataFieldsModel.default_dqa_a = data.data.default_dqa_a;
+     this.dataFieldsModel.default_dqa_c = data.data.default_dqa_c;
+     this.dataFieldsModel.default_commentary_t = data.data.default_commentary_t;
+     this.dataFieldsModel.default_commentary_a = data.data.default_commentary_a;
+     this.dataFieldsModel.default_commentary_c = data.data.default_commentary_c;
+ 
+         // alert("Data field added Successfully.");
+         if(!data.data.id)
+         {
+           this.datafieldsService.createGlobalRisk(this.dataFieldsModel).subscribe(() => {
+   
+           this.toastNotificationService.success("Global Risk Added Successfully.");
+           setTimeout(() => {
+               this.getDataFields(); // refresh
+            
+             }, 1000);
+         });
+       }
+         else
+         {
+           this.datafieldsService.updateGlobalRisk(this.dataFieldsModel).subscribe(() => {
+   
+             this.toastNotificationService.success("Global Risk updated Successfully.");
+             setTimeout(() => {
+                   this.getDataFields();
+               
+               }, 1000);
+           });
+         }
+        
+   }
+
  
   saveDatafields(data:any)
   {
@@ -347,12 +571,13 @@ export class EditSourceComponent implements OnInit {
 
   this.dataFieldsModel.field_id = data.data.field_id;
   this.dataFieldsModel.field_name = data.data.field_name;
-  this.dataFieldsModel.dqa_c = "L";
-  this.dataFieldsModel.dqa_t = "L";
-  this.dataFieldsModel.dqa_a = "L";
+  this.dataFieldsModel.field_description = data.data.field_description;
+  this.dataFieldsModel.dqa_c = data.data.dqa_c;
+  this.dataFieldsModel.dqa_t = data.data.dqa_t;
+  this.dataFieldsModel.dqa_a = data.data.dqa_a;
   this.dataFieldsModel.commentary_a = data.data.commentary_a;
   this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  this.dataFieldsModel.commentary_p = data.data.commentary_p;
+  this.dataFieldsModel.commentary_c = data.data.commentary_c;
   this.dataFieldsModel.data_type = data.data.data_type;
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;

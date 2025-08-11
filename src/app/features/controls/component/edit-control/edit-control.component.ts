@@ -11,6 +11,7 @@ import { SystemServiceService } from 'src/app/features/systems/services/system-s
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
+import { isRawIdxResponse } from '@okta/okta-auth-js/types/lib/idx/types/idx-js';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -42,6 +43,8 @@ controlForm!: FormGroup;
   filteredAttachToIdOptions: { id: number, name: string }[] = [];
   attachTo!:string;
   attachToId!:number;
+  activeView!: string; // default view on load
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -57,7 +60,9 @@ controlForm!: FormGroup;
 
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, },
-    // { field: 'field_name', headerName: 'Field Name', editable: true },
+    { field: 'entity_id', headerName: 'Entity ID', editable: false, },
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
+    { field: 'entity_type', headerName: 'Entity Type', editable: false },
     // { field: 'data_type', headerName: 'Data Type', editable: true,
     //   cellEditor: 'agSelectCellEditor',
     //   cellEditorParams: {
@@ -69,6 +74,10 @@ controlForm!: FormGroup;
       field: 'dqa_c',
       editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -79,11 +88,15 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       },
     },
-    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: true },
+    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
     { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'red',
+        fontWeight: 'bold'
       },
      },
     {
@@ -91,6 +104,10 @@ controlForm!: FormGroup;
       field: 'dqa_t',
       editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -101,11 +118,15 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: true },
+    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
     { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'blue',
+        fontWeight: 'bold'
       },
      },
     {
@@ -113,6 +134,10 @@ controlForm!: FormGroup;
       field: 'dqa_a',
       editable: false,
       // valueGetter: () => 'L', // Always returns 'L'
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ["H", "M", "L"],
+      },
       width:65,
       minWidth: 65,
       maxWidth: 65,
@@ -123,11 +148,15 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       }
     },
-    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: true },
+    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
     { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["HIGH", "LOW", "MEDIUM"]
+        values: ["H", "M", "L"],
+      },
+      cellStyle: {
+        color: 'purple',
+        fontWeight: 'bold'
       },
      },
     {
@@ -284,10 +313,11 @@ controlForm!: FormGroup;
     console.log('Cell Value Changed:', event);
   }
 
-  addDatafields()
+  addDatafields(view:string)
   {
+    this.activeView = view;
     this.showDataFields = true;
-    alert(this.attachTo +','+ this.attachToId);
+    // alert(this.attachTo +','+ this.attachToId);
       this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
         next: (res: any) => {
           this.rowData = [...res]; // triggers change
@@ -310,7 +340,9 @@ controlForm!: FormGroup;
   interfaceOptionList: string[] = [];
 
 
-  loadInboundInterfaces() {
+  loadInboundInterfaces(view:string) {
+    this.activeView = view;
+
     this.showDataFields = true;
     const interfaces$ = this.interfaceService.getInterface();
     const interfaceDataFields$ = this.interfaceService.getInboundData(this.attachToId);
@@ -335,6 +367,7 @@ controlForm!: FormGroup;
           const rawData = interfaceDataFields[0]; // replace with your actual variable
 
           const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
           const systemFields = JSON.parse(rawData.system_fields || '[]');
 
           let combinedFields: any[] = [];
@@ -344,17 +377,19 @@ controlForm!: FormGroup;
             combinedFields.push({
               ...field,
               interface_name: rawData.system_name,
+              interface_id: rawData.system_id,
               source: 'System'
             });
           });
 
           // From inbound_interfaces
-          inboundInterfaces.forEach((intf: any) => {
+          outboundInterfaces.forEach((intf: any) => {
             intf.fields.forEach((field: any) => {
               combinedFields.push({
                 ...field,
                 interface_name: intf.interface_name,
-                source: 'Inbound'
+                interface_id: intf.interface_id,
+                source: 'Outbound'
               });
             });
           });

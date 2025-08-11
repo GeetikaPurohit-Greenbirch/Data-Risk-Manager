@@ -16,8 +16,8 @@ import { Router } from '@angular/router';
 export class SourceBuilderComponent {
   sourceForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions = ['PERIODIC', 'REAL-TIME'];
-  sourceTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
+  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+  sourceTypeOptions = ['SYSTEM', 'MANUAL ENTRY'];
   sourceModel : Sources = new Sources();
   timeOptions: string[] = [];
   frequencyLimit = 1;
@@ -29,6 +29,7 @@ export class SourceBuilderComponent {
   ngOnInit(): void {
     this.sourceForm = this.fb.group({
       sourceName: ['', Validators.required],
+      vendor:['', Validators.required],
       serviceQuality: ['', Validators.required],
       frequencyUpdate:[1,Validators.required],
       updateSchedule: [[], Validators.required],
@@ -83,6 +84,7 @@ export class SourceBuilderComponent {
       const payload = {
         sourceEntity: {
           source_name : this.sourceForm.value.sourceName,
+          vendor: this.sourceForm.value.vendor,
           quality_of_service : this.sourceForm.value.serviceQuality,
           frequency_of_update:this.sourceForm.value.frequencyUpdate,
           schedule_of_update:this.sourceForm.value.updateSchedule,
