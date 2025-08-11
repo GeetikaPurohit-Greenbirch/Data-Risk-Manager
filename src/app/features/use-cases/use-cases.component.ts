@@ -32,7 +32,10 @@ export class UseCasesComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  pageSize = 5;
+  data: any[] = []; // example
+  // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
+  pageSizeOptions: number[] = [];
   constructor(private usecaseService: UsecaseService,
     private router: Router,
     private toastNotificationService: ToastnotificationService,
@@ -138,42 +141,29 @@ export class UseCasesComponent {
   }
 
   ngAfterViewInit() {
-    
+    setTimeout(() => {
+      this.patchAllLabel();
+    }, 0);
+  }
+  patchAllLabel() {
+    setTimeout(() => {
+      const options = document.querySelectorAll('mat-option span.mdc-list-item__primary-text');
+      options.forEach((opt: any) => {
+        if (opt.textContent?.trim() === String(this.rowData.length)) {
+          opt.textContent = 'All';
+        }
+      });
+    }, 100);
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  
-    // Optional: if your table includes objects, set a custom filterPredicate
-    this.dataSource.filterPredicate = (data: Usecase, filter: string) => {
-      const lowerFilter = filter.trim().toLowerCase();
-
-      const formatDate = (date: any): string => {
-        return date
-          ? new Date(date).toLocaleDateString('en-CA') // yyyy-mm-dd
-          : '';
-      };
-    
-      const formattedLastReviewDate = formatDate(data.last_review_date);
-      const formattedNextReviewDate = formatDate(data.next_review_date);
-
-      return (
-        data.use_case_name?.toLowerCase().includes(lowerFilter) ||
-        data.use_case_description?.toLowerCase().includes(lowerFilter) ||
-        data.use_case_owner?.toLowerCase().includes(lowerFilter) ||
-        data.use_case_owner_email?.toLowerCase().includes(lowerFilter) ||
-        data.status?.toLowerCase().includes(lowerFilter) ||
-        data.reviewed_by?.toLowerCase().includes(lowerFilter) ||
-        data.reviewer?.toLowerCase().includes(lowerFilter) ||
-        String(data.use_case_id).includes(lowerFilter) ||
-        String(data.version).includes(lowerFilter) ||
-        formattedLastReviewDate.includes(lowerFilter) ||
-        formattedNextReviewDate.includes(lowerFilter)
-      );
-    };
+  onPageChange(event: any) {
+    if (event.pageSize === this.rowData.length || event.pageSize === 'All') {
+      this.pageSize = this.rowData.length;
+    } else {
+      this.pageSize = event.pageSize;
+    }
   }
-  
+ 
 
   getUsecaseList() {
     this.usecaseService.getUsecase().subscribe({

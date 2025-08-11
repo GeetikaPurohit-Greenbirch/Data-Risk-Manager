@@ -20,12 +20,22 @@
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
+        [pagination]="true"
+        [paginationPageSize]="pageSize"
         (cellValueChanged)="onCellValueChanged($event)"
         rowSelection="single"
         [suppressColumnVirtualisation]="true"
         [domLayout]="'normal'"
         >
         </ag-grid-angular>
+
+        <mat-paginator
+  [length]="rowData.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[rowData.length, 5, 10, 50]"
+  (page)="onPageChange($event)"
+  (click)="patchAllLabel()">
+</mat-paginator>
       </div>
       
 </main>

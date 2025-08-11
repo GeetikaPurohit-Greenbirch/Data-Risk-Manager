@@ -57,7 +57,9 @@ editableColumns: string[] = [
   'actions'
 ];
 
-  dataSource: MatTableDataSource<SystemsModel>;
+
+    dataSource = new MatTableDataSource<SystemsModel>;
+  
 
   // systems : SystemsModel = new SystemsModel();
   systems: SystemsModel[] = []; // ✅ correct
@@ -78,18 +80,17 @@ editableColumns: string[] = [
      private router: Router
 
   ) {
-    this.dataSource = new MatTableDataSource(this.systems);
   }
 
   columnDefs: (ColDef | ColGroupDef)[]= [
-      { field: 'system_id', headerName: 'System ID', editable: false, sortable: true},
-      { field: 'system_name', headerName: 'Name', editable: true,  sortable: true },
-      { field: 'description', headerName: 'Description', editable: true,sortable: true },
-      { field: 'owner', headerName: 'Owner', editable: true, sortable: true },
-      { field: 'owner_email', headerName: 'Owner Email', editable: true, sortable: true },
-      { field: 'leanix_id', headerName: 'LeanIX ID', editable: true, sortable: true },
-      { field: 'version_number', headerName: 'Version', editable: true, sortable: true },
-      { field: 'status', headerName: 'Status', editable: true, sortable: true },
+      { field: 'system_id', headerName: 'System ID', editable: false, sortable: true, sort: 'asc'},
+      { field: 'system_name', headerName: 'Name', editable: true,  sortable: true,sort: 'asc' },
+      { field: 'description', headerName: 'Description', editable: true,sortable: true,sort: 'asc' },
+      { field: 'owner', headerName: 'Owner', editable: true, sortable: true,sort: 'asc' },
+      { field: 'owner_email', headerName: 'Owner Email', editable: true, sortable: true,sort: 'asc' },
+      { field: 'leanix_id', headerName: 'LeanIX ID', editable: true, sortable: true,sort: 'asc' },
+      { field: 'version_number', headerName: 'Version', editable: true, sortable: true,sort: 'asc' },
+      { field: 'status', headerName: 'Status', editable: true, sortable: true,sort: 'asc' },
       {
         headerName: 'Actions',
         editable: false,
@@ -158,6 +159,7 @@ editableColumns: string[] = [
     onGridReady(params: any) {
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
+     
       this.gridApi.sizeColumnsToFit();
       this.getSystemList();
     }
@@ -173,7 +175,7 @@ editableColumns: string[] = [
     this.getChildGriddata();
     // this.rowData= [];
     // this.replaceLastPageSizeLabel();
-    this.pageSizeOptions = [this.systems.length, 5, 10, 50]; // "All" is first
+    this.pageSizeOptions = [this.rowData.length, 5, 10, 50]; // "All" is first
 
   }
 
@@ -186,7 +188,7 @@ editableColumns: string[] = [
     setTimeout(() => {
       const options = document.querySelectorAll('mat-option span.mdc-list-item__primary-text');
       options.forEach((opt: any) => {
-        if (opt.textContent?.trim() === String(this.systems.length)) {
+        if (opt.textContent?.trim() === String(this.rowData.length)) {
           opt.textContent = 'All';
         }
       });
@@ -194,8 +196,8 @@ editableColumns: string[] = [
   }
 
   onPageChange(event: any) {
-    if (event.pageSize === this.systems.length || event.pageSize === 'All') {
-      this.pageSize = this.systems.length;
+    if (event.pageSize === this.rowData.length || event.pageSize === 'All') {
+      this.pageSize = this.rowData.length;
     } else {
       this.pageSize = event.pageSize;
     }
@@ -256,26 +258,6 @@ saveChildGrid(parentRow: any) {
   
 }
 
-applyFilter(event: Event) {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  // Optional: if your table includes objects, set a custom filterPredicate
-  this.dataSource.filterPredicate = (data: SystemsModel, filter: string) => {
-    return (
-      data.system_name?.toLowerCase().includes(filter) ||
-      data.description?.toLowerCase().includes(filter) ||
-      data.owner?.toLowerCase().includes(filter) ||
-      data.owner_email?.toLowerCase().includes(filter) ||
-      data.leanix_id?.toLowerCase().includes(filter) ||
-      data.status?.toLowerCase().includes(filter) ||
-      String(data.system_id).includes(filter) ||
-      String(data.version_number).includes(filter)
-    );
-  };
-}
-
-
 
   getSystemList(): void {
     this.systemService.getSystems().subscribe((data: any) => {
@@ -298,25 +280,6 @@ applyFilter(event: Event) {
       // this.pageSizeOptions = [2, 3, 5, this.systems.length];
    
 
-      // Optional: sortingDataAccessor if sorting by number-as-string
-      this.dataSource.sortingDataAccessor = (item: SystemsModel, property: string) => {
-        switch (property) {
-          case 'systemid': return +item.system_id;
-          case 'name': return item.system_name;
-          case 'description': return item.description;
-          case 'owner': return item.owner;
-          case 'owner_email': return item.owner_email;
-          case 'leanixId': return item.leanix_id;
-          case 'version': return item.version_number;
-          case 'status': return item.status;
-          default: return '';
-        }
-      };
-  
-      // 👇 Set and trigger default sorting
-      this.sort.active = 'systemid';    // matColumnDef name
-      this.sort.direction = 'asc';      // or 'desc'
-      this.sort.sortChange.emit();      // <- triggers the sort to apply
     });
   }
   
@@ -337,22 +300,6 @@ applyFilter(event: Event) {
         this.getSystemList(); // refresh
     })
   }
-
-  // editSystem(system: SystemsModel) {
-  //   const dialogRef = this.dialog.open(EditSystemDialogComponent, {
-  //     width: '1200px',
-  //     data: { ...system } // Pass a copy
-  //   });
-  
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       // Save updated data to server
-  //       // this.systemService.updateSystem(result).subscribe(() => {
-  //         this.getSystemList(); // refresh
-  //       // });
-  //     }
-  //   });
-  // }
 
   addSystemScreen()
   {

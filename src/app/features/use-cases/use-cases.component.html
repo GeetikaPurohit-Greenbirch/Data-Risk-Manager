@@ -12,23 +12,29 @@
         Add Use Case
       </button>
       <div class="system-table-container">
-        <!-- <mat-form-field appearance="outline" class="filter-input">
-          <mat-label>Filter Use Case</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter..." />
-        </mat-form-field> -->
-       
+    
         <ag-grid-angular
         class="ag-theme-alpine"
         style="width: 100%; height: 400px;"
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
+        [pagination]="true"
+        [paginationPageSize]="pageSize"
         (cellValueChanged)="onCellValueChanged($event)"
         rowSelection="single"
         [suppressColumnVirtualisation]="true"
         [domLayout]="'normal'"
         >
         </ag-grid-angular>
+
+        <mat-paginator
+  [length]="rowData.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[rowData.length, 5, 10, 50]"
+  (page)="onPageChange($event)"
+  (click)="patchAllLabel()">
+</mat-paginator>
       </div>
       
 </main>

@@ -109,18 +109,18 @@
         <!-- Add remaining fields similarly -->
         <div class="updateBtn">
 
-        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Source</button>
+        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
         </div>
 <!-- Toggle Button -->
 <div style="display: flex; height: 100%;">
   <!-- Left Side Buttons -->
   <div style="width: 100%; padding: 12px;">
     <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-      <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+      <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
       [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
               (click)="addDatafields('datafields')">
         Add Datafields
-      </button>
+      </button> -->
 
       <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
       [ngClass]="{ 'inverse': activeView === 'dqa', 'primary': activeView !== 'dqa' }"

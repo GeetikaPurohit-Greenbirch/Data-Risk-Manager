@@ -31,6 +31,10 @@ export class InterfacesComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  pageSize = 5;
+  data: any[] = []; // example
+  // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
+  pageSizeOptions: number[] = [];
 
   constructor(private interfaceService: InterfaceService,
     private router: Router,
@@ -132,27 +136,30 @@ export class InterfacesComponent {
     this.getInterfaceList();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  
-    // Optional: if your table includes objects, set a custom filterPredicate
-    this.dataSource.filterPredicate = (data: Interface, filter: string) => {
-      return (
-        data.interface_name?.toLowerCase().includes(filter) ||
-        data.quality_of_service?.toLowerCase().includes(filter) ||
-        data.schedule_of_update?.includes(filter) ||
-        data.methodology_of_transfer?.toLowerCase().includes(filter) ||
-        data.interface_type?.toLowerCase().includes(filter) ||
-        data.interface_version_number?.toLowerCase().includes(filter) ||
-        data.interface_status?.toLowerCase().includes(filter) ||
-        data.interface_owner?.toLowerCase().includes(filter) ||
-        data.interface_owner_email?.toLowerCase().includes(filter) ||
-        String(data.id).includes(filter) ||
-        String(data.frequency_of_update).includes(filter)
-      );
-    };
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.patchAllLabel();
+    }, 0);
   }
+  patchAllLabel() {
+    setTimeout(() => {
+      const options = document.querySelectorAll('mat-option span.mdc-list-item__primary-text');
+      options.forEach((opt: any) => {
+        if (opt.textContent?.trim() === String(this.rowData.length)) {
+          opt.textContent = 'All';
+        }
+      });
+    }, 100);
+  }
+
+  onPageChange(event: any) {
+    if (event.pageSize === this.rowData.length || event.pageSize === 'All') {
+      this.pageSize = this.rowData.length;
+    } else {
+      this.pageSize = event.pageSize;
+    }
+  }
+
 
   getInterfaceList() {
     this.interfaceService.getInterface().subscribe({

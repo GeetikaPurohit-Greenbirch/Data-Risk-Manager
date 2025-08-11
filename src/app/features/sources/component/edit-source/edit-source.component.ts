@@ -21,9 +21,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class EditSourceComponent implements OnInit {
  sourceForm!: FormGroup;
-   showDataFields = false;
+   showDataFields = true;
    showDataQuality = false;
-   showDataFieldsTable = false;
+   showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD-HOC'];
   sourceTypeOptions: string[] = ['SYSTEM', 'MANUAL ENTRY'];
