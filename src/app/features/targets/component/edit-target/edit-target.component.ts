@@ -9,6 +9,7 @@ import { TargetService } from '../../services/target.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { PdfService } from 'src/app/features/shared-services/pdf.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -41,9 +42,13 @@ export class EditTargetComponent {
    // rowData: any;
    dataFieldsModel : Datafields = new Datafields();
    activeView!: string; // default view on load
+ // report builder visibility/position
+ reportVisible = false;
+ reportPosition = { x: 200, y: 120 };
 
    constructor(
      private route: ActivatedRoute,
+     private pdfService: PdfService,
      private fb: FormBuilder,
      private toastNotificationService: ToastnotificationService,
      private targetService: TargetService,
@@ -64,15 +69,21 @@ export class EditTargetComponent {
      { field: 'field_length', headerName: 'Length', editable: true },
      {
        headerName: 'DQA',
+       field: 'dqa',
+       resizable: true,
        children: [
          {
-           headerName: 'C',
+           headerName: 'C= Completeness',
            field: 'dqa_c',
-           editable: false,
-           valueGetter: () => 'L', // Always returns 'L'
-           width:65,
-           minWidth: 65,
-           maxWidth: 65,
+           editable: true,
+          //  valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
+          //  width:65,
+          //  minWidth: 65,
+          //  maxWidth: 65,
            resizable: true,
            suppressSizeToFit: true,
            cellStyle: {
@@ -81,13 +92,17 @@ export class EditTargetComponent {
            },
          },
          {
-           headerName: 'T',
+           headerName: 'T= Timeliness',
            field: 'dqa_t',
-           editable: false,
-           valueGetter: () => 'L', // Always returns 'L'
-           width:65,
-           minWidth: 65,
-           maxWidth: 65,
+           editable: true,
+          //  valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
+          //  width:65,
+          //  minWidth: 65,
+          //  maxWidth: 65,
            resizable: true,
            suppressSizeToFit: true,
            cellStyle: {
@@ -96,13 +111,17 @@ export class EditTargetComponent {
            }
          },
          {
-           headerName: 'A',
+           headerName: 'A= Accuracy',
            field: 'dqa_a',
-           editable: false,
-           valueGetter: () => 'L', // Always returns 'L'
-           width:65,
-           minWidth: 65,
-           maxWidth: 65,
+           editable: true,
+          //  valueGetter: () => 'L', // Always returns 'L'
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["H", "M", "L"]
+          },
+          //  width:65,
+          //  minWidth: 65,
+          //  maxWidth: 65,
            resizable: true,
            suppressSizeToFit: true,
            cellStyle: {
@@ -190,6 +209,45 @@ export class EditTargetComponent {
      this.getDataFields();
    }
  
+
+   onHeaderCellClicked(event: any) {
+    // event.column.getColDef().headerName gives the header text
+    const clickedHeader = event?.column?.getColDef()?.headerName;
+    if (clickedHeader === 'DQA') {
+      // position the floating panel near mouse
+      const mouseEvent = event.event as MouseEvent;
+      const offsetX = 10; // small offset so it doesn't cover cursor
+      const offsetY = 10;
+      this.reportPosition = { x: mouseEvent.clientX + offsetX, y: mouseEvent.clientY + offsetY };
+      this.reportVisible = true;
+    }
+  }
+  openReportBuilder() {
+    this.reportVisible = true;
+    this.reportPosition = { x: 150, y: 100 }; // fixed position
+  }
+
+  closeReportBuilder() {
+    this.reportVisible = false;
+  }
+
+  onBuildReport(options: any) {
+    if (!this.gridApi) {
+      console.error('Grid API not ready');
+      return;
+    }
+    // pass grid rows as sample data to generate in PDF
+    const allRows: any[] = [];
+    this.gridApi.forEachNode((node: any) => allRows.push(node.data));
+    this.pdfService.generatePdf(options, allRows);
+    this.reportVisible = false;
+  }
+
+  onCloseBuilder() {
+    this.reportVisible = false;
+  }
+
+
    addRow() {
      const newItem = {fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA:'',  criticality: '' };
      this.rowData = [...this.rowData, newItem];

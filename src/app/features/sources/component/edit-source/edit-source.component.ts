@@ -58,9 +58,10 @@ export class EditSourceComponent implements OnInit {
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      resizable: true,
       children: [
         {
-          headerName: 'C',
+          headerName: 'C= Completeness',
           field: 'default_dqa_c',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -89,7 +90,7 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'T',
+          headerName: 'T= Timeliness',
           field: 'default_dqa_t',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -118,7 +119,7 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'A',
+          headerName: 'A= Accuracy',
           field: 'default_dqa_a',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -198,9 +199,10 @@ export class EditSourceComponent implements OnInit {
      { field: 'field_length', headerName: 'Length', editable: true },
      {
        headerName: 'DQA',
+       resizable: true,
        children: [
          {
-           headerName: 'C',
+           headerName: 'C= Completeness',
            field: 'dqa_c',
            editable: true,
           //  valueGetter: () => 'L', // Always returns 'L'
@@ -208,9 +210,9 @@ export class EditSourceComponent implements OnInit {
           cellEditorParams: {
             values: ["H", "M", "L"]
           },
-           width:65,
-           minWidth: 65,
-           maxWidth: 65,
+          //  width:65,
+          //  minWidth: 65,
+          //  maxWidth: 65,
            resizable: true,
            suppressSizeToFit: true,
            cellStyle: {
@@ -222,15 +224,15 @@ export class EditSourceComponent implements OnInit {
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: true,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
         },
         {
-          headerName: 'T',
+          headerName: 'T= Timeliness',
           field: 'dqa_t',
           editable: true,
           // valueGetter: () => 'L', // Always returns 'L'
@@ -238,9 +240,9 @@ export class EditSourceComponent implements OnInit {
           cellEditorParams: {
             values: ["H", "M", "L"]
           },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -260,7 +262,7 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'A',
+          headerName: 'A= Accuracy',
           field: 'dqa_a',
           editable: true,
           // valueGetter: () => 'L', // Always returns 'L'
@@ -268,9 +270,9 @@ export class EditSourceComponent implements OnInit {
           cellEditorParams: {
             values: ["H", "M", "L"]
           },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -282,9 +284,9 @@ export class EditSourceComponent implements OnInit {
           headerName: 'A Commentary',
           field: 'commentary_a',
           editable: true,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          

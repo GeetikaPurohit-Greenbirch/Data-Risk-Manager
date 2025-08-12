@@ -27,12 +27,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class EditSystemComponent{
  systemForm!: FormGroup;
   systemModel : SystemsModel = new SystemsModel();
-  showDataFieldsTable = false;
-  showDataFields = false;
-  showInputDataFields = false;
-  showInbound = false;
-  showoutbound = false;
-  showsystemMapping = false;
+  // showDataFieldsTable = false;
+  public showDataFields = false;
+  public showInputDataFields = false;
+  public showInbound = false;
+  public showoutbound = false;
+  public showsystemMapping = false;
   activeView!: string; // default view on load
   isLoading: boolean = false;
 
@@ -54,6 +54,8 @@ export class EditSystemComponent{
   // ✅ Table column names
   systemId!: any;
   gridApi: any;
+  gridApiIn: any;
+  gridApiout: any;
   gridColumnApi: any;
    dataFieldsModel : Datafields = new Datafields();
   constructor(
@@ -65,6 +67,7 @@ export class EditSystemComponent{
         private toastNotificationService: ToastnotificationService,
         private interfaceService: InterfaceService,
         private targetService : TargetService,
+        
 
   ) {}
 
@@ -72,9 +75,10 @@ export class EditSystemComponent{
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      resizable: true,
       children: [
         {
-          headerName: 'C',
+          headerName: 'C= Completeness',
           field: 'default_dqa_c',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -103,7 +107,7 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'T',
+          headerName: 'T= Timeliness',
           field: 'default_dqa_t',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -132,7 +136,7 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'A',
+          headerName: 'A= Accuracy',
           field: 'default_dqa_a',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -202,9 +206,10 @@ export class EditSystemComponent{
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      resizable: true,
       children: [
         {
-          headerName: 'C',
+          headerName: 'C= Completeness',
           field: 'default_dqa_c',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -233,7 +238,7 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'T',
+          headerName: 'T= Timeliness',
           field: 'default_dqa_t',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -262,7 +267,7 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'A',
+          headerName: 'A= Accuracy',
           field: 'default_dqa_a',
           editable: true,
           cellEditor: 'agSelectCellEditor',
@@ -343,6 +348,7 @@ export class EditSystemComponent{
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      resizable: true,
       children: [
         {
           headerName: 'C',
@@ -352,9 +358,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"]
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -366,9 +372,9 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: this.isEditable,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
@@ -381,9 +387,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
@@ -395,9 +401,9 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'commentary_t',
           editable: this.isEditable,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
@@ -410,9 +416,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -424,9 +430,9 @@ export class EditSystemComponent{
           headerName: 'A Commentary',
           field: 'commentary_a',
           editable: this.isEditable,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
@@ -521,6 +527,7 @@ export class EditSystemComponent{
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      resizable: true,
       children: [
         {
           headerName: 'C',
@@ -530,9 +537,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"]
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -544,9 +551,9 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: this.isEditable,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
@@ -559,9 +566,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
@@ -573,9 +580,9 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'commentary_t',
           editable: this.isEditable,
-          width:100,
-          minWidth: 100,
-          maxWidth: 100,
+          // width:100,
+          // minWidth: 100,
+          // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
          
@@ -588,9 +595,9 @@ export class EditSystemComponent{
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-          width:65,
-          minWidth: 65,
-          maxWidth: 65,
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
@@ -1080,7 +1087,7 @@ loadDropdownOptions(): void {
   addDatafields(view:string)
   {
     this.activeView = view;
-    this.showDataFieldsTable = true;
+    // this.showDataFieldsTable = true;
     this.showInputDataFields = false;
     this.showDataFields = true;
     this.showInbound = false;
@@ -1155,6 +1162,32 @@ loadDropdownOptions(): void {
     })
   }
 
+  onInboundGridReady(params: any) {
+    this.gridApiIn = params.api;
+  }
+
+  onOutboundGridReady(params: any) {
+    this.gridApiout = params.api;
+  }
+
+  toggleOutboundGrid(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.showGlobalQualityRiskGridOutbound = checked;
+    if (!checked) {
+      this.gridApi = null;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleInboundGrid(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.showGlobalQualityRiskGridInbound = checked;
+    if (!checked) {
+      this.gridApi = null;
+    }
+    this.cdr.detectChanges();
+  }
+
   getDatafieldsDQA(interface_type:any)
   {
     if(interface_type == 'OUTBOUND')
@@ -1166,16 +1199,17 @@ loadDropdownOptions(): void {
         this.showGlobalQualityRiskGridOutbound = res.allow_risk_update;
         console.log('rowDataoutboundDQA:', this.rowDataoutboundDQA);
 
-        if (this.gridApi) {
-          this.gridApi.setRowData([]); // Clear first to ensure refresh
-          this.gridApi.setRowData(this.rowDataoutboundDQA);
+        if (this.gridApiout && this.showGlobalQualityRiskGridOutbound) {
+          this.gridApiout.setRowData([]); // Clear first to ensure refresh
+          this.gridApiout.setRowData(this.rowDataoutboundDQA);
         }
   
         this.cdr.detectChanges(); // trigger Angular change detection
         
-        error: (err: any) => {
-          console.error('Failed to load interface:', err);
-        }
+      
+      },
+      error: (err: any) => {
+        console.error('Failed to load interface:', err);
       }
          // Force refresh with setRowData
     
@@ -1187,16 +1221,16 @@ loadDropdownOptions(): void {
       next: (res: any) => {
         this.rowDataInboundDQA = [res]; // triggers change
         this.showGlobalQualityRiskGridInbound = res.allow_risk_update;
-        if (this.gridApi) {
-          this.gridApi.setRowData([]); // Clear first to ensure refresh
-          this.gridApi.setRowData(this.rowDataInboundDQA);
+        if (this.gridApiIn && this.showGlobalQualityRiskGridInbound) {
+          this.gridApiIn.setRowData(this.rowDataInboundDQA);
         }
   
         this.cdr.detectChanges(); // trigger Angular change detection
         
-        error: (err: any) => {
-          console.error('Failed to load interface:', err);
-        }
+      
+      },
+      error: (err: any) => {
+        console.error('Failed to load interface:', err);
       }
          // Force refresh with setRowData
     
@@ -1317,34 +1351,37 @@ loadDropdownOptions(): void {
   addInbound(view: string)
   {
     this.activeView = view;
-    this.showDataFieldsTable = true;
+    // this.showDataFieldsTable = true;
     this.showInputDataFields = false;
     this.showDataFields = false;
     this.showInbound = true;
     this.showoutbound = true;
     this.showsystemMapping = false;
-    // this.getInboundInterfaceData();
+    this.loadInboundInterfaces();
   }
 
-  addOutBound()
-  {
-    this.showDataFieldsTable = true;
-    this.showInputDataFields = false;
-    this.showDataFields = false;
-    this.showInbound = false;
-    this.showoutbound = true;
-    this.showsystemMapping = false;
-  }
+  // addOutBound()
+  // {
+  //   // this.showDataFieldsTable = true;
+  //   this.showInputDataFields = false;
+  //   this.showDataFields = false;
+  //   this.showInbound = false;
+  //   this.showoutbound = true;
+  //   this.showsystemMapping = false;
+  // }
 
   sysMapping(view:string)
   {
     this.activeView = view;
-    this.showDataFieldsTable = true;
+    // this.showDataFieldsTable = true;
     this.showInputDataFields = false;
     this.showDataFields = false;
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = true;
+
+    this.cdr.detectChanges();
+
   }
 
   addInterface()

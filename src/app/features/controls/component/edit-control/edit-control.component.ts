@@ -78,9 +78,9 @@ controlForm!: FormGroup;
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-      width:65,
-      minWidth: 65,
-      maxWidth: 65,
+      // width:65,
+      // minWidth: 65,
+      // maxWidth: 65,
       resizable: true,
       suppressSizeToFit: true,
       cellStyle: {
@@ -108,9 +108,9 @@ controlForm!: FormGroup;
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-      width:65,
-      minWidth: 65,
-      maxWidth: 65,
+      // width:65,
+      // minWidth: 65,
+      // maxWidth: 65,
       resizable: true,
       suppressSizeToFit: true,
       cellStyle: {
@@ -138,9 +138,9 @@ controlForm!: FormGroup;
       cellEditorParams: {
         values: ["H", "M", "L"],
       },
-      width:65,
-      minWidth: 65,
-      maxWidth: 65,
+      // width:65,
+      // minWidth: 65,
+      // maxWidth: 65,
       resizable: true,
       suppressSizeToFit: true,
       cellStyle: {

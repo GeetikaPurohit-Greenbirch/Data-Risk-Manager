@@ -96,9 +96,24 @@ export class UseCasesComponent {
         deleteDataFields.addEventListener('click', () => {
           this.deleteUseCase(params.node);
         });
+
+        const shareUsecase = document.createElement('button');
+        shareUsecase.className = 'fa fa-share';
+        shareUsecase.style.color = 'red';
+        shareUsecase.style.border = '1px solid lightGrey';
+        shareUsecase.style.borderRadius = '5px';
+        shareUsecase.style.lineHeight = '22px';
+        shareUsecase.style.height = '32px';
+        shareUsecase.style.cursor = 'pointer';
+        shareUsecase.title = 'Delete';
+    
+        shareUsecase.addEventListener('click', () => {
+          this.openShareComponent(params.node);
+        });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
+        div.appendChild(shareUsecase);
     
         return div;
       }
@@ -248,6 +263,6 @@ export class UseCasesComponent {
 
 
   openShareComponent(row: any) {
-    this.router.navigate(['/use-cases/share-usecase', row.use_case_id]);
+    this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
   }
 }

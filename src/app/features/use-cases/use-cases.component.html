@@ -29,7 +29,6 @@
         </ag-grid-angular>
 
         <mat-paginator
-  [length]="rowData.length"
   [pageSize]="pageSize"
   [pageSizeOptions]="[rowData.length, 5, 10, 50]"
   (page)="onPageChange($event)"
