@@ -1,0 +1,12 @@
+<div class="block-palette">
+  <div
+    class="block-item"
+    *ngFor="let block of blocks"
+    draggable="true"
+    (dragstart)="dragStart($event, block)"
+  >
+    <!-- <div class="icon">{{ block.icon }}</div> -->
+      <div  [innerHTML]="block.icon"></div>
+    <div class="label">{{ block.label }}</div>
+  </div>
+</div>

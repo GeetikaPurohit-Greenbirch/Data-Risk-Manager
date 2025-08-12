@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>{{ data?.mode === 'edit' ? 'Edit Lineage' : 'Add Lineage' }}</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col gap-4">
+    <!-- fields -->
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="lineage_name" placeholder="Enter lineage name" required />
+      <mat-hint *ngIf="data?.mode==='edit' && data?.value?.lineage_id">ID: {{ data?.value?.lineage_id }}</mat-hint>
+      <mat-error *ngIf="form.get('lineage_name')?.invalid && (form.get('lineage_name')?.touched || form.get('lineage_name')?.dirty)">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Usecase</mat-label>
+      <mat-select formControlName="usecase_id" required>
+        <mat-option *ngFor="let u of data?.usecaseOptions" [value]="u.id">
+          {{ u.name }} ({{ u.id }})
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('usecase_id')?.invalid && (form.get('usecase_id')?.touched || form.get('usecase_id')?.dirty)">
+        Usecase is required
+      </mat-error>
+    </mat-form-field>
+
+    <!-- MOVE ACTIONS INSIDE THE FORM -->
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ data?.mode === 'edit' ? 'Update' : 'Add' }}
+      </button>
+    </div>
+  </form>
+</div>

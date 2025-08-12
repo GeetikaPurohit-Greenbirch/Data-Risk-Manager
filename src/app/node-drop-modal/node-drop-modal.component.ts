@@ -8,8 +8,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
       <mat-form-field appearance="fill" style="width: 100%;">
         <mat-label>Choose a value</mat-label>
         <mat-select [(value)]="selectedValue">
-          <mat-option *ngFor="let option of data.options" [value]="option">
-            {{ option }}
+          <mat-option *ngFor="let option of data.items" [value]="option.label">
+            {{ option.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>

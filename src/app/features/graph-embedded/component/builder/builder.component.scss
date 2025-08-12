@@ -1,0 +1,33 @@
+::ng-deep .joint-paper{
+width: 100%!important;
+height: 100%!important;
+left: 0 !important;
+top:0 !important
+
+}
+
+::ng-deep .joint-viewport{
+  stroke-width: 0px !important;
+}
+
+.graph-box{
+width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  box-sizing: border-box;
+ .graph-row{
+   display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+ }
+ .graph-col-3{
+    flex: 0 0 16.6667%; max-width: 16.6667%;
+ }
+ .graph-col-9{
+   flex: 0 0 83.3333%; max-width: 83.3333%; 
+ }
+}
+
