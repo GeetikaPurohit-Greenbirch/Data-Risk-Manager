@@ -16,6 +16,7 @@ import { SystemDataFields } from '../models/system-data-fields.model';
 import { Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray  } from '@angular/cdk/drag-drop';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-systems',
@@ -77,7 +78,9 @@ editableColumns: string[] = [
 
   constructor(private systemService: SystemServiceService,
     private dialog: MatDialog,
-     private router: Router
+     private router: Router,
+          private toastNotificationService: ToastnotificationService,
+     
 
   ) {
   }
@@ -251,7 +254,9 @@ saveChildGrid(parentRow: any) {
     if(res)
     {
       console.log(res, "System builder created");
-      alert("Data field added Successfully.");
+      // alert("Data field added Successfully.");
+      this.toastNotificationService.success("Data field added Successfully.");
+
       // window.location.reload();
     }
   })
@@ -296,7 +301,9 @@ saveChildGrid(parentRow: any) {
 
   deleteSystem(system: any) {
     this.systemService.deleteSystem(system.data.system_id).subscribe(res => {
-        alert("System Deleted Successfully. Deleted System ID is "+ system.data.system_id);
+        // alert("System Deleted Successfully. Deleted System ID is "+ system.data.system_id);
+        this.toastNotificationService.error("System Deleted Successfully. Deleted System ID is "+ system.data.system_id);
+
         this.getSystemList(); // refresh
     })
   }

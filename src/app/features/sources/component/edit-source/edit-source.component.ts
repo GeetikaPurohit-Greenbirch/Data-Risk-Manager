@@ -617,7 +617,7 @@ export class EditSourceComponent implements OnInit {
    {
      this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
        // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-       this.toastNotificationService.success("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+       this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
        setTimeout(() => {
          this.getDataFields(); // refresh
  

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsecaseService } from '../../services/usecase.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-create-use-case',
@@ -19,7 +20,8 @@ export class CreateUseCaseComponent {
 
   constructor(private fb: FormBuilder, 
     private usecaseService: UsecaseService,
-    private router: Router
+    private router: Router,
+     private toastNotificationService: ToastnotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +62,9 @@ export class CreateUseCaseComponent {
         if(res)
         {
           console.log(res, "UseCase builder created");
-          alert("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
+          // alert("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
+          this.toastNotificationService.success("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
+
           // window.location.reload();
           this.router.navigate(['/usecases/edit-usecase', res.useCaseEntity.use_case_id]);
 

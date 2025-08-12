@@ -222,7 +222,7 @@ export class UseCasesComponent {
   deleteUseCase(usecases:any) {
     this.usecaseService.deleteUsecase(usecases.data.use_case_id).subscribe(() => {
         // alert("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.usecase_id);
-        this.toastNotificationService.success("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.data.use_case_id);
+        this.toastNotificationService.error("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.data.use_case_id);
         setTimeout(() => {
           this.getUsecaseList(); // refresh
         }, 1000);

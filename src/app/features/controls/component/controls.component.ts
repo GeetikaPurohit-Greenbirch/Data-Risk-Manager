@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Control } from '../models/control.model';
 import { ControlService } from '../services/control.service';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-controls',
@@ -37,7 +38,8 @@ gridColumnApi: any;
 
 
   constructor(private controlService: ControlService,
-    private router: Router
+    private router: Router,
+     private toastNotificationService: ToastnotificationService,
 
   ) { }
 
@@ -187,7 +189,8 @@ gridColumnApi: any;
 
   deleteControl(controls:any) {
     this.controlService.deleteControl(controls.data.control_id).subscribe(() => {
-        alert("Control Deleted Successfully. Deleted Control ID is "+ controls.data.control_id);
+        // alert("Control Deleted Successfully. Deleted Control ID is "+ controls.data.control_id);
+        this.toastNotificationService.error("Control Deleted Successfully. Deleted Control ID is "+ controls.data.control_id);
         this.getControlList(); // refresh
     })
   }

@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { TargetService } from '../../services/target.service';
 import { Target } from '../../models/target.model';
 import { Router } from '@angular/router';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 
 @Component({
@@ -23,7 +24,9 @@ targetForm!: FormGroup;
   frequencyLimit = 1;
   scheduleLimitReached = false;
   constructor(private fb: FormBuilder, private targetService: TargetService,
-    private router: Router
+    private router: Router,            
+    private toastNotificationService: ToastnotificationService,
+    
   ) {} 
 
   ngOnInit(): void {
@@ -101,7 +104,9 @@ targetForm!: FormGroup;
         if(res)
         {
           console.log(res, "Target builder created");
-          alert("Target Created Successfully. Your Target ID is "+ res.targetEntity.target_id);
+          // alert("Target Created Successfully. Your Target ID is "+ res.targetEntity.target_id);
+          this.toastNotificationService.success("Target Created Successfully. Your Target ID is "+ res.targetEntity.target_id);
+
           // window.location.reload();
           this.router.navigate(['/targets/edit-target', res.targetEntity.target_id]);
 

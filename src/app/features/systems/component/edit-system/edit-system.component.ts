@@ -1340,7 +1340,7 @@ loadDropdownOptions(): void {
   {
     this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.success("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 
@@ -1419,12 +1419,12 @@ loadDropdownOptions(): void {
           // this.rowDataInbound = response
           if(interface_type === 'INBOUND')
           {
-            alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
+            // alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
             this.toastNotificationService.success("Inbound Interface Saved Successfully for System ID"+ this.systemId);
           }
           else
           {
-            alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
+            // alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
             this.toastNotificationService.success("Outbound Interface Saved Successfully for System ID"+ this.systemId);
           }
           this.loadInboundInterfaces();
@@ -1446,12 +1446,12 @@ loadDropdownOptions(): void {
           // this.rowDataInbound = response
           if(interface_type === 'INBOUND')
           {
-            alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
+            // alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
             this.toastNotificationService.success("Inbound Interface Saved Successfully for System ID"+ this.systemId);
           }
           else
           {
-            alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
+            // alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
             this.toastNotificationService.success("Outbound Interface Saved Successfully for System ID"+ this.systemId);
           }
         }

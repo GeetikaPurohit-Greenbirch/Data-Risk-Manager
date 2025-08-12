@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Target } from '../models/target.model';
 import { TargetService } from '../services/target.service';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-targets',
@@ -34,7 +35,9 @@ displayedColumns: string[] = ['targetid', 'name', 'servicequality', 'frequencyup
   pageSizeOptions: number[] = [];
 
   constructor(private targetService: TargetService,
-    private router: Router
+    private router: Router,
+            private toastNotificationService: ToastnotificationService,
+    
 
   ) { }
 
@@ -183,7 +186,9 @@ displayedColumns: string[] = ['targetid', 'name', 'servicequality', 'frequencyup
 
   deleteTarget(targets:any) {
     this.targetService.deleteTarget(targets.data.target_id).subscribe(() => {
-        alert("Target Deleted Successfully. Deleted Target ID is "+ targets.data.target_id);
+        // alert("Target Deleted Successfully. Deleted Target ID is "+ targets.data.target_id);
+        this.toastNotificationService.error("Target Deleted Successfully. Deleted Target ID is "+ targets.data.target_id);
+
         this.getTargetList(); // refresh
     })
   }
