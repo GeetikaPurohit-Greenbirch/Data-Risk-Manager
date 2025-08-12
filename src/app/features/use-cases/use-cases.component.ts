@@ -96,9 +96,24 @@ export class UseCasesComponent {
         deleteDataFields.addEventListener('click', () => {
           this.deleteUseCase(params.node);
         });
+
+        const shareUsecase = document.createElement('button');
+        shareUsecase.className = 'fa fa-share';
+        shareUsecase.style.color = 'red';
+        shareUsecase.style.border = '1px solid lightGrey';
+        shareUsecase.style.borderRadius = '5px';
+        shareUsecase.style.lineHeight = '22px';
+        shareUsecase.style.height = '32px';
+        shareUsecase.style.cursor = 'pointer';
+        shareUsecase.title = 'Delete';
+    
+        shareUsecase.addEventListener('click', () => {
+          this.openShareComponent(params.node);
+        });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
+        div.appendChild(shareUsecase);
     
         return div;
       }
@@ -207,7 +222,7 @@ export class UseCasesComponent {
   deleteUseCase(usecases:any) {
     this.usecaseService.deleteUsecase(usecases.data.use_case_id).subscribe(() => {
         // alert("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.usecase_id);
-        this.toastNotificationService.success("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.data.use_case_id);
+        this.toastNotificationService.error("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.data.use_case_id);
         setTimeout(() => {
           this.getUsecaseList(); // refresh
         }, 1000);
@@ -248,6 +263,6 @@ export class UseCasesComponent {
 
 
   openShareComponent(row: any) {
-    this.router.navigate(['/use-cases/share-usecase', row.use_case_id]);
+    this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
   }
 }

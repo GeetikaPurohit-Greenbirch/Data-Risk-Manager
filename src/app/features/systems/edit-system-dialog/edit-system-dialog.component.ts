@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SystemEntity, SystemsModel } from '../models/systems-model.model';
 import { SystemServiceService } from '../services/system-service.service';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-edit-system-dialog',
@@ -16,7 +17,9 @@ export class EditSystemDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<EditSystemDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SystemEntity,
-    private systemService: SystemServiceService
+    private systemService: SystemServiceService,
+        private toastNotificationService: ToastnotificationService,
+    
   ) {
     console.log(data, "row data to edit");
   }
@@ -37,7 +40,9 @@ export class EditSystemDialogComponent {
     this.systemService.updateSystem(this.systemModel).subscribe(res => {
       if(res)
       {
-        alert("System Updated Successfully. Your System ID is "+ res.id);
+        // alert("System Updated Successfully. Your System ID is "+ res.id);
+        this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ res.id);
+
         // window.location.reload();
       }
     })

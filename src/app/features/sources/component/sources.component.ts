@@ -7,6 +7,7 @@ import { SourceService } from '../services/source.service';
 import { Router } from '@angular/router';
 import { SourceEntity, Sources } from '../models/sources.model';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ displayedColumns: string[] = ['sourceid', 'name', 'vendor', 'servicequality', 'f
   pageSizeOptions: number[] = [];
 
   constructor(private sourceService: SourceService,
-    private router: Router
+    private router: Router,
+     private toastNotificationService: ToastnotificationService,
 
   ) { }
 
@@ -204,7 +206,9 @@ displayedColumns: string[] = ['sourceid', 'name', 'vendor', 'servicequality', 'f
 
   deleteSource(sources:any) {
     this.sourceService.deleteSource(sources.data.source_id).subscribe(() => {
-        alert("Source Deleted Successfully. Deleted Source ID is "+ sources.data.source_id);
+        // alert("Source Deleted Successfully. Deleted Source ID is "+ sources.data.source_id);
+        this.toastNotificationService.error("Source Deleted Successfully. Deleted Source ID is "+ sources.data.source_id);
+
         this.getSourceList(); // refresh
     })
   }

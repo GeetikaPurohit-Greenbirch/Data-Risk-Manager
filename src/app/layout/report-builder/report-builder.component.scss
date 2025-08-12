@@ -1,0 +1,14 @@
+.report-builder {
+    position: absolute;
+    width: 25%;
+    background: #f7f7f7;
+    border: 1px solid #777;
+    border-radius: 6px;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 1500;
+  }
+  .section { margin-bottom: 12px; }
+  .section-title { font-weight: 700; margin-bottom: 8px; }
+  .actions { display:flex; gap: 10px; justify-content: flex-end; }
+  button { padding: 6px 10px; }

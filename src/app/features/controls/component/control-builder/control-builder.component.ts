@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Sources } from 'src/app/features/sources/models/sources.model';
 import { SystemsModel } from 'src/app/features/systems/models/systems-model.model';
 import { SystemServiceService } from 'src/app/features/systems/services/system-service.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 @Component({
   selector: 'app-control-builder',
   // standalone: true,
@@ -32,6 +33,7 @@ controlForm!: FormGroup;
     private router: Router,
     private sourceService: SourceService,
     private systemService: SystemServiceService,
+    private toastNotificationService: ToastnotificationService,
   ) {} 
 
   ngOnInit(): void {
@@ -107,7 +109,9 @@ controlForm!: FormGroup;
         if(res)
         {
           console.log(res, "Control builder created");
-          alert("Control Created Successfully. Your Control ID is "+ res.controlEntity.control_id);
+          // alert("Control Created Successfully. Your Control ID is "+ res.controlEntity.control_id);
+          this.toastNotificationService.success("Control Created Successfully. Your Control ID is "+ res.controlEntity.control_id);
+
           // Navigate to Edit Control page with the ID
           this.router.navigate(['/controls/edit-control', res.controlEntity.control_id]);
         }

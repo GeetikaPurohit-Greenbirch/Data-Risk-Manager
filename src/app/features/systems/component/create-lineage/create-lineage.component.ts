@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import * as joint from 'jointjs';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
@@ -14,186 +14,348 @@ export class CreateLineageComponent {
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
   @Input() inboundFields: any[] = [];
 @Input() outboundFields: any[] = [];
-@Input() systemId: any;
+@Input() systemId!: number; // or number
 // @Input() showsystemMapping: any;
  private graph!: joint.dia.Graph;
   private paper!: joint.dia.Paper;
   public mappingId:any;
+  private pendingRender = false;
+  private graphInitialized = false;
+
   private elementsMap: { [id: string]: joint.dia.Element } = {};
    constructor(
         private datafieldsService: DatafieldsService,
           private toastNotificationService: ToastnotificationService,
       
     ) {}
-  
-  // inboundFields = [
-  //   { interface: 'Interface 1', fieldId: 1, fieldName: 'A', dataType: 'Num', length: 10 },
-  //   { interface: 'Interface 1', fieldId: 2, fieldName: 'B', dataType: 'Alphanum', length: 28 },
-  //   { interface: 'Interface 2', fieldId: 2, fieldName: 'H', dataType: 'Alphanum', length: 28 },
-  //   { interface: 'System', fieldId: 1, fieldName: 'K', dataType: 'Num', length: 25 },
-  //   { interface: 'System', fieldId: 2, fieldName: 'L', dataType: 'Alphanum', length: 28 },
-  // ];
-  
-  // outboundFields = [
-  //   { interface: 'Interface 1', fieldId: 1, fieldName: 'A', dataType: 'Num', length: 10 },
-  //   { interface: 'Interface 3', fieldId: 1, fieldName: 'G', dataType: 'Num', length: 10 },
-  //   { interface: 'Target 1', fieldId: 1, fieldName: 'G', dataType: 'Num', length: 10 },
-  //   { interface: 'Target 2', fieldId: 2, fieldName: 'H', dataType: 'Alphanum', length: 28 },
-  // ];
+
 
   ngOnInIt()
   {
-    // this.loadAndRenderSavedLinks();
+    this.renderFields();
   }
 
-  ngOnChanges(): void {
-    if (this.inboundFields.length || this.outboundFields.length) {
-      this.renderFields();
-      // setTimeout(() => this.loadAndRenderSavedLinks(), 0); // call after elements are rendered
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      (changes['systemId'] && changes['systemId'].currentValue) ||
+      (changes['inboundFields'] && changes['inboundFields'].currentValue) ||
+      (changes['outboundFields'] && changes['outboundFields'].currentValue)
+    ) {
+      if (this.graphInitialized) {
+        this.renderFields();
+      } else {
+        this.pendingRender = true;
+      }
     }
   }
-  
-  links: any[] = []; // Store link data
-  ngAfterViewInit(): void {
-    // 1️⃣ Initialize graph and paper
-    this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
-  
-    this.paper = new joint.dia.Paper({
-      el: this.paperContainer.nativeElement,
-      model: this.graph,
-      width: 1200,
-      height: 600,
-      gridSize: 10,
-      interactive: (cellView) => {
-        const cell = cellView.model;
-        if (cell.get('customType') === 'inbound') {
-          return { elementMove: false }; // disable moving inbound fields
-        }
-        return true;
-      },
-      linkPinning: false,
-      snapLinks: { radius: 75 },
-      defaultConnector: { name: 'rounded' },
-      defaultConnectionPoint: { name: 'boundary' },
-      defaultLink: () =>
-        new joint.shapes.standard.Link({
-          attrs: {
-            line: {
-              stroke: '#5c9ded',
-              strokeWidth: 2,
-              targetMarker: {
-                type: 'path',
-                d: 'M 10 -5 0 0 10 5 z',
-              },
-            },
-          },
-        }),
-    });
-  
-    // 2️⃣ Render fields and then load saved links
-    this.renderFields();
+
+  ngAfterViewInit() {
+    // Delay to ensure DOM is ready
     setTimeout(() => {
-      this.loadAndRenderSavedLinks(); // should populate saved mappings
-    }, 0);
-  
-    // 3️⃣ On new link creation → store mapping in `this.links`
-    this.paper.on('link:connect', (linkView: any) => {
-      const sourceId = linkView.model.get('source').id;
-      const targetId = linkView.model.get('target').id;
-  
-      const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
-      const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
-  
-      const from = sourceElement?.attributes?.attrs?.['label']?.text;
-      const to = targetElement?.attributes?.attrs?.['label']?.text;
-  
-      if (from && to) {
-        this.links.push({ from, to }); // mappingId will be added only after save
-        console.log('🔗 New mapping:', from, '→', to);
+      this.initGraph();
+      if (this.pendingRender) {
+        this.renderFields();
+        this.pendingRender = false;
       }
     });
-  
-    // 4️⃣ Show delete (X) tool on link hover using linkTools
-    this.paper.on('link:mouseenter', (linkView: any) => {
-      const customDeleteTool = new joint.linkTools.Button({
-        markup: [{
-          tagName: 'circle',
-          selector: 'button',
-          attributes: {
-            r: 10,
-            fill: '#f44336',
-            stroke: '#fff',
-            'stroke-width': 2,
-            cursor: 'pointer'
-          }
-        }, {
-          tagName: 'text',
-          textContent: 'X',
-          selector: 'icon',
-          attributes: {
-            fill: '#fff',
-            'font-size': 12,
-            'text-anchor': 'middle',
-            y: 4,
-            cursor: 'pointer'
-          }
-        }],
-        distance: '50%',
-        action: (evt: any, linkView: any) => {
-          evt.stopPropagation(); // prevent native removal
-    
-          const link = linkView.model;
-          const sourceId = link.get('source')?.id;
-          const targetId = link.get('target')?.id;
-    
+  }
+
+  private initGraph() {
+    const container = document.getElementById('paper-container');
+    if (!container) {
+      console.error('Graph container not found. Check template for #paper-container element.');
+      return;
+    }
+
+    this.graph = new joint.dia.Graph();
+    // this.paper = new joint.dia.Paper({
+    //   el: container,
+    //   model: this.graph,
+    //   width: 1000,
+    //   height: 600,
+    //   gridSize: 10
+    // });
+
+    this.graphInitialized = true;
+    console.log('Graph initialized');
+
+    this.paper = new joint.dia.Paper({
+          el: container,
+          model: this.graph,
+          width: 1200,
+          height: 600,
+          gridSize: 10,
+          interactive: (cellView) => {
+            const cell = cellView.model;
+            if (cell.get('customType') === 'inbound') {
+              return { elementMove: false }; // disable moving inbound fields
+            }
+            return true;
+          },
+          linkPinning: false,
+          snapLinks: { radius: 75 },
+          defaultConnector: { name: 'rounded' },
+          defaultConnectionPoint: { name: 'boundary' },
+          defaultLink: () =>
+            new joint.shapes.standard.Link({
+              attrs: {
+                line: {
+                  stroke: '#5c9ded',
+                  strokeWidth: 2,
+                  targetMarker: {
+                    type: 'path',
+                    d: 'M 10 -5 0 0 10 5 z',
+                  },
+                },
+              },
+            }),
+        });
+      
+        // 2️⃣ Render fields and then load saved links
+        this.renderFields();
+        setTimeout(() => {
+          this.loadAndRenderSavedLinks(); // should populate saved mappings
+        }, 0);
+      
+        // 3️⃣ On new link creation → store mapping in `this.links`
+        this.paper.on('link:connect', (linkView: any) => {
+          const sourceId = linkView.model.get('source').id;
+          const targetId = linkView.model.get('target').id;
+      
           const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
           const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
-    
-          const fromLabel = sourceElement?.attr('label/text');
-          const toLabel = targetElement?.attr('label/text');
-    
-          const mapping = this.links.find(
-            l => l.from === fromLabel && l.to === toLabel
-          );
-    
-          const confirmed = confirm(`Do you really want to delete mapping:\n${fromLabel} → ${toLabel}?`);
-          if (confirmed) {
-            if (mapping?.mappingId) {
-              // ✅ Saved mapping: call delete API
-              this.datafieldsService.deleteFieldMapping(mapping?.mappingId).subscribe((res:string) => {
-                alert(res);
-                link.remove();
-                this.links = this.links.filter(l => l.mappingId !== mapping?.mappingId);
-              });
-            } else {
-              // ❌ Not yet saved: just remove
-              link.remove();
-              this.links = this.links.filter(l => l.from !== fromLabel || l.to !== toLabel);
-            }
+      
+          const from = sourceElement?.attributes?.attrs?.['label']?.text;
+          const to = targetElement?.attributes?.attrs?.['label']?.text;
+      
+          if (from && to) {
+            this.links.push({ from, to }); // mappingId will be added only after save
+            console.log('🔗 New mapping:', from, '→', to);
           }
-        }
-      });
-    
-      const toolsView = new joint.dia.ToolsView({
-        tools: [customDeleteTool]
-      });
-    
-      linkView.addTools(toolsView);
-    });
-    
-  
-    // 5️⃣ Remove delete tool on mouse leave
-    this.paper.on('link:mouseleave', (linkView: any) => {
-      linkView.removeTools();
-    });
-  
-  
-    // 7️⃣ Optional: fallback manual delete on double click
-    this.paper.on('link:pointerdblclick', (linkView: any) => {
-      linkView.model.remove();
-    });
+        });
+      
+        // 4️⃣ Show delete (X) tool on link hover using linkTools
+        this.paper.on('link:mouseenter', (linkView: any) => {
+          const customDeleteTool = new joint.linkTools.Button({
+            markup: [{
+              tagName: 'circle',
+              selector: 'button',
+              attributes: {
+                r: 10,
+                fill: '#f44336',
+                stroke: '#fff',
+                'stroke-width': 2,
+                cursor: 'pointer'
+              }
+            }, {
+              tagName: 'text',
+              textContent: 'X',
+              selector: 'icon',
+              attributes: {
+                fill: '#fff',
+                'font-size': 12,
+                'text-anchor': 'middle',
+                y: 4,
+                cursor: 'pointer'
+              }
+            }],
+            distance: '50%',
+            action: (evt: any, linkView: any) => {
+              evt.stopPropagation(); // prevent native removal
+        
+              const link = linkView.model;
+              const sourceId = link.get('source')?.id;
+              const targetId = link.get('target')?.id;
+        
+              const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+              const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+        
+              const fromLabel = sourceElement?.attr('label/text');
+              const toLabel = targetElement?.attr('label/text');
+        
+              const mapping = this.links.find(
+                l => l.from === fromLabel && l.to === toLabel
+              );
+        
+              const confirmed = confirm(`Do you really want to delete mapping:\n${fromLabel} → ${toLabel}?`);
+              if (confirmed) {
+                if (mapping?.mappingId) {
+                  // ✅ Saved mapping: call delete API
+                  this.datafieldsService.deleteFieldMapping(mapping?.mappingId).subscribe((res:string) => {
+                    alert(res);
+                    link.remove();
+                    this.links = this.links.filter(l => l.mappingId !== mapping?.mappingId);
+                  });
+                } else {
+                  // ❌ Not yet saved: just remove
+                  link.remove();
+                  this.links = this.links.filter(l => l.from !== fromLabel || l.to !== toLabel);
+                }
+              }
+            }
+          });
+        
+          const toolsView = new joint.dia.ToolsView({
+            tools: [customDeleteTool]
+          });
+        
+          linkView.addTools(toolsView);
+        });
+        
+      
+        // 5️⃣ Remove delete tool on mouse leave
+        this.paper.on('link:mouseleave', (linkView: any) => {
+          linkView.removeTools();
+        });
+      
+      
+        // 7️⃣ Optional: fallback manual delete on double click
+        this.paper.on('link:pointerdblclick', (linkView: any) => {
+          linkView.model.remove();
+        });
   }
+
+  
+  links: any[] = []; // Store link data
+  // ngAfterViewInit(): void {
+  //   // 1️⃣ Initialize graph and paper
+  //   this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
+  
+  //   this.paper = new joint.dia.Paper({
+  //     el: this.paperContainer.nativeElement,
+  //     model: this.graph,
+  //     width: 1200,
+  //     height: 600,
+  //     gridSize: 10,
+  //     interactive: (cellView) => {
+  //       const cell = cellView.model;
+  //       if (cell.get('customType') === 'inbound') {
+  //         return { elementMove: false }; // disable moving inbound fields
+  //       }
+  //       return true;
+  //     },
+  //     linkPinning: false,
+  //     snapLinks: { radius: 75 },
+  //     defaultConnector: { name: 'rounded' },
+  //     defaultConnectionPoint: { name: 'boundary' },
+  //     defaultLink: () =>
+  //       new joint.shapes.standard.Link({
+  //         attrs: {
+  //           line: {
+  //             stroke: '#5c9ded',
+  //             strokeWidth: 2,
+  //             targetMarker: {
+  //               type: 'path',
+  //               d: 'M 10 -5 0 0 10 5 z',
+  //             },
+  //           },
+  //         },
+  //       }),
+  //   });
+  
+  //   // 2️⃣ Render fields and then load saved links
+  //   this.renderFields();
+  //   setTimeout(() => {
+  //     this.loadAndRenderSavedLinks(); // should populate saved mappings
+  //   }, 0);
+  
+  //   // 3️⃣ On new link creation → store mapping in `this.links`
+  //   this.paper.on('link:connect', (linkView: any) => {
+  //     const sourceId = linkView.model.get('source').id;
+  //     const targetId = linkView.model.get('target').id;
+  
+  //     const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+  //     const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+  
+  //     const from = sourceElement?.attributes?.attrs?.['label']?.text;
+  //     const to = targetElement?.attributes?.attrs?.['label']?.text;
+  
+  //     if (from && to) {
+  //       this.links.push({ from, to }); // mappingId will be added only after save
+  //       console.log('🔗 New mapping:', from, '→', to);
+  //     }
+  //   });
+  
+  //   // 4️⃣ Show delete (X) tool on link hover using linkTools
+  //   this.paper.on('link:mouseenter', (linkView: any) => {
+  //     const customDeleteTool = new joint.linkTools.Button({
+  //       markup: [{
+  //         tagName: 'circle',
+  //         selector: 'button',
+  //         attributes: {
+  //           r: 10,
+  //           fill: '#f44336',
+  //           stroke: '#fff',
+  //           'stroke-width': 2,
+  //           cursor: 'pointer'
+  //         }
+  //       }, {
+  //         tagName: 'text',
+  //         textContent: 'X',
+  //         selector: 'icon',
+  //         attributes: {
+  //           fill: '#fff',
+  //           'font-size': 12,
+  //           'text-anchor': 'middle',
+  //           y: 4,
+  //           cursor: 'pointer'
+  //         }
+  //       }],
+  //       distance: '50%',
+  //       action: (evt: any, linkView: any) => {
+  //         evt.stopPropagation(); // prevent native removal
+    
+  //         const link = linkView.model;
+  //         const sourceId = link.get('source')?.id;
+  //         const targetId = link.get('target')?.id;
+    
+  //         const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
+  //         const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
+    
+  //         const fromLabel = sourceElement?.attr('label/text');
+  //         const toLabel = targetElement?.attr('label/text');
+    
+  //         const mapping = this.links.find(
+  //           l => l.from === fromLabel && l.to === toLabel
+  //         );
+    
+  //         const confirmed = confirm(`Do you really want to delete mapping:\n${fromLabel} → ${toLabel}?`);
+  //         if (confirmed) {
+  //           if (mapping?.mappingId) {
+  //             // ✅ Saved mapping: call delete API
+  //             this.datafieldsService.deleteFieldMapping(mapping?.mappingId).subscribe((res:string) => {
+  //               alert(res);
+  //               link.remove();
+  //               this.links = this.links.filter(l => l.mappingId !== mapping?.mappingId);
+  //             });
+  //           } else {
+  //             // ❌ Not yet saved: just remove
+  //             link.remove();
+  //             this.links = this.links.filter(l => l.from !== fromLabel || l.to !== toLabel);
+  //           }
+  //         }
+  //       }
+  //     });
+    
+  //     const toolsView = new joint.dia.ToolsView({
+  //       tools: [customDeleteTool]
+  //     });
+    
+  //     linkView.addTools(toolsView);
+  //   });
+    
+  
+  //   // 5️⃣ Remove delete tool on mouse leave
+  //   this.paper.on('link:mouseleave', (linkView: any) => {
+  //     linkView.removeTools();
+  //   });
+  
+  
+  //   // 7️⃣ Optional: fallback manual delete on double click
+  //   this.paper.on('link:pointerdblclick', (linkView: any) => {
+  //     linkView.model.remove();
+  //   });
+  // }
   
   
     

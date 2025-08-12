@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SystemsModel } from '../../models/systems-model.model';
 import { SystemServiceService } from '../../services/system-service.service';
 import { Router } from '@angular/router';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 @Component({
   selector: 'app-system-builder',
@@ -17,7 +18,8 @@ export class SystemBuilderComponent implements OnInit {
   systemModel : SystemsModel = new SystemsModel();
 
   constructor(private fb: FormBuilder, private systemService: SystemServiceService,
-    private router: Router
+    private router: Router,
+    private toastNotificationService: ToastnotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +59,9 @@ export class SystemBuilderComponent implements OnInit {
         if(res)
         {
           console.log(res, "System builder created");
-          alert("System Created Successfully. Your System ID is "+ res.systemEntity.system_id);
+          // alert("System Created Successfully. Your System ID is "+ res.systemEntity.system_id);
+          this.toastNotificationService.success("System Created Successfully. Your System ID is "+ res.systemEntity.system_id);
+
           // window.location.reload();
           this.router.navigate(['/systems/edit-system', res.systemEntity.system_id]);
 

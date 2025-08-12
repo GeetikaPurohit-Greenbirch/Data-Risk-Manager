@@ -4,6 +4,7 @@ import { Sources } from '../../models/sources.model';
 import { SourceService } from '../../services/source.service';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class SourceBuilderComponent {
   frequencyLimit = 1;
   scheduleLimitReached = false;
   constructor(private fb: FormBuilder, private sourceService: SourceService,
-    private router: Router
+    private router: Router,
+     private toastNotificationService: ToastnotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -102,7 +104,9 @@ export class SourceBuilderComponent {
         if(res)
         {
           console.log(res, "Source builder created");
-          alert("Source Created Successfully. Your Source ID is "+ res.sourceEntity.source_id);
+          // alert("Source Created Successfully. Your Source ID is "+ res.sourceEntity.source_id);
+          this.toastNotificationService.success("Source Created Successfully. Your Source ID is "+ res.sourceEntity.source_id);
+
           // window.location.reload();
           this.router.navigate(['/sources/edit-source', res.sourceEntity.source_id]);
         }

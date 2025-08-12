@@ -183,7 +183,7 @@ export class InterfacesComponent {
   deleteInterface(interfaces:any) {
     this.interfaceService.deleteInterface(interfaces.data.interface_id).subscribe(() => {
         // alert("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
-        this.toastNotificationService.success("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.data.interface_id);
+        this.toastNotificationService.error("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.data.interface_id);
         setTimeout(() => {
           this.getInterfaceList(); // refresh
         }, 1000);

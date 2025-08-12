@@ -1,0 +1,57 @@
+<div class="report-builder"
+     *ngIf="visible"
+     [ngStyle]="{ right:'42px', top: position.y + 'px' }">
+
+  <h4>DQA Target Report Builder</h4>
+
+  <!-- Contents Section -->
+  <div class="section-title">Contents</div>
+
+  <div class="row">
+    <div class="col-md-6">
+    <label><input type="checkbox" [(ngModel)]="options.contents.coverPage"> Cover Page</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.synopsis"> Synopsis</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseName"> Use Case Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.targetName"> Target Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.targetStatus"> Target Status</label><br>
+</div>
+<div class="col-md-6">
+    <label><input type="checkbox" [(ngModel)]="options.contents.individualControlReports"> Individual Control Reports</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.dataFieldDetail"> DataField Detail</label>
+  </div>
+</div>
+  <!-- DataField Attributes Section -->
+  <div class="section-title">DataField Attributes</div>
+
+  <div class="row">
+    <div class="col-md-6">
+    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldId"> Field ID</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldName"> Field Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldDescription"> Field Description</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.dataType"> Data Type</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.sourceName"> Source Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.sourceType"> Source Type</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.accuracyRisk"> Accuracy Risk</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.accuracyRiskComment"> Accuracy Risk Comment</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.completenessRisk"> Completeness Risk</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.completenessRiskComment"> Completeness Risk Comment</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.timelinessRisk"> Timeliness Risk</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.timelinessRiskComment"> Timeliness Risk Comment</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.criticality"> Criticality</label><br>
+</div>
+<div class="col-md-6">
+    <label><input type="checkbox" [(ngModel)]="options.attributes.controlId"> Control ID</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.controlStatus"> Control Status</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.postControlAccuracy"> Post Control Accuracy</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.postControlCompleteness"> Post Control Completeness</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.postControlTimeliness"> Post Control Timeliness</label>
+  </div>
+</div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button (click)="onBuild()">Build Report</button>
+    <button (click)="onClose()">Close</button>
+  </div>
+
+</div>

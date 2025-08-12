@@ -32,6 +32,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PdfService } from '../../shared-services/pdf.service';
+import { ReportBuilderComponent } from 'src/app/layout/report-builder/report-builder.component';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -40,6 +42,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
   declarations: [
     HeaderComponent,
     SidebarComponent,
+    ReportBuilderComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +77,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
   exports: [
     HeaderComponent,
     SidebarComponent,    // 👈 Export so other modules can use
+    ReportBuilderComponent,
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
@@ -102,6 +106,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatSnackBarModule,
     DragDropModule
   ],
+  providers: [PdfService],
   
 })
 export class SharedModule {}

@@ -143,15 +143,20 @@
             <!-- <h3>DataFields</h3> -->
             <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
             <button (click)="addRow()" class="add-btn">Add Row</button>
-
+            <div style="margin-bottom: 10px;">
+              <button (click)="openReportBuilder()" class="btn btn-primary">
+                Build DQA Report
+              </button>
+            </div>
           </div>
           
       <div class="datafields-table" *ngIf="showDataFields">
         <ag-grid-angular
         class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
+        style="width: 60%; height: 580px;"
         [rowData]="rowData"
         [columnDefs]="columnDefs"
+        (gridReady)="onGridReady($event)"
         [defaultColDef]="defaultColDef"
         (cellValueChanged)="onCellValueChanged($event)"
         rowSelection="single"
@@ -159,6 +164,14 @@
         [domLayout]="'normal'"
         >
         </ag-grid-angular>
+
+        <app-report-builder
+        [visible]="reportVisible"
+        [position]="reportPosition"
+        [gridRows]="rowData"
+        (build)="onBuildReport($event)"
+        (close)="onCloseBuilder()">
+      </app-report-builder>
       <!-- <table mat-table [dataSource]="dataFields" class="mat-elevation-z2 datafieldTable">
         <ng-container matColumnDef="fieldId">
           <th mat-header-cell *matHeaderCellDef> Field ID </th>

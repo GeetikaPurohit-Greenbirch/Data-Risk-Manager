@@ -110,7 +110,8 @@
         
           <!-- Checkbox to toggle grid visibility -->
           <label style="margin-left: 16px;">
-            <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound" />
+            <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
+            (change)="toggleInboundGrid($event)" />
             Set Global Quality Risk
           </label>
         
@@ -122,6 +123,7 @@
             [rowData]="rowDataInboundDQA"
             [columnDefs]="columnDefsInboundDQA"
             [defaultColDef]="defaultColDef"
+            (gridReady)="onInboundGridReady($event)"
             rowSelection="single"
           >
           </ag-grid-angular>
@@ -163,7 +165,8 @@
 
         <!-- Checkbox to toggle grid visibility -->
         <label style="margin-left: 16px;">
-          <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound" />
+          <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound" 
+          (change)="toggleOutboundGrid($event)"/>
           Set Global Quality Risk
         </label>
       
@@ -175,6 +178,7 @@
           [rowData]="rowDataoutboundDQA"
           [columnDefs]="columnDefsOoutboundDQA"
           [defaultColDef]="defaultColDef"
+          (gridReady)="onOutboundGridReady($event)"
           rowSelection="single"
         >
         </ag-grid-angular>
@@ -227,13 +231,11 @@
     <app-create-lineage
     [inboundFields]="inboundFields"
   [outboundFields]="outboundFields"
-  systemId="{{systemId}}"
+  [systemId]="systemId"
   ></app-create-lineage>
       
       </div>
     
-
-      <!-- <button class="save-btn" (click)="saveMappings()">Save Mappings</button> -->
     </div>
     
 

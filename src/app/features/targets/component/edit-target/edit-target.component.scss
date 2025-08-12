@@ -1,0 +1,17 @@
+// .app-root { display:flex; gap:16px; padding:16px; height:100vh; box-sizing:border-box; }
+// .left-panel { width:300px; background:#f0f0f0; padding:12px; border-radius:6px; }
+// .right-panel { flex:1; position:relative; }
+// .add-row { margin-bottom:8px; }
+
+// /* ensure report builder overlays correctly (report builder has absolute positioning) */
+
+.report-box {
+    position: absolute;
+    background: white;
+    padding: 12px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 100;
+    width: 220px;
+  }
+  
