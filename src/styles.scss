@@ -367,3 +367,7 @@ mat-card.mat-mdc-card.mdc-card{
 .ag-paging-panel {
   display: none !important;
 }
+
+.mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper{
+  width: 100% !important;
+}

@@ -9,6 +9,7 @@ import { filter } from 'rxjs';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { MatSelectChange } from '@angular/material/select';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -23,7 +24,7 @@ export class EditInterfaceComponent implements OnInit {
   showDataQuality = false;
   showDataFieldsTable = true;
   statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+  serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
 
   // ✅ DataFields table data
@@ -38,6 +39,8 @@ export class EditInterfaceComponent implements OnInit {
   gridApi: any;
   gridColumnApi: any;
   activeView!: string; // default view on load
+  frequencyLimit = 1;
+  scheduleLimitReached = false;
 
   // rowData: any;
   dataFieldsModel : Datafields = new Datafields();
@@ -259,7 +262,62 @@ export class EditInterfaceComponent implements OnInit {
         }
       });
       // this.generateTimeOptions();
+
+      // Fetch data from API and patch to form
+  this.interfaceService.getInterfaceById(this.interfaceId).subscribe({
+    next: (res: any) => {
+      const data = res.interfaceEntity;
+      this.interfaceForm.patchValue(data);
+
+      // Apply disable logic immediately after patch
+      this.toggleFieldsBasedOnQoS(data.quality_of_service);
+    },
+    error: (err: any) => {
+      console.error('Failed to load interface:', err);
+    }
+  });
+
+  // Watch for changes in quality_of_service
+  this.interfaceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
+    this.toggleFieldsBasedOnQoS(value);
+  });
+
+
+
       this.getDataFields();
+
+      
+  }
+
+  onFrequencyChange(): void {
+    const freq = +this.interfaceForm.get('frequency_of_update')?.value || 1;
+    this.frequencyLimit = freq;
+
+    const currentSelection = this.interfaceForm.get('schedule_of_update')?.value || [];
+    if (currentSelection.length > freq) {
+      this.interfaceForm.get('schedule_of_update')?.setValue(currentSelection.slice(0, freq));
+    }
+  }
+  
+    onScheduleSelectionChange(event: MatSelectChange): void {
+      const selected = event.value || [];
+      if (selected.length > this.frequencyLimit) {
+        this.scheduleLimitReached = true;
+        // Keep only allowed number of selections
+        this.interfaceForm.get('schedule_of_update')?.setValue(selected.slice(0, this.frequencyLimit));
+      } else {
+        this.scheduleLimitReached = false;
+      }
+    }
+
+  private toggleFieldsBasedOnQoS(value: string): void {
+    if (value === 'STREAMING' || value === 'AD_HOC') {
+      this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+      this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
+    } else {
+      this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+      this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+    }
   }
 
   getDataFields()
@@ -319,6 +377,13 @@ export class EditInterfaceComponent implements OnInit {
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.interfaceForm.value);
+
+    // Extract form values
+  const formValues = this.interfaceForm.value;
+
+  // If QoS is STREAMING or AD_HOC, nullify these fields
+  const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
+
     // Submit or save logic here
     const payload = {
       interfaceEntity: {
@@ -326,8 +391,8 @@ export class EditInterfaceComponent implements OnInit {
     interface_id: this.interfaceId,
     interface_name : this.interfaceForm.value.interface_name,
     quality_of_service : this.interfaceForm.value.quality_of_service,
-    frequency_of_update:this.interfaceForm.value.frequency_of_update,
-    schedule_of_update:this.interfaceForm.value.schedule_of_update,
+    frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+      schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
     methodology_of_transfer:this.interfaceForm.value.methodology_of_transfer,
     interface_type:this.interfaceForm.value.interface_type,
     interface_version_number : this.interfaceForm.value.interface_version_number,

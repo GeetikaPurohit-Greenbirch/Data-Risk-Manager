@@ -36,7 +36,7 @@ private apiUrl = environment.apiAllBaseUrl // Base URL
       }
 
        public updateTarget(payload:any): Observable<any> {
-            const url: string = this.apiUrl + 'interfaces';
+            const url: string = this.apiUrl + 'targets';
             console.log(payload)
         
             return this.http.post<Target[]>(url, payload);

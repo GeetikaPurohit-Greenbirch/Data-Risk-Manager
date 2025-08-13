@@ -15,7 +15,7 @@ export interface User {
 })
 export class UserService {
 
-  private apiUrl = environment.apiBaseUrl + 'users'; // Base URL
+  private apiUrl = environment.apiBaseUrl + 'users/roles'; // Base URL
 
   private _currentUserEmail: string = '';
 

@@ -16,7 +16,7 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 export class InterfaceBuilderComponent {
 interfaceForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   interfaceTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
   interfaceModel : Interface = new Interface();
   timeOptions: string[] = [];
@@ -41,6 +41,17 @@ interfaceForm!: FormGroup;
       ownerEmail: ['', [Validators.required, Validators.email]],
       });
       this.generateTimeOptions();
+
+       // Watch for changes in serviceQuality
+  this.interfaceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+    if (value === 'STREAMING' || value === 'AD_HOC') {
+      this.interfaceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
+      this.interfaceForm.get('updateSchedule')?.disable({ emitEvent: false });
+    } else {
+      this.interfaceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
+      this.interfaceForm.get('updateSchedule')?.enable({ emitEvent: false });
+    }
+  });
   }
 
 
@@ -50,6 +61,9 @@ interfaceForm!: FormGroup;
       const time = hour.toString().padStart(2, '0') + ':00';
       this.timeOptions.push(time);
     }
+
+
+    
   }
 
   onFrequencyChange(): void {

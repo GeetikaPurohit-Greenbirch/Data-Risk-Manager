@@ -17,7 +17,7 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 export class TargetBuilderComponent {
 targetForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+  serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   targetTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
   targetModel : Target = new Target();
   timeOptions: string[] = [];
@@ -44,6 +44,19 @@ targetForm!: FormGroup;
       entity: ['', Validators.required]
       });
       this.generateTimeOptions();
+
+      
+      
+       // Watch for changes in serviceQuality
+  this.targetForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+    if (value === 'STREAMING' || value === 'AD_HOC') {
+      this.targetForm.get('frequencyUpdate')?.disable({ emitEvent: false });
+      this.targetForm.get('updateSchedule')?.disable({ emitEvent: false });
+    } else {
+      this.targetForm.get('frequencyUpdate')?.enable({ emitEvent: false });
+      this.targetForm.get('updateSchedule')?.enable({ emitEvent: false });
+    }
+  });
   }
 
 
