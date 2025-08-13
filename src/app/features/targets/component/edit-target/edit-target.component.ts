@@ -26,11 +26,14 @@ export class EditTargetComponent {
    showDataFields = true;
    showDataQuality = false;
    showDataFieldsTable = true;
+   targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER']
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
    serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
    frequencyLimit = 1;
    scheduleLimitReached = false;
+   formLoaded = false;
+
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -292,6 +295,12 @@ export class EditTargetComponent {
          }
        });
        // this.generateTimeOptions();
+
+       setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
        
 
   // Watch for changes in quality_of_service

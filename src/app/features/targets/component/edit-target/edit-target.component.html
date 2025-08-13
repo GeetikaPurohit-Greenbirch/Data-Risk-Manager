@@ -20,7 +20,7 @@
           <input matInput formControlName="target_name" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Quality Of Service</mat-label>
           <mat-select formControlName="quality_of_service">
             <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
@@ -39,7 +39,7 @@
           <input matInput formControlName="schedule_of_update" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Schedule Of Update</mat-label>
           <mat-select formControlName="schedule_of_update" multiple
           (selectionChange)="onScheduleSelectionChange($event)">
@@ -57,9 +57,12 @@
           <input matInput formControlName="methodology_of_transfer" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Target Type</mat-label>
-          <input matInput formControlName="target_type" />
+          <!-- <input matInput formControlName="target_type" /> -->
+          <mat-select formControlName="target_type">
+            <mat-option *ngFor="let option of targetTypeOptions" [value]="option">{{ option }}</mat-option>
+          </mat-select>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
@@ -72,7 +75,7 @@
           <input matInput formControlName="target_status" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Status</mat-label>
           <mat-select formControlName="target_status">
             <mat-option *ngFor="let status of statusOptions" [value]="status">

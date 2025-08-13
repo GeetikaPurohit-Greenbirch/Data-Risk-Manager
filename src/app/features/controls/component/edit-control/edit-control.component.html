@@ -25,7 +25,7 @@
           <input matInput formControlName="control_description" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Attach To</mat-label>
           <!-- <input matInput formControlName="attach_to" /> -->
           <mat-select formControlName="attach_to" (selectionChange)="onChange($event.value)">
@@ -35,7 +35,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Attach To ID</mat-label>
           <!-- <input matInput formControlName="attach_to_id" /> -->
           <mat-select formControlName="attach_to_id">
@@ -60,7 +60,7 @@
           <input matInput formControlName="version_number" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
             <mat-option *ngFor="let status of statusOptions" [value]="status">
@@ -70,7 +70,7 @@
         </mat-form-field>
   
 
-        <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-form-field appearance="outline" style="width: 47%;" *ngIf="formLoaded">
           <mat-label>Application Date</mat-label>
           <input
             matInput
@@ -83,7 +83,7 @@
         </mat-form-field>
         
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Application Date Status</mat-label>
           <mat-select formControlName="application_date_status">
             <mat-option *ngFor="let status of applicationStatusOptions" [value]="status">
@@ -94,7 +94,7 @@
   
         <!-- Add remaining fields similarly -->
         <div class="updateBtn">
-          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Control</button>
+          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
           </div>
 <!-- Toggle Button -->
 <div style="display: flex; height: 100%;">

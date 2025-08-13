@@ -46,11 +46,21 @@
           <mat-label>Version</mat-label>
           <input matInput formControlName="version_number" />
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
           <input matInput formControlName="status" />
-        </mat-form-field>
+        </mat-form-field> -->
+
         <div class="updateBtn">
             <!-- Update System -->
     <button mat-raised-button color="primary" (click)="onUpdate()">

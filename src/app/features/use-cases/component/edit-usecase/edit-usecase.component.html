@@ -39,15 +39,39 @@
           <mat-label>Version</mat-label>
           <input matInput formControlName="version" />
         </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Status</mat-label>
-          <input matInput formControlName="status" />
+          <!-- <select formControlName="status">
+            <option *ngFor="let status of statusOptions" [value]="status">{{}}</option>
+          </select> -->
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <!-- <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <input matInput formControlName="status" />
+        </mat-form-field> -->
+  
+        <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Last Review Date</mat-label>
           <input matInput formControlName="last_review_date" />
+        </mat-form-field> -->
+
+        <mat-form-field appearance="outline" style="width: 47%;" *ngIf="formLoaded">
+          <mat-label>Last Review Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="last_review_date"
+            placeholder="Choose a date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
@@ -55,9 +79,16 @@
           <input matInput formControlName="reviewed_by" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" style="width: 47%;"  *ngIf="formLoaded">
             <mat-label>Next Review Date</mat-label>
-            <input matInput formControlName="next_review_date" />
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              formControlName="next_review_date"
+              placeholder="Choose a date"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">

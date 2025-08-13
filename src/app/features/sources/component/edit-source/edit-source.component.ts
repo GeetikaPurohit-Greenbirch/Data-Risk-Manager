@@ -27,10 +27,11 @@ export class EditSourceComponent implements OnInit {
    showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
-  sourceTypeOptions: string[] = ['SYSTEM', 'MANUAL ENTRY'];
+  sourceTypeOptions: string[] = [ 'SYSTEM', 'MANUAL_ENTRY' ]
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
    frequencyLimit = 1;
    scheduleLimitReached = false;
+   formLoaded = false;
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -414,7 +415,11 @@ export class EditSourceComponent implements OnInit {
        });
        // this.generateTimeOptions();
 
-     
+       setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
 
   // Watch for changes in quality_of_service
   this.sourceForm.get('quality_of_service')?.valueChanges.subscribe(value => {

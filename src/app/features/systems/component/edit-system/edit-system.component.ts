@@ -48,8 +48,10 @@ export class EditSystemComponent{
   links: any[] = []; // Store link data
   showGlobalQualityRiskGridInbound = false; // Controls visibility of AG Grid
   showGlobalQualityRiskGridOutbound = false;
- 
+  statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+
   
+  formLoaded = false;
 
   // ✅ Table column names
   systemId!: any;
@@ -796,106 +798,6 @@ export class EditSystemComponent{
     },
   ];
 
-  // combinedColumnDefs: ColDef[] = [
-  //   {
-  //     field: 'source',
-  //     headerName: 'Interface / Target',
-  //     editable: true,
-  //     cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: () => {
-  //       return {
-  //         values: this.combinedOptions
-  //       };
-  //     }
-  //   },
-  //   {
-  //     headerName: 'Actions',
-  //     editable: false,
-  //     filter: false,
-  //     sortable: false,
-  //     minWidth: 100,
-  //     flex: 1,
-  //     cellRenderer: (params: any) => {
-  //       const div = document.createElement('div');
-  //       div.className = 'model-cell-renderer';
-  
-  //       const saveBtn = document.createElement('button');
-  //       saveBtn.className = 'fa fa-save';
-  //       saveBtn.style.color = 'green';
-  //       saveBtn.style.border = '1px solid lightGrey';
-  //       saveBtn.style.borderRadius = '5px';
-  //       saveBtn.style.lineHeight = '22px';
-  //       saveBtn.style.height = '32px';
-  //       saveBtn.style.cursor = 'pointer';
-  //       saveBtn.title = 'Save';
-  
-  //       saveBtn.addEventListener('click', () => {
-  //         this.saveInboundInterface(params.node);
-  //       });
-  
-  //       div.appendChild(saveBtn);
-  //       return div;
-  //     }
-  //   }
-  // ];
-  
-  // outBoundTargetColumnDefs:(ColDef)[]= [
-  //   { field: 'target', headerName: 'Target', editable: true,
-  //     cellEditor: 'agSelectCellEditor',
-  //   cellEditorParams: (params: any) => {
-  //     return {
-  //       values: this.targetOptionList
-  //     };
-  //   }
-  //   },
-  //   {
-  //     headerName: 'Actions',
-  //     editable: false,
-  //     filter: false,
-  //     sortable: false,
-  //     minWidth: 100, 
-  //     flex:1,
-  //     cellRenderer: (params: any) => {
-  //       const div = document.createElement('div');
-  //       div.className = 'model-cell-renderer';
-    
-  //       const saveInterface = document.createElement('button');
-  //       saveInterface.className = 'fa fa-save';
-  //       saveInterface.style.color = 'green';
-  //       saveInterface.style.border = '1px solid lightGrey';
-  //       saveInterface.style.borderRadius = '5px';
-  //       saveInterface.style.lineHeight = '22px';
-  //       saveInterface.style.height = '32px';
-  //       saveInterface.style.cursor = 'pointer';
-  //       saveInterface.title = 'Save';
-    
-  //       // Pass row data or node to save
-  //       saveInterface.addEventListener('click', () => {
-  //         this.saveInboundInterface(params.node);
-  //       });
-    
-  //       // const deleteDataFields = document.createElement('button');
-  //       // deleteDataFields.className = 'fa fa-trash';
-  //       // deleteDataFields.style.color = 'red';
-  //       // deleteDataFields.style.border = '1px solid lightGrey';
-  //       // deleteDataFields.style.borderRadius = '5px';
-  //       // deleteDataFields.style.lineHeight = '22px';
-  //       // deleteDataFields.style.height = '32px';
-  //       // deleteDataFields.style.cursor = 'pointer';
-  //       // deleteDataFields.title = 'Delete';
-    
-  //       // deleteDataFields.addEventListener('click', () => {
-  //       //   // this.deleteDAtaFields(params.node);
-  //       // });
-    
-  //       div.appendChild(saveInterface);
-  //       // div.appendChild(deleteDataFields);
-    
-  //       return div;
-  //     }
-  //   },
-  // ];
-
   defaultColDef = {
     flex: 1,
     resizable: true,
@@ -962,6 +864,13 @@ export class EditSystemComponent{
           console.error('Failed to load system:', err);
         }
       });
+
+      setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
+
       this.getDataFields();
       // this.getInboundInterface();
       this.loadInboundInterfaces();
@@ -1093,7 +1002,7 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
-
+    this.cdr.detectChanges();
     this.getDatafieldsDQA('OUTBOUND');
   }
   
@@ -1105,6 +1014,7 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
+    this.cdr.detectChanges();
     this.getDatafieldsDQA('INBOUND')
   }
 
@@ -1156,8 +1066,9 @@ loadDropdownOptions(): void {
     this.systemService.updateSystem(payload).subscribe(res => {
       if(res)
       {
-        alert("System Updated Successfully. Your System ID is "+ this.systemId);
-        window.location.reload();
+        // alert("System Updated Successfully. Your System ID is "+ this.systemId);
+        this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ this.systemId)
+        // window.location.reload();
       }
     })
   }
@@ -1195,6 +1106,7 @@ loadDropdownOptions(): void {
     const entity_id = this.outboundInterfaceList.map((i: any) => i.interface_id);
     this.datafieldsService.getDataFieldsDQA(entity_id[0], 'INTERFACE').subscribe({
       next: (res: any) => {
+       
         this.rowDataoutboundDQA = [res]; // triggers change
         this.showGlobalQualityRiskGridOutbound = res.allow_risk_update;
         console.log('rowDataoutboundDQA:', this.rowDataoutboundDQA);
@@ -1205,11 +1117,12 @@ loadDropdownOptions(): void {
         }
   
         this.cdr.detectChanges(); // trigger Angular change detection
-        
+          
       
       },
       error: (err: any) => {
         console.error('Failed to load interface:', err);
+        
       }
          // Force refresh with setRowData
     
@@ -1231,6 +1144,7 @@ loadDropdownOptions(): void {
       },
       error: (err: any) => {
         console.error('Failed to load interface:', err);
+        
       }
          // Force refresh with setRowData
     
