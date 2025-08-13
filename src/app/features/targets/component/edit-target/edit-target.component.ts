@@ -10,6 +10,7 @@ import { DatafieldsService } from 'src/app/features/shared-services/datafields.s
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { PdfService } from 'src/app/features/shared-services/pdf.service';
+import { MatSelectChange } from '@angular/material/select';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -27,6 +28,9 @@ export class EditTargetComponent {
    showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
+   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
+   frequencyLimit = 1;
+   scheduleLimitReached = false;
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -270,6 +274,7 @@ export class EditTargetComponent {
        target_status: [''],
        target_owner: [''],
        target_owner_email: [''],
+       target_entity: [''],
        // add other form controls as needed
      });
      this.targetId = Number(this.route.snapshot.paramMap.get('id'));
@@ -279,14 +284,54 @@ export class EditTargetComponent {
          next: (res: any) => {
            const data = res.targetEntity;
            this.targetForm.patchValue(data);
+           this.toggleFieldsBasedOnQoS(data.quality_of_service);
+
          },
          error: (err: any) => {
            console.error('Failed to load target:', err);
          }
        });
        // this.generateTimeOptions();
+       
+
+  // Watch for changes in quality_of_service
+  this.targetForm.get('quality_of_service')?.valueChanges.subscribe(value => {
+    this.toggleFieldsBasedOnQoS(value);
+  });
        this.getDataFields();
    }
+
+     onFrequencyChange(): void {
+          const freq = +this.targetForm.get('frequency_of_update')?.value || 1;
+          this.frequencyLimit = freq;
+      
+          const currentSelection = this.targetForm.get('schedule_of_update')?.value || [];
+          if (currentSelection.length > freq) {
+            this.targetForm.get('schedule_of_update')?.setValue(currentSelection.slice(0, freq));
+          }
+        }
+        
+          onScheduleSelectionChange(event: MatSelectChange): void {
+            const selected = event.value || [];
+            if (selected.length > this.frequencyLimit) {
+              this.scheduleLimitReached = true;
+              // Keep only allowed number of selections
+              this.targetForm.get('schedule_of_update')?.setValue(selected.slice(0, this.frequencyLimit));
+            } else {
+              this.scheduleLimitReached = false;
+            }
+          }
+      
+        private toggleFieldsBasedOnQoS(value: string): void {
+          if (value === 'STREAMING' || value === 'AD_HOC') {
+            this.targetForm.get('frequency_of_update')?.disable({ emitEvent: false });
+            this.targetForm.get('schedule_of_update')?.disable({ emitEvent: false });
+          } else {
+            this.targetForm.get('frequency_of_update')?.enable({ emitEvent: false });
+            this.targetForm.get('schedule_of_update')?.enable({ emitEvent: false });
+          }
+        }
+      
  
    getDataFields()
    { 
@@ -345,6 +390,12 @@ export class EditTargetComponent {
    // ✅ Trigger update/save logic
    onUpdate(): void {
      console.log('Form data:', this.targetForm.value);
+       // Extract form values
+  const formValues = this.targetForm.value;
+
+  // If QoS is STREAMING or AD_HOC, nullify these fields
+  const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
+
      // Submit or save logic here
      const payload = {
        targetEntity: {
@@ -352,14 +403,15 @@ export class EditTargetComponent {
      target_id: this.targetId,
      target_name : this.targetForm.value.target_name,
      quality_of_service : this.targetForm.value.quality_of_service,
-     frequency_of_update:this.targetForm.value.frequency_of_update,
-     schedule_of_update:this.targetForm.value.schedule_of_update,
+     frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+     schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
      methodology_of_transfer:this.targetForm.value.methodology_of_transfer,
      target_type:this.targetForm.value.target_type,
      target_version_number : this.targetForm.value.target_version_number,
      target_status : this.targetForm.value.target_status,
      target_owner: this.targetForm.value.target_owner,
-     target_owner_email: this.targetForm.value.target_owner_email
+     target_owner_email: this.targetForm.value.target_owner_email,
+     target_entity: this.targetForm.value.target_entity
        }
      }
      this.targetService.updateTarget(payload).subscribe(res => {

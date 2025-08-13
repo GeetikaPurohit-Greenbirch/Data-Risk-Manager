@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./report-builder.component.scss']
 })
 export class ReportBuilderComponent {
-  @Input() position = { x: 40, y: 100 };
+  @Input() position = { x: 40, y: 80 };
   @Input() visible = false;
   @Input() gridRows: any[] = [];
   @Output() build = new EventEmitter<any>();

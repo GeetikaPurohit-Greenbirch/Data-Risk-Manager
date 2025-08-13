@@ -9,6 +9,7 @@ import { SourceService } from '../../services/source.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { MatSelectChange } from '@angular/material/select';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -25,9 +26,11 @@ export class EditSourceComponent implements OnInit {
    showDataQuality = false;
    showDataFieldsTable = true;
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
-   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD-HOC'];
+   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   sourceTypeOptions: string[] = ['SYSTEM', 'MANUAL ENTRY'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
+   frequencyLimit = 1;
+   scheduleLimitReached = false;
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -402,18 +405,59 @@ export class EditSourceComponent implements OnInit {
          next: (res: any) => {
            const data = res.sourceEntity;
            this.sourceForm.patchValue(data);
+           this.toggleFieldsBasedOnQoS(data.quality_of_service);
+
          },
          error: (err: any) => {
            console.error('Failed to load source:', err);
          }
        });
        // this.generateTimeOptions();
+
+     
+
+  // Watch for changes in quality_of_service
+  this.sourceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
+    this.toggleFieldsBasedOnQoS(value);
+  });
+
        this.getDataFields();
 
        this.rowDataDQA = [{}];
 
    }
  
+   onFrequencyChange(): void {
+       const freq = +this.sourceForm.get('frequency_of_update')?.value || 1;
+       this.frequencyLimit = freq;
+   
+       const currentSelection = this.sourceForm.get('schedule_of_update')?.value || [];
+       if (currentSelection.length > freq) {
+         this.sourceForm.get('schedule_of_update')?.setValue(currentSelection.slice(0, freq));
+       }
+     }
+     
+       onScheduleSelectionChange(event: MatSelectChange): void {
+         const selected = event.value || [];
+         if (selected.length > this.frequencyLimit) {
+           this.scheduleLimitReached = true;
+           // Keep only allowed number of selections
+           this.sourceForm.get('schedule_of_update')?.setValue(selected.slice(0, this.frequencyLimit));
+         } else {
+           this.scheduleLimitReached = false;
+         }
+       }
+   
+     private toggleFieldsBasedOnQoS(value: string): void {
+       if (value === 'STREAMING' || value === 'AD_HOC') {
+         this.sourceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+         this.sourceForm.get('schedule_of_update')?.disable({ emitEvent: false });
+       } else {
+         this.sourceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+         this.sourceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+       }
+     }
+   
    getDataFields()
    { 
      this.datafieldsService.getDataFieldsById(this.sourceId, 'SOURCE').subscribe({
@@ -472,15 +516,24 @@ export class EditSourceComponent implements OnInit {
    // ✅ Trigger update/save logic
    onUpdate(): void {
      console.log('Form data:', this.sourceForm.value);
+
+     // Extract form values
+  const formValues = this.sourceForm.value;
+
+  // If QoS is STREAMING or AD_HOC, nullify these fields
+  const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
+
+
      // Submit or save logic here
      const payload = {
        sourceEntity: {
      // this.sourceModel.source_id = this.sourceForm.value.sourceId;
      source_id: this.sourceId,
      source_name : this.sourceForm.value.source_name,
+     vendor: this.sourceForm.value.vendor,
      quality_of_service : this.sourceForm.value.quality_of_service,
-     frequency_of_update:this.sourceForm.value.frequency_of_update,
-     schedule_of_update:this.sourceForm.value.schedule_of_update,
+     frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+     schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
      methodology_of_transfer:this.sourceForm.value.methodology_of_transfer,
      source_type:this.sourceForm.value.source_type,
      source_version_number : this.sourceForm.value.source_version_number,

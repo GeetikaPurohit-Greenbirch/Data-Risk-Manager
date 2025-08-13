@@ -22,12 +22,16 @@
   
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Quality Of Service</mat-label>
-          <input matInput formControlName="quality_of_service" />
+          <mat-select formControlName="quality_of_service">
+            <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+              {{ quality }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Frequency Of Update</mat-label>
-          <input matInput formControlName="frequency_of_update" />
+          <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1"/>
         </mat-form-field>
 
         <!-- <mat-form-field appearance="outline" class="full-width">
@@ -37,11 +41,15 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Schedule Of Update</mat-label>
-          <mat-select formControlName="schedule_of_update" multiple>
+          <mat-select formControlName="schedule_of_update" multiple
+          (selectionChange)="onScheduleSelectionChange($event)">
             <mat-option *ngFor="let time of timeOptions" [value]="time">
               {{ time }}
             </mat-option>
           </mat-select>
+          <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+            You can only select {{ frequencyLimit }} time(s)
+          </mat-hint>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
@@ -83,9 +91,15 @@
           <mat-label>Owner Email</mat-label>
           <input matInput formControlName="target_owner_email" />
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Target Entity</mat-label>
+          <input matInput formControlName="target_entity" />
+        </mat-form-field>
+
         <!-- Add remaining fields similarly -->
         <div class="updateBtn">
-          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Update Target</button>
+          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
           </div>
 <!-- Toggle Button -->
 <div style="display: flex; height: 100%;">
@@ -143,11 +157,9 @@
             <!-- <h3>DataFields</h3> -->
             <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
             <button (click)="addRow()" class="add-btn">Add Row</button>
-            <div style="margin-bottom: 10px;">
-              <button (click)="openReportBuilder()" class="btn btn-primary">
-                Build DQA Report
-              </button>
-            </div>
+            <button (click)="openReportBuilder()" class="add-btn" style="margin-left: 12px;">
+              Build DQA Report
+            </button>
           </div>
           
       <div class="datafields-table" *ngIf="showDataFields">
