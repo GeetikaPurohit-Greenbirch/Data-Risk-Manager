@@ -44,6 +44,7 @@ controlForm!: FormGroup;
   attachTo!:string;
   attachToId!:number;
   activeView!: string; // default view on load
+  formLoaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -272,6 +273,12 @@ controlForm!: FormGroup;
           console.error('Failed to load control:', err);
         }
       });
+
+      setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
     
   }
 

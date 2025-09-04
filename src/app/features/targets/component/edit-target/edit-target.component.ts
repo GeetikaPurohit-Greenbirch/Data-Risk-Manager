@@ -11,6 +11,7 @@ import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { PdfService } from 'src/app/features/shared-services/pdf.service';
 import { MatSelectChange } from '@angular/material/select';
+import { HttpClient } from '@angular/common/http';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -26,11 +27,15 @@ export class EditTargetComponent {
    showDataFields = true;
    showDataQuality = false;
    showDataFieldsTable = true;
+   targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER']
    statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
    serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
    frequencyLimit = 1;
    scheduleLimitReached = false;
+   formLoaded = false;
+   showReport = false;
+
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -49,6 +54,7 @@ export class EditTargetComponent {
  // report builder visibility/position
  reportVisible = false;
  reportPosition = { x: 200, y: 120 };
+  options: any;
 
    constructor(
      private route: ActivatedRoute,
@@ -57,7 +63,8 @@ export class EditTargetComponent {
      private toastNotificationService: ToastnotificationService,
      private targetService: TargetService,
      private datafieldsService: DatafieldsService,
-     private cdr: ChangeDetectorRef
+     private cdr: ChangeDetectorRef,
+     private http: HttpClient
    ) {}
  
  
@@ -226,29 +233,85 @@ export class EditTargetComponent {
       this.reportVisible = true;
     }
   }
+  useCases: any[] = [];
+  selectedUseCaseId: string | null = null;
+  
   openReportBuilder() {
+    this.showReport = true;
     this.reportVisible = true;
-    this.reportPosition = { x: 150, y: 100 }; // fixed position
+    this.reportPosition = { x: 150, y: 100 };
+  
+    // Fetch use cases for this target
+    const targetId = this.targetId; // make sure you have this set
+    this.http.get<any[]>(`https://api.dev.datariskmanager.net/entity/use_cases/target/${targetId}`)
+      .subscribe({
+        next: (data) => {
+          this.useCases = data;
+        },
+        error: (err) => {
+          console.error('Failed to fetch use cases', err);
+        }
+      });
   }
 
   closeReportBuilder() {
     this.reportVisible = false;
+    this.showReport = false;
   }
 
-  onBuildReport(options: any) {
-    if (!this.gridApi) {
-      console.error('Grid API not ready');
+  confirmUseCase() {
+    if (!this.selectedUseCaseId) {
+      alert('Please select a use case first.');
       return;
     }
-    // pass grid rows as sample data to generate in PDF
-    const allRows: any[] = [];
-    this.gridApi.forEachNode((node: any) => allRows.push(node.data));
-    this.pdfService.generatePdf(options, allRows);
-    this.reportVisible = false;
+  
+    // Pass selected useCaseId to report builder options
+    this.options = {
+      ...this.options,
+      contents: {
+        ...this.options.contents,
+        useCaseId: this.selectedUseCaseId
+      }
+    };
+  
+    // Now the popup closes and ReportBuilder gets the use case
+    this.reportVisible = true; // keep report visible
+  }
+
+  // onBuildReport(options: any) {
+  //   if (!this.gridApi) {
+  //     console.error('Grid API not ready');
+  //     return;
+  //   }
+  //   // pass grid rows as sample data to generate in PDF
+  //   const allRows: any[] = [];
+  //   this.gridApi.forEachNode((node: any) => allRows.push(node.data));
+  //   this.pdfService.generatePdf(options, allRows);
+  //   this.reportVisible = false;
+  // }
+
+  onBuildReport(payload: any) {
+    console.log('Report payload:', payload);
+
+    this.http.post(
+      `https://api.dev.datariskmanager.net/lineage/reports/sample?disposition=inline`,
+      payload,
+      { responseType: 'blob' } // handle PDF/Excel
+    ).subscribe({
+      next: (response: BlobPart) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      },
+      error: (err) => {
+        console.error('Report generation failed', err);
+      }
+    });
   }
 
   onCloseBuilder() {
     this.reportVisible = false;
+    this.showReport = false;
   }
 
 
@@ -292,6 +355,12 @@ export class EditTargetComponent {
          }
        });
        // this.generateTimeOptions();
+
+       setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
        
 
   // Watch for changes in quality_of_service

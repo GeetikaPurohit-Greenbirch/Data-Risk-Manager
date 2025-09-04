@@ -66,7 +66,7 @@ export class CreateUseCaseComponent {
           this.toastNotificationService.success("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
 
           // window.location.reload();
-          this.router.navigate(['/usecases/edit-usecase', res.useCaseEntity.use_case_id]);
+          this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
 
         }
       })

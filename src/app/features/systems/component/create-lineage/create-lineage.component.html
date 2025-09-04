@@ -1,65 +1,16 @@
 <div class="lineage-container">
     <div class="field-tables">
-      <!-- Inbound Table -->
-      <!-- <div class="table-wrapper">
-        <h3>Inbound Fields</h3>
-        <table class="fields-table">
-          <thead>
-            <tr>
-              <th>Interface</th>
-              <th>Field ID</th>
-              <th>Field Name</th>
-              <th>Data Type</th>
-              <th>Length</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let field of inboundFields; let i = index" [attr.data-index]="'in-' + i">
-              <td>{{ field.interface }}</td>
-              <td>{{ field.fieldId }}</td>
-              <td>{{ field.fieldName }}</td>
-              <td>{{ field.dataType }}</td>
-              <td>{{ field.length }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
+      
+      
         <!-- JointJS Canvas Overlay -->
-    <div #paperContainer id="paper-container" class="diagram-canvas"></div>
+    <div #paperContainer id="paper-container" class="diagram-canvas paper-scroll"></div>
   
-      <!-- Outbound Table -->
-      <!-- <div class="table-wrapper">
-        <h3>Outbound Fields</h3>
-        <table class="fields-table">
-          <thead>
-            <tr>
-              <th>Interface</th>
-              <th>Field ID</th>
-              <th>Field Name</th>
-              <th>Data Type</th>
-              <th>Length</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let field of outboundFields; let i = index" [attr.data-index]="'out-' + i">
-              <td>{{ field.interface }}</td>
-              <td>{{ field.fieldId }}</td>
-              <td>{{ field.fieldName }}</td>
-              <td>{{ field.dataType }}</td>
-              <td>{{ field.length }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
-    </div>
-    <div>
-      <button mat-raised-button color="primary" (click)="saveMappings()" style="    margin: 0 auto;
-      width: 15%;">Save Mappings</button>
-      &nbsp;&nbsp;&nbsp;
-      <button mat-raised-button color="red" (click)="saveMappings()" style="    margin: 0 auto;
-      width: 15%;">Delete Mappings</button>
-    
     </div>
   
   </div>
+  <div>
+    <button mat-raised-button color="primary" (click)="saveMappings()" class="mapping-btn" >Save Mappings</button>
+    &nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="red" (click)="saveMappings()" class="mapping-btn" >Delete Mappings</button>
   
+  </div>

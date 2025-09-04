@@ -23,9 +23,11 @@ export class EditInterfaceComponent implements OnInit {
   showDataFields = true;
   showDataQuality = false;
   showDataFieldsTable = true;
+  interfaceTypeOptions = [ 'SYSTEM', 'MANUAL_ENTRY' ]
   statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
+  formLoaded = false;
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -263,19 +265,11 @@ export class EditInterfaceComponent implements OnInit {
       });
       // this.generateTimeOptions();
 
-      // Fetch data from API and patch to form
-  this.interfaceService.getInterfaceById(this.interfaceId).subscribe({
-    next: (res: any) => {
-      const data = res.interfaceEntity;
-      this.interfaceForm.patchValue(data);
-
-      // Apply disable logic immediately after patch
-      this.toggleFieldsBasedOnQoS(data.quality_of_service);
-    },
-    error: (err: any) => {
-      console.error('Failed to load interface:', err);
-    }
-  });
+      setTimeout(() => {
+        this.cdr.detectChanges(); // ensure UI updates  
+      }, 100);
+      
+      this.formLoaded = true; // triggers re-render
 
   // Watch for changes in quality_of_service
   this.interfaceForm.get('quality_of_service')?.valueChanges.subscribe(value => {

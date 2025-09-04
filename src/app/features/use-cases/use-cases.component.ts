@@ -157,7 +157,7 @@ export class UseCasesComponent {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.patchAllLabel();
+      // this.patchAllLabel();
     }, 0);
   }
   patchAllLabel() {
@@ -200,7 +200,7 @@ export class UseCasesComponent {
                 permission: perm?.is_editable ? 'Edit' : 'View' // or use boolean if needed
               };
             });
-  
+            this.patchAllLabel();
             this.rowData = finalUsecases;
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

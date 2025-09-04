@@ -1,7 +1,5 @@
-<app-header></app-header>
 
 <div class="main-container">
-  <app-sidebar></app-sidebar>
   
   <main class="dashboard-container">
     <section class="welcome-banner">
@@ -20,7 +18,7 @@
           <input matInput formControlName="target_name" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Quality Of Service</mat-label>
           <mat-select formControlName="quality_of_service">
             <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
@@ -39,7 +37,7 @@
           <input matInput formControlName="schedule_of_update" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Schedule Of Update</mat-label>
           <mat-select formControlName="schedule_of_update" multiple
           (selectionChange)="onScheduleSelectionChange($event)">
@@ -57,9 +55,12 @@
           <input matInput formControlName="methodology_of_transfer" />
         </mat-form-field>
   
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Target Type</mat-label>
-          <input matInput formControlName="target_type" />
+          <!-- <input matInput formControlName="target_type" /> -->
+          <mat-select formControlName="target_type">
+            <mat-option *ngFor="let option of targetTypeOptions" [value]="option">{{ option }}</mat-option>
+          </mat-select>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="full-width">
@@ -72,7 +73,7 @@
           <input matInput formControlName="target_status" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
           <mat-label>Status</mat-label>
           <mat-select formControlName="target_status">
             <mat-option *ngFor="let status of statusOptions" [value]="status">
@@ -163,9 +164,10 @@
           </div>
           
       <div class="datafields-table" *ngIf="showDataFields">
+        <div class="aggrid">
         <ag-grid-angular
         class="ag-theme-alpine"
-        style="width: 60%; height: 580px;"
+        style="width: 100%; height: 580px;"
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         (gridReady)="onGridReady($event)"
@@ -176,6 +178,34 @@
         [domLayout]="'normal'"
         >
         </ag-grid-angular>
+      </div>
+      <div class="report-builder" *ngIf="showReport">
+
+        <!-- Popup -->
+<div *ngIf="reportVisible" class="popup-overlay">
+  <div class="popup-box row">
+    
+<div class="col-md-5">
+  <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+    <mat-label>Select Use Case</mat-label>
+    <mat-select [(ngModel)]="selectedUseCaseId">
+      <mat-option *ngFor="let uc of useCases" [value]="uc.id">
+        {{ uc.use_case_name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+   
+    </div>
+<div class="col-md-5">
+  <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Continue</button>
+    &nbsp;&nbsp;
+  <button mat-raised-button color="primary" (click)="onCloseBuilder()" style="height: 43px; margin-top: 6px;">Cancel</button>
+
+  <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+
+  </div>
+  </div>
+</div>
 
         <app-report-builder
         [visible]="reportVisible"
@@ -184,6 +214,7 @@
         (build)="onBuildReport($event)"
         (close)="onCloseBuilder()">
       </app-report-builder>
+      </div>
       <!-- <table mat-table [dataSource]="dataFields" class="mat-elevation-z2 datafieldTable">
         <ng-container matColumnDef="fieldId">
           <th mat-header-cell *matHeaderCellDef> Field ID </th>

@@ -43,6 +43,7 @@ import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NodeDropModalComponent } from './node-drop-modal/node-drop-modal.component';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -124,7 +125,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    { provide: OverlayContainer, useClass: OverlayContainer }
+
 
   ],
   bootstrap: [AppComponent]

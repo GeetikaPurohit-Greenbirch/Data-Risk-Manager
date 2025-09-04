@@ -1,16 +1,15 @@
-<app-header></app-header>
 
 <div class="main-container">
-  <app-sidebar></app-sidebar>
   
   <main class="dashboard-container">
     <section class="welcome-banner">
         <h2>Controls</h2>
-      </section>
-      <button mat-raised-button color="primary" style="margin-bottom: 20px;" (click)="addControlScreen()">
+        
+      <button mat-raised-button color="primary" (click)="addControlScreen()">
         <i class="fa fa-sliders" style="margin-right: 8px;"></i>
         Add Control
       </button>
+      </section>
       <div class="system-table-container">
        
         <ag-grid-angular

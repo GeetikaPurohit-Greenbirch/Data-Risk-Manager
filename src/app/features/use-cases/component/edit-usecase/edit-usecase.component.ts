@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
@@ -27,15 +27,19 @@ usecaseForm!: FormGroup;
   ];
 
   // ✅ Table column names
+  statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   usecaseId!: any;
   gridApi: any;
   gridColumnApi: any;
+  formLoaded = false;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private usecaseService: UsecaseService,
     private toastNotificationService: ToastnotificationService,
+            private cdr: ChangeDetectorRef,
+    
   ) {}
 
 
@@ -117,18 +121,31 @@ usecaseForm!: FormGroup;
       use_case_owner_email: [''],
       status: [''],
       version: [''],
-      last_review_date: [''],
+      last_review_date: [null],
       reviewed_by: [''],
-      next_review_date: [''],
+      next_review_date: [null],
       reviewer:[''],
          });
+
+          // 🧹 Clear any stale Angular Material overlays
     this.usecaseId = Number(this.route.snapshot.paramMap.get('id'));
 
       // Step 2: Fetch data from API and patch to form
       this.usecaseService.getUsecaseById(this.usecaseId).subscribe({
         next: (res: any) => {
           const data = res.useCaseEntity;
-          this.usecaseForm.patchValue(data);
+          this.usecaseForm.patchValue({
+            ...data,
+            last_review_date: data.last_review_date ? new Date(data.last_review_date) : null,
+            next_review_date: data.next_review_date ? new Date(data.next_review_date) : null
+          });
+
+          setTimeout(() => {
+            this.cdr.detectChanges(); // ensure UI updates  
+          }, 100);
+          
+          this.formLoaded = true; // triggers re-render
+
         },
         error: (err: any) => {
           console.error('Failed to load usecase:', err);
@@ -194,4 +211,6 @@ usecaseForm!: FormGroup;
   {
 
   }
+
+
 }

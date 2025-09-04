@@ -1,17 +1,15 @@
-<app-header></app-header>
-
 <div class="main-container">
-  <app-sidebar></app-sidebar>
   
   <main class="dashboard-container">
     <section class="welcome-banner">
         <h2>Interfaces</h2>
+        <button mat-raised-button color="primary" (click)="addInterfaceScreen()">
+          <i class="fa fa-random" style="margin-right: 8px;"></i>
+          Add Interface
+        </button>
+  
       </section>
-      <button mat-raised-button color="primary" style="margin-bottom: 20px;" (click)="addInterfaceScreen()">
-        <i class="fa fa-random" style="margin-right: 8px;"></i>
-        Add Interface
-      </button>
-
+ 
       <div class="system-table-container">
         
         <ag-grid-angular

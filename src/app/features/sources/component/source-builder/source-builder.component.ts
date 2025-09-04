@@ -18,7 +18,7 @@ export class SourceBuilderComponent {
   sourceForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
   serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
-  sourceTypeOptions = ['SYSTEM', 'MANUAL ENTRY'];
+  sourceTypeOptions = ['SYSTEM', 'MANUAL_ENTRY'];
   sourceModel : Sources = new Sources();
   timeOptions: string[] = [];
   frequencyLimit = 1;

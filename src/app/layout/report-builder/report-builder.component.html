@@ -1,6 +1,6 @@
 <div class="report-builder"
      *ngIf="visible"
-     [ngStyle]="{ right:'42px', top: '80px' }">
+     [ngStyle]="{ right:'88px', top: '80px' }">
 
   <h4>DQA Target Report Builder</h4>
 
@@ -8,9 +8,10 @@
   <div class="section-title">Contents</div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
     <label><input type="checkbox" [(ngModel)]="options.contents.coverPage"> Cover Page</label><br>
     <label><input type="checkbox" [(ngModel)]="options.contents.synopsis"> Synopsis</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseId"> Use Case ID</label><br>
     <label><input type="checkbox" [(ngModel)]="options.contents.useCaseName"> Use Case Name</label><br>
     <label><input type="checkbox" [(ngModel)]="options.contents.targetName"> Target Name</label><br>
     <label><input type="checkbox" [(ngModel)]="options.contents.targetStatus"> Target Status</label><br>
@@ -24,7 +25,7 @@
   <div class="section-title">DataField Attributes</div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
     <label><input type="checkbox" [(ngModel)]="options.attributes.fieldId"> Field ID</label><br>
     <label><input type="checkbox" [(ngModel)]="options.attributes.fieldName"> Field Name</label><br>
     <label><input type="checkbox" [(ngModel)]="options.attributes.fieldDescription"> Field Description</label><br>

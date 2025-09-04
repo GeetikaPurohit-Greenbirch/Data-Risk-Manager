@@ -18,10 +18,17 @@ export class PdfService {
     if (options.contents) {
       doc.text('Contents:', 40, y);
       y += 18;
-      if (options.contents.coverPage) { doc.text('- Cover Page', 60, y); y += 14; }
-      if (options.contents.synopsis) { doc.text('- Synopsis', 60, y); y += 14; }
-      if (options.contents.dataFieldDetail) { doc.text('- DataField Detail', 60, y); y += 14; }
+      const keys = Object.keys(options.contents).filter(k => options.contents[k]);
+      if (keys.length === 0) {
+        doc.text('- (none)', 60, y); y += 14;
+      } else {
+        keys.forEach(k => { doc.text('- ' + this.friendlyName(k), 60, y); y += 14; });
+      }
       y += 6;
+      // if (options.contents.coverPage) { doc.text('- Cover Page', 60, y); y += 14; }
+      // if (options.contents.synopsis) { doc.text('- Synopsis', 60, y); y += 14; }
+      // if (options.contents.dataFieldDetail) { doc.text('- DataField Detail', 60, y); y += 14; }
+      // y += 6;
     }
 
     // DataField attributes
