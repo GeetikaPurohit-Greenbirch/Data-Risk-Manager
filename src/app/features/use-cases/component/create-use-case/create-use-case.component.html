@@ -1,7 +1,5 @@
-<app-header></app-header>
 
 <div class="main-container">
-  <app-sidebar></app-sidebar>
   
   <main class="dashboard-container">
     <section class="welcome-banner">
@@ -57,7 +55,7 @@
               <mat-error *ngIf="usecaseForm.get('status')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 50%;">
+            <mat-form-field appearance="outline" class="half-width">
               <mat-label>Last Review Date</mat-label>
               <input matInput [matDatepicker]="lastPicker" formControlName="lastreviewdate">
               <mat-datepicker-toggle matSuffix [for]="lastPicker"></mat-datepicker-toggle>
@@ -71,7 +69,7 @@
               <mat-error *ngIf="usecaseForm.get('reviewedby')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 50%;">
+            <mat-form-field appearance="outline" class="half-width">
               <mat-label>Next Review Date</mat-label>
               <input matInput [matDatepicker]="nextPicker" formControlName="nextreviewdate">
               <mat-datepicker-toggle matSuffix [for]="nextPicker"></mat-datepicker-toggle>

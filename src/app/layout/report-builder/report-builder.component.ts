@@ -14,11 +14,12 @@ export class ReportBuilderComponent {
 
   options = {
     contents: {
-      coverPage: false,
-      synopsis: false,
-      useCaseName: false,
-      targetName: false,
-      targetStatus: false,
+      coverPage: true,
+      synopsis: true,
+      useCaseId: true,
+      useCaseName: true,
+      targetName: true,
+      targetStatus: true,
       individualControlReports: false,
       dataFieldDetail: false
     },
@@ -47,11 +48,61 @@ export class ReportBuilderComponent {
   
 
   includeSampleRows = true;
+  http: any;
+
+  // onBuild() {
+  //   const options = { contents: this.options.contents, attributes: this.options.attributes, includeSampleRows: this.includeSampleRows };
+  //   this.build.emit(options);
+  // }
+
 
   onBuild() {
-    const options = { contents: this.options.contents, attributes: this.options.attributes, includeSampleRows: this.includeSampleRows };
-    this.build.emit(options);
+    const payload = {
+      use_case_id: this.options.contents.useCaseId,  // 👈 added here
+      use_case_name: this.options.contents.useCaseName,
+      target_name: this.options.contents.targetName,
+      date_of_report: true,
+  
+      target_synopsis: this.options.contents.synopsis,
+      target_status: this.options.contents.targetStatus,
+      use_case_status: true,
+      data_field_detail: this.options.contents.dataFieldDetail,
+      individual_control_reports: this.options.contents.individualControlReports,
+      target_owner: true,
+      target_email: true,
+      use_case_owner: true,
+      use_case_email: false,
+  
+      target_data_quality_report_detail: {
+        field_id: this.options.attributes.fieldId,
+        field_name: this.options.attributes.fieldName,
+        field_description: this.options.attributes.fieldDescription,
+        data_type: this.options.attributes.dataType,
+        source_name: this.options.attributes.sourceName,
+        source_type: this.options.attributes.sourceType,
+  
+        accuracy_risk: this.options.attributes.accuracyRisk,
+        accuracy_risk_comment: this.options.attributes.accuracyRiskComment,
+        completeness_risk: this.options.attributes.completenessRisk,
+        completeness_risk_comment: this.options.attributes.completenessRiskComment,
+        timeliness_risk: this.options.attributes.timelinessRisk,
+        timeliness_risk_comment: this.options.attributes.timelinessRiskComment,
+  
+        criticality: this.options.attributes.criticality,
+        control_id: this.options.attributes.controlId,
+        control_status: this.options.attributes.controlStatus,
+  
+        post_control_risk_accuracy: this.options.attributes.postControlAccuracy,
+        post_control_risk_completeness: this.options.attributes.postControlCompleteness,
+        post_control_risk_timeliness: this.options.attributes.postControlTimeliness
+      }
+    };
+  
+    this.build.emit(payload);  // only emit, no API call here
   }
+  
+
+  
 
   onClose() {
     this.close.emit();

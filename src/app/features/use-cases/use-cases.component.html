@@ -1,21 +1,18 @@
-<app-header></app-header>
-
-<div class="main-container">
-  <app-sidebar></app-sidebar>
-  
+<div class="main-container">  
   <main class="dashboard-container">
+    <!-- ✅ Welcome Banner -->
     <section class="welcome-banner">
-        <h2>Use Cases</h2>
-      </section>
-      <button mat-raised-button color="primary" style="margin-bottom: 20px;" (click)="addUseCaseScreen()">
+      <h2>Use Cases</h2>
+      <button mat-raised-button color="primary" (click)="addUseCaseScreen()">
         <i class="fa fa-clipboard" style="margin-right: 8px;"></i>
         Add Use Case
       </button>
-      <div class="system-table-container">
-    
-        <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
+    </section>
+
+    <!-- ✅ Table Section -->
+    <div class="system-table-container">
+      <ag-grid-angular
+        class="ag-theme-alpine responsive-grid"
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
@@ -24,18 +21,19 @@
         (cellValueChanged)="onCellValueChanged($event)"
         rowSelection="single"
         [suppressColumnVirtualisation]="true"
-        [domLayout]="'normal'"
-        >
-        </ag-grid-angular>
+        [domLayout]="'autoHeight'">   <!-- ✅ auto height for responsiveness -->
+      </ag-grid-angular>
 
+      <!-- ✅ Paginator -->
+      <div class="paginator-container">
         <mat-paginator
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[rowData.length, 5, 10, 50]"
-  (page)="onPageChange($event)"
-  (click)="patchAllLabel()">
-</mat-paginator>
+          [length]="rowData.length"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[rowData.length, 5, 10, 50]"
+          (page)="onPageChange($event)"
+          (click)="patchAllLabel()">
+        </mat-paginator>
       </div>
-      
-</main>
+    </div>
+  </main>
 </div>
-<!-- <router-outlet></router-outlet> child pages like builder will open here -->

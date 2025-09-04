@@ -2,6 +2,11 @@ import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular
 import * as joint from 'jointjs';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { Link, Constant, Concat, GetDate, Record } from '../../../graph-embedded/component/diagram/shapes.component';
+import { shapes, util, dia } from '@joint/plus';
+
+type Records = Constant | Concat | GetDate | Record;
+
 
 @Component({
   selector: 'app-create-lineage',
@@ -82,9 +87,11 @@ export class CreateLineageComponent {
     this.paper = new joint.dia.Paper({
           el: container,
           model: this.graph,
-          width: 1200,
-          height: 600,
+          width: container.clientWidth,   // ✅ dynamic width
+          height: container.clientHeight, // ✅ dynamic height
           gridSize: 10,
+          async: true,
+          drawGrid: true,
           interactive: (cellView) => {
             const cell = cellView.model;
             if (cell.get('customType') === 'inbound') {
@@ -94,23 +101,31 @@ export class CreateLineageComponent {
           },
           linkPinning: false,
           snapLinks: { radius: 75 },
-          defaultConnector: { name: 'rounded' },
+          defaultConnector: { name: 'smooth' },
           defaultConnectionPoint: { name: 'boundary' },
           defaultLink: () =>
             new joint.shapes.standard.Link({
               attrs: {
                 line: {
-                  stroke: '#5c9ded',
+                  stroke: '#ff9800', // orange dashed link
                   strokeWidth: 2,
+                  strokeDasharray: '4 2',
                   targetMarker: {
                     type: 'path',
                     d: 'M 10 -5 0 0 10 5 z',
-                  },
-                },
-              },
+                    fill: '#ff9800'
+                  }
+                }
+              }
             }),
         });
       
+        // ✅ Make sure canvas resizes on window resize
+        window.addEventListener('resize', () => {
+          this.paper.setDimensions(container.clientWidth, container.clientHeight);
+        });
+
+        this.graphInitialized = true;
         // 2️⃣ Render fields and then load saved links
         this.renderFields();
         setTimeout(() => {
@@ -212,6 +227,15 @@ export class CreateLineageComponent {
         // 7️⃣ Optional: fallback manual delete on double click
         this.paper.on('link:pointerdblclick', (linkView: any) => {
           linkView.model.remove();
+        });
+
+        this.paper.on('blank:mousewheel', (evt, x, y, delta) => {
+          evt.preventDefault();
+          const oldScale = this.paper.scale().sx;
+          const newScale = oldScale + delta * 0.1;
+          if (newScale > 0.2 && newScale < 2) {
+            this.paper.scale(newScale, newScale);
+          }
         });
   }
 
@@ -370,9 +394,36 @@ export class CreateLineageComponent {
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: leftX, y: startY + i * spacing },
           size: { width: 200, height: 40 },
+          markup: [
+            { tagName: 'rect', selector: 'body' },
+            { tagName: 'image', selector: 'image' },  // 👈 add icon element
+            { tagName: 'text', selector: 'label' }
+          ],
           attrs: {
-            body: { fill: '#d1e8ff', stroke: '#333' },
-            label: { text: label, fill: '#000' },
+            body: {
+              fill: '#ffffff',
+              stroke: '#008080', // teal/green border
+              strokeWidth: 2,
+              rx: 6, // rounded corners
+              ry: 6
+            },
+           // Add image (icon from assets)
+            image: {
+              'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
+              width: 18,
+              height: 24,
+              x: 5,
+              y: 10,
+            },
+            label: {
+              text: label,
+              fill: '#333',
+              fontSize: 12,
+              fontWeight: 'bold',
+              refX: 28, // offset right after the icon
+              refY: 22,
+              textAnchor: 'start'
+            }
           },
           ports: {
             groups: {
@@ -391,6 +442,7 @@ export class CreateLineageComponent {
             items: [{ id: 'out', group: 'out' }],
           },
         });
+        
   
         // ✅ Tag this element as inbound
         rect.set('customType', 'inbound');
@@ -405,9 +457,33 @@ export class CreateLineageComponent {
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: rightX, y: startY + i * spacing },
           size: { width: 200, height: 40 },
+          markup: [
+            { tagName: 'rect', selector: 'body' },
+            { tagName: 'image', selector: 'image' },  // 👈 add icon element
+            { tagName: 'text', selector: 'label' }
+          ],
           attrs: {
-            body: { fill: '#d1ffd1', stroke: '#333' },
-            label: { text: label, fill: '#000' },
+            body: {
+              fill: '#ffffff',
+              stroke: '#008080', // teal/green border
+              strokeWidth: 2,
+              rx: 6, // rounded corners
+              ry: 6
+            },
+            image: {
+              'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
+              width: 18,
+              height: 24,
+              x: 10,
+              y: 10,
+            },
+            label: {
+              text: label,
+              fill: '#333',
+              fontSize: 12,
+              fontWeight: 'bold',
+            }
+            
           },
           ports: {
             groups: {
@@ -417,7 +493,7 @@ export class CreateLineageComponent {
                   circle: {
                     r: 6,
                     magnet: true,
-                    stroke: '#000',
+                    stroke: '#008080',
                     fill: '#fff',
                   },
                 },

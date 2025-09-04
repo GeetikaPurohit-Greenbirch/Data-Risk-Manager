@@ -5,13 +5,32 @@
   <title>DataRiskManager</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/toast.css" crossorigin="anonymous" rel="stylesheet">
 
 </head>
-<body class="mat-typography">
+<body class="mat-typography">  
+  
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.getElementById("sidebar");
+    const content = document.querySelector(".content");
+    const toggleBtn = document.getElementById("sidebarToggle");
+
+    if (toggleBtn && sidebar && content) {
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("expanded");
+      });
+    }
+  });
+</script>
   <app-root></app-root>
+  
 </body>
 </html>
