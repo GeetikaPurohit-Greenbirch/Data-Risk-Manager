@@ -1,4 +1,3 @@
-// diagram.component.ts (NO CHANGES NEEDED - it's already correct for this flow)
 
 import {
   Component,
@@ -17,19 +16,34 @@ import {
   format,
   elementTools
 } from '@joint/plus';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Link, Constant, Concat, GetDate, Record } from './shapes.component';
 import { Decorator } from './highlighter.component';
-import { SourceArrowhead, TargetArrowhead, Button } from './link-tools.component';
+import { SourceArrowhead, TargetArrowhead, Button, NavigateButton } from './link-tools.component';
 import { routerNamespace } from './routers.component';
 import { anchorNamespace } from './anchors.component';
 import { loadExample } from './example.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
-import {L001,L002,L003} from './diagrams'; 
-
+import { L001, L002, L003 } from './diagrams';
+import { map, filter, switchMap, catchError, takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { LineageService } from '../../services/lineage.service';
+import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { finalize } from 'rxjs/operators';
 
 type Records = Constant | Concat | GetDate | Record;
+
+export type LineageRecord = {
+  createdBy: string;
+  createdAt: string;   // ISO string
+  updatedAt: string;   // ISO string
+  id: number;
+  name: string;        // e.g. "L005"
+  use_case_id: number; // e.g. 7
+  lineage_json: string; // JSON string of the graph
+};
+
 
 
 @Component({
@@ -47,15 +61,93 @@ export class DiagramComponent implements AfterViewInit {
   scaleDisplay: number = 100;
 
   constructor(
-  private dialog: MatDialog,
-  private router: Router,
-  @Inject(PLATFORM_ID) private platformId: Object
-) {}
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
+    private lineageService: LineageService,
+    private toastNotificationService: ToastnotificationService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
+
+  loading = false;
+  errorMsg = '';
+  lineages: LineageRecord | null = {
+    createdBy: '',
+    createdAt: '',
+    updatedAt: '',
+    id: 0,
+    name: '',
+    use_case_id: 0,
+    lineage_json: ''
+
+  };
+
+  private destroy$ = new Subject<void>();
+
 
 
   public ngOnInit(): void {
-    // This is a good place for initial setup that doesn't require DOM access
-   
+
+    this.route.paramMap.pipe(
+      // Try both common param names; keep whichever your route uses
+      map(params => params.get('usecaseId') ?? params.get('use_case_id') ?? params.get('id')),
+      filter((id): id is string => !!id && id.trim().length > 0),
+      switchMap((usecaseId: string) =>
+        this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
+          catchError(err => {
+            console.error('Failed to fetch lineages by usecaseId:', err);
+            this.errorMsg = 'Could not load lineage data.';
+            return of<LineageRecord | null>(null);
+          })
+        )
+      ),
+      takeUntil(this.destroy$)
+    ).subscribe((lineages: LineageRecord | null) => {
+      this.lineages = lineages;
+      console.log('Fetched lineages:', lineages);
+      this.loadGraphFromJSON(lineages?.lineage_json || {});
+      this.loading = false;
+
+      
+      // If you also need to feed AG Grid or a graph lib, do it here:
+      // this.gridApi?.setRowData(this.lineages);
+      // this.graph.loadFromLineages(this.lineages);
+    });
+
+  }
+
+  public onNavigate(link: dia.Link) {
+    // Pull anything you want to pass along (optional)
+    const source = link.get('source');
+    const target = link.get('target');
+
+    const linkId = link.id as string;
+    const sourceId = (source?.id ?? source?.cell ?? null) as string | null;
+    const targetId = (target?.id ?? target?.cell ?? null) as string | null;
+
+    console.log(link.getSourceElement()?.attributes['typeName'], source, sourceId, target, targetId, 'Navigating with link');
+
+
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+    const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+    const sourceType = `source-${link.getSourceElement()?.attributes['typeName'] || `${link.getSourceElement()?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`}`
+    const targetType = `target-${link.getTargetElement()?.attributes['typeName'] || `${link.getTargetElement()?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`}`
+
+    this.router.navigate([
+      '/graph-embedded/lineage-mapping/',
+      useCaseId,
+      layoutId,
+      linkId
+    ],
+      {
+        queryParams: {
+          [sourceType]: source.port.split('-')[0],
+          [targetType]: target.port.split('-')[0],
+        }
+      }
+    );
   }
 
 
@@ -68,6 +160,12 @@ export class DiagramComponent implements AfterViewInit {
           distance: '25%',
           action: () => {
             this.linkAction(linkView.model as Link); // ✅ 'this' is now bound correctly
+          }
+        }),
+        new NavigateButton({
+          distance: '50%',
+          action: () => {
+            this.onNavigate(linkView.model as Link); // ✅ 'this' is now bound correctly
           }
         })
       ]
@@ -99,6 +197,53 @@ export class DiagramComponent implements AfterViewInit {
       }
     });
   }
+
+public normalizeTypeName(typeName: string) {
+  switch (typeName.toLowerCase()) {
+     case "sources":
+      return "SOURCE";
+    case "systems":
+      return "SYSTEM";
+    case "interfaces":
+      return "INTERFACE";
+    case "target":
+      return "TARGET";
+    case "control":
+      return "CONTROLS";
+    default:
+      return typeName.toUpperCase();
+  }
+}
+
+public enrichLinksWithNormalizedTypeName(json:any) {
+  const idToNormalizedTypeName:any = {};
+
+  // Step 1: Map Concat node IDs to normalized typeNames
+  json.cells.forEach((cell:any) => {
+    if (cell.type === "mapping.Concat" && cell.id && cell.attrs?.typeName) {
+      const rawTypeNameObj = cell.attrs.typeName;
+      const rawTypeName = Object.values(rawTypeNameObj).join(""); // e.g., {0:'s',1:'y'...} → "systems"
+      const normalized = this.normalizeTypeName(rawTypeName);
+      idToNormalizedTypeName[cell.id] = normalized;
+    }
+  });
+
+  // Step 2: Add normalized typeNames to link source/target
+  json.cells.forEach((cell:any) => {
+    if (cell.type === "mapping.Link") {
+      if (cell.source?.id && idToNormalizedTypeName[cell.source.id]) {
+        cell.source.type = idToNormalizedTypeName[cell.source.id];
+      }
+      if (cell.target?.id && idToNormalizedTypeName[cell.target.id]) {
+        cell.target.type = idToNormalizedTypeName[cell.target.id];
+      }
+    }
+  });
+
+  return json;
+}
+
+
 
 
   public tracePathNew(element: dia.Element, portId: string): boolean {
@@ -205,9 +350,36 @@ export class DiagramComponent implements AfterViewInit {
       defaultLink: function () {
         return new Link();
       },
-      validateConnection: function (sv, sm, tv, tm, end) {
-        return !!sm && !!tm;
-      }
+      validateMagnet: (cellView: dia.CellView, magnetEl: SVGElement) => {
+        // If it's not a Concat element, don’t constrain here
+        if (cellView.model.get('type') !== 'mapping.Concat') return true;
+
+        const sel = magnetEl.getAttribute('joint-selector') || '';
+        // Allow only the actual port graphic, not item labels/bodies/etc.
+        return sel === 'portBody';
+      },
+
+      // Allow connecting ONLY to ports on Concat; disallow items
+      validateConnection: (sv, sm, tv, tm) => {
+        // Require both magnets
+        if (!sm || !tm) return false;
+
+        // If source is a Concat, its magnet must be the port circle
+        if (sv && sv.model.get('type') === 'mapping.Concat') {
+          const sSel = sm.getAttribute('joint-selector') || '';
+          if (sSel !== 'portBody') return false;
+        }
+
+        // If target is a Concat, its magnet must be the port circle
+        if (tv && tv.model.get('type') === 'mapping.Concat') {
+          const tSel = tm.getAttribute('joint-selector') || '';
+          if (tSel !== 'portBody') return false;
+        }
+
+        // otherwise OK
+        return true;
+      },
+
     });
 
     this.paper.setDimensions(500, 500);
@@ -235,6 +407,58 @@ export class DiagramComponent implements AfterViewInit {
         record.setScrollTop(record.getScrollTop() + delta * 10);
       }
     });
+
+    // Collapse/expand on header or caret click (works with our Concat.toggleCollapse)
+    this.paper.on('element:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
+      const model = view.model as any;
+      if (model.get?.('type') !== 'mapping.Concat') return;
+
+      const targetEl = evt.target as Element;
+
+      // helper: does the clicked node (or its ancestors) carry a given joint-selector?
+
+      const hit = (sel: string) => !!targetEl.closest?.(`[joint-selector="${sel}"]`);
+
+      // treat label/icon as header clicks too (they are siblings of the header rect)
+      const clickedCaret = !!targetEl.closest?.('[joint-selector="caret"]');
+
+      // const clickedHeader = hit('header') || hit('headerLabel') || hit('headerIcon');
+
+
+      if (clickedCaret) {
+        evt.preventDefault();
+        evt.stopPropagation?.();
+        if (typeof model.toggleCollapse === 'function') {
+          model.toggleCollapse();
+        } else {
+          // fallback collapse/expand (path-form keeps TS happy)
+          const collapsed = !!model.get('collapsed');
+          if (!collapsed) {
+            const sz = model.size();
+            model.set('expandedSize', sz);
+            model.attr('body/display', 'none');
+            model.attr('items/display', 'none');
+            model.attr('footer/display', 'none');
+            model.attr('caret/transform', 'rotate(-90 6 6)');
+            model.resize(sz.width, (model.attr('header/height') as number) || 35);
+            model.set('collapsed', true);
+          } else {
+            model.removeAttr('body/display');
+            model.removeAttr('items/display');
+            model.removeAttr('footer/display');
+            model.removeAttr('caret/transform');
+            const esz = (model.get('expandedSize') as { width: number; height: number }) ?? {
+              width: model.size().width,
+              height: 200
+            };
+            model.resize(esz.width, esz.height);
+            model.set('collapsed', false);
+          }
+        }
+      }
+    });
+
+
 
     this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
@@ -300,29 +524,69 @@ export class DiagramComponent implements AfterViewInit {
 
       const block = JSON.parse(e.dataTransfer?.getData('block') || '{}');
 
-      // Crucial: Add the actual drop coordinates to the block data
+      // Add the actual drop coordinates to the block data
       const paperLocalPoint = this.paper.clientToLocalPoint({ x: e.clientX, y: e.clientY });
       block.x = paperLocalPoint.x;
       block.y = paperLocalPoint.y;
       console.log('Dropped block:', block);
 
-      const dialogRef = this.dialog.open(NodeDropModalComponent, {
-        width: '300px',
-        data: block // Now block contains x and y coordinates, and full block definition
-      });
+      this.lineageService.getAllByEntityType(block.typeName).subscribe({
+        next: (data: any) => {
 
-      dialogRef.afterClosed().subscribe((selectedValue: string) => {
-        if (!selectedValue) return; // User canceled
+          const base = (block.label || '').toLowerCase(); // e.g., 'source'
+          const nameKey = `${base}_name`; // 'source_name'
+          const idKey = `${base}_id`;   // 'source_id'
 
-        // Use the existing graph instance to add the new element
-        loadExample(this.graph, selectedValue, block); // Pass the full 'block' data
+          const items = (data ?? []).map((d: any) => {
+            const row = d?.[`${base}Entity`] ?? d; // handle nested or flat
+            return {
+              label: String(row?.[nameKey] ?? '').trim(),
+              value: row?.[idKey] ?? row?.id ?? row?.source_id // fallback if needed
+            };
+          });
 
-        // You might want to recenter or adjust the view after adding
-        // If loadExample adds elements, the scroller might need to re-evaluate its content.
-        // For simple additions, JointJS usually handles rendering automatically.
-        // If you add many elements, consider freezing/unfreezing the paper around the additions.
-      });
+          console.log('Fetched items for', block.typeName, items);
+          const dialogRef = this.dialog.open(NodeDropModalComponent, {
+            width: '360px',
+            disableClose: true,
+            data: { ...block, data, items }
+          });
+
+          dialogRef.afterClosed().subscribe((selectedValue: string | null) => {
+            console.log('Dialog result:', selectedValue);
+            if (!selectedValue) return; // User canceled
+
+            const selectedItem = (data ?? []).map((d: any) => {
+              const row = d?.[`${base}Entity`] ?? d;
+              return {
+                ...row
+              };
+            }).filter((item: any) => item?.[`${base}_name`] === selectedValue)[0];
+
+            this.lineageService.getEntityById(block.typeName, selectedItem?.[`${base}_id`] ?? 0).subscribe({
+              next: (fullData: any) => {
+                console.log(fullData, "fullDat")
+                const parsedData = JSON.parse(fullData.node)
+                loadExample(this.graph, selectedValue, block, selectedItem, parsedData);
+              },
+              error: (error: any) => {
+                console.log(error)
+              }
+            })
+
+
+            // Add element to graph with the returned selection
+
+          });
+
+
+        },
+        error: (err) => {
+          console.error('Failed to fetch sources:', err);
+        }
+      })
     });
+
 
     const styleId = 'jointjs-dash-animation-style';
     if (!document.getElementById(styleId)) {
@@ -341,39 +605,39 @@ export class DiagramComponent implements AfterViewInit {
       document.head.appendChild(style);
     }
 
-   try {
+    try {
 
-     const path = this.router.url.split('?')[0].split('#')[0];
-  const segments = path.split('/').filter(Boolean);
-  const layoutId = (segments[segments.length - 1] || '').toUpperCase();
-console.log('Current path:', path, 'Layout ID:', layoutId);
-    // Map routes to your JSON presets
-    const presetByPath: any = {
-      '/L001': L001,
-      '/L002': L002,
-      '/L003': L003
-      // add more like '/L003': L003
-    };
+      const path = this.router.url.split('?')[0].split('#')[0];
+      const segments = path.split('/').filter(Boolean);
+      const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+      console.log('Current path:', path, 'Layout ID:', layoutId);
+      // Map routes to your JSON presets
+      const presetByPath: any = {
+        '/L001': L001,
+        '/L002': L002,
+        '/L003': L003
+        // add more like '/L003': L003
+      };
 
-    // Current path without query/hash
-    // const path = this.router.url.split('?')[0].split('#')[0];
+      // Current path without query/hash
+      // const path = this.router.url.split('?')[0].split('#')[0];
 
-    const preset = presetByPath[`/${layoutId}`];
-    if (preset) {
-      this.paper.freeze();
-      // If preset might be a string, parse it; if it's already an object, use as-is
-      const json = typeof preset === 'string' ? JSON.parse(preset) : preset;
-      this.graph.fromJSON(json);
-      this.paper.unfreeze();
-      this.scroller.centerContent();
-      this.hasGraph = true;
-      console.log('Loaded preset for path:', path);
-    } else {
-      console.log('No preset mapped for path:', path, '— skipping auto-load.');
+      const preset = presetByPath[`/${layoutId}`];
+      if (preset) {
+        this.paper.freeze();
+        // If preset might be a string, parse it; if it's already an object, use as-is
+        const json = typeof preset === 'string' ? JSON.parse(preset) : preset;
+        this.graph.fromJSON(json);
+        this.paper.unfreeze();
+        this.scroller.centerContent();
+        this.hasGraph = true;
+        console.log('Loaded preset for path:', path);
+      } else {
+        console.log('No preset mapped for path:', path, '— skipping auto-load.');
+      }
+    } catch (err) {
+      console.error('Failed to load diagram from route:', err);
     }
-  } catch (err) {
-    console.error('Failed to load diagram from route:', err);
-  }
   }
 
   resetGraph() {
@@ -383,18 +647,34 @@ console.log('Current path:', path, 'Layout ID:', layoutId);
 
   saveGraph() {
     const json = this.graph.toJSON();
-    const jsonString = JSON.stringify(json, null, 2); // Pretty print
 
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const ddata= this.enrichLinksWithNormalizedTypeName(json);
+    console.log('Graph JSON:', ddata);
+    const jsonString = JSON.stringify(ddata, null, 2); // Pretty print
 
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'diagram.json'; // Change name if needed
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url); // Clean up
+    // const blob = new Blob([jsonString], { type: 'application/json' });
+    // const url = URL.createObjectURL(blob);
+
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.download = 'diagram.json'; // Change name if needed
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    // URL.revokeObjectURL(url); // Clean up
+
+
+    this.lineageService.saveLineageById(this.lineages as any, jsonString).subscribe({
+      next: (response) => {
+        console.log("Lineage saved successfully:", response);
+        this.toastNotificationService.success('Lineage Saved successfully');
+      },
+      error: (err) => {
+        console.error("Failed to save lineage:", err);
+      }
+    });
+
+
   }
 
   loadGraphFromFile(e: any) {
@@ -417,9 +697,11 @@ console.log('Current path:', path, 'Layout ID:', layoutId);
   }
 
   loadGraphFromJSON(json: any) {
-    this.graph.fromJSON(json); 
-    this.scroller.centerContent(); 
-    this.hasGraph = true; 
+    console.log('Loading graph from JSON:', json);
+    this.graph.fromJSON(JSON.parse(json));
+    this.scroller.centerContent();
+    this.hasGraph = true;
+
   }
 
   onZoomSliderChange(e: any) {
@@ -436,3 +718,4 @@ console.log('Current path:', path, 'Layout ID:', layoutId);
     this.scroller.centerContent(); // Center content after resetting zoom
   }
 }
+
