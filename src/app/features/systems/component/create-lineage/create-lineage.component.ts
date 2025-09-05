@@ -241,147 +241,7 @@ export class CreateLineageComponent {
 
   
   links: any[] = []; // Store link data
-  // ngAfterViewInit(): void {
-  //   // 1️⃣ Initialize graph and paper
-  //   this.graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
-  
-  //   this.paper = new joint.dia.Paper({
-  //     el: this.paperContainer.nativeElement,
-  //     model: this.graph,
-  //     width: 1200,
-  //     height: 600,
-  //     gridSize: 10,
-  //     interactive: (cellView) => {
-  //       const cell = cellView.model;
-  //       if (cell.get('customType') === 'inbound') {
-  //         return { elementMove: false }; // disable moving inbound fields
-  //       }
-  //       return true;
-  //     },
-  //     linkPinning: false,
-  //     snapLinks: { radius: 75 },
-  //     defaultConnector: { name: 'rounded' },
-  //     defaultConnectionPoint: { name: 'boundary' },
-  //     defaultLink: () =>
-  //       new joint.shapes.standard.Link({
-  //         attrs: {
-  //           line: {
-  //             stroke: '#5c9ded',
-  //             strokeWidth: 2,
-  //             targetMarker: {
-  //               type: 'path',
-  //               d: 'M 10 -5 0 0 10 5 z',
-  //             },
-  //           },
-  //         },
-  //       }),
-  //   });
-  
-  //   // 2️⃣ Render fields and then load saved links
-  //   this.renderFields();
-  //   setTimeout(() => {
-  //     this.loadAndRenderSavedLinks(); // should populate saved mappings
-  //   }, 0);
-  
-  //   // 3️⃣ On new link creation → store mapping in `this.links`
-  //   this.paper.on('link:connect', (linkView: any) => {
-  //     const sourceId = linkView.model.get('source').id;
-  //     const targetId = linkView.model.get('target').id;
-  
-  //     const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
-  //     const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
-  
-  //     const from = sourceElement?.attributes?.attrs?.['label']?.text;
-  //     const to = targetElement?.attributes?.attrs?.['label']?.text;
-  
-  //     if (from && to) {
-  //       this.links.push({ from, to }); // mappingId will be added only after save
-  //       console.log('🔗 New mapping:', from, '→', to);
-  //     }
-  //   });
-  
-  //   // 4️⃣ Show delete (X) tool on link hover using linkTools
-  //   this.paper.on('link:mouseenter', (linkView: any) => {
-  //     const customDeleteTool = new joint.linkTools.Button({
-  //       markup: [{
-  //         tagName: 'circle',
-  //         selector: 'button',
-  //         attributes: {
-  //           r: 10,
-  //           fill: '#f44336',
-  //           stroke: '#fff',
-  //           'stroke-width': 2,
-  //           cursor: 'pointer'
-  //         }
-  //       }, {
-  //         tagName: 'text',
-  //         textContent: 'X',
-  //         selector: 'icon',
-  //         attributes: {
-  //           fill: '#fff',
-  //           'font-size': 12,
-  //           'text-anchor': 'middle',
-  //           y: 4,
-  //           cursor: 'pointer'
-  //         }
-  //       }],
-  //       distance: '50%',
-  //       action: (evt: any, linkView: any) => {
-  //         evt.stopPropagation(); // prevent native removal
-    
-  //         const link = linkView.model;
-  //         const sourceId = link.get('source')?.id;
-  //         const targetId = link.get('target')?.id;
-    
-  //         const sourceElement = this.graph.getCell(sourceId) as joint.dia.Element;
-  //         const targetElement = this.graph.getCell(targetId) as joint.dia.Element;
-    
-  //         const fromLabel = sourceElement?.attr('label/text');
-  //         const toLabel = targetElement?.attr('label/text');
-    
-  //         const mapping = this.links.find(
-  //           l => l.from === fromLabel && l.to === toLabel
-  //         );
-    
-  //         const confirmed = confirm(`Do you really want to delete mapping:\n${fromLabel} → ${toLabel}?`);
-  //         if (confirmed) {
-  //           if (mapping?.mappingId) {
-  //             // ✅ Saved mapping: call delete API
-  //             this.datafieldsService.deleteFieldMapping(mapping?.mappingId).subscribe((res:string) => {
-  //               alert(res);
-  //               link.remove();
-  //               this.links = this.links.filter(l => l.mappingId !== mapping?.mappingId);
-  //             });
-  //           } else {
-  //             // ❌ Not yet saved: just remove
-  //             link.remove();
-  //             this.links = this.links.filter(l => l.from !== fromLabel || l.to !== toLabel);
-  //           }
-  //         }
-  //       }
-  //     });
-    
-  //     const toolsView = new joint.dia.ToolsView({
-  //       tools: [customDeleteTool]
-  //     });
-    
-  //     linkView.addTools(toolsView);
-  //   });
-    
-  
-  //   // 5️⃣ Remove delete tool on mouse leave
-  //   this.paper.on('link:mouseleave', (linkView: any) => {
-  //     linkView.removeTools();
-  //   });
-  
-  
-  //   // 7️⃣ Optional: fallback manual delete on double click
-  //   this.paper.on('link:pointerdblclick', (linkView: any) => {
-  //     linkView.model.remove();
-  //   });
-  // }
-  
-  
+   
     
     renderFields(): void {
       const leftX = 50;
@@ -412,7 +272,7 @@ export class CreateLineageComponent {
               'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
               width: 18,
               height: 24,
-              x: 5,
+              x: 3,
               y: 10,
             },
             label: {
@@ -422,7 +282,12 @@ export class CreateLineageComponent {
               fontWeight: 'bold',
               refX: 28, // offset right after the icon
               refY: 22,
-              textAnchor: 'start'
+              textAnchor: 'start',
+              textWrap: {
+                width: -20,   // available width inside the rect (200px - padding)
+                height: 'auto',
+                ellipsis: false
+              }
             }
           },
           ports: {
@@ -442,6 +307,23 @@ export class CreateLineageComponent {
             items: [{ id: 'out', group: 'out' }],
           },
         });
+
+     
+          // 1️⃣ Add element to graph first
+          this.graph.addCell(rect);
+
+          // 2️⃣ Wait for the paper to render before measuring
+          setTimeout(() => {
+            const view = this.paper.findViewByModel(rect);
+            if (view) {
+              const labelEl = view.el.querySelector('text'); // SVG <text> element
+              if (labelEl) {
+                const bbox = labelEl.getBBox();
+                // 3️⃣ Resize rect height according to text
+                rect.resize(300, bbox.height + 20); // +20 for padding
+              }
+            }
+          }, 0);
         
   
         // ✅ Tag this element as inbound
@@ -474,14 +356,19 @@ export class CreateLineageComponent {
               'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
               width: 18,
               height: 24,
-              x: 10,
-              y: 10,
+              x: 15,
+              y: 17,
             },
             label: {
               text: label,
               fill: '#333',
               fontSize: 12,
               fontWeight: 'bold',
+              textWrap: {
+                width: -20,   // available width inside the rect (200px - padding)
+                height: 'auto',
+                ellipsis: false
+              }
             }
             
           },
@@ -502,6 +389,22 @@ export class CreateLineageComponent {
             items: [{ id: 'in', group: 'in' }],
           },
         });
+
+          // 1️⃣ Add element to graph first
+          this.graph.addCell(rect);
+
+          // 2️⃣ Wait for the paper to render before measuring
+          setTimeout(() => {
+            const view = this.paper.findViewByModel(rect);
+            if (view) {
+              const labelEl = view.el.querySelector('text'); // SVG <text> element
+              if (labelEl) {
+                const bbox = labelEl.getBBox();
+                // 3️⃣ Resize rect height according to text
+                rect.resize(300, bbox.height + 20); // +20 for padding
+              }
+            }
+          }, 0);
 
         rect.set('customFieldId', field.fieldId);
         rect.addTo(this.graph);
@@ -619,3 +522,19 @@ export class CreateLineageComponent {
     
   
 }
+function getWrappedTextHeight(text: string, width: number, font: string = 'bold 12px Arial') {
+  const div = document.createElement('div');
+  div.style.position = 'absolute';
+  div.style.visibility = 'hidden';
+  div.style.width = `${width}px`;
+  div.style.font = font;
+  div.style.lineHeight = '16px';
+  div.style.whiteSpace = 'normal';
+  div.style.wordBreak = 'break-word';
+  div.innerText = text;
+  document.body.appendChild(div);
+  const height = div.offsetHeight;
+  document.body.removeChild(div);
+  return height;
+}
+

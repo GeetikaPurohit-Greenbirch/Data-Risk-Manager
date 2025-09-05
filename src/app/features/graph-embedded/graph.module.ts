@@ -8,6 +8,8 @@ import { SharedModule } from '../shared/shared/shared.module';
 import { BuilderComponent } from './component/builder/builder.component';
 import { DiagramComponent } from './component/diagram/diagram.component';
 import { NodesComponent } from './component/nodes/nodes.component';
+import { ConfirmDialogComponent } from './component/delete-confirmation/deleteConfirmation.component';
+import { LineageComponent } from './component/lineage-mapper/lineage.component';
 
 // import { NodesComponent } from "../nodes/nodes.component";
 // import { DiagramComponent } from "../diagram/diagram.component";
@@ -20,6 +22,8 @@ import { NodesComponent } from './component/nodes/nodes.component';
     BuilderComponent,
     DiagramComponent,
     NodesComponent,
+    ConfirmDialogComponent,
+    LineageComponent
   ],
   imports: [
     CommonModule,

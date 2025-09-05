@@ -189,11 +189,13 @@
   <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
     <mat-label>Select Use Case</mat-label>
     <mat-select [(ngModel)]="selectedUseCaseId">
-      <mat-option *ngFor="let uc of useCases" [value]="uc.id">
+      <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id">
         {{ uc.use_case_name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <pre>{{ useCases | json }}</pre>
+
    
     </div>
 <div class="col-md-6">

@@ -45,6 +45,7 @@ export class EditSystemComponent{
   
   inboundFields: any[] = [];
   outboundFields:any[] = [];
+  combinedFields:any[] = [];
   links: any[] = []; // Store link data
   showGlobalQualityRiskGridInbound = false; // Controls visibility of AG Grid
   showGlobalQualityRiskGridOutbound = false;
@@ -1393,9 +1394,36 @@ loadDropdownOptions(): void {
             );
           }
   
-          // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
-          const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
+
+         
   
+          const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
+
+          // Assuming you have only one object in the array (as per your example)
+          const rawData = interfaceDataFields[0]; // replace with your actual variable
+
+          const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
+          const systemFields = JSON.parse(rawData.system_fields || '[]');
+
+
+          // Wrap system fields in an "interface-like" object so it matches inbound structure
+          const systemAsInterface = {
+            interface_id: rawData.system_id,
+            interface_name: rawData.system_name,
+            source: 'System',
+            fields: systemFields.map((f: any) => ({
+              ...f,
+              entity_type: 'SYSTEM',
+              interface_id: rawData.system_id,
+              interface_name: rawData.system_name
+            }))
+          };
+
+          const parsedInboundInterfaces = [systemAsInterface, ...inboundInterfaces];
+          // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
+          // const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
+            
           if (parsedInboundInterfaces?.length > 0) {
             this.rowDataInbound = parsedInboundInterfaces.map(
               (item:  { interface_id: any; interface_name: any  }) =>
@@ -1413,15 +1441,6 @@ loadDropdownOptions(): void {
             // Fallback: show one blank row if no data
             this.rowDataInbound = [{}];
           }
-  
-          const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
-
-          // Assuming you have only one object in the array (as per your example)
-          const rawData = interfaceDataFields[0]; // replace with your actual variable
-
-          const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
-          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
-          const systemFields = JSON.parse(rawData.system_fields || '[]');
 
           this.systemList = systemFields;
           this.outboundInterfaceList = outboundInterfaces;
@@ -1514,6 +1533,8 @@ loadDropdownOptions(): void {
 
           this.inboundFields = [];
           this.outboundFields = [];
+          this.combinedFields = [];
+
 
           // 🔄 Flatten inbound
         parsedInboundInterfaces.forEach((intf: any) => {

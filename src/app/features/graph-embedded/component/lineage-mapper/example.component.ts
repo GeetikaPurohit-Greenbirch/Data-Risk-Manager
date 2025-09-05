@@ -20,6 +20,7 @@ type ParentNode = {
     label: string;
     icon: string;
     items: Array<{ id: string; label: string; icon: string }>;
+    group?: string;
 };
 
 type BuildResult = {
@@ -33,104 +34,6 @@ function sanitizeJson(s: string): string {
         .replace(/,\s*,/g, ',')      // fix double commas
         .replace(/,\s*([\]}])/g, '$1'); // remove trailing commas before ] or }
 }
-
-// export function buildPortsAndItems(input: string | { ports: Port[] }): BuildResult {
-//   let obj: any;
-
-//   if (typeof input === 'string') {
-//     try { obj = JSON.parse(input); }
-//     catch { obj = JSON.parse(sanitizeJson(input)); }
-//   } else {
-//     obj = input;
-//   }
-
-//   const ports: Port[] = Array.isArray(obj?.ports) ? obj.ports : [];
-
-//   const noType: Port[] = [];
-//   const inMap = new Map<string, ParentNode>();
-//   const outMap = new Map<string, ParentNode>();
-
-//   type G = 'in' | 'out';
-
-//   const slug = (v: any) =>
-//     String(v ?? '')
-//       .trim()
-//       .toLowerCase()
-//       .replace(/[^a-z0-9]+/g, '_')
-//       .replace(/^_+|_+$/g, '');
-
-//   const makeId = (group: G, ...parts: (string | number | null | undefined)[]) =>
-//     `${group}__${parts.map(slug).filter(Boolean).join('_')}`;
-
-//   const ensureParent = (
-//     map: Map<string, ParentNode>,
-//     key: string,
-//     group: G,
-//     idTokens: (string | number | null | undefined)[],
-//     label: string,
-//     icon: string
-//   ): ParentNode => {
-//     let p = map.get(key);
-//     if (!p) {
-//       p = { id: makeId(group, ...idTokens), label, icon, items: [] };
-//       map.set(key, p);
-//     }
-//     return p;
-//   };
-
-//   for (const p of ports) {
-//     if (!p?.type) {
-//       noType.push(p);
-//       continue;
-//     }
-
-//     const group: G = p.group === 'out' ? 'out' : 'in';
-//     const target = group === 'in' ? inMap : outMap;
-
-//     let parentKey: string;
-//     let parentLabel: string;
-//     let idTokens: (string | number | null | undefined)[];
-
-//     if (p.type === 'interface') {
-//       // Group strictly by interfaceId; label with interfaceName
-//     const iid = p.interfaceId ?? 'unknown';
-//   parentKey = `interface:${iid}`;
-//   idTokens = ['interface', iid];
-//   parentLabel = String(p.interfaceName ?? `#${iid}`); 
-//     } else if (p.type === 'system') {
-//       parentKey = 'system';
-//       idTokens = ['system'];
-//       parentLabel = 'SYSTEM'; // 👈 keep SYSTEM
-//     } else {
-//       const t = String(p.type);
-//       parentKey = `type:${t}`;
-//       idTokens = ['type', t];
-//       parentLabel = t.charAt(0).toUpperCase() + t.slice(1);
-//     }
-
-//     const parent = ensureParent(target, parentKey, group, idTokens, parentLabel, ' ');
-//     parent.items.push({
-//       id: makeId(group, 'port', p.id), // unique per group
-//       icon: ' ',
-//       label: String(p.name)
-//     });
-//   }
-
-//   return {
-//     ports: noType,
-//     items: [Array.from(inMap.values()), Array.from(outMap.values())]
-//   };
-// }
-
-
-// type Port = {
-//   id?: string | number;
-//   name?: string;
-//   type?: string;                 // e.g., "INTERFACE" | "SYSTEM" | ...
-//   group?: 'in' | 'out';
-//   interfaceId?: string | number;
-//   interfaceName?: string;
-// };
 
 type RecordItem = { id: string; label: string; icon?: string };
 // type ParentNode = { id: string; label: string; icon?: string; items: RecordItem[] };
@@ -170,6 +73,7 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
             p = { id: makeId(g, ...idTokens), label, icon, items: [] };
             map.set(key, p);
         }
+        p.group= 'disabled'
         return p;
     };
 
@@ -208,10 +112,11 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
 
         const parent = ensureParent(target, parentKey, g, idTokens, parentLabel);
         parent.items.push({
-            id: makeId(g, 'port', p.id ?? parent.items.length),
+            id: String(p.id ?? parent.items.length),  // 👈 Only use original port id
             label: String(p.name ?? '').trim() || String(p.id ?? ''),
             icon: ' '
         });
+
     }
 
     return {
@@ -240,10 +145,24 @@ const getColorByTab = (type: string) => {
 
 
 
-export const loadExample = function (graph: dia.Graph, selectedValue: string, droppedBlockData: any, selectedItem: any, selectedItemDetails: any): void {
+export const loadExample = function (graph: dia.Graph, selectedValue: any, droppedBlockData: any, selectedItem: any): void {
 
-    const blockDefinition: any = blockDefinitions.find((b: any) => b.typeName === droppedBlockData.typeName);
-    console.log(blockDefinition, "blockDefinition", selectedValue, selectedItem, selectedItemDetails)
+    console.log("Dropped block data:Dropped block data:Dropped block data:Dropped block data:Dropped block data:", selectedItem);
+
+    let typeOfBlock = ""
+
+    if (selectedItem.type === "source") {
+        typeOfBlock = "sources"
+
+    } else if (selectedItem.type === "system") {
+        typeOfBlock = "systems"
+    } else if (selectedItem.type === "target") {
+        typeOfBlock = "targets"
+    } else if (selectedItem.type === "control") {
+        typeOfBlock = "controls"
+    }
+
+    const blockDefinition: any = blockDefinitions.find((b: any) => b.typeName === typeOfBlock);
 
     if (!blockDefinition) {
         console.warn("Block definition not found for typeName: ${droppedBlockData.typeName}");
@@ -251,32 +170,16 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
     }
 
     // Get the drop coordinates from the block data passed from DiagramComponent
-    const dropX = droppedBlockData.x !== undefined ? droppedBlockData.x : 100;
-    const dropY = droppedBlockData.y !== undefined ? droppedBlockData.y : 100;
+    const dropX = selectedValue.x !== undefined ? selectedValue.x : 100;
+    const dropY = selectedValue.y !== undefined ? selectedValue.y : 100;
 
     let newCell: dia.Element | null = null;
-    let itemsToDisplay: any[] = []; // To hold the filtered items for Record types
-
-    // Determine items to display for Record types (specifically the 'Target' block)
-    if (blockDefinition.type === 'Record' && blockDefinition.typeName === 'Target' && blockDefinition.itemMappings) {
-        const mappedItemIds = blockDefinition.itemMappings[selectedValue];
-        if (mappedItemIds) {
-            itemsToDisplay = (blockDefinition.allItems || []).filter((item: any) =>
-                mappedItemIds.includes(item.id)
-            );
-        } else {
-            console.warn("No item mapping found for selectedValue: ${selectedValue} in Target block. Displaying all items.");
-            itemsToDisplay = blockDefinition.allItems || [];
-        }
-    }
-    // Create the JointJS cell based on the block's 'type' property
     switch (blockDefinition.type) {
         case 'Constant':
             newCell = new Constant({
                 position: { x: dropX, y: dropY },
                 size: blockDefinition.size,
                 // icon: blockDefinition?.sicon,
-                id:selectedItemDetails?.id,
                 attrs: {
                     label: { text: blockDefinition.label || blockDefinition.typeName },
                     body: { fill: blockDefinition.color || '#fff', border: '2px solid #cfd8dc' },
@@ -319,22 +222,21 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             break;
 
         case 'Concat':
-            const result = buildTypeHierarchy(selectedItemDetails?.ports || []);
-            console.log(result, "buildPortsAndItems result")
-
+            let result = buildTypeHierarchy(selectedItem?.ports || []);
             let targetData: any = []
-            if (selectedItemDetails?.type === "target") {
+            if (selectedItem?.type === "target") {
                 targetData = result.in[0].items
 
             }
-            const dataToPass = selectedItemDetails?.type === "target" ? [targetData] : [result.in, result.out]
+            const dataToPass = selectedItem?.type === "target" ? [targetData] : [result.in, result.out]
+            console.log(dataToPass, result, "resultresultresultresultresultresultresultresultresultresultresultresultresultresult")
 
-            // if (result.ports.length === 0) {
+            console.log(result, "buildPortsAndItems result", blockDefinition)
             newCell = new Concat({
                 position: { x: dropX, y: dropY },
                 size: blockDefinition.size,
                 typeName: blockDefinition.typeName,
-                 id:selectedItemDetails?.id,
+                id: selectedItem?.id,
                 attrs: {
                     label: { text: blockDefinition.label || blockDefinition.typeName },
                     typeName: blockDefinition.typeName,
@@ -347,28 +249,14 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                         fill: getColorByTab(blockDefinition.label),
                         stroke: getColorByTab(blockDefinition.label),
                     },
-                    // caret: {
-                    //     ref: 'header',
-                    //     refX: '85%',
-                    //     refY: 14,
-                    //     width: 12,
-                    //     height: 12,
-                    //     cursor: 'pointer',
-                    //     d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-                    //     fill: '#6B7280',
-                    //     event: 'element:caret:pointerdown',
-                    // },
                 },
 
 
-            }).setName(selectedValue || blockDefinition.typeName)
-                // .setItems(dataToPass)
-                .addPorts(result.noType)
+            }).setName(selectedItem.name || blockDefinition.typeName)
+                .setItems(dataToPass)
+            //   .addPorts(result.noType)
 
-            newCell.attr('forksGroups/stroke', 'lightgray');
-            (newCell as Concat).setCaretIcon()
-
-
+            //   newCell.attr('forksGroups/stroke', 'lightgray');
             //     .setName(selectedValue || blockDefinition.typeName)
             //     .addPorts(result.ports)
 
@@ -376,7 +264,6 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
-
 
             break;
 
@@ -398,7 +285,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             });
 
             if (blockDefinition.ports?.length) {
-                newCell.addPorts(selectedItemDetails?.ports);
+                newCell.addPorts(selectedItem?.ports);
             }
 
 

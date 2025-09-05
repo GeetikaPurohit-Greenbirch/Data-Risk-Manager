@@ -14,12 +14,12 @@
 
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>Usecase</mat-label>
-      <mat-select formControlName="usecase_id" required>
+      <mat-select formControlName="use_case_id" required>
         <mat-option *ngFor="let u of data?.usecaseOptions" [value]="u.id">
           {{ u.name }} ({{ u.id }})
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="form.get('usecase_id')?.invalid && (form.get('usecase_id')?.touched || form.get('usecase_id')?.dirty)">
+      <mat-error *ngIf="form.get('use_case_id')?.invalid && (form.get('use_case_id')?.touched || form.get('use_case_id')?.dirty)">
         Usecase is required
       </mat-error>
     </mat-form-field>

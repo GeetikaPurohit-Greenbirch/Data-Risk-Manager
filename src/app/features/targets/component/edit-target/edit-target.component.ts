@@ -247,6 +247,8 @@ export class EditTargetComponent {
       .subscribe({
         next: (data) => {
           this.useCases = data;
+          this.formLoaded = true;
+
         },
         error: (err) => {
           console.error('Failed to fetch use cases', err);

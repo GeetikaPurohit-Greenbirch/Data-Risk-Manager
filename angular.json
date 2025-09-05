@@ -28,7 +28,6 @@
               "src/assets"
             ],
             "styles": [
-              "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/font-awesome/css/font-awesome.min.css",
               "node_modules/jointjs/dist/joint.min.css",
@@ -116,7 +115,6 @@
               "src/assets"
             ],
             "styles": [
-              "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/jointjs/dist/joint.css",

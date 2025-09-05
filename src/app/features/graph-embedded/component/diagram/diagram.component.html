@@ -18,4 +18,10 @@
   <button class="button" (click)="saveGraph()" >💾 Save</button>
   <button class="button" (click)="resetGraph()">🧹 New Diagram</button>
 </div> -->
+
+<div class="toolbar">
+  <div class="toolbar-title">{{ lineages?.name }}</div>
+  <div class="block-item" (click)="saveGraph()">Save</div>
+</div>
+
 <div #canvas class="paper-container"></div>

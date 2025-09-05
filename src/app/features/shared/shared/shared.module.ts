@@ -34,6 +34,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PdfService } from '../../shared-services/pdf.service';
 import { ReportBuilderComponent } from 'src/app/layout/report-builder/report-builder.component';
+import { MatOptionModule } from '@angular/material/core';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -72,6 +73,7 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatRadioModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatOptionModule,
     DragDropModule
   ],
   exports: [
@@ -104,7 +106,8 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatRadioModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    DragDropModule
+    DragDropModule,
+    MatOptionModule
   ],
   providers: [PdfService],
   

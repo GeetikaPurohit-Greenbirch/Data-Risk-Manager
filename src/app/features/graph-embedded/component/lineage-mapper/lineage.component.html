@@ -1,0 +1,36 @@
+<!-- <div class="toolbar">
+  <label class="zoom-control">
+    Zoom:
+    <input type="range" min="20" max="300" [value]="scale * 100" (input)="onZoomSliderChange($event)">
+    <span>{{ scaleDisplay }}%</span>
+  </label>
+
+  <button class="icon-button" (click)="resetZoom()" title="Reset Zoom">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="1 4 1 10 7 10"></polyline>
+      <path d="M3.51 15a9 9 0 1 0 .49-5.61L1 10"></path>
+    </svg>
+  </button>
+
+  <input type="file" id="loadFile" class="file-input" (change)="loadGraphFromFile($event)" accept=".json" hidden />
+  <label for="loadFile" class="button">📂 Load</label>
+
+  <button class="button" (click)="saveGraph()" >💾 Save</button>
+  <button class="button" (click)="resetGraph()">🧹 New Diagram</button>
+</div> -->
+
+<!-- <app-header></app-header> -->
+
+<div class="main-container">
+  <!-- <app-sidebar></app-sidebar> -->
+
+  <main class="dashboard-container">
+
+<div class="toolbar">
+  <!-- <div class="toolbar-title">{{ lineages?.name }}</div> -->
+  <div class="block-item" (click)="saveGraph()">Save</div>
+</div>
+
+<div #canvas class="paper-container"></div>
+</main>
+</div>
