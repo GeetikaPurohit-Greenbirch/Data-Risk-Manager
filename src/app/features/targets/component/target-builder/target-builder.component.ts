@@ -18,7 +18,7 @@ export class TargetBuilderComponent {
 targetForm!: FormGroup;
   statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
   serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
-  targetTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
+  targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER'];
   targetModel : Target = new Target();
   timeOptions: string[] = [];
   frequencyLimit = 1;

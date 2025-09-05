@@ -86,7 +86,7 @@ export class EditTargetComponent {
          {
            headerName: 'C= Completeness',
            field: 'dqa_c',
-           editable: true,
+           editable: false,
           //  valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -105,7 +105,7 @@ export class EditTargetComponent {
          {
            headerName: 'T= Timeliness',
            field: 'dqa_t',
-           editable: true,
+           editable: false,
           //  valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -124,7 +124,7 @@ export class EditTargetComponent {
          {
            headerName: 'A= Accuracy',
            field: 'dqa_a',
-           editable: true,
+           editable: false,
           //  valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -499,9 +499,9 @@ export class EditTargetComponent {
  
    // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
    this.dataFieldsModel.field_name = data.data.field_name;
-   this.dataFieldsModel.dqa_c = "L";
-   this.dataFieldsModel.dqa_t = "L";
-   this.dataFieldsModel.dqa_a = "L";
+   this.dataFieldsModel.dqa_c = data.data.dqa_c;
+  this.dataFieldsModel.dqa_t = data.data.dqa_t;
+  this.dataFieldsModel.dqa_a = data.data.dqa_a;
    this.dataFieldsModel.data_type = data.data.data_type;
    this.dataFieldsModel.field_length = data.data.field_length;
    this.dataFieldsModel.criticality = data.data.criticality;

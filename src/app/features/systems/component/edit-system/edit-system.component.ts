@@ -822,7 +822,8 @@ export class EditSystemComponent{
   }
 
   addRow() {
-    const newItem = { entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
+    this.cdr.detectChanges();
+    const newItem = {entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
     this.rowDataInput = [...this.rowDataInput, newItem];
   }
 
@@ -1207,7 +1208,7 @@ loadDropdownOptions(): void {
   saveDatafields(data:any)
   {
     console.log(data, "Interface Data Fields");
-
+  this.dataFieldsModel.entity_id = this.systemId;
   this.dataFieldsModel.field_id = data.data.field_id;
   this.dataFieldsModel.field_name = data.data.field_name;
   this.dataFieldsModel.dqa_c = data.data.dqa_c;
@@ -1220,7 +1221,7 @@ loadDropdownOptions(): void {
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;
   this.dataFieldsModel.entity_type = data.data.entity_type;
-  this.dataFieldsModel.entity_id = data.data.entity_id;
+  // this.dataFieldsModel.entity_id = data.data.entity_id;
  
       // alert("Data field added Successfully.");
       if(!data.data.field_id)
@@ -1229,7 +1230,7 @@ loadDropdownOptions(): void {
 
         this.toastNotificationService.success("Data field added Successfully.");
         setTimeout(() => {
-          this.getDataFields(); // refresh
+          this.loadInboundInterfaces(); // refresh
   
         }, 1000);
       });
@@ -1240,7 +1241,7 @@ loadDropdownOptions(): void {
 
           this.toastNotificationService.success("Data field updated Successfully.");
           setTimeout(() => {
-            this.getDataFields(); // refresh
+            this.loadInboundInterfaces(); // refresh
     
           }, 1000);
         });
@@ -1252,6 +1253,7 @@ loadDropdownOptions(): void {
 
   deleteDAtaFields(data:any)
   {
+       
     this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
       this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
@@ -1260,6 +1262,7 @@ loadDropdownOptions(): void {
 
       }, 1000);
   })
+
   }
 
   addInbound(view: string)
