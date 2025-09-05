@@ -69,7 +69,7 @@ export const blockDefinitions = [
       typeName: 'targets',
       args: { x: 400, y: 100 },
       color: '#fff',
-      size: { width: 200, height: 200 },
+      size: { width: 400, height: 200 },
       allItems: [
         { id: 'reportStatus', label: 'Report Status' },
         { id: 'reportStatus2', label: 'Report Status2' },

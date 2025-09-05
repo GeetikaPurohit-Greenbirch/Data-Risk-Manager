@@ -296,7 +296,7 @@ export class LineageComponent implements AfterViewInit {
       }
     });
 
-    this.paper.setDimensions(1186, 1000);
+    // this.paper.setDimensions(1186, 1000);
 
     this.scroller = new ui.PaperScroller({
       paper: this.paper,
@@ -310,8 +310,8 @@ export class LineageComponent implements AfterViewInit {
 
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
-    this.scroller.center();
-    this.paper.unfreeze(); // Unfreeze the paper after initial setup
+    // this.scroller.center();
+    // this.paper.unfreeze(); // Unfreeze the paper after initial setup
 
     // --- Event Listeners for Paper and Graph ---
     this.paper.on('element:mousewheel', (recordView: dia.ElementView, evt: dia.Event, x: number, y: number, delta: number) => {
@@ -322,15 +322,15 @@ export class LineageComponent implements AfterViewInit {
       }
     });
 
-    this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    // this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
+    //   evt.preventDefault();
+    //   this.zoom(ox, oy, delta);
+    // });
 
-    this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    // this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
+    //   evt.preventDefault();
+    //   this.zoom(ox, oy, delta);
+    // });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
@@ -491,7 +491,7 @@ export class LineageComponent implements AfterViewInit {
         return "SYSTEM";
       case "interfaces":
         return "INTERFACE";
-      case "target":
+      case "targets":
         return "TARGET";
       case "control":
         return "CONTROLS";

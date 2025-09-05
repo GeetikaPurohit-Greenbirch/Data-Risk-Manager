@@ -3,7 +3,7 @@ import { dia } from '@joint/plus';
 import { Link, Constant, Concat, GetDate, Record, SingleBlock } from './shapes.component';
 
 // Import blockDefinitions from its separate file
-import { blockDefinitions } from '../diagram/block-definitions';
+import { blockDefinitions } from './block-definitions';
 
 
 type Port = {
