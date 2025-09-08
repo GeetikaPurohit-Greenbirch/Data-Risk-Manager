@@ -206,7 +206,7 @@ public normalizeTypeName(typeName: string) {
       return "SYSTEM";
     case "interfaces":
       return "INTERFACE";
-    case "target":
+    case "targets":
       return "TARGET";
     case "control":
       return "CONTROLS";

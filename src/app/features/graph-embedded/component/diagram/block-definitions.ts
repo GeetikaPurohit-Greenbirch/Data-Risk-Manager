@@ -9,7 +9,7 @@ export const blockDefinitions = [
       typeName: 'sources',
       color: '#fff',
       args: { x: 15, y: 50 },
-      size: { width: 150, height: 200 },
+      size: { width: 150, height: 40 },
       ports: [
         { id: 'out1', group: 'out', attrs: { portLabel: { text: 'Output', fontSize: 14, fill: '#00FA00' } } }
       ],
@@ -22,7 +22,7 @@ export const blockDefinitions = [
       typeName: 'systems',
       color: '#fff',
       args: { x: 115, y: 50 },
-      size: { width: 150, height: 200 },
+     size: { width: 150, height: 40 },
       ports: [
         { id: 'in1', group: 'in', attrs: { portLabel: { text: '', fontSize: 14, fill: '#000' } } },
         { id: 'out2', group: 'out', attrs: { portLabel: { text: '', fontSize: 14, fill: '#000' } } }

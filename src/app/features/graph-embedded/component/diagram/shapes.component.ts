@@ -191,6 +191,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
       itemOffset: 5,
       padding: { top: 35, left: 10, right: 0, bottom: 0 },
       itemMinLabelWidth: 100,
+      scrollTop: 0,
       itemOverflow: true,
       collapsed: false,
       expandedSize: null,

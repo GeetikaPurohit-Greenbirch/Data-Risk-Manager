@@ -369,6 +369,10 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             newCell.attr('forksGroups/stroke', 'lightgray');
             (newCell as Concat).setCaretIcon()
 
+            if(selectedItemDetails?.type === "target"){
+                (newCell as Concat).setItems(dataToPass)
+            }
+
 
             //     .setName(selectedValue || blockDefinition.typeName)
             //     .addPorts(result.ports)

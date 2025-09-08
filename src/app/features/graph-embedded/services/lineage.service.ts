@@ -71,6 +71,11 @@ export class LineageService {
         return this.http.post<any>(url, payload);
     }
 
+      public updateLineageDetailsByLinkId(linkId: string,usecaseId: string, payload:any){
+        const url: string = this.apiUrl + `lineage/fields/json/${usecaseId}/${linkId}`;
+        return this.http.put<any>(url, payload);
+    }
+
       public getLineageDetailsByLinkId(linkId: string,usecaseId: string){
         const url: string = this.apiUrl + `lineage/fields/json/${usecaseId}/${linkId}`;
         return this.http.get<any>(url);
