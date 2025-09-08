@@ -97,6 +97,9 @@ export class CreateLineageComponent {
             if (cell.get('customType') === 'inbound') {
               return { elementMove: false }; // disable moving inbound fields
             }
+            if (cell.get('customType') === 'outbound') {
+              return { elementMove: false }; // disable moving inbound fields
+            }
             return true;
           },
           linkPinning: false,
@@ -253,7 +256,7 @@ export class CreateLineageComponent {
         const label = `${field.interface} | ${field.fieldName} | ${field.fieldId}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: leftX, y: startY + i * spacing },
-          size: { width: 200, height: 40 },
+          size: { width: 250, height: 50 },
           markup: [
             { tagName: 'rect', selector: 'body' },
             { tagName: 'image', selector: 'image' },  // 👈 add icon element
@@ -272,7 +275,7 @@ export class CreateLineageComponent {
               'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
               width: 18,
               height: 24,
-              x: 3,
+              x: 6,
               y: 10,
             },
             label: {
@@ -280,6 +283,7 @@ export class CreateLineageComponent {
               fill: '#333',
               fontSize: 12,
               fontWeight: 'bold',
+              x: 8,
               refX: 28, // offset right after the icon
               refY: 22,
               textAnchor: 'start',
@@ -320,7 +324,7 @@ export class CreateLineageComponent {
               if (labelEl) {
                 const bbox = labelEl.getBBox();
                 // 3️⃣ Resize rect height according to text
-                rect.resize(300, bbox.height + 20); // +20 for padding
+                rect.resize(250, bbox.height + 50); // +20 for padding
               }
             }
           }, 0);
@@ -338,7 +342,7 @@ export class CreateLineageComponent {
         const label = `${field.interface} | ${field.fieldName} | ${field.fieldId}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: rightX, y: startY + i * spacing },
-          size: { width: 200, height: 40 },
+          size: { width: 250, height: 50 },
           markup: [
             { tagName: 'rect', selector: 'body' },
             { tagName: 'image', selector: 'image' },  // 👈 add icon element
@@ -356,7 +360,7 @@ export class CreateLineageComponent {
               'xlink:href': 'assets/images/icons-random-48.png', // <-- your assets path
               width: 18,
               height: 24,
-              x: 15,
+              x: 10,
               y: 17,
             },
             label: {
@@ -364,6 +368,7 @@ export class CreateLineageComponent {
               fill: '#333',
               fontSize: 12,
               fontWeight: 'bold',
+              x: 15,
               textWrap: {
                 width: -20,   // available width inside the rect (200px - padding)
                 height: 'auto',
@@ -401,11 +406,12 @@ export class CreateLineageComponent {
               if (labelEl) {
                 const bbox = labelEl.getBBox();
                 // 3️⃣ Resize rect height according to text
-                rect.resize(300, bbox.height + 20); // +20 for padding
+                rect.resize(250, bbox.height + 50); // +20 for padding
               }
             }
           }, 0);
 
+          rect.set('customType', 'outbound');
         rect.set('customFieldId', field.fieldId);
         rect.addTo(this.graph);
         this.elementsMap['out-' + i] = rect;

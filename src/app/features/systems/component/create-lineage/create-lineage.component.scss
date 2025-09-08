@@ -35,7 +35,7 @@
 
 .paper-scroll {
   width: 100%;
-  height: calc(100vh - 100px); // adjust as needed
+  height: calc(100vh - 250px); // adjust as needed
   overflow: auto; // ✅ shows scrollbar
   border: 1px solid #ccc;
 }
