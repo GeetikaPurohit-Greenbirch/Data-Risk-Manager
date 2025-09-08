@@ -677,6 +677,11 @@ public enrichLinksWithNormalizedTypeName(json:any) {
 
   }
 
+  goBack=() => {
+this.router.navigate(['/graph-embedded']);
+
+  }
+
   loadGraphFromFile(e: any) {
     const file = e.target.files[0];
     if (file) {

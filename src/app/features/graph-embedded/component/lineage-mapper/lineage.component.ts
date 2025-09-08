@@ -1,4 +1,4 @@
-// diagram.component.ts (NO CHANGES NEEDED - it's already correct for this flow)
+// diagram.component.ts
 
 import {
   Component,
@@ -31,9 +31,7 @@ import { LineageService } from '../../services/lineage.service';
 import { catchError } from 'rxjs/operators';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
-
 type Records = Constant | Concat | GetDate | Record;
-
 
 @Component({
   selector: 'app-child-diagram',
@@ -56,15 +54,13 @@ export class LineageComponent implements AfterViewInit {
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
-
+  ) {}
 
   source: any = null;
   target: any = null;
   initialData: any = null;
 
   private destroy$ = new Subject<void>();
-
 
   private getFirstQueryParamWithType(keys: string[]): { type: string; value: string } {
     const pm: ParamMap = this.route.snapshot.queryParamMap;
@@ -76,14 +72,12 @@ export class LineageComponent implements AfterViewInit {
   }
 
   public loadData = () => {
-
     const sourceQP = this.getFirstQueryParamWithType([
       'source-sources', 'source-systems', 'source-targets', 'source-controls'
     ]);
     const targetQP = this.getFirstQueryParamWithType([
       'target-sources', 'target-systems', 'target-targets', 'target-controls'
     ]);
-
 
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
@@ -131,19 +125,12 @@ export class LineageComponent implements AfterViewInit {
         }
       }
     });
-
-
   }
-
-
 
   public ngOnInit(): void {
     // This is a good place for initial setup that doesn't require DOM access
-
     this.loadData();
-
   }
-
 
   public showLinkTools(linkView: dia.LinkView) {
     const tools = new dia.ToolsView({
@@ -161,13 +148,17 @@ export class LineageComponent implements AfterViewInit {
     linkView.addTools(tools);
   }
 
-
   public linkAction(link: Link) {
-
     link.remove();
-
   }
 
+  public goBack = () => {
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const lineageId = (segments[segments.length - 2] || '');
+    const usecaseId = (segments[segments.length - 3] || '');
+    this.router.navigate([`/graph-embedded/edit-lineage/${usecaseId}/${lineageId}`]);
+  }
 
   public clearHighlights() {
     const allLinks = this.graph.getLinks();
@@ -186,7 +177,6 @@ export class LineageComponent implements AfterViewInit {
     });
   }
 
-
   public tracePathNew(element: dia.Element, portId: string): boolean {
     const incomingLinks = this.graph.getConnectedLinks(element, {
       inbound: true
@@ -200,7 +190,7 @@ export class LineageComponent implements AfterViewInit {
       if (!source?.id || !source?.port) continue;
       const sourceElement = this.graph.getCell(source.id);
       if (!sourceElement) continue;
-      const sourceAttrs = sourceElement.attributes?.attrs || {};
+      const sourceAttrs = (sourceElement as any).attributes?.attrs || {};
       const sourceName = sourceAttrs['title']?.text || 'Unnamed';
       const incomingLinksOfSource = this.graph.getConnectedLinks(sourceElement, {
         inbound: true
@@ -237,9 +227,7 @@ export class LineageComponent implements AfterViewInit {
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
 
     // --- Initialize Graph, Paper, and Scroller ONCE ---
-    this.graph = new dia.Graph({
-
-    }, { cellNamespace: shapes });
+    this.graph = new dia.Graph({}, { cellNamespace: shapes });
 
     this.paper = new dia.Paper({
       model: this.graph,
@@ -296,8 +284,6 @@ export class LineageComponent implements AfterViewInit {
       }
     });
 
-    // this.paper.setDimensions(1186, 1000);
-
     this.scroller = new ui.PaperScroller({
       paper: this.paper,
       autoResizePaper: false, // important: disables scroll management
@@ -307,13 +293,8 @@ export class LineageComponent implements AfterViewInit {
       cursor: 'grab'
     });
 
-
-    // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
-    // this.scroller.center();
-    // this.paper.unfreeze(); // Unfreeze the paper after initial setup
 
-    // --- Event Listeners for Paper and Graph ---
     this.paper.on('element:mousewheel', (recordView: dia.ElementView, evt: dia.Event, x: number, y: number, delta: number) => {
       evt.preventDefault();
       const record = recordView.model as any;
@@ -322,27 +303,16 @@ export class LineageComponent implements AfterViewInit {
       }
     });
 
-    // this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
-
-    // this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
-
-
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
       this.showLinkTools(linkView);
-    })
+    });
 
     this.paper.on('link:mouseleave', (linkView: dia.LinkView) => {
       linkView.removeTools();
     });
 
     this.graph.on('add', (cell) => {
-      if (cell.get('type') === 'mapping.Record') {
+      if ((cell as any).get('type') === 'mapping.Record') {
         // Ensure the view is rendered before adding tools
         const cellView = this.paper.findViewByModel(cell);
         if (cellView) {
@@ -352,10 +322,6 @@ export class LineageComponent implements AfterViewInit {
         }
       }
     });
-
-    this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
-      // showLinkTools(linkView);
-    })
 
     this.paper.on('element:magnet:pointerdblclick', (elementView, evt, magnet) => {
       const model = elementView.model; // dia.Element
@@ -371,43 +337,10 @@ export class LineageComponent implements AfterViewInit {
       connectedLinks.forEach((link: dia.Link) => {
         const target = link.get('target');
         const source = link.get('source');
-        console.log('Target Port:', target, source, 'on Link:', link.id);
-      })
-      this.clearHighlights()
+        console.log('Target Port:', target, source, 'on Link:', (link as any).id);
+      });
+      this.clearHighlights();
       this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
-
-
-    });
-
-
-    // --- Drop Event Listener (now only adds to existing graph) ---
-    container.addEventListener('drop', (e: DragEvent) => {
-      e.preventDefault();
-
-      const block = JSON.parse(e.dataTransfer?.getData('block') || '{}');
-
-      // Crucial: Add the actual drop coordinates to the block data
-      const paperLocalPoint = this.paper.clientToLocalPoint({ x: e.clientX, y: e.clientY });
-      block.x = paperLocalPoint.x;
-      block.y = paperLocalPoint.y;
-      console.log('Dropped block:', block);
-
-      const dialogRef = this.dialog.open(NodeDropModalComponent, {
-        width: '300px',
-        data: block // Now block contains x and y coordinates, and full block definition
-      });
-
-      dialogRef.afterClosed().subscribe((selectedValue: string) => {
-        if (!selectedValue) return; // User canceled
-
-        // Use the existing graph instance to add the new element
-        // loadExample(this.graph, selectedValue, block); // Pass the full 'block' data
-
-        // You might want to recenter or adjust the view after adding
-        // If loadExample adds elements, the scroller might need to re-evaluate its content.
-        // For simple additions, JointJS usually handles rendering automatically.
-        // If you add many elements, consider freezing/unfreezing the paper around the additions.
-      });
     });
 
     const styleId = 'jointjs-dash-animation-style';
@@ -428,11 +361,11 @@ export class LineageComponent implements AfterViewInit {
     }
 
     try {
-
       const path = this.router.url.split('?')[0].split('#')[0];
       const segments = path.split('/').filter(Boolean);
       const layoutId = (segments[segments.length - 1] || '').toUpperCase();
       console.log('Current path:', path, 'Layout ID:', layoutId);
+
       // Map routes to your JSON presets
       const presetByPath: any = {
         '/L001': L001,
@@ -440,9 +373,6 @@ export class LineageComponent implements AfterViewInit {
         '/L003': L003
         // add more like '/L003': L003
       };
-
-      // Current path without query/hash
-      // const path = this.router.url.split('?')[0].split('#')[0];
 
       const preset = presetByPath[`/${layoutId}`];
       if (preset) {
@@ -470,10 +400,8 @@ export class LineageComponent implements AfterViewInit {
   // saveGraph() {
   //   const json = this.graph.toJSON();
   //   const jsonString = JSON.stringify(json, null, 2); // Pretty print
-
   //   const blob = new Blob([jsonString], { type: 'application/json' });
   //   const url = URL.createObjectURL(blob);
-
   //   const link = document.createElement('a');
   //   link.href = url;
   //   link.download = 'diagram.json'; // Change name if needed
@@ -485,53 +413,132 @@ export class LineageComponent implements AfterViewInit {
 
   public normalizeTypeName(typeName: string) {
     switch (typeName.toLowerCase()) {
-      case "sources":
-        return "SOURCE";
-      case "systems":
-        return "SYSTEM";
-      case "interfaces":
-        return "INTERFACE";
-      case "targets":
-        return "TARGET";
-      case "control":
-        return "CONTROLS";
+      case 'sources':
+        return 'SOURCE';
+      case 'systems':
+        return 'SYSTEM';
+      case 'interfaces':
+        return 'INTERFACE';
+      case 'targets':
+        return 'TARGET';
+      case 'control':
+        return 'CONTROLS';
       default:
         return typeName.toUpperCase();
     }
   }
 
-  public enrichLinksWithNormalizedTypeName(json: any) {
-    const idToNormalizedTypeName: any = {};
+  // === NEW HELPERS ==============================================
 
-    // Step 1: Map Concat node IDs to normalized typeNames
-    json.cells.forEach((cell: any) => {
-      if (cell.type === "mapping.Concat" && cell.id && cell.attrs?.typeName) {
-        const rawTypeNameObj = cell.attrs.typeName;
-        const rawTypeName = Object.values(rawTypeNameObj).join(""); // e.g., {0:'s',1:'y'...} → "systems"
-        const normalized = this.normalizeTypeName(rawTypeName);
-        idToNormalizedTypeName[cell.id] = normalized;
+  /** Safely extract a raw typeName from a Concat cell.
+   * Supports:
+   * - cell.typeName as string
+   * - cell.attrs.typeName as string
+   * - cell.attrs.typeName as object-of-characters {0:'s',1:'y',...}
+   */
+  private getRawTypeName(cell: any): string {
+    if (!cell) return '';
+    if (typeof cell.typeName === 'string') return cell.typeName;
+    const t = cell?.attrs?.typeName;
+    if (typeof t === 'string') return t;
+    if (t && typeof t === 'object') {
+      try {
+        return Object.values(t).join('');
+      } catch {
+        return '';
+      }
+    }
+    return '';
+  }
+
+  /** Build a map of { portId -> item.type } from a mapping.Concat cell's nested items. */
+  private buildConcatPortTypeIndex(concatCell: any): any {
+    const idx: any = {};
+    const groups = Array.isArray(concatCell?.items) ? concatCell.items : [];
+    for (const group of groups) {
+      const sections = Array.isArray(group) ? group : [];
+      for (const section of sections) {
+        const leafItems = Array.isArray(section?.items) ? section.items : [];
+        for (const leaf of leafItems) {
+          const id = leaf?.id;
+          const t = (leaf?.type ?? '').trim();
+          if (id !== undefined && id !== null && t) {
+            idx[String(id)] = t.toUpperCase();
+          }
+        }
+      }
+    }
+    return idx;
+  }
+
+  // === UPDATED METHOD ============================================
+
+  /** Enrich links so source.type/target.type reflect the exact port item type when available,
+   *  falling back to the Concat node's normalized type.
+   */
+  public enrichLinksWithNormalizedTypeName(json: any) {
+    // nodeId -> normalized node type (SYSTEM/TARGET/INTERFACE/SOURCE/CONTROLS/...)
+    const idToNormalizedTypeName: any= {};
+    // nodeId -> (portId -> item type) from Concat leaf items
+    const nodePortTypeMap: any = {};
+
+    // Step 1: build maps from Concat cells
+    (json.cells || []).forEach((cell: any) => {
+      if (cell?.type !== 'mapping.Concat' || !cell.id) return;
+
+      // node-level normalized type
+      const rawTypeName = this.getRawTypeName(cell);
+      if (rawTypeName) {
+        idToNormalizedTypeName[cell.id] = this.normalizeTypeName(rawTypeName);
+      }
+
+      // per-port type map
+      const portIndex = this.buildConcatPortTypeIndex(cell);
+      if (Object.keys(portIndex).length) {
+        nodePortTypeMap[cell.id] = portIndex;
       }
     });
 
-    // Step 2: Add normalized typeNames to link source/target
-    json.cells.forEach((cell: any) => {
-      if (cell.type === "mapping.Link") {
-        if (cell.source?.id && idToNormalizedTypeName[cell.source.id]) {
-          cell.source.type = idToNormalizedTypeName[cell.source.id];
+    console.log('ID to Normalized TypeName Map:', idToNormalizedTypeName);
+    // console.log('Node Port Type Map:', nodePortTypeMap);
+
+    // Step 2: enrich links using exact port type, fallback to node type
+    (json.cells || []).forEach((cell: any) => {
+      if (cell?.type !== 'mapping.Link') return;
+
+      const applyType = (endpoint: 'source' | 'target') => {
+        const ep = cell[endpoint];
+        if (!ep?.id) return;
+
+        const nodeId = String(ep.id);
+        const portId = ep.port != null ? String(ep.port) : '';
+        let resolved: string | undefined;
+
+        // 1) exact port type if available
+        const portMap = nodePortTypeMap[nodeId];
+        if (portMap && portId && portMap[portId]) {
+          resolved = portMap[portId];
         }
-        if (cell.target?.id && idToNormalizedTypeName[cell.target.id]) {
-          cell.target.type = idToNormalizedTypeName[cell.target.id];
+
+        // 2) fallback to node normalized type
+        if (!resolved && idToNormalizedTypeName[nodeId]) {
+          resolved = idToNormalizedTypeName[nodeId];
         }
-      }
+
+        if (resolved) {
+          cell[endpoint] = { ...(ep || {}), type: resolved };
+        }
+      };
+
+      applyType('source');
+      applyType('target');
     });
 
     return json;
   }
 
-
   saveGraph() {
     const json = this.graph.toJSON();
-
     const ddata = this.enrichLinksWithNormalizedTypeName(json);
     const jsonString = JSON.stringify(ddata, null, 2); // Pretty print
 
@@ -540,30 +547,15 @@ export class LineageComponent implements AfterViewInit {
     const linkId = (segments[segments.length - 1] || '');
     const usecaseId = (segments[segments.length - 3] || '');
 
-
-    // const blob = new Blob([jsonString], { type: 'application/json' });
-    // const url = URL.createObjectURL(blob);
-
-    // const link = document.createElement('a');
-    // link.href = url;
-    // link.download = 'diagram.json'; // Change name if needed
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    // URL.revokeObjectURL(url); // Clean up
-
-
     this.lineageService.saveLineageDetailsByLinkId(linkId, usecaseId, jsonString).subscribe({
       next: (response) => {
-        console.log("Lineage saved successfully:", response);
+        console.log('Lineage saved successfully:', response);
         this.toastNotificationService.success('Lineage Saved successfully');
       },
       error: (err) => {
-        console.error("Failed to save lineage:", err);
+        console.error('Failed to save lineage:', err);
       }
     });
-
-
   }
 
   loadGraphFromFile(e: any) {

@@ -1,13 +1,15 @@
-/* JointJS canvas fill */
+/* === JointJS Canvas Full Fill === */
 ::ng-deep .joint-paper {
   width: 100% !important;
   height: 100% !important;
   left: 0 !important;
   top: 0 !important;
 }
-::ng-deep .joint-viewport { stroke-width: 0 !important; }
+::ng-deep .joint-viewport {
+  stroke-width: 0 !important;
+}
 
-/* Height flow */
+/* === Height Flow === */
 :host,
 .main-container,
 .dashboard-container,
@@ -18,7 +20,7 @@
   height: 100%;
 }
 
-/* Page layout */
+/* === Main Page Layout === */
 .main-container {
   display: flex;
   min-height: 100vh;
@@ -27,24 +29,22 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 
-/* Graph layout */
+/* === Graph Section Layout === */
 .graph-box {
-  position: relative; /* for the floating toggle button */
+  position: relative;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+  padding: 0 15px;
+  margin: 0 auto;
   box-sizing: border-box;
 
   .graph-row {
     display: flex;
     flex: 1;
     flex-wrap: nowrap;
-    margin-right: -15px;
-    margin-left: -15px;
+    margin: 0 -15px;
   }
 
   .graph-col-3,
@@ -78,68 +78,89 @@
     }
   }
 
-  /* Collapsed state */
+  /* === Collapsed State === */
   &.nodes-collapsed {
     .graph-col-3 {
       flex-basis: 0%;
       max-width: 0%;
-      padding: 0;      /* remove gutter */
+      padding: 0;
       margin: 0;
-      overflow: hidden; /* hide content */
+      overflow: hidden;
     }
+
     .graph-col-9 {
       flex-basis: 100%;
       max-width: 100%;
     }
+
+    .collapse-btn {
+      left: 6px;
+    }
   }
 
-  /* Floating toggle button between panes */
+  /* === Floating Collapse Button === */
   .collapse-btn {
     position: absolute;
     top: 12px;
-    left: calc(6% + 6px); /* sits near the divider in expanded state */
+    left: calc(6% + 6px);
     z-index: 2;
+    width: 28px;
+    height: 28px;
     border: 1px solid #d9d9d9;
     background: #fff;
     border-radius: 14px;
-    width: 28px;
-    height: 28px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     line-height: 26px;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,.08);
     transition: left 200ms ease, transform 200ms ease;
 
-    &:hover { transform: scale(1.05); }
-  }
+    i {
+      font-size: 14px;
+      color: #3f51b5;
+    }
 
-  &.nodes-collapsed .collapse-btn {
-    /* when collapsed, park the button at the left gutter */
-    left: 6px;
-    /* arrow already flips via template content */
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }
 
-/* Optional: small header bar inside nodes panel */
+/* === Panel Header (like Toolbar Style) === */
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 12px 0px;
-  border-bottom: 1px solid #eee;
+  background-color: #555555;
+  color: #000;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
 
   .panel-title {
-    margin: 0;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
+    margin: 0;
+    color: #fff;
   }
+
+  .collapse-btn,
   .panel-collapse {
-    border: 1px solid #d9d9d9;
-    background: #fff;
-    border-radius: 6px;
-    padding: 2px 6px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
     cursor: pointer;
-    line-height: 1;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    i {
+      color: #fff;
+    }
   }
 }

@@ -1,33 +1,10 @@
-
 <div class="main-container">
-
-  <main class="dashboard-container">
+  <main class="dashboard-container" style="padding: 0">
     <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
+
+        <app-diagram></app-diagram>
       <!-- Collapse toggle -->
      
-      <div class="graph-row">
-        <div class="graph-col-3">
-          <div class="panel-header">
-            <h3 class="panel-title">Nodes</h3>
-            <button
-        class="collapse-btn"
-        type="button"
-        (click)="toggleNodes()"
-        [attr.aria-expanded]="!nodesCollapsed"
-        [attr.aria-label]="nodesCollapsed ? 'Expand nodes panel' : 'Collapse nodes panel'"
-      >
-        <span *ngIf="nodesCollapsed">➤</span>
-        <span *ngIf="!nodesCollapsed">◀</span>
-      </button>
-
-          </div>
-          <app-nodes></app-nodes>
-        </div>
-
-        <div class="graph-col-9">
-          <app-diagram></app-diagram>
-        </div>
-      </div>
     </div>
   </main>
 </div>
