@@ -167,7 +167,7 @@
         <div class="aggrid">
         <ag-grid-angular
         class="ag-theme-alpine"
-        style="width: 100%; height: 580px;"
+        style="width: 100%; height: 720px;"
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         (gridReady)="onGridReady($event)"
@@ -186,16 +186,21 @@
   <div class="popup-box row">
     
 <div class="col-md-5">
+  <form [formGroup]="targetUseCaseForm">
+<!-- <select [(ngModel)]="selectedUseCaseId" class="full-width" *ngIf="formLoaded">
+  <option vlaue="">Select Use Case</option>
+  <option *ngFor="let uc of useCases" [value]="uc.use_case_id">        {{ uc.use_case_name }}
+  </option>
+</select> -->
   <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
     <mat-label>Select Use Case</mat-label>
-    <mat-select [(ngModel)]="selectedUseCaseId">
+    <mat-select formControlName="selectedUseCaseId">
       <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id">
         {{ uc.use_case_name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <pre>{{ useCases | json }}</pre>
-
+  </form>
    
     </div>
 <div class="col-md-6">

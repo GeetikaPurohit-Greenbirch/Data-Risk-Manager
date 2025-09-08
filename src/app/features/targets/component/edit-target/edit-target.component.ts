@@ -24,6 +24,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class EditTargetComponent {
   targetForm!: FormGroup;
+  targetUseCaseForm!: FormGroup;
    showDataFields = true;
    showDataQuality = false;
    showDataFieldsTable = true;
@@ -35,6 +36,7 @@ export class EditTargetComponent {
    scheduleLimitReached = false;
    formLoaded = false;
    showReport = false;
+   selectedUseCaseId: string | null = null;
 
  
    // ✅ DataFields table data
@@ -234,7 +236,7 @@ export class EditTargetComponent {
     }
   }
   useCases: any[] = [];
-  selectedUseCaseId: string | null = null;
+  // selectedUseCaseId: string | null = null;
   
   openReportBuilder() {
     this.showReport = true;
@@ -248,10 +250,16 @@ export class EditTargetComponent {
         next: (data) => {
           this.useCases = data;
           this.formLoaded = true;
+      
 
         },
         error: (err) => {
           console.error('Failed to fetch use cases', err);
+          if (err.status === 404) {
+            alert("No use cases found (404).");
+          } else {
+            alert("An error occurred while fetching use cases.");
+          }
         }
       });
   }
@@ -262,7 +270,7 @@ export class EditTargetComponent {
   }
 
   confirmUseCase() {
-    if (!this.selectedUseCaseId) {
+    if (!this.targetUseCaseForm.value.selectedUseCaseId) {
       alert('Please select a use case first.');
       return;
     }
@@ -272,7 +280,7 @@ export class EditTargetComponent {
       ...this.options,
       contents: {
         ...this.options.contents,
-        useCaseId: this.selectedUseCaseId
+        useCaseId: this.targetUseCaseForm.value.selectedUseCaseId
       }
     };
   
@@ -296,7 +304,7 @@ export class EditTargetComponent {
     console.log('Report payload:', payload);
 
     this.http.post(
-      `https://api.dev.datariskmanager.net/lineage/reports/sample?disposition=inline`,
+      `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.targetUseCaseForm.value.selectedUseCaseId}?disposition=inline`,
       payload,
       { responseType: 'blob' } // handle PDF/Excel
     ).subscribe({
@@ -328,6 +336,9 @@ export class EditTargetComponent {
  
    ngOnInit(): void {
      console.log('Editing target with ID:', this.targetId);
+     this.targetUseCaseForm = this.fb.group({
+      selectedUseCaseId:[''],
+     });
      this.targetForm = this.fb.group({
        target_name: [''],
        quality_of_service: [''],

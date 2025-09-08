@@ -176,10 +176,7 @@ editableColumns: string[] = [
     
     this.getSystemList();
     this.getChildGriddata();
-    // this.rowData= [];
-    // this.replaceLastPageSizeLabel();
-    this.pageSizeOptions = [this.rowData.length, 5, 10, 50]; // "All" is first
-
+   
   }
 
   ngAfterViewInit() {
@@ -279,7 +276,7 @@ saveChildGrid(parentRow: any) {
           this.systems = systemsWithChildData;
                 this.rowData = this.systems;
 
-      this.dataSource = new MatTableDataSource(this.systems);
+      // this.dataSource = new MatTableDataSource(this.systems);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       // this.pageSizeOptions = [2, 3, 5, this.systems.length];
