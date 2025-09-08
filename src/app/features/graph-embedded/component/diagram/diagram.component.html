@@ -1,27 +1,36 @@
-<!-- <div class="toolbar">
-  <label class="zoom-control">
-    Zoom:
-    <input type="range" min="20" max="300" [value]="scale * 100" (input)="onZoomSliderChange($event)">
-    <span>{{ scaleDisplay }}%</span>
-  </label>
-
-  <button class="icon-button" (click)="resetZoom()" title="Reset Zoom">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="1 4 1 10 7 10"></polyline>
-      <path d="M3.51 15a9 9 0 1 0 .49-5.61L1 10"></path>
-    </svg>
-  </button>
-
-  <input type="file" id="loadFile" class="file-input" (change)="loadGraphFromFile($event)" accept=".json" hidden />
-  <label for="loadFile" class="button">📂 Load</label>
-
-  <button class="button" (click)="saveGraph()" >💾 Save</button>
-  <button class="button" (click)="resetGraph()">🧹 New Diagram</button>
-</div> -->
-
 <div class="toolbar">
+  <div class="back-icon" (click)="goBack()">
+     <i class="fa fa-arrow-left" ></i>
+  </div>
   <div class="toolbar-title">{{ lineages?.name }}</div>
   <div class="block-item" (click)="saveGraph()">Save</div>
 </div>
 
-<div #canvas class="paper-container"></div>
+
+
+<div class="graph-box" >
+      <!-- Collapse toggle -->
+ <div class="graph-row">
+        <div class="graph-col-3">
+          <div class="panel-header">
+            <h3 class="panel-title">Entity</h3>
+           <!-- <button
+              class="collapse-btn"
+              type="button"
+              (click)="toggleNodes()"
+              [attr.aria-expanded]="!nodesCollapsed"
+              [attr.aria-label]="nodesCollapsed ? 'Expand nodes panel' : 'Collapse nodes panel'"
+            >
+              <i *ngIf="nodesCollapsed" class="fa fa-chevron-right"></i>
+              <i *ngIf="!nodesCollapsed" class="fa fa-chevron-left"></i>
+            </button> -->
+          </div>
+
+          <app-nodes></app-nodes>
+        </div>
+
+        <div class="graph-col-9">
+        <div #canvas class="paper-container"></div>
+        </div>
+      </div>
+</div>

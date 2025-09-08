@@ -19,7 +19,7 @@ type ParentNode = {
     id: string;
     label: string;
     icon: string;
-    items: Array<{ id: string; label: string; icon: string }>;
+    items: Array<{ id: string; label: string; icon: string, type?: string }>;
 };
 
 type BuildResult = {
@@ -210,7 +210,8 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
         parent.items.push({
             id: makeId(g, 'port', p.id ?? parent.items.length),
             label: String(p.name ?? '').trim() || String(p.id ?? ''),
-            icon: ' '
+            icon: ' ',
+            type: p.type
         });
     }
 

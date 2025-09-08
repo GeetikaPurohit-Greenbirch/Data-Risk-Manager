@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 @import "~@joint/plus/joint-plus.css";
 
 .paper {
@@ -6,41 +5,6 @@
   height: 300px;
   border: 1px solid #ccc;
   position: relative;
-}
-
-.toolbar {
-  margin-bottom: 10px;
-}
-
-.context-menu {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  z-index: 10;
-  padding: 4px;
-}
-
-.inline-input {
-  border: none!important;
-  outline: none!important;
-  box-shadow: none!important;
-  background: transparent!important;
-  font: inherit!important;
-  color: inherit!important;
-  width: auto!important;
-  padding: 0!important;
-  margin: 0!important;
-}
-inline-input {
-  border: none!important;
-  outline: none!important;
-  box-shadow: none!important;
-  background: transparent!important;
-  font: inherit!important;
-  color: inherit!important;
-  width: auto!important;
-  padding: 0!important;
-  margin: 0!important;
 }
 
 .paper-container {
@@ -51,25 +15,55 @@ inline-input {
   position: relative;
 }
 
+/* === Toolbar === */
 .toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* title left, save button right */
+  justify-content: space-between;
   padding: 8px 16px;
-  background-color: #f5f5f5;
+  background-color: #3f51b5;
   border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  font-weight: 500;
+
+  .back-icon {
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+
+    i {
+      color: #fff; // Font Awesome icon
+    }
+  }
+
+  .toolbar-title {
+    flex-grow: 1;
+    // font-weight: bold;
+    font-size: 18px;
+    color: #fff;
+    padding-left: 16px;
+  }
+
+  .block-item {
+    cursor: pointer;
+    padding: 4px 12px;
+    background-color: #3f51b5;
+    color: #fff;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background-color: #0022aa;
+    }
+  }
 
   .zoom-control {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-weight: 500;
-  }
 
-  input[type="range"] {
-    width: 120px;
+    input[type="range"] {
+      width: 120px;
+    }
   }
 
   .icon-button {
@@ -102,7 +96,7 @@ inline-input {
     transition: background-color 0.15s;
 
     &:hover {
-      background-color: #5c738a;
+      background-color: #4a5e70;
     }
 
     &:disabled {
@@ -116,82 +110,195 @@ inline-input {
   }
 }
 
-.inline-input {
+/* === JointJS Paper === */
+.joint-paper {
+  cursor: default;
+  top: 0 !important;
+  left: 0 !important;
+
+  .resize-corner {
+    cursor: se-resize;
+  }
+}
+
+/* === Scrollable Nodes / Ports === */
+.joint-shape-processor {
+  position: relative;
+
+  .ports {
+    overflow-y: auto;
+    height: 200px;
+    max-height: 400px;
+    padding-right: 10px;
+  }
+}
+
+.scrollable-body {
+  overflow-y: auto;
+  max-height: 400px;
+  padding-right: 10px;
+
+  .content {
+    padding: 10px;
+    word-wrap: break-word;
+  }
+}
+
+/* === Context Menu === */
+.context-menu {
   position: absolute;
-  border: 1px solid red;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+  padding: 4px;
+}
+
+/* === Inline Input === */
+.inline-input,
+inline-input {
+  position: absolute;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  font: inherit !important;
+  color: inherit !important;
+  width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
   font-size: 14px;
   z-index: 9999;
 }
 
-.joint-paper {
-  cursor: default;
-  top:0  !important;
-  left:0 !important
-}
 
-.joint-paper .resize-corner {
-  cursor: se-resize;
-}
-
-
-/* Make the ports container scrollable */
-.joint-shape-processor {
+.graph-box {
   position: relative;
-}
+  width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+  box-sizing: border-box;
 
-.joint-shape-processor .ports {
-  overflow-y: auto;  /* Enables vertical scrolling */
-  height: 200px;     /* Height limit for the ports area */
-  max-height: 400px; /* Optional max height */
-  padding-right: 10px; /* Optional: Adjust space for scroll */
-}
+  .graph-row {
+    display: flex;
+    flex: 1;
+    flex-wrap: nowrap;
+    margin: 0 -15px;
+  }
 
+  .graph-col-3,
+  .graph-col-9 {
+    transition:
+      flex-basis 200ms ease,
+      max-width 200ms ease,
+      padding 200ms ease,
+      margin 200ms ease;
+  }
 
-/* CSS for scrollable nodes */
-.scrollable-body {
-  overflow-y: auto;  /* Enables vertical scrolling */
-  max-height: 400px; /* Set a maximum height for the body */
-  padding-right: 10px; /* Optional: adds space for the scrollbar */
-}
+  .graph-col-3 {
+    flex: 0 0 10%;
+    max-width: 10%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
 
-/* Optional: If the body has content inside it, apply styling */
-.scrollable-body .content {
-  padding: 10px;
-  word-wrap: break-word; /* Ensure text content breaks properly */
-}
+  .graph-col-9 {
+    flex: 0 0 90%;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
 
+    app-diagram {
+      flex: 1;
+      min-height: 0;
+      display: block;
+    }
+  }
 
+  /* === Collapsed State === */
+  &.nodes-collapsed {
+    .graph-col-3 {
+      flex-basis: 0%;
+      max-width: 0%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
 
-.block-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: grab;
-  padding: 6px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: background 0.2s;
+    .graph-col-9 {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
 
-  &:hover {
-    background: #e0e0e0;
+    .collapse-btn {
+      left: 6px;
+    }
+  }
+
+  /* === Floating Collapse Button === */
+  .collapse-btn {
+    position: absolute;
+    top: 12px;
+    left: calc(6% + 6px);
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+    transition: left 200ms ease, transform 200ms ease;
+
+    i {
+      font-size: 14px;
+      color: #3f51b5;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }
 
-.toolbar-title {
-  font-weight: 600;
-  padding-left: 25px;
-}
 
-.block-item {
-  cursor: pointer;
-  padding: 4px 12px;
-  background-color: #0033ff;
-  color: #fff;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #555555;
+  color: #000;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
 
-  &:hover {
-    background-color: #0022aa;
+  .panel-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    color: #fff;
+  }
+
+  .collapse-btn,
+  .panel-collapse {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    i {
+      color: #fff;
+    }
   }
 }
