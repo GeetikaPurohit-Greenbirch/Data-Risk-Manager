@@ -340,6 +340,7 @@ export class EditSystemComponent{
     { field: 'interface_name', headerName: 'Entity Name', editable: false, },
     { field: 'entity_type', headerName: 'Entity Type', editable: false, },
     { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'user_generated_id', headerName: 'Field No.', editable: this.isEditable,},
     { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
     { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
       cellEditor: 'agSelectCellEditor',
@@ -519,6 +520,7 @@ export class EditSystemComponent{
     { field: 'entity_type', headerName: 'Entity Type', editable: false, },
 
     { field: 'field_id', headerName: 'Field ID', editable: false, },
+    { field: 'user_generated_id', headerName: 'Field No.', editable: false, },
     { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
     { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
       cellEditor: 'agSelectCellEditor',
@@ -1211,6 +1213,7 @@ loadDropdownOptions(): void {
     console.log(data, "Interface Data Fields");
   this.dataFieldsModel.entity_id = this.systemId;
   this.dataFieldsModel.field_id = data.data.field_id;
+  this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
   this.dataFieldsModel.field_name = data.data.field_name;
   this.dataFieldsModel.dqa_c = data.data.dqa_c;
   this.dataFieldsModel.dqa_t = data.data.dqa_t;
@@ -1255,7 +1258,7 @@ loadDropdownOptions(): void {
   deleteDAtaFields(data:any)
   {
        
-    this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
+    this.datafieldsService.deleteDataFields(data.data.field_id, 'SYSTEM', this.systemId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
       this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
       setTimeout(() => {
@@ -1420,9 +1423,9 @@ loadDropdownOptions(): void {
             }))
           };
 
-          const parsedInboundInterfaces = [systemAsInterface, ...inboundInterfaces];
+          // const parsedInboundInterfaces = [systemAsInterface, ...inboundInterfaces];
           // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
-          // const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
+          const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
             
           if (parsedInboundInterfaces?.length > 0) {
             this.rowDataInbound = parsedInboundInterfaces.map(

@@ -72,6 +72,7 @@ export class EditTargetComponent {
  
    columnDefs: (ColDef | ColGroupDef)[]= [
      { field: 'field_id', headerName: 'Field ID', editable: false, },
+     { field: 'user_generated_id', headerName: 'Field No.', editable: true, },
      { field: 'field_name', headerName: 'Field Name', editable: true },
      { field: 'data_type', headerName: 'Data Type', editable: true,
        cellEditor: 'agSelectCellEditor',
@@ -511,6 +512,7 @@ export class EditTargetComponent {
      console.log(data, "Target Data Fields");
  
    // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
+   this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
    this.dataFieldsModel.field_name = data.data.field_name;
    this.dataFieldsModel.dqa_c = data.data.dqa_c;
   this.dataFieldsModel.dqa_t = data.data.dqa_t;
@@ -543,7 +545,7 @@ export class EditTargetComponent {
  
    deleteDAtaFields(data:any)
    {
-     this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
+     this.datafieldsService.deleteDataFields(data.data.field_id, 'TARGET', this.targetId).subscribe(() => {
        // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
        this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
        setTimeout(() => {

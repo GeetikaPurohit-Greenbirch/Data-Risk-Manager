@@ -47,6 +47,18 @@ export class ReportBuilderComponent {
   };
   
 
+  onDataFieldDetailChange() {
+    if (this.options.contents.dataFieldDetail) {
+      // If parent is checked → check & disable children
+      this.options.attributes.fieldId = true;
+      this.options.attributes.fieldName = true;
+    } else {
+      // If parent is unchecked → uncheck & enable children
+      this.options.attributes.fieldId = false;
+      this.options.attributes.fieldName = false;
+    }
+  }
+
   includeSampleRows = true;
   http: any;
 

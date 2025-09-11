@@ -1,5 +1,6 @@
 export class Datafields {
     field_id! :number;
+    user_generated_id! :number;
     field_name!:string;
     field_description!:string;
     dqa_c!:string;

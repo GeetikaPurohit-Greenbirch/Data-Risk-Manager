@@ -53,8 +53,8 @@ export class DatafieldsService {
         return this.http.get<Datafields[]>(url);
       }
 
-  public deleteDataFields(id:number):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'fields/'+id;
+  public deleteDataFields(id:number, entity_type:string, entity_id:number):Observable<Datafields[]> {
+        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+id;
         return this.http.delete<Datafields[]>(url);
       }
 

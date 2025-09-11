@@ -192,6 +192,7 @@ export class EditSourceComponent implements OnInit {
  
    columnDefs: (ColDef | ColGroupDef)[]= [
      { field: 'field_id', headerName: 'Field ID', editable: false, },
+     { field: 'user_generated_id', headerName: 'Field No.', editable: true, },
      { field: 'field_name', headerName: 'Field Name', editable: true },
      { field: 'field_description', headerName: 'Field Description', editable: true },
      { field: 'data_type', headerName: 'Data Type', editable: true,
@@ -630,6 +631,7 @@ export class EditSourceComponent implements OnInit {
     console.log(data, "Interface Data Fields");
 
   this.dataFieldsModel.field_id = data.data.field_id;
+  this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
   this.dataFieldsModel.field_name = data.data.field_name;
   this.dataFieldsModel.field_description = data.data.field_description;
   this.dataFieldsModel.dqa_c = data.data.dqa_c;
@@ -673,7 +675,7 @@ export class EditSourceComponent implements OnInit {
  
    deleteDAtaFields(data:any)
    {
-     this.datafieldsService.deleteDataFields(data.data.field_id).subscribe(() => {
+     this.datafieldsService.deleteDataFields(data.data.field_id, 'SOURCE', this.sourceId).subscribe(() => {
        // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
        this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
        setTimeout(() => {

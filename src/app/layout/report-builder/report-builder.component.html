@@ -9,16 +9,16 @@
 
   <div class="row">
     <div class="col-md-5">
-    <label><input type="checkbox" [(ngModel)]="options.contents.coverPage"> Cover Page</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.synopsis"> Synopsis</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseId"> Use Case ID</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseName"> Use Case Name</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.targetName"> Target Name</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.targetStatus"> Target Status</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.coverPage" disabled> Cover Page</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.synopsis" disabled> Synopsis</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseId" disabled> Use Case ID</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.useCaseName" disabled> Use Case Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.targetName" disabled> Target Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.contents.targetStatus" disabled> Target Status</label><br>
 </div>
 <div class="col-md-6">
     <label><input type="checkbox" [(ngModel)]="options.contents.individualControlReports"> Individual Control Reports</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.contents.dataFieldDetail"> DataField Detail</label>
+    <label><input type="checkbox" [(ngModel)]="options.contents.dataFieldDetail" (change)="onDataFieldDetailChange()"> DataField Detail</label>
   </div>
 </div>
   <!-- DataField Attributes Section -->
@@ -26,8 +26,8 @@
 
   <div class="row">
     <div class="col-md-5">
-    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldId"> Field ID</label><br>
-    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldName"> Field Name</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldId" [disabled]="options.contents.dataFieldDetail"> Field ID</label><br>
+    <label><input type="checkbox" [(ngModel)]="options.attributes.fieldName" [disabled]="options.contents.dataFieldDetail"> Field Name</label><br>
     <label><input type="checkbox" [(ngModel)]="options.attributes.fieldDescription"> Field Description</label><br>
     <label><input type="checkbox" [(ngModel)]="options.attributes.dataType"> Data Type</label><br>
     <label><input type="checkbox" [(ngModel)]="options.attributes.sourceName"> Source Name</label><br>
