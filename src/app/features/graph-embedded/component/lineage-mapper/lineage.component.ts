@@ -471,6 +471,33 @@ export class LineageComponent implements AfterViewInit {
     return idx;
   }
 
+
+  /** Build a map of { portId -> parentId } from a Concat cell's items */
+private buildConcatPortParentIdMap(concatCell: any): any {
+  const map: any = {};
+  const nodeId = String(concatCell?.id);
+  const groups = Array.isArray(concatCell?.items) ? concatCell.items : [];
+
+  for (const group of groups) {
+    const sections = Array.isArray(group) ? group : [];
+
+    for (const section of sections) {
+      const sectionId = section?.id || nodeId; // fallback to node id if no section id
+      const leafItems = Array.isArray(section?.items) ? section.items : [];
+
+      for (const leaf of leafItems) {
+        const leafId = leaf?.id;
+        if (leafId != null) {
+          map[String(leafId)] = sectionId;
+        }
+      }
+    }
+  }
+
+  return map;
+}
+
+
   // === UPDATED METHOD ============================================
 
   /** Enrich links so source.type/target.type reflect the exact port item type when available,
@@ -481,6 +508,7 @@ export class LineageComponent implements AfterViewInit {
     const idToNormalizedTypeName: any= {};
     // nodeId -> (portId -> item type) from Concat leaf items
     const nodePortTypeMap: any = {};
+    const nodePortParentMap: any = {};
 
     // Step 1: build maps from Concat cells
     (json.cells || []).forEach((cell: any) => {
@@ -497,6 +525,13 @@ export class LineageComponent implements AfterViewInit {
       if (Object.keys(portIndex).length) {
         nodePortTypeMap[cell.id] = portIndex;
       }
+
+
+       const portParentMap = this.buildConcatPortParentIdMap(cell);
+    if (Object.keys(portParentMap).length) {
+      nodePortParentMap[cell.id] = portParentMap;
+    }
+
     });
 
     console.log('ID to Normalized TypeName Map:', idToNormalizedTypeName);
@@ -525,8 +560,13 @@ export class LineageComponent implements AfterViewInit {
           resolved = idToNormalizedTypeName[nodeId];
         }
 
+
+        //  let resolvedType = portTypeMap?.[portId] || normalizedType;
+         const portParentMap = nodePortParentMap[nodeId];
+        let resolvedParentId = portParentMap?.[portId].split('_')[3] || nodeId;
+
         if (resolved) {
-          cell[endpoint] = { ...(ep || {}), type: resolved };
+          cell[endpoint] = { ...(ep || {}), type: resolved, parentId: resolvedParentId};
         }
       };
 

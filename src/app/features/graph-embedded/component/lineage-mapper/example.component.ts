@@ -73,7 +73,7 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
             p = { id: makeId(g, ...idTokens), label, icon, items: [] };
             map.set(key, p);
         }
-        p.group= 'disabled'
+        p.group = 'disabled'
         return p;
     };
 
@@ -93,13 +93,15 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
         let idTokens: (string | number | null | undefined)[];
 
         if (typeNorm === 'interface') {
-            // Group by interfaceName; label should be interfaceName (fallback to #<id>)
-            const name = (p.interfaceName ?? '').trim();
-            const label = name || `#${p.interfaceId ?? 'unknown'}`;
-            parentKey = `interface:${slug(label)}`;         // use name as key (so id/label align)
-            idTokens = ['interface', label];
-            parentLabel = label;
-        } else if (typeNorm === 'system') {
+            const id = p.interfaceId ?? 'unknown';                    // used for ID
+            const name = (p.interfaceName ?? '').trim();              // used for label
+            const label = name || `#${id}`;
+
+            parentKey = `interface:${slug(id)}`;                      // use ID for grouping
+            idTokens = ['interface', id];                             // use ID for makeId()
+            parentLabel = label;                                      // keep label as name
+        }
+        else if (typeNorm === 'system') {
             parentKey = 'system';
             idTokens = ['system'];
             parentLabel = 'System'; // 👈 keep System (not SYSTEM)
