@@ -227,11 +227,27 @@ export const loadExample = function (graph: dia.Graph, selectedValue: any, dropp
         case 'Concat':
             let result = buildTypeHierarchy(selectedItem?.ports || []);
             let targetData: any = []
+            let sourceData: any = []
             if (selectedItem?.type === "target") {
                 targetData = result.in[0].items
 
             }
-            const dataToPass = selectedItem?.type === "target" ? [targetData] : [result.in, result.out]
+            if(selectedItem?.type === "source"){
+                sourceData = result.out[0]?.items || []
+            }
+            
+
+            let dataToPass = []
+
+            if(selectedItem?.type === "source"){
+                dataToPass=[[],[...sourceData]]
+            }else if(selectedItem?.type === "target"){
+                dataToPass=[targetData]
+            }else{
+                dataToPass=[result.in,result.out]
+            }
+
+
             console.log(dataToPass, result, "resultresultresultresultresultresultresultresultresultresultresultresultresultresult")
 
             console.log(result, "buildPortsAndItems result", blockDefinition)
