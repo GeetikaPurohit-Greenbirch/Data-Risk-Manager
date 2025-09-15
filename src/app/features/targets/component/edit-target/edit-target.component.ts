@@ -71,87 +71,29 @@ export class EditTargetComponent {
  
  
    columnDefs: (ColDef | ColGroupDef)[]= [
-     { field: 'field_id', headerName: 'Field ID', editable: false, },
-     { field: 'user_generated_id', headerName: 'Field No.', editable: true, },
-     { field: 'field_name', headerName: 'Field Name', editable: true },
-     { field: 'data_type', headerName: 'Data Type', editable: true,
-       cellEditor: 'agSelectCellEditor',
-       cellEditorParams: {
-         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
-       },
-     },
-     { field: 'field_length', headerName: 'Length', editable: true },
-     {
-       headerName: 'DQA',
-       field: 'dqa',
-       resizable: true,
-       children: [
-         {
-           headerName: 'C= Completeness',
-           field: 'dqa_c',
-           editable: false,
-          //  valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["H", "M", "L"]
-          },
-          //  width:65,
-          //  minWidth: 65,
-          //  maxWidth: 65,
-           resizable: true,
-           suppressSizeToFit: true,
-           cellStyle: {
-             color: 'red',
-             fontWeight: 'bold'
-           },
-         },
-         {
-           headerName: 'T= Timeliness',
-           field: 'dqa_t',
-           editable: false,
-          //  valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["H", "M", "L"]
-          },
-          //  width:65,
-          //  minWidth: 65,
-          //  maxWidth: 65,
-           resizable: true,
-           suppressSizeToFit: true,
-           cellStyle: {
-             color: 'blue',
-             fontWeight: 'bold'
-           }
-         },
-         {
-           headerName: 'A= Accuracy',
-           field: 'dqa_a',
-           editable: false,
-          //  valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["H", "M", "L"]
-          },
-          //  width:65,
-          //  minWidth: 65,
-          //  maxWidth: 65,
-           resizable: true,
-           suppressSizeToFit: true,
-           cellStyle: {
-             color: 'purple',
-             fontWeight: 'bold'
-           }
-         }
-       ],
- 
-     },
-     { field: 'criticality', headerName: 'Criticality', editable: true,
-       cellEditor: 'agSelectCellEditor',
-       cellEditorParams: {
-         values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
-       },
-      },
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
+    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
+    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
+    { field: 'data_type', headerName: 'Data Type', editable: true, 
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: { values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+      headerTooltip: 'Data Type'
+    },
+    { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length' },
+    {
+      headerName: 'DQA',
+      field: 'dqa',
+      resizable: true,
+      headerTooltip: 'DQA',
+      children: [
+        { headerName: 'C= Completeness', field: 'dqa_c', editable: false, headerTooltip: 'C= Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+        { headerName: 'T= Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'T= Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+        { headerName: 'A= Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'A= Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
+      ]
+    },
+    { field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality', cellEditor: 'agSelectCellEditor', 
+      cellEditorParams: { values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"] } },
+    
      {
        headerName: 'Actions',
        editable: false,
@@ -159,6 +101,7 @@ export class EditTargetComponent {
        sortable: false,
        minWidth: 100, 
        flex:1,
+       headerTooltip: 'Actions',
        cellRenderer: (params: any) => {
          const div = document.createElement('div');
          div.className = 'model-cell-renderer';

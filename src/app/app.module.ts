@@ -44,6 +44,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NodeDropModalComponent } from './node-drop-modal/node-drop-modal.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
+// PrimeNG modules
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -117,6 +125,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
+    TableModule,
+    DropdownModule,
+    ButtonModule,
+    InputTextModule,
+    MultiSelectModule,
+    TooltipModule,
+    
   ],
 
   providers: [

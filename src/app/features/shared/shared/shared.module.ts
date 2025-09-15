@@ -35,6 +35,14 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PdfService } from '../../shared-services/pdf.service';
 import { ReportBuilderComponent } from 'src/app/layout/report-builder/report-builder.component';
 import { MatOptionModule } from '@angular/material/core';
+// PrimeNG modules
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
+import { SplitterModule } from 'primeng/splitter';
 
 
 ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
@@ -74,7 +82,14 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatOptionModule,
-    DragDropModule
+    DragDropModule,
+    TableModule,
+    DropdownModule,
+    ButtonModule,
+    InputTextModule,
+    MultiSelectModule,
+    TooltipModule,
+    SplitterModule
   ],
   exports: [
     HeaderComponent,
@@ -107,7 +122,14 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     MatProgressSpinnerModule,
     MatSnackBarModule,
     DragDropModule,
-    MatOptionModule
+    MatOptionModule,
+    TableModule,
+    DropdownModule,
+    ButtonModule,
+    InputTextModule,
+    MultiSelectModule,
+    TooltipModule,
+    SplitterModule
   ],
   providers: [PdfService],
   

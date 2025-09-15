@@ -10,6 +10,7 @@ import { DiagramComponent } from './component/diagram/diagram.component';
 import { NodesComponent } from './component/nodes/nodes.component';
 import { ConfirmDialogComponent } from './component/delete-confirmation/deleteConfirmation.component';
 import { LineageComponent } from './component/lineage-mapper/lineage.component';
+import { SplitterModule } from 'primeng/splitter';
 
 // import { NodesComponent } from "../nodes/nodes.component";
 // import { DiagramComponent } from "../diagram/diagram.component";
@@ -28,6 +29,7 @@ import { LineageComponent } from './component/lineage-mapper/lineage.component';
   imports: [
     CommonModule,
     SharedModule,
+    SplitterModule,
     UseCaseRoutingModule
   ]
 })

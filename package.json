@@ -43,6 +43,9 @@
     "jspdf-autotable": "^5.0.2",
     "lodash": "^4.17.21",
     "ngx-toastr": "^19.0.0",
+    "primeflex": "^4.0.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
