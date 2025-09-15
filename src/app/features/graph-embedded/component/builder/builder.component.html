@@ -1,10 +1,106 @@
-<div class="main-container">
-  <main class="dashboard-container" style="padding: 0">
-    <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
+<p-splitter 
+  [style]="{ height: '100vh' }" 
+  styleClass="mb-5" 
+  layout="vertical">
 
-        <app-diagram></app-diagram>
-      <!-- Collapse toggle -->
-     
+  <!-- Panel 1 -->
+  <ng-template pTemplate="panel">
+    <div class="col flex align-items-center justify-content-center">
+      <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
+        <!-- <button 
+        pButton 
+        type="button" 
+        icon="pi pi-minus" 
+        (click)="toggleDiagram()" 
+        label="Toggle Diagram">
+      </button> -->
+        <app-diagram ></app-diagram>
+      </div>
     </div>
-  </main>
-</div>
+  </ng-template>
+
+  <!-- Panel 2 -->
+  <ng-template pTemplate="panel">
+    <div class="col flex align-items-center justify-content-center">
+      <div class="card" style="width: 100%;">
+        <h2>Field Metadata</h2>
+
+        <!-- Column Toggle -->
+        <p-multiSelect
+          [options]="cols"
+          [(ngModel)]="selectedColumns"
+          optionLabel="header"
+          display="chip"
+          placeholder="Choose columns"
+          class="mb-3"
+        ></p-multiSelect>
+
+        <!-- PrimeNG Table -->
+        <p-table
+          #dt
+          [value]="fields"
+          [columns]="selectedColumns"
+          [paginator]="true"
+          [rows]="5"
+          [resizableColumns]="true"
+          columnResizeMode="expand"
+          [globalFilterFields]="['fieldName','dataType','sourceName','criticality']"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        >
+          <!-- Global Filter -->
+          <ng-template pTemplate="caption">
+            <div class="flex justify-between">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  (input)="onGlobalFilter($event, dt)"
+                  placeholder="Global Search"
+                />
+              </span>
+            </div>
+          </ng-template>
+
+          <!-- Headers -->
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-row let-columns="columns">
+            <tr>
+              <td *ngFor="let col of columns">
+                <ng-container [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'actions'">
+                    <button
+                      pButton
+                      icon="pi pi-pencil"
+                      class="p-button-rounded p-button-text"
+                      (click)="editRow(row)"
+                      pTooltip="Edit"
+                    ></button>
+                    <button
+                      pButton
+                      icon="pi pi-trash"
+                      class="p-button-rounded p-button-danger p-button-text"
+                      (click)="deleteRow(row)"
+                      pTooltip="Delete"
+                    ></button>
+                  </span>
+                  <span *ngSwitchDefault>{{ row[col.field] }}</span>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </ng-template>
+</p-splitter>

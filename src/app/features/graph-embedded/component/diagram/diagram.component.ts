@@ -46,19 +46,6 @@ export type LineageRecord = {
 
 
 
-interface FieldData {
-  id: number;
-  fieldName: string;
-  dataType: string;
-  length: number;
-  sourceName: string;
-  dqaCompleteness: string;
-  dqaTimeliness: string;
-  dqaAccuracy: string;
-  criticality: string;
-}
-
-
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
@@ -72,21 +59,9 @@ export class DiagramComponent implements AfterViewInit {
   scroller!: ui.PaperScroller;
   scale: number = 1;
   scaleDisplay: number = 100;
-  selectedColumns!: any[];
+  diagramCollapsed = false;
 
-  cols: any[] = [
-    { field: 'id', header: 'Field ID' },
-    { field: 'fieldName', header: 'Field Name' },
-    { field: 'dataType', header: 'Data Type' },
-    { field: 'length', header: 'Length' },
-    { field: 'sourceName', header: 'Source Name' },
-    { field: 'dqaCompleteness', header: 'DQA - Completeness' },
-    { field: 'dqaTimeliness', header: 'DQA - Timeliness' },
-    { field: 'dqaAccuracy', header: 'DQA - Accuracy' },
-    { field: 'criticality', header: 'Criticality' },
-    { field: 'actions', header: 'Actions' }
-  ];
-
+  
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -117,7 +92,6 @@ export class DiagramComponent implements AfterViewInit {
 
   public ngOnInit(): void {
 
-    this.selectedColumns = this.cols, // By default all visible
 
     this.route.paramMap.pipe(
       // Try both common param names; keep whichever your route uses
@@ -754,62 +728,8 @@ this.router.navigate(['/graph-embedded']);
     this.scroller.centerContent(); // Center content after resetting zoom
   }
 
-
-  title = 'PrimeNG Table Example';
-
-  fields: FieldData[] = [
-    {
-      id: 1,
-      fieldName: 'Customer ID',
-      dataType: 'Number',
-      length: 10,
-      sourceName: 'CRM',
-      dqaCompleteness: 'High',
-      dqaTimeliness: 'Medium',
-      dqaAccuracy: 'High',
-      criticality: 'Critical'
-    },
-    {
-      id: 2,
-      fieldName: 'Customer Name',
-      dataType: 'String',
-      length: 100,
-      sourceName: 'CRM',
-      dqaCompleteness: 'High',
-      dqaTimeliness: 'High',
-      dqaAccuracy: 'High',
-      criticality: 'High'
-    },
-    {
-      id: 3,
-      fieldName: 'Transaction Date',
-      dataType: 'Date',
-      length: 8,
-      sourceName: 'ERP',
-      dqaCompleteness: 'Medium',
-      dqaTimeliness: 'High',
-      dqaAccuracy: 'Medium',
-      criticality: 'Medium'
-    }
-  ];
-
-  onGlobalFilter(event: Event, dt: any) {
-    const input = event.target as HTMLInputElement;
-    dt.filterGlobal(input.value, 'contains');
-  }
-  
-  onColumnFilter(event: Event, dt: any, field: string) {
-    const input = event.target as HTMLInputElement;
-    dt.filter(input.value, field, 'contains');
-  }
-
-  // Example action
-  editRow(row: FieldData) {
-    console.log('Edit:', row);
-  }
-
-  deleteRow(row: FieldData) {
-    console.log('Delete:', row);
+  toggleDiagram() {
+    this.diagramCollapsed = !this.diagramCollapsed;
   }
 }
 
