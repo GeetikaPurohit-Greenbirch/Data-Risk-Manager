@@ -97,6 +97,28 @@
         <div class="updateBtn">
         <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
       </div>
+
+      <div style="display: flex; height: 100%;">
+        <!-- Left Side Buttons -->
+        <div style="width: 100%; padding: 12px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <button mat-raised-button
+            style="flex: 0 0 calc(50% - 6px);"
+            [ngClass]="{ 'inverse': activeView === 'existing', 'primary': activeView !== 'existing' }"
+            (click)="existingLineage('existing')">
+            Existing Lineage
+          </button>
+      
+            <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+            [ngClass]="{ 'inverse': activeView === 'new', 'primary': activeView !== 'new' }"
+                    (click)="newLineage('new')">
+              Create New Lineage
+            </button>
+      
+          </div>
+        </div>
+      </div>
+
       </form>
 
     </div>

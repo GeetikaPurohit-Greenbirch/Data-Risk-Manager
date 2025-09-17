@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 
 
 
@@ -24,23 +26,29 @@ export class BuilderComponent implements OnInit {
 
   selectedColumns!: any[];
   diagramCollapsed = false;
+  useCaseId!: number;
+  lineageId!: number;
+  fields : any;
 
   
     cols: any[] = [
-      { field: 'id', header: 'Field ID' },
+      { field: 'fieldId', header: 'Field ID' },
       { field: 'fieldName', header: 'Field Name' },
       { field: 'dataType', header: 'Data Type' },
-      { field: 'length', header: 'Length' },
+      { field: 'fieldLength', header: 'Length' },
       { field: 'sourceName', header: 'Source Name' },
-      { field: 'dqaCompleteness', header: 'DQA - Completeness' },
-      { field: 'dqaTimeliness', header: 'DQA - Timeliness' },
-      { field: 'dqaAccuracy', header: 'DQA - Accuracy' },
+      // { field: 'completenessRisk', header: 'DQA - Completeness' },
+      { field: 'completenessRiskComment', header: 'Completeness Commentary' },
+      // { field: 'timelinessRisk', header: 'DQA - Timeliness' },
+      { field: 'timelinessRiskComment', header: 'Timeliness Commentary' },
+      // { field: 'accuracyRisk', header: 'DQA - Accuracy' },
+      { field: 'accuracyRiskComment', header: 'Accuracy Commentary' },
       { field: 'criticality', header: 'Criticality' },
       { field: 'actions', header: 'Actions' }
     ];
   
 
-  constructor() {}
+  constructor(private datafieldsService: DatafieldsService,private route: ActivatedRoute) {}
 
    nodesCollapsed = false;
 
@@ -55,7 +63,13 @@ export class BuilderComponent implements OnInit {
   ngOnInit(): void {
     // Any initialization logic
 
+    this.useCaseId = +this.route.snapshot.paramMap.get('usecaseId')!;
+
+    console.log('Use Case ID:', this.useCaseId);
+
     this.selectedColumns = this.cols // By default all visible
+
+    this.getTargetReport();
 
   }
 
@@ -66,41 +80,52 @@ export class BuilderComponent implements OnInit {
   
   title = 'PrimeNG Table Example';
 
-  fields: FieldData[] = [
-    {
-      id: 1,
-      fieldName: 'Customer ID',
-      dataType: 'Number',
-      length: 10,
-      sourceName: 'CRM',
-      dqaCompleteness: 'High',
-      dqaTimeliness: 'Medium',
-      dqaAccuracy: 'High',
-      criticality: 'Critical'
-    },
-    {
-      id: 2,
-      fieldName: 'Customer Name',
-      dataType: 'String',
-      length: 100,
-      sourceName: 'CRM',
-      dqaCompleteness: 'High',
-      dqaTimeliness: 'High',
-      dqaAccuracy: 'High',
-      criticality: 'High'
-    },
-    {
-      id: 3,
-      fieldName: 'Transaction Date',
-      dataType: 'Date',
-      length: 8,
-      sourceName: 'ERP',
-      dqaCompleteness: 'Medium',
-      dqaTimeliness: 'High',
-      dqaAccuracy: 'Medium',
-      criticality: 'Medium'
-    }
-  ];
+  // fields: FieldData[] = [
+  //   {
+  //     id: 1,
+  //     fieldName: 'Customer ID',
+  //     dataType: 'Number',
+  //     length: 10,
+  //     sourceName: 'CRM',
+  //     dqaCompleteness: 'High',
+  //     dqaTimeliness: 'Medium',
+  //     dqaAccuracy: 'High',
+  //     criticality: 'Critical'
+  //   },
+  //   {
+  //     id: 2,
+  //     fieldName: 'Customer Name',
+  //     dataType: 'String',
+  //     length: 100,
+  //     sourceName: 'CRM',
+  //     dqaCompleteness: 'High',
+  //     dqaTimeliness: 'High',
+  //     dqaAccuracy: 'High',
+  //     criticality: 'High'
+  //   },
+  //   {
+  //     id: 3,
+  //     fieldName: 'Transaction Date',
+  //     dataType: 'Date',
+  //     length: 8,
+  //     sourceName: 'ERP',
+  //     dqaCompleteness: 'Medium',
+  //     dqaTimeliness: 'High',
+  //     dqaAccuracy: 'Medium',
+  //     criticality: 'Medium'
+  //   }
+  // ];
+
+  getTargetReport()
+   { 
+    this.datafieldsService.getTargetReportdata(this.useCaseId, '8').subscribe({
+      next: (res: any) => {
+        this.fields = res;
+      }
+         // Force refresh with setRowData
+    
+    });
+   }
 
   onGlobalFilter(event: Event, dt: any) {
     const input = event.target as HTMLInputElement;

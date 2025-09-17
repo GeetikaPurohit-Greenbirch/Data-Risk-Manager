@@ -60,6 +60,7 @@ export class DiagramComponent implements AfterViewInit {
   scale: number = 1;
   scaleDisplay: number = 100;
   diagramCollapsed = false;
+  use_case_id!: string;
 
   
   constructor(
@@ -110,6 +111,9 @@ export class DiagramComponent implements AfterViewInit {
     ).subscribe((lineages: LineageRecord | null) => {
       this.lineages = lineages;
       console.log('Fetched lineages:', lineages);
+      const useCaseId = lineages?.use_case_id ?? null;
+      console.log('Use Case ID:', useCaseId);
+
       this.loadGraphFromJSON(lineages?.lineage_json || {});
       this.loading = false;
 

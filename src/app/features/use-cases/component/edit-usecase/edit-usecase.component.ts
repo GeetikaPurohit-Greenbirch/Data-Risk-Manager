@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -33,9 +33,12 @@ usecaseForm!: FormGroup;
   gridApi: any;
   gridColumnApi: any;
   formLoaded = false;
+  activeView!: string; // default view on load
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
+        private router: Router,
     private usecaseService: UsecaseService,
     private toastNotificationService: ToastnotificationService,
             private cdr: ChangeDetectorRef,
@@ -154,6 +157,10 @@ usecaseForm!: FormGroup;
     
   }
 
+  setActiveView(view: string) {
+    this.activeView = view;
+  }
+
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
@@ -212,5 +219,15 @@ usecaseForm!: FormGroup;
 
   }
 
+  existingLineage(view: string)
+  {
+    this.activeView = view;
 
+    this.router.navigate(['/graph-embedded/edit-lineage/', this.usecaseId, this.usecaseForm.value.lineageId]);
+
+  }
+  newLineage(view: string)
+  {
+    this.activeView = view;
+  }
 }

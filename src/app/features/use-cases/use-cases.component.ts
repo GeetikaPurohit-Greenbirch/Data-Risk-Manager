@@ -105,15 +105,30 @@ export class UseCasesComponent {
         shareUsecase.style.lineHeight = '22px';
         shareUsecase.style.height = '32px';
         shareUsecase.style.cursor = 'pointer';
-        shareUsecase.title = 'Delete';
+        shareUsecase.title = 'Share';
     
         shareUsecase.addEventListener('click', () => {
           this.openShareComponent(params.node);
+        });
+
+        const goToLineage = document.createElement('button');
+        goToLineage.className = 'fa fa-arrow-right';
+        goToLineage.style.color = 'blue';
+        goToLineage.style.border = '1px solid lightGrey';
+        goToLineage.style.borderRadius = '5px';
+        goToLineage.style.lineHeight = '22px';
+        goToLineage.style.height = '32px';
+        goToLineage.style.cursor = 'pointer';
+        goToLineage.title = 'Navigate to Lineage';
+    
+        goToLineage.addEventListener('click', () => {
+          this.openLineageComponent(params.node);
         });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
         div.appendChild(shareUsecase);
+        div.appendChild(goToLineage);
     
         return div;
       }
@@ -264,5 +279,9 @@ export class UseCasesComponent {
 
   openShareComponent(row: any) {
     this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
+  }
+
+  openLineageComponent(row: any){
+    this.router.navigate(['/graph-embedded/edit-lineage/', row.data.use_case_id, row.data.lineageId]);
   }
 }

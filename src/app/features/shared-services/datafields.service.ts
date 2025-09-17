@@ -100,4 +100,9 @@ export class DatafieldsService {
           responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
         });      
       }
+
+      public getTargetReportdata(use_case_id:number, target_id:any):Observable<Datafields[]> {
+        const url: string = this.lineageUrl + 'reports/target/'+use_case_id+'/'+target_id;
+        return this.http.get<Datafields[]>(url);
+      }
 }
