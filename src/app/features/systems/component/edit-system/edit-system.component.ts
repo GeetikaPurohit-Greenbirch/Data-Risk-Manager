@@ -49,7 +49,7 @@ export class EditSystemComponent{
   links: any[] = []; // Store link data
   showGlobalQualityRiskGridInbound = false; // Controls visibility of AG Grid
   showGlobalQualityRiskGridOutbound = false;
-  statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  statusOptions: string[] = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
 
   
   formLoaded = false;
@@ -1423,7 +1423,7 @@ loadDropdownOptions(): void {
             }))
           };
 
-          // const parsedInboundInterfaces = [systemAsInterface, ...inboundInterfaces];
+          const parsedInboundInterfacesforMapping = [systemAsInterface, ...inboundInterfaces];
           // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
           const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
             
@@ -1540,7 +1540,7 @@ loadDropdownOptions(): void {
 
 
           // 🔄 Flatten inbound
-        parsedInboundInterfaces.forEach((intf: any) => {
+        parsedInboundInterfacesforMapping.forEach((intf: any) => {
           intf.fields.forEach((field: any) => {
             this.inboundFields.push({
               interface: intf.interface_name,

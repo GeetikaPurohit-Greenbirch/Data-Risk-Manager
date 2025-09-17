@@ -3,12 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Usecase } from '../models/usecase.model';
+import { Lineage } from '../use-cases.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsecaseService {
   private apiUrl = environment.apiAllBaseUrl // Base URL
+  private lineageUrl = environment.apiLineageBaseUrl
+
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +45,11 @@ export class UsecaseService {
       public getUsecaseById(id:number):Observable<Usecase[]> {
         const url: string = this.apiUrl + 'use_cases/id/'+id;
         return this.http.get<Usecase[]>(url);
+      }
+
+      public navigateToLineage(usecaseId:number):Observable<Lineage | Lineage[]> {
+        const url: string = this.lineageUrl + 'lineage/entities/json/'+usecaseId;
+        return this.http.get<Lineage | Lineage[]>(url);
       }
   
       public deleteUsecase(id:number):Observable<Usecase[]> {

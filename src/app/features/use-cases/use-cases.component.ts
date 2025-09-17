@@ -10,6 +10,15 @@ import { ToastnotificationService } from '../shared-services/toastnotification.s
 import { ShareDialogComponent } from './component/share-dialog/share-dialog.component';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 
+export interface Lineage {
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  name: string;
+  use_case_id: number;
+  lineage_json: any;
+}
 
 @Component({
   selector: 'app-use-cases',
@@ -281,7 +290,32 @@ export class UseCasesComponent {
     this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
   }
 
-  openLineageComponent(row: any){
-    this.router.navigate(['/graph-embedded/edit-lineage/', row.data.use_case_id, row.data.lineageId]);
+  openLineageComponent(row: any) {
+    const useCaseId = row.data.use_case_id;
+  
+    this.usecaseService.navigateToLineage(useCaseId).subscribe({
+      next: (response) => {
+        const lineage_json = Array.isArray(response) ? response[0] : response;
+        if(lineage_json.lineage_json !==  "{}")
+        {
+        const lineage = Array.isArray(response) ? response[0] : response;
+        if (lineage) {
+          this.router.navigate(['/graph-embedded/edit-lineage', useCaseId, lineage.id]);
+        }
+      }
+      else
+      {
+        this.toastNotificationService.error("No lineage found for useCaseId : " + useCaseId);
+        setTimeout(() => {
+          this.getUsecaseList(); // refresh
+        }, 1000);
+      }
+      },
+      error: (err) => {
+        console.error("Failed to fetch lineageId:", err);
+      }
+    });
   }
+  
+  
 }

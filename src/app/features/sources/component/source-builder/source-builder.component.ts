@@ -16,7 +16,8 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 })
 export class SourceBuilderComponent {
   sourceForm!: FormGroup;
-  statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+
+  statusOptions = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   sourceTypeOptions = ['SYSTEM', 'MANUAL_ENTRY'];
   sourceModel : Sources = new Sources();
