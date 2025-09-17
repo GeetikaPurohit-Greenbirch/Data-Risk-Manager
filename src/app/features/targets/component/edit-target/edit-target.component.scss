@@ -14,23 +14,54 @@
 //     z-index: 100;
 //     width: 220px;
 //   }
-  .aggrid{
-    width: 56%;
-    float: left;
-  }
-  .report-builder {
-        position: relative;
-        width: 40%;
-        float: left;
-        background: #f7f7f7;
-        border: 1px solid #777;
-        border-radius: 6px;
-        padding: 12px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-        z-index: 0;
-        margin-left: 20px;
-      }
+  // .aggrid{
+  //   width: 56%;
+  //   float: left;
+  // }
+  // .report-builder {
+  //       position: relative;
+  //       width: 40%;
+  //       float: left;
+  //       background: #f7f7f7;
+  //       border: 1px solid #777;
+  //       border-radius: 6px;
+  //       padding: 12px;
+  //       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  //       z-index: 0;
+  //       margin-left: 20px;
+  //     }
 
+
+  .datafields-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 720px;
+  }
+  
+  /* Grid takes full width initially */
+  .aggrid {
+    flex: 1;
+    transition: flex 0.3s ease;
+  }
+  
+  /* When report is open → grid shrinks */
+  .aggrid.shrinked {
+    flex: 0.6; /* 60% width for grid */
+  }
+  
+  .report-builder {
+    flex: 0.4; /* 40% width for report */
+    border-left: 1px solid #ddd;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+  
       /* styles.css */
 // .popup-overlay {
 //   position: fixed;

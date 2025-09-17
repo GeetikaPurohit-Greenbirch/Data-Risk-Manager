@@ -24,7 +24,7 @@ export class EditInterfaceComponent implements OnInit {
   showDataQuality = false;
   showDataFieldsTable = true;
   interfaceTypeOptions = [ 'SYSTEM', 'MANUAL_ENTRY' ]
-  statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  statusOptions: string[] = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
   formLoaded = false;

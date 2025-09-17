@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -27,15 +27,26 @@ usecaseForm!: FormGroup;
   ];
 
   // ✅ Table column names
-  statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  statusOptions: string[] = ['NEW',
+'DRAFT',
+'READY_FOR_REVIEW',
+'IN_REVIEW',
+'APPROVED_READY_FOR_PRODUCTION',
+'APPROVED_IN_PRODUCTION',
+'NEEDS_REVIEW',
+'EXPIRED',
+'REJECTED'];
   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   usecaseId!: any;
   gridApi: any;
   gridColumnApi: any;
   formLoaded = false;
+  activeView!: string; // default view on load
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
+        private router: Router,
     private usecaseService: UsecaseService,
     private toastNotificationService: ToastnotificationService,
             private cdr: ChangeDetectorRef,
@@ -154,6 +165,10 @@ usecaseForm!: FormGroup;
     
   }
 
+  setActiveView(view: string) {
+    this.activeView = view;
+  }
+
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
@@ -212,5 +227,37 @@ usecaseForm!: FormGroup;
 
   }
 
+  existingLineage(view: string)
+  {
+    this.activeView = view;
+  
+    this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
+      next: (response) => {
+        const lineage_json = Array.isArray(response) ? response[0] : response;
+        if(lineage_json.lineage_json !==  "{}")
+        {
+        const lineage = Array.isArray(response) ? response[0] : response;
+        if (lineage) {
+          this.router.navigate(['/graph-embedded/edit-lineage', this.usecaseId, lineage.id]);
+        }
+      }
+      else
+      {
+        this.toastNotificationService.error("No lineage found for useCaseId : " + this.usecaseId);
+        // setTimeout(() => {
+        //   this.getUsecaseList(); // refresh
+        // }, 1000);
+      }
+      },
+      error: (err) => {
+        console.error("Failed to fetch lineageId:", err);
+      }
+    });
+    // this.router.navigate(['/graph-embedded/edit-lineage/', this.usecaseId, this.usecaseForm.value.lineageId]);
 
+  }
+  newLineage(view: string)
+  {
+    this.activeView = view;
+  }
 }

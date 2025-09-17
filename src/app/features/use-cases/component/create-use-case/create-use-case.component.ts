@@ -13,7 +13,15 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 })
 export class CreateUseCaseComponent {
  usecaseForm!: FormGroup;
-  statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  statusOptions = ['NEW',
+'DRAFT',
+'READY_FOR_REVIEW',
+'IN_REVIEW',
+'APPROVED_READY_FOR_PRODUCTION',
+'APPROVED_IN_PRODUCTION',
+'NEEDS_REVIEW',
+'EXPIRED',
+'REJECTED'];
   accuracyRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   timlinessRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   // usecaseModel : UseCasesModel = new UseCasesModel();

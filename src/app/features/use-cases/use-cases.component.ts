@@ -10,6 +10,15 @@ import { ToastnotificationService } from '../shared-services/toastnotification.s
 import { ShareDialogComponent } from './component/share-dialog/share-dialog.component';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 
+export interface Lineage {
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  name: string;
+  use_case_id: number;
+  lineage_json: any;
+}
 
 @Component({
   selector: 'app-use-cases',
@@ -105,15 +114,30 @@ export class UseCasesComponent {
         shareUsecase.style.lineHeight = '22px';
         shareUsecase.style.height = '32px';
         shareUsecase.style.cursor = 'pointer';
-        shareUsecase.title = 'Delete';
+        shareUsecase.title = 'Share';
     
         shareUsecase.addEventListener('click', () => {
           this.openShareComponent(params.node);
+        });
+
+        const goToLineage = document.createElement('button');
+        goToLineage.className = 'fa fa-arrow-right';
+        goToLineage.style.color = 'blue';
+        goToLineage.style.border = '1px solid lightGrey';
+        goToLineage.style.borderRadius = '5px';
+        goToLineage.style.lineHeight = '22px';
+        goToLineage.style.height = '32px';
+        goToLineage.style.cursor = 'pointer';
+        goToLineage.title = 'Navigate to Lineage';
+    
+        goToLineage.addEventListener('click', () => {
+          this.openLineageComponent(params.node);
         });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
         div.appendChild(shareUsecase);
+        div.appendChild(goToLineage);
     
         return div;
       }
@@ -265,4 +289,33 @@ export class UseCasesComponent {
   openShareComponent(row: any) {
     this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
   }
+
+  openLineageComponent(row: any) {
+    const useCaseId = row.data.use_case_id;
+  
+    this.usecaseService.navigateToLineage(useCaseId).subscribe({
+      next: (response) => {
+        const lineage_json = Array.isArray(response) ? response[0] : response;
+        if(lineage_json.lineage_json !==  "{}")
+        {
+        const lineage = Array.isArray(response) ? response[0] : response;
+        if (lineage) {
+          this.router.navigate(['/graph-embedded/edit-lineage', useCaseId, lineage.id]);
+        }
+      }
+      else
+      {
+        this.toastNotificationService.error("No lineage found for useCaseId : " + useCaseId);
+        setTimeout(() => {
+          this.getUsecaseList(); // refresh
+        }, 1000);
+      }
+      },
+      error: (err) => {
+        console.error("Failed to fetch lineageId:", err);
+      }
+    });
+  }
+  
+  
 }

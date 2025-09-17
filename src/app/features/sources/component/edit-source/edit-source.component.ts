@@ -25,7 +25,7 @@ export class EditSourceComponent implements OnInit {
    showDataFields = true;
    showDataQuality = false;
    showDataFieldsTable = true;
-   statusOptions: string[] = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+   statusOptions: string[] = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
    serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   sourceTypeOptions: string[] = [ 'SYSTEM', 'MANUAL_ENTRY' ]
    timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];

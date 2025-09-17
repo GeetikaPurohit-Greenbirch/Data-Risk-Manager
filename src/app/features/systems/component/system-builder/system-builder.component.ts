@@ -12,7 +12,7 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 })
 export class SystemBuilderComponent implements OnInit {
   systemForm!: FormGroup;
-  statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'PRODUCTION'];
+  statusOptions = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   accuracyRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   timlinessRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   systemModel : SystemsModel = new SystemsModel();

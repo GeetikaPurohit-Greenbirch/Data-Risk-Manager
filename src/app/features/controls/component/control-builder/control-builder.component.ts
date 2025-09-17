@@ -21,7 +21,17 @@ export class ControlBuilderComponent {
   dataSource1 = new MatTableDataSource<Sources>();
   dataSource2 = new MatTableDataSource<SystemsModel>();
 controlForm!: FormGroup;
-  statusOptions = ['DRAFT', 'READY_FOR_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED','PRODUCTION'];
+  statusOptions = ['NEW',
+'DRAFT',
+'READY_FOR_REVIEW',
+'RISK_ASSESSMENT',
+'APPROVED',
+'REJECTED',
+'IN_DEV',
+'IN_TEST',
+'READY_FOR_PRODUCTION',
+'IN_PRODUCTION',
+'ARCHIVED'];
   applicationStatusOptions= ['TARGET', 'PLANNED', 'COMMITTED', 'DELAYED'];
   attachToOptions = ['SYSTEM', 'SOURCE'];
   filteredAttachToIdOptions: { id: number, name: string }[] = [];
