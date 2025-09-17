@@ -22,7 +22,7 @@ export const blockDefinitions = [
       typeName: 'systems',
       color: '#fff',
       args: { x: 115, y: 50 },
-     size: { width: 150, height: 40 },
+     size: { width: 250, height: 300 },
       ports: [
         { id: 'in1', group: 'in', attrs: { portLabel: { text: '', fontSize: 14, fill: '#000' } } },
         { id: 'out2', group: 'out', attrs: { portLabel: { text: '', fontSize: 14, fill: '#000' } } }
@@ -66,10 +66,12 @@ export const blockDefinitions = [
       label: 'Target',
       icon: '<i class="fa fa-bullseye" aria-hidden="true"></i>',
       sicon: 'assets/icons/target.svg',
+      reportIcon: 'assets/icons/report.svg',
+      detailIcon: 'assets/icons/details-more.svg',
       typeName: 'targets',
       args: { x: 400, y: 100 },
       color: '#fff',
-      size: { width: 200, height: 200 },
+      size: { width: 300, height: 200 },
       allItems: [
         { id: 'reportStatus', label: 'Report Status' },
         { id: 'reportStatus2', label: 'Report Status2' },

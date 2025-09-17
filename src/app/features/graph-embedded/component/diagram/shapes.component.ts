@@ -184,203 +184,236 @@ export class Constant extends shapes.standard.BorderedRecord {
 }
 
 export class Concat extends shapes.standard.HeaderedRecord {
-  override defaults() {
-    return util.defaultsDeep({
-      type: 'mapping.Concat',
-      itemHeight: 20,
-      itemOffset: 5,
-      padding: { top: 35, left: 10, right: 0, bottom: 0 },
-      itemMinLabelWidth: 100,
-      scrollTop: 0,
-      itemOverflow: true,
-      collapsed: false,
-      expandedSize: null,
-      attrs: {
-        root: { magnet: false },
-        body: { stroke: '#EBEEF0' },
-        header: { height: 35,  fill: '#FFFFFF', stroke: '#EBEEF0' },
-        tabColor: { height: 5, x: 0, y: 0, width: 'calc(w)', fill: '#FF4365', stroke: '#FF4365' },
+    override defaults() {
+        return util.defaultsDeep({
+            type: 'mapping.Concat',
+            itemHeight: 20,
+            itemOffset: 5,
+            padding: { top: 35, left: 10, right: 0, bottom: 0 },
+            itemMinLabelWidth: 100,
+            scrollTop: 0,
+            itemOverflow: true,
+            collapsed: false,
+            expandedSize: null,
+            attrs: {
+                root: { magnet: false },
+                body: { stroke: '#EBEEF0' },
+                header: { height: 35, fill: '#FFFFFF', stroke: '#EBEEF0' },
+                tabColor: { height: 5, x: 0, y: 0, width: 'calc(w)', fill: '#FF4365', stroke: '#FF4365' },
 
-        // caret toggle icon inside header (click target)
-        // caret: {
-        //   ref: 'header',
-        //   refX: '85%',
-        //   refY: 14,
-        //   width: 12,
-        //   height: 12,
-        //   cursor: 'pointer',
-        //   d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-        //   fill: '#6B7280',
-        //   event: 'element:caret:pointerdown',
-        // },
-        //   buttonsGroups: {
-        //             stroke: '#7C90A6'
-        //         },
-         forksGroups: {
-                    stroke: 'white'
+                // caret toggle icon inside header (click target)
+                // caret: {
+                //   ref: 'header',
+                //   refX: '85%',
+                //   refY: 14,
+                //   width: 12,
+                //   height: 12,
+                //   cursor: 'pointer',
+                //   d: 'M 0 0 L 12 0 L 6 8 z', // ▼
+                //   fill: '#6B7280',
+                //   event: 'element:caret:pointerdown',
+                // },
+                  buttonsGroups: {
+                            stroke: '#7C90A6'
+                        },
+                 forksGroups: {
+                    stroke: 'lightgray'
                 },
 
-        headerIcon: {
-          'xlink:href': '',
-          x: 10, y: 10, width: 14, height: 14
-        },
-        headerLabel: {
-          y: 5,
-          fontFamily: 'Sans-serif',
-          fontWeight: 50,
-          margin: 10,
-          fontSize: 12,
-          textWrap: { ellipsis: false, height: 30 }
-        },
-        itemLabels: { magnet: 'passive', fontSize: 12, fontFamily: 'Sans-serif' },
-        itemLabels_0: { magnet: 'passive', cursor: 'pointer' },
-        itemBodies_0: { magnet: 'passive' }
-      },
-      portMarkup: [{ tagName: 'circle', selector: 'portBody' }],
-      ports: {
-        groups: {
-          in: {
-      position: { name: 'left', args: { y: 17 } },   // ≈ headerHeight / 2
-      attrs: {
-        portBody: { magnet: 'passive', r: 3, fill: '#000', stroke: '#000', strokeWidth: 1 }
-      },
-      label: { position: { name: 'left', args: { y: 0 } } }
-    },
-    out: {
-      position: { name: 'right', args: { y: 17 } },  // ≈ headerHeight / 2
-      attrs: {
-        portBody: { magnet: true, r: 3, fill: '#000', stroke: '#000', strokeWidth: 1 }
-      },
-      label: { position: { name: 'right', args: { y: 0 } } }
+                headerIcon: {
+                    'xlink:href': '',
+                    x: 10, y: 10, width: 14, height: 14
+                },
+                headerLabel: {
+                    y: 5,
+                    fontFamily: 'Sans-serif',
+                    fontWeight: 50,
+                    margin: 10,
+                    fontSize: 12,
+                    textWrap: { ellipsis: false, height: 30 }
+                },
+                headerAction1: {
+                    ref: 'header',
+                     refX: '75%',
+                    refY: 14,
+                    // refDx: -32,    
+                      width: 14,
+                    height: 14,       // 32px from the right edge
+                    cursor: 'pointer',
+                    'xlink:href': '',
+                    event: 'element:action1:pointerdown',
+                    // x: 10, 
+                    // y: 10, 
+                    // width: 14,
+                    // height: 14
+                },
+                headerAction2: {
+                    ref: 'header',
+                    refX: '85%',
+                    refY: 14,
+                    width: 14,
+                    height: 14,
+                    cursor: 'pointer',
+                    'xlink:href': '',
+                    event: 'element:action2:pointerdown'
+                },
+                itemLabels: { magnet: 'passive', fontSize: 12, fontFamily: 'Sans-serif' },
+                itemLabels_0: { magnet: 'passive', cursor: 'pointer' },
+                itemBodies_0: { magnet: 'passive' }
+            },
+            portMarkup: [{ tagName: 'circle', selector: 'portBody' }],
+            ports: {
+                groups: {
+                    in: {
+                        position: { name: 'left', args: { y: 17 } },   // ≈ headerHeight / 2
+                        attrs: {
+                            portBody: { magnet: 'passive', r: 3, fill: '#000', stroke: '#000', strokeWidth: 1 }
+                        },
+                        label: { position: { name: 'left', args: { y: 0 } } }
+                    },
+                    out: {
+                        position: { name: 'right', args: { y: 17 } },  // ≈ headerHeight / 2
+                        attrs: {
+                            portBody: { magnet: true, r: 3, fill: '#000', stroke: '#000', strokeWidth: 1 }
+                        },
+                        label: { position: { name: 'right', args: { y: 0 } } }
+                    }
+                }
+            },
+            items: [],
+            id: ''
+        }, super.defaults);
     }
-        }
-      },
-      items: [],
-      id:''
-    }, super.defaults);
-  }
 
-  override preinitialize(): void {
-    this.markup = [
-      { tagName: 'rect', selector: 'body' },
-      { tagName: 'rect', selector: 'header' },
-      { tagName: 'rect', selector: 'tabColor' },
-    //   { tagName: 'path', selector: 'caret' },               // <— caret
-      { tagName: 'image', selector: 'headerIcon' },
-      { tagName: 'text', selector: 'headerLabel' },
-      { tagName: 'g', selector: 'inPorts', groupSelector: 'in' },
-      { tagName: 'g', selector: 'outPorts', groupSelector: 'out' }
-    ];
-  }
+    override preinitialize(): void {
+        this.markup = [
+            { tagName: 'rect', selector: 'body' },
+            { tagName: 'rect', selector: 'header' },
+            { tagName: 'rect', selector: 'tabColor' },
+            //   { tagName: 'path', selector: 'caret' },               // <— caret
+            { tagName: 'image', selector: 'headerIcon' },
+            { tagName: 'text', selector: 'headerLabel' },
+            { tagName: 'image', selector: 'headerAction1' },   // ← new
+            { tagName: 'image', selector: 'headerAction2' },   // ← new
+            { tagName: 'g', selector: 'inPorts', groupSelector: 'in' },
+            { tagName: 'g', selector: 'outPorts', groupSelector: 'out' }
+        ];
+    }
 
-  // ---------- convenience ----------
-private get headerHeight(): number {
-  return (this.attr('header/height') as number) ?? 35;
-}
+    // ---------- convenience ----------
+    private get headerHeight(): number {
+        return (this.attr('header/height') as number) ?? 35;
+    }
 
 
-  setItems(items: any[]) {
-    return this.prop('items', items);
-  }
+    setItems(items: any[]) {
+        return this.prop('items', items);
+    }
 
-  setName(name: string, opt?: object) {
-    return this.attr(['headerLabel', 'textWrap', 'text'], name, opt);
-  }
+    setName(name: string, opt?: object) {
+        return this.attr(['headerLabel', 'textWrap', 'text'], name, opt);
+    }
 
-  setIcon(iconPath: string, opt?: object) {
-    return this.attr('headerIcon/xlink:href', iconPath, opt);
-  }
+    setIcon(iconPath: string, opt?: object) {
+        return this.attr('headerIcon/xlink:href', iconPath, opt);
+    }
 
-  setCaretIcon(){
-    return this.attr('caret',  {
-          ref: 'header',
-          refX: '85%',
-          refY: 14,
-          width: 12,
-          height: 12,
-          cursor: 'pointer',
-          d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-          fill: '#6B7280',
-          event: 'element:caret:pointerdown',
+    setHeaderActions(icon1: string, icon2: string, opt?: object) {
+        this.attr('headerAction1/xlink:href', icon1, opt);
+        this.attr('headerAction2/xlink:href', icon2, opt);
+    }
+
+
+    setCaretIcon() {
+        return this.attr('caret', {
+            ref: 'header',
+            refX: '85%',
+            refY: 14,
+            width: 12,
+            height: 12,
+            cursor: 'pointer',
+            d: 'M 0 0 L 12 0 L 6 8 z', // ▼
+            fill: '#6B7280',
+            event: 'element:caret:pointerdown',
         })
-  }
+    }
 
-  getNumberOfValues() {
-    return this.prop(['items', 0]).length;
-  }
+    getNumberOfValues() {
+        return this.prop(['items', 0]).length;
+    }
 
-  getDefaultItem() {
-    return { id: util.uuid(), label: 'Value ' + (this.getNumberOfValues() + 1), icon: 'assets/images/link.svg' };
-  }
+    getDefaultItem() {
+        return { id: util.uuid(), label: 'Value ' + (this.getNumberOfValues() + 1), icon: 'assets/images/link.svg' };
+    }
 
-  getItemTools(itemId: string) {
-    const groupIndex = this.getItemGroupIndex(itemId);
-    if (groupIndex !== 0) return null;
-    const tools = [{ action: 'edit', content: 'Edit Value' }, { action: 'add-next-sibling', content: 'Add Value' }];
-    if (this.getNumberOfValues() > 2) tools.push({ action: 'remove', content: warning('Remove Value') });
-    return tools;
-  }
+    getItemTools(itemId: string) {
+        const groupIndex = this.getItemGroupIndex(itemId);
+        if (groupIndex !== 0) return null;
+        const tools = [{ action: 'edit', content: 'Edit Value' }, { action: 'add-next-sibling', content: 'Add Value' }];
+        if (this.getNumberOfValues() > 2) tools.push({ action: 'remove', content: warning('Remove Value') });
+        return tools;
+    }
 
-  getTools() {
-    return [{ action: 'add-item', content: 'Add Value' }, { action: 'remove', content: warning('Remove Concat') }];
-  }
+    getTools() {
+        return [{ action: 'add-item', content: 'Add Value' }, { action: 'remove', content: warning('Remove Concat') }];
+    }
 
-  getInspectorConfig(itemId: string) {
-    const groupIndex = this.getItemGroupIndex(itemId);
-    if (groupIndex !== 0) return null;
-    return { label: { label: 'Label', type: 'content-editable' } };
-  }
+    getInspectorConfig(itemId: string) {
+        const groupIndex = this.getItemGroupIndex(itemId);
+        if (groupIndex !== 0) return null;
+        return { label: { label: 'Label', type: 'content-editable' } };
+    }
 
-  // ---------- collapse logic ----------
-  collapse() {
-    if (this.get('collapsed')) return;
+    // ---------- collapse logic ----------
+    collapse() {
+        if (this.get('collapsed')) return;
 
-    // remember full size
-    const fullSize = this.size();
-    this.set('expandedSize', fullSize);
+        // remember full size
+        const fullSize = this.size();
+        this.set('expandedSize', fullSize);
 
-    // hide everything except header
-     this.attr('body/display', 'none');
-    this.attr('items/display', 'none');
-    this.attr('footer/display', 'none');
-    this.attr('caret/transform', 'rotate(-90 6 6)');
-    this.attr('wrapper/display', 'none');
+        // hide everything except header
+        this.attr('body/display', 'none');
+        this.attr('items/display', 'none');
+        this.attr('footer/display', 'none');
+        this.attr('caret/transform', 'rotate(-90 6 6)');
+        this.attr('wrapper/display', 'none');
 
 
-    // shrink to header height
-    this.resize(fullSize.width, this.headerHeight);
-    this.set('collapsed', true);
-  }
-  
+        // shrink to header height
+        this.resize(fullSize.width, this.headerHeight);
+        this.set('collapsed', true);
+    }
 
-  expand() {
-    if (!this.get('collapsed')) return;
 
-    this.removeAttr('body/display');
-    this.removeAttr('items/display');
-    this.removeAttr('footer/display');
-    this.removeAttr('caret/transform');
-     this.removeAttr('wrapper/display');
+    expand() {
+        if (!this.get('collapsed')) return;
 
-    const sz = this.get('expandedSize') || { width: this.size().width, height: 200 };
-    this.resize(sz.width, sz.height);
-    this.set('collapsed', false);
-  }
+        this.removeAttr('body/display');
+        this.removeAttr('items/display');
+        this.removeAttr('footer/display');
+        this.removeAttr('caret/transform');
+        this.removeAttr('wrapper/display');
 
-  toggleCollapse() {
-    this.get('collapsed') ? this.expand() : this.collapse();
-  }
+        const sz = this.get('expandedSize') || { width: this.size().width, height: 200 };
+        this.resize(sz.width, sz.height);
+        this.set('collapsed', false);
+    }
 
-  override toJSON() {
-    const json: any = super.toJSON();
-    json.collapsed = this.get('collapsed');
-    json.expandedSize = this.get('expandedSize');
-    return json;
-  }
+    toggleCollapse() {
+        this.get('collapsed') ? this.expand() : this.collapse();
+    }
 
-   fromJSON(json: any) {
-    if (json.collapsed) this.collapse();
-  }
+    override toJSON() {
+        const json: any = super.toJSON();
+        json.collapsed = this.get('collapsed');
+        json.expandedSize = this.get('expandedSize');
+        return json;
+    }
+
+    fromJSON(json: any) {
+        if (json.collapsed) this.collapse();
+    }
 }
 
 
@@ -779,7 +812,7 @@ export class Record extends shapes.standard.HeaderedRecord {
                 },
                 items: [
 
-                      
+
                 ]
             }
         }, super.defaults);

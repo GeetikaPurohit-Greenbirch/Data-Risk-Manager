@@ -381,6 +381,9 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
+            if(blockDefinition?.reportIcon && blockDefinition?.detailIcon){
+                (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon)
+            }
 
 
             break;

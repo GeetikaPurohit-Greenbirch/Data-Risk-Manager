@@ -61,7 +61,7 @@ export class DiagramComponent implements AfterViewInit {
   scaleDisplay: number = 100;
   diagramCollapsed = false;
 
-  
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -69,7 +69,7 @@ export class DiagramComponent implements AfterViewInit {
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    
+
 
   ) { }
 
@@ -113,7 +113,7 @@ export class DiagramComponent implements AfterViewInit {
       this.loadGraphFromJSON(lineages?.lineage_json || {});
       this.loading = false;
 
-      
+
       // If you also need to feed AG Grid or a graph lib, do it here:
       // this.gridApi?.setRowData(this.lineages);
       // this.graph.loadFromLineages(this.lineages);
@@ -203,52 +203,50 @@ export class DiagramComponent implements AfterViewInit {
     });
   }
 
-public normalizeTypeName(typeName: string) {
-  switch (typeName.toLowerCase()) {
-     case "sources":
-      return "SOURCE";
-    case "systems":
-      return "SYSTEM";
-    case "interfaces":
-      return "INTERFACE";
-    case "targets":
-      return "TARGET";
-    case "control":
-      return "CONTROLS";
-    default:
-      return typeName.toUpperCase();
+  public normalizeTypeName(typeName: string) {
+    switch (typeName.toLowerCase()) {
+      case "sources":
+        return "SOURCE";
+      case "systems":
+        return "SYSTEM";
+      case "interfaces":
+        return "INTERFACE";
+      case "targets":
+        return "TARGET";
+      case "control":
+        return "CONTROLS";
+      default:
+        return typeName.toUpperCase();
+    }
   }
-}
 
-public enrichLinksWithNormalizedTypeName(json:any) {
-  const idToNormalizedTypeName:any = {};
+  public enrichLinksWithNormalizedTypeName(json: any) {
+    const idToNormalizedTypeName: any = {};
 
-  // Step 1: Map Concat node IDs to normalized typeNames
-  json.cells.forEach((cell:any) => {
-    if (cell.type === "mapping.Concat" && cell.id && cell.attrs?.typeName) {
-      const rawTypeNameObj = cell.attrs.typeName;
-      const rawTypeName = Object.values(rawTypeNameObj).join(""); // e.g., {0:'s',1:'y'...} → "systems"
-      const normalized = this.normalizeTypeName(rawTypeName);
-      idToNormalizedTypeName[cell.id] = normalized;
-    }
-  });
-
-  // Step 2: Add normalized typeNames to link source/target
-  json.cells.forEach((cell:any) => {
-    if (cell.type === "mapping.Link") {
-      if (cell.source?.id && idToNormalizedTypeName[cell.source.id]) {
-        cell.source.type = idToNormalizedTypeName[cell.source.id];
+    // Step 1: Map Concat node IDs to normalized typeNames
+    json.cells.forEach((cell: any) => {
+      if (cell.type === "mapping.Concat" && cell.id && cell.attrs?.typeName) {
+        const rawTypeNameObj = cell.attrs.typeName;
+        const rawTypeName = Object.values(rawTypeNameObj).join(""); // e.g., {0:'s',1:'y'...} → "systems"
+        const normalized = this.normalizeTypeName(rawTypeName);
+        idToNormalizedTypeName[cell.id] = normalized;
       }
-      if (cell.target?.id && idToNormalizedTypeName[cell.target.id]) {
-        cell.target.type = idToNormalizedTypeName[cell.target.id];
+    });
+
+    // Step 2: Add normalized typeNames to link source/target
+    json.cells.forEach((cell: any) => {
+      if (cell.type === "mapping.Link") {
+        if (cell.source?.id && idToNormalizedTypeName[cell.source.id]) {
+          cell.source.type = idToNormalizedTypeName[cell.source.id];
+        }
+        if (cell.target?.id && idToNormalizedTypeName[cell.target.id]) {
+          cell.target.type = idToNormalizedTypeName[cell.target.id];
+        }
       }
-    }
-  });
+    });
 
-  return json;
-}
-
-
+    return json;
+  }
 
 
   public tracePathNew(element: dia.Element, portId: string): boolean {
@@ -653,7 +651,7 @@ public enrichLinksWithNormalizedTypeName(json:any) {
   saveGraph() {
     const json = this.graph.toJSON();
 
-    const ddata= this.enrichLinksWithNormalizedTypeName(json);
+    const ddata = this.enrichLinksWithNormalizedTypeName(json);
     console.log('Graph JSON:', ddata);
     const jsonString = JSON.stringify(ddata, null, 2); // Pretty print
 
@@ -682,8 +680,8 @@ public enrichLinksWithNormalizedTypeName(json:any) {
 
   }
 
-  goBack=() => {
-this.router.navigate(['/graph-embedded']);
+  goBack = () => {
+    this.router.navigate(['/graph-embedded']);
 
   }
 
