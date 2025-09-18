@@ -324,6 +324,10 @@ inline-input {
   min-height: 0; /* Important for flex layouts */
 }
 
+.graph-box{
+  height: calc(100% - 60px);
+}
+
 .graph-row {
   display: flex;
   height: 100%;

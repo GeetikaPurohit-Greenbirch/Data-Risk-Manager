@@ -22,13 +22,13 @@ export class SidebarComponent implements OnInit {
   userRole: string | null = null;
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/home', icon: 'fa-tachometer', feature: 'sb_dashboard' },
-    { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
     { label: 'Use Cases', route: '/use-cases', icon: 'fa-clipboard', feature: 'sb_use_cases' },
     { label: 'Systems', route: '/systems', icon: 'fa-cogs', feature: 'sb_systems' },
     { label: 'Interfaces', route: '/interfaces', icon: 'fa-random', feature: 'sb_interfaces' },
     { label: 'Sources', route: '/sources', icon: 'fa-database', feature: 'sb_sources' },
     { label: 'Targets', route: '/targets', icon: 'fa-bullseye', feature: 'sb_targets' },
     { label: 'Controls', route: '/controls', icon: 'fa-sliders', feature: 'sb_controls' },
+   { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
     { label: 'Use Case Builder', route: '/use-cases/create-use-case', icon: 'fa-clipboard', subIcon: 'fa-plus', feature: 'sb_create_use_cases' },
     { label: 'System Builder', route: '/systems/system-builder', icon: 'fa-cogs', subIcon: 'fa-plus', feature: 'sb_system_builder' },
     { label: 'Interface Builder', route: '/interfaces/interface-builder', icon: 'fa-random', subIcon: 'fa-plus', feature: 'sb_interface_builder' },

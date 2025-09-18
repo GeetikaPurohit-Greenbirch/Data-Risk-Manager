@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 
 
@@ -14,6 +14,7 @@ interface FieldData {
   dqaTimeliness: string;
   dqaAccuracy: string;
   criticality: string;
+  fieldId:string;
 }
 
 
@@ -29,6 +30,7 @@ export class BuilderComponent implements OnInit {
   useCaseId!: number;
   lineageId!: number;
   fields : any;
+  targetId: any;
 
   
     cols: any[] = [
@@ -48,7 +50,7 @@ export class BuilderComponent implements OnInit {
     ];
   
 
-  constructor(private datafieldsService: DatafieldsService,private route: ActivatedRoute) {}
+  constructor(private datafieldsService: DatafieldsService,private route: ActivatedRoute,   private router: Router,) {}
 
    nodesCollapsed = false;
 
@@ -69,12 +71,14 @@ export class BuilderComponent implements OnInit {
 
     this.selectedColumns = this.cols // By default all visible
 
-    this.getTargetReport();
+  
 
   }
 
   toggleDiagram(param:any) {
     console.log(param)
+    this.getTargetReport(param);
+    this.targetId=param
     this.diagramCollapsed = !this.diagramCollapsed;
   }
 
@@ -117,9 +121,9 @@ export class BuilderComponent implements OnInit {
   //   }
   // ];
 
-  getTargetReport()
+  getTargetReport(targetId:any)
    { 
-    this.datafieldsService.getTargetReportdata(this.useCaseId, '8').subscribe({
+    this.datafieldsService.getTargetReportdata(this.useCaseId, targetId).subscribe({
       next: (res: any) => {
         this.fields = res;
       }
@@ -141,6 +145,30 @@ export class BuilderComponent implements OnInit {
   // Example action
   editRow(row: FieldData) {
     console.log('Edit:', row);
+
+
+    
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+    const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+
+    // console.log(itemId,model,"modelmodelmodel")
+     const selectedField = row.fieldId;
+
+       this.router.navigate([
+      '/graph-embedded/lineage-mapping/',
+      useCaseId,
+      layoutId
+    ],
+      {
+        queryParams: {
+            selectedItem:selectedField,
+            targetId:  this.targetId
+
+        }
+      }
+    );
   }
 
   deleteRow(row: FieldData) {

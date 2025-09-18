@@ -382,7 +382,9 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
             if(blockDefinition?.reportIcon && blockDefinition?.detailIcon){
-                (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon)
+                (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon);
+                // (newCell as Concat).setHeaderActions2(blockDefinition?.detailIcon);
+        
             }
 
 

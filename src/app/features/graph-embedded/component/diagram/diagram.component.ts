@@ -34,6 +34,8 @@ import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { finalize } from 'rxjs/operators';
 
+
+
 type Records = Constant | Concat | GetDate | Record;
 
 export type LineageRecord = {
@@ -267,7 +269,7 @@ export class DiagramComponent implements AfterViewInit {
       const target = link.get('target');
       return target?.port === portId;
     });
-    for (const link of filteredLinks) {
+    for (const link of incomingLinks) {
       const source = link.get('source');
       if (!source?.id || !source?.port) continue;
       const sourceElement = this.graph.getCell(source.id);
@@ -305,6 +307,9 @@ export class DiagramComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
+
+  (shapes as any).mapping = (shapes as any).mapping || {};
+(shapes as any).mapping.Concat = Concat;
     const container = this.canvas.nativeElement;
      const width = container.clientWidth;
 const height = container.clientHeight;
@@ -527,44 +532,48 @@ const height = container.clientHeight;
 
       const model = elementView.model; // dia.Element
       const itemId = elementView.findAttribute('item-id', magnet);
-      // const connectedLinks = this.graph.getConnectedLinks(model, {
-      //   inbound: true,
-      //   outbound: true,
-      //   port: itemId   // 🔥 This is the key part to filter links by specific item/port
-      // });
+      const connectedLinks = this.graph.getConnectedLinks(model, {
+        inbound: true,
+        outbound: true,
+        port: itemId   // 🔥 This is the key part to filter links by specific item/port
+      });
 
-      // console.log('Connected Links:', connectedLinks, itemId);
+      console.log('Connected Links:', connectedLinks, itemId);
 
-      // connectedLinks.forEach((link: dia.Link) => {
-      //   const target = link.get('target');
-      //   const source = link.get('source');
-      //   console.log('Target Port:', target, source, 'on Link:', link.id);
-      // })
-      // this.clearHighlights()
-      // this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
+      connectedLinks.forEach((link: dia.Link) => {
+        const target = link.get('target');
+        const source = link.get('source');
+        console.log('Target Port:', target, source, 'on Link:', link.id);
+      })
+      this.clearHighlights()
+      this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
 
       
-    const path = this.router.url.split('?')[0].split('#')[0];
-    const segments = path.split('/').filter(Boolean);
-    const layoutId = (segments[segments.length - 1] || '').toUpperCase();
-    const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+///below should be uncommentd
 
-    console.log(itemId,model,"modelmodelmodel")
-     const selectedField = itemId ? itemId.split('_').pop() : '';
 
-       this.router.navigate([
-      '/graph-embedded/lineage-mapping/',
-      useCaseId,
-      layoutId
-    ],
-      {
-        queryParams: {
-            selectedItem:selectedField,
-            targetId: model?.get('id')
 
-        }
-      }
-    );
+    // const path = this.router.url.split('?')[0].split('#')[0];
+    // const segments = path.split('/').filter(Boolean);
+    // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+    // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+
+    // console.log(itemId,model,"modelmodelmodel")
+    //  const selectedField = itemId ? itemId.split('_').pop() : '';
+
+    //    this.router.navigate([
+    //   '/graph-embedded/lineage-mapping/',
+    //   useCaseId,
+    //   layoutId
+    // ],
+    //   {
+    //     queryParams: {
+    //         selectedItem:selectedField,
+    //         targetId: model?.get('id')
+
+    //     }
+    //   }
+    // );
 
     });
 

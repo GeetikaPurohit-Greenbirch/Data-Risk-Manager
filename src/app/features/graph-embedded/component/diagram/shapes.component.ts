@@ -213,10 +213,10 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 //   fill: '#6B7280',
                 //   event: 'element:caret:pointerdown',
                 // },
-                  buttonsGroups: {
-                            stroke: '#7C90A6'
-                        },
-                 forksGroups: {
+                buttonsGroups: {
+                    stroke: '#7C90A6'
+                },
+                forksGroups: {
                     stroke: 'lightgray'
                 },
 
@@ -234,10 +234,10 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 },
                 headerAction1: {
                     ref: 'header',
-                     refX: '75%',
+                    refX: '75%',
                     refY: 14,
                     // refDx: -32,    
-                      width: 14,
+                    width: 14,
                     height: 14,       // 32px from the right edge
                     cursor: 'pointer',
                     'xlink:href': '',
