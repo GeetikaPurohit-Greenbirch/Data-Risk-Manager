@@ -5,7 +5,9 @@ import {
   AfterViewInit,
   ViewChild,
   Inject,
-  PLATFORM_ID
+  PLATFORM_ID,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   dia,
@@ -52,6 +54,10 @@ export type LineageRecord = {
   styleUrls: ['./diagram.component.scss']
 })
 export class DiagramComponent implements AfterViewInit {
+
+  @Output() toggle = new EventEmitter<void>();
+
+
   @ViewChild('canvas') canvas!: ElementRef;
   hasGraph: boolean = false;
   graph!: dia.Graph;
@@ -147,11 +153,11 @@ export class DiagramComponent implements AfterViewInit {
     this.router.navigate([
       '/graph-embedded/lineage-mapping/',
       useCaseId,
-      layoutId,
-      linkId
+      layoutId
     ],
       {
         queryParams: {
+          linkId: linkId,
           [sourceType]: source.port.split('-')[0],
           [targetType]: target.port.split('-')[0],
         }
@@ -300,6 +306,9 @@ export class DiagramComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     const container = this.canvas.nativeElement;
+     const width = container.clientWidth;
+const height = container.clientHeight;
+
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
 
     // --- Initialize Graph, Paper, and Scroller ONCE ---
@@ -312,6 +321,8 @@ export class DiagramComponent implements AfterViewInit {
       background: {
         color: '#F8F9FA',
       },
+      height,
+      width,
       // frozen: true, // Keep frozen until initial setup is done
       async: true,
       sorting: dia.Paper.sorting.APPROX,
@@ -465,17 +476,27 @@ export class DiagramComponent implements AfterViewInit {
       }
     });
 
+    this.paper.on('element:action1:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
+      const model = view.model as any;
+      const targetId = model.get?.('id');
+      this.toggle.emit(targetId);
+    })
+
+    this.paper.on('element:action2:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
+      console.log("helllllllllooo")
+
+    })
 
 
-    this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    // this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
+    //   evt.preventDefault();
+    //   this.zoom(ox, oy, delta);
+    // });
 
-    this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    // this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
+    //   evt.preventDefault();
+    //   this.zoom(ox, oy, delta);
+    // });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
@@ -487,7 +508,7 @@ export class DiagramComponent implements AfterViewInit {
     });
 
     this.graph.on('add', (cell) => {
-      if (cell.get('type') === 'mapping.Record') {
+      if (cell.get('type') === 'mapping.Concat') {
         // Ensure the view is rendered before adding tools
         const cellView = this.paper.findViewByModel(cell);
         if (cellView) {
@@ -503,24 +524,47 @@ export class DiagramComponent implements AfterViewInit {
     })
 
     this.paper.on('element:magnet:pointerdblclick', (elementView, evt, magnet) => {
+
       const model = elementView.model; // dia.Element
       const itemId = elementView.findAttribute('item-id', magnet);
-      const connectedLinks = this.graph.getConnectedLinks(model, {
-        inbound: true,
-        outbound: true,
-        port: itemId   // 🔥 This is the key part to filter links by specific item/port
-      });
+      // const connectedLinks = this.graph.getConnectedLinks(model, {
+      //   inbound: true,
+      //   outbound: true,
+      //   port: itemId   // 🔥 This is the key part to filter links by specific item/port
+      // });
 
-      console.log('Connected Links:', connectedLinks, itemId);
+      // console.log('Connected Links:', connectedLinks, itemId);
 
-      connectedLinks.forEach((link: dia.Link) => {
-        const target = link.get('target');
-        const source = link.get('source');
-        console.log('Target Port:', target, source, 'on Link:', link.id);
-      })
-      this.clearHighlights()
-      this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
+      // connectedLinks.forEach((link: dia.Link) => {
+      //   const target = link.get('target');
+      //   const source = link.get('source');
+      //   console.log('Target Port:', target, source, 'on Link:', link.id);
+      // })
+      // this.clearHighlights()
+      // this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
 
+      
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+    const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+
+    console.log(itemId,model,"modelmodelmodel")
+     const selectedField = itemId ? itemId.split('_').pop() : '';
+
+       this.router.navigate([
+      '/graph-embedded/lineage-mapping/',
+      useCaseId,
+      layoutId
+    ],
+      {
+        queryParams: {
+            selectedItem:selectedField,
+            targetId: model?.get('id')
+
+        }
+      }
+    );
 
     });
 

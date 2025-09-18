@@ -73,7 +73,8 @@ export class BuilderComponent implements OnInit {
 
   }
 
-  toggleDiagram() {
+  toggleDiagram(param:any) {
+    console.log(param)
     this.diagramCollapsed = !this.diagramCollapsed;
   }
 

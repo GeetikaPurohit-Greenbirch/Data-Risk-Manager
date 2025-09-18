@@ -10,7 +10,7 @@ import { LineageComponent } from './component/lineage-mapper/lineage.component';
 const routes: Routes = [
   { path: '', component: UseCasesComponent },
   { path: 'edit-lineage/:usecaseId/:lineageId', component: BuilderComponent },
-  { path: 'lineage-mapping/:usecaseId/:lineageId/:linkId', component: LineageComponent},
+  { path: 'lineage-mapping/:usecaseId/:lineageId', component: LineageComponent},
 
 ];
 

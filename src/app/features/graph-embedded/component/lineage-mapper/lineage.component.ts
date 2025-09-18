@@ -17,7 +17,7 @@ import {
   format,
   elementTools
 } from '@joint/plus';
-import { Subject, of, forkJoin } from 'rxjs';
+import { Subject, of, forkJoin, firstValueFrom } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Link, Constant, Concat, GetDate, Record } from './shapes.component';
 import { SourceArrowhead, TargetArrowhead, Button } from '../diagram/link-tools.component';
@@ -54,7 +54,7 @@ export class LineageComponent implements AfterViewInit {
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   source: any = null;
   target: any = null;
@@ -81,8 +81,8 @@ export class LineageComponent implements AfterViewInit {
 
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
-    const linkId = (segments[segments.length - 1] || '');
-    const usecaseId = (segments[segments.length - 3] || '');
+    const linkId = this.route.snapshot.queryParamMap.get('linkId') || '';
+    const usecaseId = (segments[segments.length - 2] || '');
 
     forkJoin({
       initialData: this.lineageService
@@ -125,11 +125,94 @@ export class LineageComponent implements AfterViewInit {
         }
       }
     });
+  } 
+
+    public widthByType(type: string): number {
+    switch (type.toLowerCase()) {
+      case 'sources':
+        return 0;      // leftmost
+      case 'systems':
+        return 300;    // middle
+      case 'targets':
+        return 600;    // rightmost
+      default:
+        return 0;      // fallback
+    }
+  }
+
+  public getUniqueEntitiesExcludingInterface(data: any) {
+    const uniqueEntities = new Map();
+
+    data.nodes.forEach((node: any) => {
+      // if (node.entity_type !== "INTERFACE") {
+        const key = node.entity_id + "-" + node.entity_type;
+        if (!uniqueEntities.has(key)) {
+          uniqueEntities.set(key, {
+            entity_id: node.entity_id,
+            entity_type: node.entity_type,
+            entity_name: node.entity_name || null
+          });
+        }
+      // }
+    });
+
+    return Array.from(uniqueEntities.values());
+  }
+
+  public async fetchEntitiesFromMapping(result: any[]) {
+  const typeMap: any = {
+    'TARGET': 'targets',
+    'SYSTEM': 'systems',
+    'INTERFACE': 'systems',
+    'SOURCE': 'sources'
+  };
+
+  for (let index = 0; index < result.length; index++) {
+    const entity = result[index];
+    const apiType = typeMap[entity.entity_type] || entity.entity_type.toLowerCase() + 's';
+    const entityId = entity.entity_id;
+    try {
+      const data = await firstValueFrom(this.lineageService.getEntityById(apiType, entityId));
+      const parsed = JSON.parse(data.node);
+      // Plot in order
+      loadExample(this.graph, { x: 50 + this.widthByType(apiType), y: 90 }, data, parsed);
+    } catch (err) {
+      console.error(`Failed to fetch entity for ${apiType} (${entityId}):`, err);
+    }
+  }
+}
+
+
+  public getTargetToSourceMapping(targetId: string, sourceId: string) {
+    this.lineageService.getTargetToSourceMapping(targetId, sourceId).subscribe({
+      next: (response) => {
+        console.log('Target to Source Mapping:', response);
+       const result = this.getUniqueEntitiesExcludingInterface(response).reverse();
+        this.fetchEntitiesFromMapping(result);
+        console.log(result);
+      },
+      error: (err) => {
+        console.error('Failed to get target to source mapping:', err);
+        this.toastNotificationService.error('Failed to fetch target to source mapping');
+      }
+    });
   }
 
   public ngOnInit(): void {
     // This is a good place for initial setup that doesn't require DOM access
-    this.loadData();
+
+    const selectedItem = this.route.snapshot.queryParamMap.get('selectedItem') || '';
+    const targetId = this.route.snapshot.queryParamMap.get('targetId') || '';
+
+    if (selectedItem && targetId) {
+
+      this.getTargetToSourceMapping(targetId, selectedItem)
+
+    } else {
+      this.loadData();
+    }
+
+
   }
 
   public showLinkTools(linkView: dia.LinkView) {
@@ -155,8 +238,8 @@ export class LineageComponent implements AfterViewInit {
   public goBack = () => {
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
-    const lineageId = (segments[segments.length - 2] || '');
-    const usecaseId = (segments[segments.length - 3] || '');
+    const lineageId = (segments[segments.length - 1] || '');
+    const usecaseId = (segments[segments.length - 2] || '');
     this.router.navigate([`/graph-embedded/edit-lineage/${usecaseId}/${lineageId}`]);
   }
 
@@ -224,6 +307,11 @@ export class LineageComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     const container = this.canvas.nativeElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    console.log(height, width, "ssssss")
+
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
 
     // --- Initialize Graph, Paper, and Scroller ONCE ---
@@ -231,9 +319,10 @@ export class LineageComponent implements AfterViewInit {
 
     this.paper = new dia.Paper({
       model: this.graph,
-      background: {
-        color: '#F8F9FA',
-      },
+      height,
+      width,
+      gridSize: 10,
+      background: { color: '#F3F7F6' },
       // frozen: true, // Keep frozen until initial setup is done
       async: true,
       sorting: dia.Paper.sorting.APPROX,
@@ -312,7 +401,7 @@ export class LineageComponent implements AfterViewInit {
     });
 
     this.graph.on('add', (cell) => {
-      if ((cell as any).get('type') === 'mapping.Record') {
+      if ((cell as any).get('type') === 'mapping.Concat') {
         // Ensure the view is rendered before adding tools
         const cellView = this.paper.findViewByModel(cell);
         if (cellView) {
@@ -473,29 +562,29 @@ export class LineageComponent implements AfterViewInit {
 
 
   /** Build a map of { portId -> parentId } from a Concat cell's items */
-private buildConcatPortParentIdMap(concatCell: any): any {
-  const map: any = {};
-  const nodeId = String(concatCell?.id);
-  const groups = Array.isArray(concatCell?.items) ? concatCell.items : [];
+  private buildConcatPortParentIdMap(concatCell: any): any {
+    const map: any = {};
+    const nodeId = String(concatCell?.id);
+    const groups = Array.isArray(concatCell?.items) ? concatCell.items : [];
 
-  for (const group of groups) {
-    const sections = Array.isArray(group) ? group : [];
+    for (const group of groups) {
+      const sections = Array.isArray(group) ? group : [];
 
-    for (const section of sections) {
-      const sectionId = section?.id || nodeId; // fallback to node id if no section id
-      const leafItems = Array.isArray(section?.items) ? section.items : [];
+      for (const section of sections) {
+        const sectionId = section?.id || nodeId; // fallback to node id if no section id
+        const leafItems = Array.isArray(section?.items) ? section.items : [];
 
-      for (const leaf of leafItems) {
-        const leafId = leaf?.id;
-        if (leafId != null) {
-          map[String(leafId)] = sectionId;
+        for (const leaf of leafItems) {
+          const leafId = leaf?.id;
+          if (leafId != null) {
+            map[String(leafId)] = sectionId;
+          }
         }
       }
     }
-  }
 
-  return map;
-}
+    return map;
+  }
 
 
   // === UPDATED METHOD ============================================
@@ -505,7 +594,7 @@ private buildConcatPortParentIdMap(concatCell: any): any {
    */
   public enrichLinksWithNormalizedTypeName(json: any) {
     // nodeId -> normalized node type (SYSTEM/TARGET/INTERFACE/SOURCE/CONTROLS/...)
-    const idToNormalizedTypeName: any= {};
+    const idToNormalizedTypeName: any = {};
     // nodeId -> (portId -> item type) from Concat leaf items
     const nodePortTypeMap: any = {};
     const nodePortParentMap: any = {};
@@ -527,10 +616,10 @@ private buildConcatPortParentIdMap(concatCell: any): any {
       }
 
 
-       const portParentMap = this.buildConcatPortParentIdMap(cell);
-    if (Object.keys(portParentMap).length) {
-      nodePortParentMap[cell.id] = portParentMap;
-    }
+      const portParentMap = this.buildConcatPortParentIdMap(cell);
+      if (Object.keys(portParentMap).length) {
+        nodePortParentMap[cell.id] = portParentMap;
+      }
 
     });
 
@@ -562,11 +651,11 @@ private buildConcatPortParentIdMap(concatCell: any): any {
 
 
         //  let resolvedType = portTypeMap?.[portId] || normalizedType;
-         const portParentMap = nodePortParentMap[nodeId];
+        const portParentMap = nodePortParentMap[nodeId];
         let resolvedParentId = portParentMap?.[portId].split('_')[3] || nodeId;
 
         if (resolved) {
-          cell[endpoint] = { ...(ep || {}), type: resolved, parentId: resolvedParentId};
+          cell[endpoint] = { ...(ep || {}), type: resolved, parentId: resolvedParentId };
         }
       };
 
@@ -584,8 +673,8 @@ private buildConcatPortParentIdMap(concatCell: any): any {
 
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
-    const linkId = (segments[segments.length - 1] || '');
-    const usecaseId = (segments[segments.length - 3] || '');
+    const linkId = this.route.snapshot.queryParamMap.get('linkId') || '';
+    const usecaseId = (segments[segments.length - 2] || '');
 
     this.lineageService.saveLineageDetailsByLinkId(linkId, usecaseId, jsonString).subscribe({
       next: (response) => {

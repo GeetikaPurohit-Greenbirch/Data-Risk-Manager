@@ -187,7 +187,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
     override defaults() {
         return util.defaultsDeep({
             type: 'mapping.Concat',
-            itemHeight: 20,
+            itemHeight: 25,
             itemOffset: 5,
             padding: { top: 35, left: 10, right: 0, bottom: 0 },
             itemMinLabelWidth: 100,
@@ -196,7 +196,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
             itemOverflow: true,
             collapsed: false,
             expandedSize: null,
-            id:'',
+            id: '',
             attrs: {
                 root: { magnet: false },
                 body: { stroke: '#EBEEF0', 'pointer-events': 'none', },
@@ -218,7 +218,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 //             stroke: '#7C90A6'
                 //         },
                 forksGroups: {
-                    stroke: 'white'
+                    stroke: '#FFF'
                 },
 
                 headerIcon: {
@@ -243,7 +243,10 @@ export class Concat extends shapes.standard.HeaderedRecord {
                     cursor: 'pointer'
                 },
                 itemBodies_0: {
-                    // stroke: '#EBEEF0'
+                    stroke: '#EBEEF0'
+                },
+                 itemBodies_1: {
+                    stroke: '#EBEEF0'
                 }
             },
             portMarkup: [{ tagName: 'circle', selector: 'portBody' }],
@@ -277,6 +280,10 @@ export class Concat extends shapes.standard.HeaderedRecord {
             //   { tagName: 'path', selector: 'caret' },               // <— caret
             { tagName: 'image', selector: 'headerIcon' },
             { tagName: 'text', selector: 'headerLabel' },
+            {
+                tagName: 'g',
+                selector: 'rowSeparators'
+            },
             { tagName: 'g', selector: 'inPorts', groupSelector: 'in' },
             { tagName: 'g', selector: 'outPorts', groupSelector: 'out' }
         ];

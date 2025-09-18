@@ -230,7 +230,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
                     fontWeight: 50,
                     margin: 10,
                     fontSize: 12,
-                    textWrap: { ellipsis: false, height: 30 }
+                    textWrap: { ellipsis: true, height: 30, width: 120 }
                 },
                 headerAction1: {
                     ref: 'header',

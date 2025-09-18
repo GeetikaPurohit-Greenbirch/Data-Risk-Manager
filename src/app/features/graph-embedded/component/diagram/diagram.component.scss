@@ -40,6 +40,7 @@
     font-size: 18px;
     color: #fff;
     padding-left: 16px;
+     height: 48px;  
   }
 
   .block-item {
@@ -307,3 +308,39 @@ inline-input {
 
 //// PrimeNG Table /////
 
+
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.dd-container,
+.graph-box,
+.graph-row,
+.graph-col-9,
+.paper-container {
+  height: 100%;
+  min-height: 0; /* Important for flex layouts */
+}
+
+.graph-row {
+  display: flex;
+  height: 100%;
+}
+
+.graph-col-3 {
+  flex: 0 0 250px; /* or whatever width you want for the sidebar */
+}
+
+.graph-col-9 {
+  flex: 1 1 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.paper-container {
+  flex: 1 1 0;
+  height: 100%;
+}
