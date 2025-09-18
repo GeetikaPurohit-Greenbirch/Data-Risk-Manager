@@ -21,6 +21,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class EditUsecaseComponent {
 usecaseForm!: FormGroup;
   showDataFields = false;
+  lineage_json: any;
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -234,14 +235,15 @@ usecaseForm!: FormGroup;
 
   }
 
+
   existingLineage(view: string)
   {
     this.activeView = view;
   
     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
       next: (response) => {
-        const lineage_json = Array.isArray(response) ? response[0] : response;
-        if(lineage_json.lineage_json !==  "{}")
+        this.lineage_json = Array.isArray(response) ? response[0] : response;
+        if(this.lineage_json.lineage_json !==  "{}")
         {
         const lineage = Array.isArray(response) ? response[0] : response;
         if (lineage) {
@@ -282,11 +284,19 @@ usecaseForm!: FormGroup;
 
 
   saveLineage() {
+    // this.existingLineage('existing');
+    this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
+      next: (response) => {
+        this.lineage_json = Array.isArray(response) ? response[0] : response;
+      
     const payload = {
       use_case_id: this.usecaseId,
-      lineage_name: this.lineageName
+      lineage_name: this.lineageName,
+      lineage_json: this.lineage_json.lineage_json
     };
 
+    if(this.lineage_json.lineage_json == '{}')
+    {
     this.lineageService.createLineage(payload).subscribe({
       next: (res) => {
         console.log('Lineage created:', res);
@@ -296,6 +306,25 @@ usecaseForm!: FormGroup;
       error: (err) => {
         console.error('Error creating lineage:', err);
       }
+      
     });
   }
+  else
+  {
+
+    const payload = {};
+    this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
+      next: (res) => {
+        console.log('Lineage created:', res);
+        this.dialog.closeAll();
+        this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+      },
+      error: (err) => {
+        console.error('Error creating lineage:', err);
+      }
+      
+    });
+  }
+  }
+})}
 }
