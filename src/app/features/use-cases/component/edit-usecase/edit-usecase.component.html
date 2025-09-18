@@ -176,3 +176,22 @@
   </mat-card>
   </main>
   </div>
+
+  <ng-template #lineagePopup>
+    <h2 mat-dialog-title>Create Lineage</h2>
+    <mat-dialog-content>
+      <mat-form-field class="w-100">
+        <mat-label>Use Case Name</mat-label>
+        <input matInput [value]="useCaseName" disabled />
+      </mat-form-field>
+  
+      <mat-form-field class="w-100">
+        <mat-label>Lineage Name</mat-label>
+        <input matInput [(ngModel)]="lineageName" placeholder="Enter lineage name" />
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveLineage()">Add</button>
+    </mat-dialog-actions>
+  </ng-template>

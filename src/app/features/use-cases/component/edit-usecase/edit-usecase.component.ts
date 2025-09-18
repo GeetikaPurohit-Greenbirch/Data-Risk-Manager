@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
@@ -7,6 +7,8 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter } from 'rxjs';
 import { UsecaseService } from '../../services/usecase.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { LineageService } from 'src/app/features/graph-embedded/services/lineage.service';
+import { MatDialog } from '@angular/material/dialog';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -19,6 +21,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class EditUsecaseComponent {
 usecaseForm!: FormGroup;
   showDataFields = false;
+  lineage_json: any;
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -38,6 +41,8 @@ usecaseForm!: FormGroup;
 'REJECTED'];
   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   usecaseId!: any;
+  useCaseName = '';   
+  lineageName = '';
   gridApi: any;
   gridColumnApi: any;
   formLoaded = false;
@@ -50,6 +55,8 @@ usecaseForm!: FormGroup;
     private usecaseService: UsecaseService,
     private toastNotificationService: ToastnotificationService,
             private cdr: ChangeDetectorRef,
+            private dialog: MatDialog,
+            private lineageService: LineageService,
     
   ) {}
 
@@ -145,6 +152,7 @@ usecaseForm!: FormGroup;
       this.usecaseService.getUsecaseById(this.usecaseId).subscribe({
         next: (res: any) => {
           const data = res.useCaseEntity;
+          this.useCaseName = data.use_case_name;
           this.usecaseForm.patchValue({
             ...data,
             last_review_date: data.last_review_date ? new Date(data.last_review_date) : null,
@@ -227,14 +235,15 @@ usecaseForm!: FormGroup;
 
   }
 
+
   existingLineage(view: string)
   {
     this.activeView = view;
   
     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
       next: (response) => {
-        const lineage_json = Array.isArray(response) ? response[0] : response;
-        if(lineage_json.lineage_json !==  "{}")
+        this.lineage_json = Array.isArray(response) ? response[0] : response;
+        if(this.lineage_json.lineage_json !==  "{}")
         {
         const lineage = Array.isArray(response) ? response[0] : response;
         if (lineage) {
@@ -259,5 +268,63 @@ usecaseForm!: FormGroup;
   newLineage(view: string)
   {
     this.activeView = view;
+
+    this.openLineagePopup();
   }
+  @ViewChild('lineagePopup') lineagePopup!: TemplateRef<any>;
+
+
+  openLineagePopup() {
+    const dialogRef = this.dialog.open(this.lineagePopup);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.lineageName = '';
+    });
+  }
+
+
+  saveLineage() {
+    // this.existingLineage('existing');
+    this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
+      next: (response) => {
+        this.lineage_json = Array.isArray(response) ? response[0] : response;
+      
+    const payload = {
+      use_case_id: this.usecaseId,
+      lineage_name: this.lineageName,
+      lineage_json: this.lineage_json.lineage_json
+    };
+
+    if(this.lineage_json.lineage_json == '{}')
+    {
+    this.lineageService.createLineage(payload).subscribe({
+      next: (res) => {
+        console.log('Lineage created:', res);
+        this.dialog.closeAll();
+        this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+      },
+      error: (err) => {
+        console.error('Error creating lineage:', err);
+      }
+      
+    });
+  }
+  else
+  {
+
+    const payload = {};
+    this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
+      next: (res) => {
+        console.log('Lineage created:', res);
+        this.dialog.closeAll();
+        this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+      },
+      error: (err) => {
+        console.error('Error creating lineage:', err);
+      }
+      
+    });
+  }
+  }
+})}
 }

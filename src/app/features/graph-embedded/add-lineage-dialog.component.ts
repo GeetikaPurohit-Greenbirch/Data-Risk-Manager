@@ -86,7 +86,8 @@ export class AddLineageDialogComponent {
     });
   }else if (this.data.mode === 'edit' && this.data.value?.lineage_id) {
       // EDIT flow -> update, then close
-      this.lineageService.updateLineage(payload).subscribe({
+      const payload = {};
+      this.lineageService.updateLineage(payload, this.form.value.use_case_id, this.form.value.lineage_name?.trim()).subscribe({
         next: () => {
           this.toastNotificationService.success('Lineage updated successfully');
           this.dialogRef.close({

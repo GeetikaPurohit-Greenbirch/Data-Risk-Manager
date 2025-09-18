@@ -35,11 +35,17 @@ export class LineageService {
         return this.http.delete<any[]>(url);
       }
      
-    public updateLineage(payload:any): Observable<Lineage[]> {
-          console.log("Update Payload: ", payload);
-         const url: string = this.apiUrl + `lineage/entities/json/${payload.use_case_id}/${payload.lineage_name}`;
-        return this.http.put<any[]>(url, payload);
-      }
+    // public updateLineage(payload:any): Observable<Lineage[]> {
+    //       console.log("Update Payload: ", payload);
+    //      const url: string = this.apiUrl + `lineage/entities/json/${payload.use_case_id}/${payload.lineage_name}`;
+    //     return this.http.put<any[]>(url, payload);
+    //   }
+
+      public updateLineage(payload:any,usecaseID:any, lineageName:any): Observable<Lineage[]> {
+        console.log("Update Payload: ", payload);
+       const url: string = this.apiUrl + `lineage/entities/json/${usecaseID}/${lineageName}`;
+      return this.http.put<any[]>(url, payload);
+    }
   
     public getLineageByUseCaseId(useCaseId: string) {
         const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}`;
