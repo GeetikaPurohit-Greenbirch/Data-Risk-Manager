@@ -9,6 +9,8 @@ import { UsecaseService } from '../../services/usecase.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { LineageService } from 'src/app/features/graph-embedded/services/lineage.service';
 import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -283,48 +285,123 @@ usecaseForm!: FormGroup;
   }
 
 
-  saveLineage() {
-    // this.existingLineage('existing');
-    this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
-      next: (response) => {
-        this.lineage_json = Array.isArray(response) ? response[0] : response;
+//   saveLineage() {
+//     // this.existingLineage('existing');
+//     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
+//       next: (response) => {
+//         this.lineage_json = Array.isArray(response) ? response[0] : response;
       
-    const payload = {
-      use_case_id: this.usecaseId,
-      lineage_name: this.lineageName,
-      lineage_json: this.lineage_json.lineage_json
-    };
+//     const payload = {
+//       use_case_id: this.usecaseId,
+//       lineage_name: this.lineageName,
+//       lineage_json: this.lineage_json.lineage_json
+//     };
 
-    if(this.lineage_json.lineage_json == '{}')
-    {
-    this.lineageService.createLineage(payload).subscribe({
-      next: (res) => {
-        console.log('Lineage created:', res);
-        this.dialog.closeAll();
-        this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
-      },
-      error: (err) => {
-        console.error('Error creating lineage:', err);
-      }
+//     if(this.lineage_json.lineage_json == '{}')
+//     {
+//     this.lineageService.createLineage(payload).subscribe({
+//       next: (res) => {
+//         console.log('Lineage created:', res);
+//         this.dialog.closeAll();
+//         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+//       },
+//       error: (err) => {
+//         console.error('Error creating lineage:', err);
+//       }
       
-    });
-  }
-  else
-  {
+//     });
+//   }
+//   else
+//   {
 
-    const payload = {};
-    this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
-      next: (res) => {
-        console.log('Lineage created:', res);
-        this.dialog.closeAll();
-        this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
-      },
-      error: (err) => {
-        console.error('Error creating lineage:', err);
-      }
+//     const payload = {};
+//     this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
+//       next: (res) => {
+//         console.log('Lineage created:', res);
+//         this.dialog.closeAll();
+//         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+//       },
+//       error: (err) => {
+//         console.error('Error creating lineage:', err);
+//       }
       
-    });
+//     });
+//   }
+//   }
+// })}
+
+
+
+private isEmptyLineage(value: any): boolean {
+  // Accepts string or object and treats {}, empty string, null/undefined as empty
+  if (value == null) return true;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed === '' || trimmed === '{}' || trimmed === '[]';
   }
+  if (typeof value === 'object') {
+    return Object.keys(value).length === 0;
   }
-})}
+  return false;
+}
+
+saveLineage() {
+  this.usecaseService.navigateToLineage(this.usecaseId).pipe(
+    // Normalize response shape (array vs object)
+    map((resp: any) => Array.isArray(resp) ? resp[0] : resp),
+
+    // Decide create vs update based on response content
+    switchMap((resp: any) => {
+      const existingLineageJsonRaw =
+        resp?.lineage_json?.lineage_json ?? // case: nested object with lineage_json.lineage_json (string)
+        resp?.lineage_json ??               // case: lineage_json is directly the string/object
+        null;
+
+      const shouldCreate = !resp || this.isEmptyLineage(existingLineageJsonRaw);
+
+      // Build payload. If we’re creating because nothing exists, send "{}" as a minimal body.
+      const payload = {
+        use_case_id: this.usecaseId,
+        lineage_name: this.lineageName,
+        lineage_json: shouldCreate
+          ? '{}' // create with a blank body if none exists
+          : existingLineageJsonRaw
+      };
+
+      if (shouldCreate) {
+        return this.lineageService.createLineage(payload).pipe(
+          tap(() => console.log('Lineage created (no existing or empty).'))
+        );
+      } else {
+        return this.lineageService.updateLineage(payload, this.usecaseId, this.lineageName).pipe(
+          tap(() => console.log('Lineage updated (existing & non-empty).'))
+        );
+      }
+    }),
+
+    // If the initial fetch FAILED, we create
+    catchError((err) => {
+      console.error('Fetch lineage failed, creating instead:', err);
+      const fallbackPayload = {
+        use_case_id: this.usecaseId,
+        lineage_name: this.lineageName,
+        lineage_json: '{}'
+      };
+      return this.lineageService.createLineage(fallbackPayload).pipe(
+        tap(() => console.log('Lineage created (fallback after fetch failure).'))
+      );
+    })
+  )
+  .subscribe({
+    next: () => {
+      this.dialog.closeAll();
+      this.router.navigate(['/graph-embedded']);
+    },
+    error: (err) => {
+      console.error('Final error in saveLineage flow:', err);
+    }
+  });
+}
+
+
 }
