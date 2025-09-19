@@ -277,8 +277,14 @@ public async fetchEntitiesFromMapping(result: any[]) {
   // 3) Now make the mapping flow async, await the API response, then await diagram load, THEN add links
 public async getTargetToSourceMapping(targetId: string, sourceId: string) {
   try {
+
+     const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const lineageId = (segments[segments.length - 1] || '');
+    const usecaseId = (segments[segments.length - 2] || '');
+
     const response = await firstValueFrom(
-      this.lineageService.getTargetToSourceMapping(targetId, sourceId)
+      this.lineageService.getTargetToSourceMapping(usecaseId, sourceId)
     );
 
     console.log('Target to Source Mapping:', response);
