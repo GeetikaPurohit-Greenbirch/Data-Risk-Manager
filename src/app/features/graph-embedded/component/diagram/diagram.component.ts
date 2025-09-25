@@ -493,15 +493,15 @@ const height = container.clientHeight;
     })
 
 
-    // this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
+    this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
+      evt.preventDefault();
+      this.zoom(ox, oy, delta);
+    });
 
-    // this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
+    this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
+      evt.preventDefault();
+      this.zoom(ox, oy, delta);
+    });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {

@@ -764,7 +764,7 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
 
         //  let resolvedType = portTypeMap?.[portId] || normalizedType;
         const portParentMap = nodePortParentMap[nodeId];
-        let resolvedParentId = portParentMap?.[portId]?.split('_')[3] || nodeId;
+        let resolvedParentId = portParentMap?.[portId]?.split('_')[3]?`${portParentMap?.[portId]?.split('_')[3]}-${portParentMap?.[portId]?.split('_')[4]}` : nodeId;
 
         if (resolved) {
           cell[endpoint] = { ...(ep || {}), type: resolved, parentId: resolvedParentId };
