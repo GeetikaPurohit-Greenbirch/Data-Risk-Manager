@@ -69,7 +69,7 @@ editableColumns: string[] = [
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  pageSize = 5;
+  pageSize = 20;
   data: any[] = []; // example
   // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
   pageSizeOptions: number[] = [];
@@ -110,8 +110,8 @@ editableColumns: string[] = [
           saveDataFields.style.color = 'green';
           saveDataFields.style.border = '1px solid lightGrey';
           saveDataFields.style.borderRadius = '5px';
-          saveDataFields.style.lineHeight = '22px';
-          saveDataFields.style.height = '32px';
+          saveDataFields.style.lineHeight = '20px';
+          saveDataFields.style.height = '24px';
           saveDataFields.style.cursor = 'pointer';
           saveDataFields.title = 'Save';
       
@@ -125,8 +125,8 @@ editableColumns: string[] = [
           deleteDataFields.style.color = 'red';
           deleteDataFields.style.border = '1px solid lightGrey';
           deleteDataFields.style.borderRadius = '5px';
-          deleteDataFields.style.lineHeight = '22px';
-          deleteDataFields.style.height = '32px';
+          deleteDataFields.style.lineHeight = '20px';
+          deleteDataFields.style.height = '24px';
           deleteDataFields.style.cursor = 'pointer';
           deleteDataFields.title = 'Delete';
       

@@ -60,7 +60,7 @@
           <input matInput formControlName="last_review_date" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" style="width: 47%;" *ngIf="formLoaded">
+        <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
           <mat-label>Last Review Date</mat-label>
           <input
             matInput
@@ -77,7 +77,7 @@
           <input matInput formControlName="reviewed_by" />
         </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 47%;"  *ngIf="formLoaded">
+          <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
             <mat-label>Next Review Date</mat-label>
             <input
               matInput

@@ -41,7 +41,7 @@ export class UseCasesComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  pageSize = 5;
+  pageSize = 20;
   data: any[] = []; // example
   // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
   pageSizeOptions: number[] = [];
@@ -82,8 +82,8 @@ export class UseCasesComponent {
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -97,8 +97,8 @@ export class UseCasesComponent {
         deleteDataFields.style.color = 'red';
         deleteDataFields.style.border = '1px solid lightGrey';
         deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '22px';
-        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.lineHeight = '20px';
+        deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
@@ -111,8 +111,8 @@ export class UseCasesComponent {
         shareUsecase.style.color = 'red';
         shareUsecase.style.border = '1px solid lightGrey';
         shareUsecase.style.borderRadius = '5px';
-        shareUsecase.style.lineHeight = '22px';
-        shareUsecase.style.height = '32px';
+        shareUsecase.style.lineHeight = '20px';
+        shareUsecase.style.height = '24px';
         shareUsecase.style.cursor = 'pointer';
         shareUsecase.title = 'Share';
     
@@ -125,8 +125,8 @@ export class UseCasesComponent {
         goToLineage.style.color = 'blue';
         goToLineage.style.border = '1px solid lightGrey';
         goToLineage.style.borderRadius = '5px';
-        goToLineage.style.lineHeight = '22px';
-        goToLineage.style.height = '32px';
+        goToLineage.style.lineHeight = '20px';
+        goToLineage.style.height = '24px';
         goToLineage.style.cursor = 'pointer';
         goToLineage.title = 'Navigate to Lineage';
     
