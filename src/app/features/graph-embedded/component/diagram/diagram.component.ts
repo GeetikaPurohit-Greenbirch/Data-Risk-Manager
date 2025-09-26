@@ -135,6 +135,9 @@ export class DiagramComponent implements AfterViewInit {
 
   public onNavigate(link: dia.Link) {
     // Pull anything you want to pass along (optional)
+
+    this.saveGraph(true); // Save current state before navigating
+
     const source = link.get('source');
     const target = link.get('target');
 
@@ -311,8 +314,8 @@ export class DiagramComponent implements AfterViewInit {
   (shapes as any).mapping = (shapes as any).mapping || {};
 (shapes as any).mapping.Concat = Concat;
     const container = this.canvas.nativeElement;
-     const width = container.clientWidth;
-const height = container.clientHeight;
+     const width = container.clientWidth || 1000;
+    const height = container.clientHeight || 700;
 
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
 
@@ -409,10 +412,10 @@ const height = container.clientHeight;
 
     this.scroller = new ui.PaperScroller({
       paper: this.paper,
-      autoResizePaper: false, // important: disables scroll management
+      autoResizePaper: true, // important: disables scroll management
       padding: 0,
-      baseWidth: 500,
-      baseHeight: 500,
+      // baseWidth: 500,
+      // baseHeight: 500,
       cursor: 'grab'
     });
 
@@ -493,15 +496,15 @@ const height = container.clientHeight;
     })
 
 
-    // this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
+    this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
+      evt.preventDefault();
+      this.zoom(ox, oy, delta);
+    });
 
-    // this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-    //   evt.preventDefault();
-    //   this.zoom(ox, oy, delta);
-    // });
+    this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
+      evt.preventDefault();
+      this.zoom(ox, oy, delta);
+    });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
@@ -705,7 +708,7 @@ const height = container.clientHeight;
     this.scroller.center(); // Recenter the empty paper
   }
 
-  saveGraph() {
+  saveGraph(fromNavigation: boolean = false) {
     const json = this.graph.toJSON();
 
     const ddata = this.enrichLinksWithNormalizedTypeName(json);
@@ -727,6 +730,7 @@ const height = container.clientHeight;
     this.lineageService.saveLineageById(this.lineages as any, jsonString).subscribe({
       next: (response) => {
         console.log("Lineage saved successfully:", response);
+        if(fromNavigation) return; // Skip notification if from navigation
         this.toastNotificationService.success('Lineage Saved successfully');
       },
       error: (err) => {

@@ -148,7 +148,7 @@ const getColorByTab = (type: string) => {
 
 
 
-export const loadExample = function (graph: dia.Graph, selectedValue: any, droppedBlockData: any, selectedItem: any): void {
+export const loadExample = function (graph: dia.Graph, selectedValue: any, droppedBlockData: any, selectedItem: any, applyMaxHeight:any): void {
 
     console.log("Dropped block data:Dropped block data:Dropped block data:Dropped block data:Dropped block data:", selectedItem);
 
@@ -166,6 +166,10 @@ export const loadExample = function (graph: dia.Graph, selectedValue: any, dropp
     }
 
     const blockDefinition: any = blockDefinitions.find((b: any) => b.typeName === typeOfBlock);
+
+    if(applyMaxHeight){
+        blockDefinition.size= { width: blockDefinition.size.width, height: 500}
+    }
 
     if (!blockDefinition) {
         console.warn("Block definition not found for typeName: ${droppedBlockData.typeName}");

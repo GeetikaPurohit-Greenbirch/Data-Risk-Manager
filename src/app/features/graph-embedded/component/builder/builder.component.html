@@ -1,12 +1,12 @@
 <p-splitter 
   [style]="{ height: '100vh' }" 
   styleClass="mb-5" 
-  [panelSizes]="[70, 30]"
+  [panelSizes]="panelSizes"
   layout="vertical">
 
   <!-- Panel 1 -->
   <ng-template pTemplate="panel">
-    <div class="col flex align-items-center justify-content-center">
+    <div class="col flex align-items-center justify-content-center" style="width: 100%;">
       <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
         <!-- <button 
         pButton 
