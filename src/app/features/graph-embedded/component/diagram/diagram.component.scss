@@ -40,7 +40,8 @@
     font-size: 18px;
     color: #fff;
     padding-left: 16px;
-     height: 48px;  
+     height: 48px;
+     line-height: 48px;  
   }
 
   .block-item {
@@ -325,6 +326,7 @@ inline-input {
 }
 
 .graph-box{
+  width: 100%;
   height: calc(100% - 60px);
 }
 

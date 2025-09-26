@@ -115,8 +115,8 @@ export class LineageComponent implements AfterViewInit {
           const sourceParsed = JSON.parse(source.node);
           const targetParsed = JSON.parse(target.node);
           // this.paper.freeze();
-          loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceParsed);
-          loadExample(this.graph, { x: 500, y: 90 }, this.target, targetParsed);
+          loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceParsed, true);
+          loadExample(this.graph, { x: 500, y: 90 }, this.target, targetParsed, true);
           // this.paper.unfreeze();
           // this.scroller.centerContent();
         } catch (e) {
@@ -144,111 +144,128 @@ export class LineageComponent implements AfterViewInit {
     const uniqueEntities = new Map();
 
     data.nodes.forEach((node: any) => {
-      // if (node.entity_type !== "INTERFACE") {
-      const key = node.entity_id + "-" + node.entity_type;
-      if (!uniqueEntities.has(key)) {
-        uniqueEntities.set(key, {
-          entity_id: node.entity_id,
-          entity_type: node.entity_type,
-          entity_name: node.entity_name || null
-        });
+      if (node.entity_type !== "INTERFACE") {
+        const key = node.entity_id + "-" + node.entity_type;
+        if (!uniqueEntities.has(key)) {
+          uniqueEntities.set(key, {
+            entity_id: node.entity_id,
+            entity_type: node.entity_type,
+            entity_name: node.entity_name || null
+          });
+        }
+      } else {
+        const key = node.attached_system_id + "-" + 'SYSTEM';
+        if (!uniqueEntities.has(key)) {
+          uniqueEntities.set(key, {
+            entity_id: node.attached_system_id,
+            entity_type: "SYSTEM",
+            entity_name: node.entity_name || null
+          });
+        }
+
       }
-      // }
     });
 
     return Array.from(uniqueEntities.values());
   }
 
-// 2) Fetch all entities in parallel and load them; WAIT for all to complete
-public async fetchEntitiesFromMapping(result: any[]) {
-  const typeMap: any = {
-    TARGET: 'targets',
-    SYSTEM: 'systems',
-    INTERFACE: 'systems',
-    SOURCE: 'sources',
-  };
+  // 2) Fetch all entities in parallel and load them; WAIT for all to complete
+  public async fetchEntitiesFromMapping(result: any[]) {
+    const typeMap: any = {
+      TARGET: 'targets',
+      SYSTEM: 'systems',
+      INTERFACE: 'systems',
+      SOURCE: 'sources',
+    };
 
-  // layout bookkeeping
-  const typeCounters: any = { sources: 0, systems: 0, targets: 0 };
-  const xMap: any = { sources: 100, systems: 400, targets: 700 };
-  const yStart = 90;
-  const yStep = 220;
+    // layout bookkeeping
+    const typeCounters: any = { sources: 0, systems: 0, targets: 0 };
+    const xMap: any = { sources: 100, systems: 400, targets: 700 };
+    const yStart = 90;
+    const yStep = 220;
 
-  // Build an array of promises so we can await them all
-  const tasks = result.map(async (entity, i) => {
-    const apiType = typeMap[entity.entity_type] || (entity.entity_type?.toLowerCase() + 's');
-    const entityId = entity.entity_id;
+    for (const entity of result) {
+      const apiType =
+        typeMap[entity.entity_type] ||
+        ((entity.entity_type?.toLowerCase?.() || '').concat('s'));
 
-    const count = (typeCounters as any)[apiType] ?? 0;
-    const x = xMap[apiType] ?? (100 + i * 300);
-    const y = yStart + count * yStep;
+      // ensure counters/x exist for unseen types
+      if (!(apiType in typeCounters)) typeCounters[apiType] = 0;
+      if (!(apiType in xMap)) xMap[apiType] = 100; // default column if new type appears
 
-    try {
-      const data = await firstValueFrom(this.lineageService.getEntityById(apiType, entityId));
-      const parsed = JSON.parse(data.node);
-      // If loadExample is synchronous, this await is harmless; if it returns a Promise, we truly wait.
-      await loadExample(this.graph, { x, y }, data, parsed);
-      (typeCounters as any)[apiType] = count + 1; // increment after successful placement
-    } catch (err) {
-      console.error(`Failed to fetch entity for ${apiType} (${entityId}):`, err);
+      const x = xMap[apiType];
+      const y = yStart + typeCounters[apiType] * yStep;
+
+      try {
+        const data = await firstValueFrom(
+          this.lineageService.getEntityById(apiType, entity.entity_id)
+        );
+        const parsed = JSON.parse(data.node);
+
+        // one-at-a-time: render after fetching, then increment Y for this type
+        await loadExample(this.graph, { x, y }, data, parsed, false);
+
+        typeCounters[apiType] += 1;
+      } catch (err) {
+        console.error(`Failed to fetch entity for ${apiType} (${entity.entity_id}):`, err);
+        // optional: still bump so gaps don't collapse on failures
+        // typeCounters[apiType] += 1;
+      }
     }
-  });
-
-  await Promise.all(tasks); // <-- wait for all nodes to be rendered before returning
-}
-
-
-
- buildFieldToEntityMap(nodes: any) {
-  const map = new Map<number, { nodeId: string; portId: string; entityType: string }>();
-  for (const n of nodes) {
-    map.set(n.field_id, {
-      nodeId: String(n.entity_id), // cell id is the entity_id
-      portId: String(n.field_id),  // port id is the field_id
-      entityType: n.entity_type
-    });
   }
-  return map;
-}
 
-/**
- * Create JointJS Link cells from mapping response.
- * Pass your Link constructor (e.g., `Link`) if it isn't globally available.
- */
+
+
+  buildFieldToEntityMap(nodes: any) {
+    const map = new Map<number, { nodeId: string; portId: string; entityType: string }>();
+    for (const n of nodes) {
+      map.set(n.field_id, {
+        nodeId: String(n.entity_id), // cell id is the entity_id
+        portId: String(n.field_id),  // port id is the field_id
+        entityType: n.entity_type
+      });
+    }
+    return map;
+  }
+
+  /**
+   * Create JointJS Link cells from mapping response.
+   * Pass your Link constructor (e.g., `Link`) if it isn't globally available.
+   */
   createLinksFromResponse(
-  resp: any,
-  LinkCtor: any /* e.g., Link class */
-) {
-  const fieldMap = this.buildFieldToEntityMap(resp.nodes);
-  const links: any[] = [];
-  const missing: any[] = [];
+    resp: any,
+    LinkCtor: any /* e.g., Link class */
+  ) {
+    const fieldMap = this.buildFieldToEntityMap(resp.nodes);
+    const links: any[] = [];
+    const missing: any[] = [];
 
-  for (const edge of resp.edges) {
-    const from = fieldMap.get(edge.from_field_id);
-    const to = fieldMap.get(edge.to_field_id);
+    for (const edge of resp.edges) {
+      const from = fieldMap.get(edge.from_field_id);
+      const to = fieldMap.get(edge.to_field_id);
 
-    if (!from || !to) {
-      // Capture missing mappings for debugging
-      missing.push(edge);
-      continue;
+      if (!from || !to) {
+        // Capture missing mappings for debugging
+        missing.push(edge);
+        continue;
+      }
+
+      // Build the link exactly like your example
+      const link = new LinkCtor({
+        source: { id: from.nodeId, port: from.portId },
+        target: { id: to.nodeId, port: to.portId }
+      });
+
+      links.push(link);
     }
 
-    // Build the link exactly like your example
-    const link = new LinkCtor({
-      source: { id: from.nodeId, port: from.portId },
-      target: { id: to.nodeId, port: to.portId }
-    });
+    // Optional: log or return missing for diagnostics
+    if (missing.length) {
+      console.warn('Missing field mappings for edges:', missing);
+    }
 
-    links.push(link);
+    return links;
   }
-
-  // Optional: log or return missing for diagnostics
-  if (missing.length) {
-    console.warn('Missing field mappings for edges:', missing);
-  }
-
-  return links;
-}
 
 
 
@@ -275,39 +292,40 @@ public async fetchEntitiesFromMapping(result: any[]) {
 
 
   // 3) Now make the mapping flow async, await the API response, then await diagram load, THEN add links
-public async getTargetToSourceMapping(targetId: string, sourceId: string) {
-  try {
+  public async getTargetToSourceMapping(targetId: string, sourceId: string) {
+    try {
 
-     const path = this.router.url.split('?')[0].split('#')[0];
-    const segments = path.split('/').filter(Boolean);
-    const lineageId = (segments[segments.length - 1] || '');
-    const usecaseId = (segments[segments.length - 2] || '');
+      const path = this.router.url.split('?')[0].split('#')[0];
+      const segments = path.split('/').filter(Boolean);
+      const lineageId = (segments[segments.length - 1] || '');
+      const usecaseId = (segments[segments.length - 2] || '');
 
-    const response = await firstValueFrom(
-      this.lineageService.getTargetToSourceMapping(usecaseId, sourceId)
-    );
+      const response = await firstValueFrom(
+        this.lineageService.getTargetToSourceMapping(usecaseId, sourceId)
+      );
 
-    console.log('Target to Source Mapping:', response);
+      console.log('Target to Source Mapping:', response);
 
-    const uniqueEntities = this.getUniqueEntitiesExcludingInterface(response).reverse();
+      const uniqueEntities = this.getUniqueEntitiesExcludingInterface(response).reverse();
+      console.log('Unique Entities to Fetch:', uniqueEntities);
 
-    // Wait until all nodes are placed
-    await this.fetchEntitiesFromMapping(uniqueEntities);
+      // Wait until all nodes are placed
+      await this.fetchEntitiesFromMapping(uniqueEntities);
 
-    // If you have a fieldIdToNodePortMap, build links from edges:
-    // const links = this.createLinksFromEdges(response.edges, fieldIdToNodePortMap);
+      // If you have a fieldIdToNodePortMap, build links from edges:
+      // const links = this.createLinksFromEdges(response.edges, fieldIdToNodePortMap);
 
-    // Example: manual link creation (replace ids/ports with real ones)
-   const links = this.createLinksFromResponse(response, Link); // <-- pass your Link class
-   links.forEach(l => this.graph.addCell(l));
+      // Example: manual link creation (replace ids/ports with real ones)
+      const links = this.createLinksFromResponse(response, Link); // <-- pass your Link class
+      links.forEach(l => this.graph.addCell(l));
 
-    console.log(links, this.graph.getCells(), 'cells after add');
-    console.log(this.graph.getLinks(), 'links after add');
-  } catch (err) {
-    console.error('Failed to get target to source mapping:', err);
-    this.toastNotificationService.error('Failed to fetch target to source mapping');
+      console.log(links, this.graph.getCells(), 'cells after add');
+      console.log(this.graph.getLinks(), 'links after add');
+    } catch (err) {
+      console.error('Failed to get target to source mapping:', err);
+      this.toastNotificationService.error('Failed to fetch target to source mapping');
+    }
   }
-}
 
 
   public ngOnInit(): void {
@@ -419,10 +437,8 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
 
   public ngAfterViewInit(): void {
     const container = this.canvas.nativeElement;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
-
-    console.log(height, width, "ssssss")
+    const width = container.clientWidth || 1000;
+    const height = container.clientHeight || 700;
 
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
 
@@ -487,14 +503,13 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
 
     this.scroller = new ui.PaperScroller({
       paper: this.paper,
-      autoResizePaper: false, // important: disables scroll management
+      autoResizePaper: true, // important: disables scroll management
       padding: 0,
-      baseWidth: 500,
-      baseHeight: 500,
       cursor: 'grab'
     });
-
-    this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
+     this.scroller.positionContent('top-left');
+    this.canvas.nativeElement.appendChild(this.scroller.el); // this.scroller.centerContent(); scroller to canvas
+  
 
     this.paper.on('element:mousewheel', (recordView: dia.ElementView, evt: dia.Event, x: number, y: number, delta: number) => {
       evt.preventDefault();
@@ -503,6 +518,7 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
         record.setScrollTop(record.getScrollTop() + delta * 10);
       }
     });
+
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
       this.showLinkTools(linkView);
@@ -582,7 +598,9 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
         const json = typeof preset === 'string' ? JSON.parse(preset) : preset;
         this.graph.fromJSON(json);
         this.paper.unfreeze();
-        this.scroller.centerContent();
+        // this.scroller.centerContent();
+        this.scroller.positionContent('top-left');
+
         this.hasGraph = true;
         console.log('Loaded preset for path:', path);
       } else {
@@ -764,7 +782,7 @@ public async getTargetToSourceMapping(targetId: string, sourceId: string) {
 
         //  let resolvedType = portTypeMap?.[portId] || normalizedType;
         const portParentMap = nodePortParentMap[nodeId];
-        let resolvedParentId = portParentMap?.[portId]?.split('_')[3]?`${portParentMap?.[portId]?.split('_')[3]}-${portParentMap?.[portId]?.split('_')[4]}` : nodeId;
+        let resolvedParentId = portParentMap?.[portId]?.split('_')[3] ? `${portParentMap?.[portId]?.split('_')[3]}-${portParentMap?.[portId]?.split('_')[4]}` : nodeId;
 
         if (resolved) {
           cell[endpoint] = { ...(ep || {}), type: resolved, parentId: resolvedParentId };

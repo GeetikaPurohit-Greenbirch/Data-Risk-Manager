@@ -1,16 +1,128 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global JointJS+ base */
 @import "~@joint/plus/joint-plus.css";
 
+/* ===== Layout Containers (scroll-friendly) ===== */
+
+/* Use this as the outer wrapper around the scroller/paper */
+.paper-container,
+.canvas {
+  width: 100%;
+  height: 100vh;          /* or a fixed height if preferred */
+  overflow: auto;         /* native scrollbars */
+  position: relative;
+  border: 1px solid #ccc; /* optional frame */
+}
+
+/* The scroller element (ui.PaperScroller root) */
+.paper-scroller {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;         /* ensure scrollbars appear here */
+}
+
+/* Optional: scroller background strip (JointJS+ adds this) */
+.paper-scroller-background {
+  width: 100% !important;
+}
+
+/* The actual paper (svg) root node */
+.joint-paper {
+  /* DO NOT force absolute/full-bleed; scroller manages this */
+  position: relative;
+  background: #F3F7F6;    /* match your TS config */
+  /* width is auto-managed by scroller; don't force 100% here */
+}
+
+/* Minimal paper size for empty graphs (can be overridden in TS) */
 .paper {
-  width: 300px;
-  height: 300px;
+  min-width: 300px;
+  min-height: 300px;
   border: 1px solid #ccc;
   position: relative;
 }
 
+/* ===== Toolbar (kept; deduped) ===== */
+
 .toolbar {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #3f51b5; /* unified */
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
 }
+
+.toolbar .back-icon {
+  cursor: pointer;
+  font-size: 20px;
+  color: #fff;
+}
+
+.toolbar .toolbar-title {
+  flex-grow: 1;
+  font-size: 18px;
+  color: #fff;
+  padding-left: 16px;
+}
+
+.toolbar .zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar .zoom-control input[type="range"] {
+  width: 120px;
+}
+
+.toolbar .icon-button {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.toolbar .icon-button svg {
+  stroke: #333;
+}
+
+.toolbar .icon-button:hover {
+  background-color: #e1e1e1;
+}
+
+.toolbar .button {
+  background-color: #5c738a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.toolbar .button:hover {
+  background-color: #4a5e70;
+}
+
+.toolbar .button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.toolbar .file-input {
+  display: none;
+}
+
+/* ===== Inline / Context Utils ===== */
 
 .context-menu {
   position: absolute;
@@ -20,166 +132,76 @@
   padding: 4px;
 }
 
-.inline-input {
-  border: none!important;
-  outline: none!important;
-  box-shadow: none!important;
-  background: transparent!important;
-  font: inherit!important;
-  color: inherit!important;
-  width: auto!important;
-  padding: 0!important;
-  margin: 0!important;
-}
+.inline-input,
 inline-input {
-  border: none!important;
-  outline: none!important;
-  box-shadow: none!important;
-  background: transparent!important;
-  font: inherit!important;
-  color: inherit!important;
-  width: auto!important;
-  padding: 0!important;
-  margin: 0!important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  font: inherit !important;
+  color: inherit !important;
+  width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.paper-container {
-  width: 100%;
-  height: 100vh;
-  overflow: auto;
-  border: 1px solid #ccc;
-  position: relative;
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* title left, save button right */
-  padding: 8px 16px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  font-weight: 500;
-
-  .zoom-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-  }
-
-  input[type="range"] {
-    width: 120px;
-  }
-
-  .icon-button {
-    background: none;
-    border: none;
-    padding: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-
-    svg {
-      stroke: #333;
-    }
-
-    &:hover {
-      background-color: #e1e1e1;
-    }
-  }
-
-  .button {
-    background-color: #5c738a;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.15s;
-
-    &:hover {
-      background-color: #5c738a;
-    }
-
-    &:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
-  .file-input {
-    display: none;
-  }
-}
-
+/* Optional visible debug style for inline editors */
 .inline-input {
   position: absolute;
-  border: 1px solid red;
+  border: 1px solid red;  /* remove if not needed */
   font-size: 14px;
   z-index: 9999;
 }
 
-.joint-paper {
-  cursor: default;
-  position: absolute !important;
-  top:0  !important;
-  left:0 !important;
-  right:0 !important;
-  bottom:0 !important;
-  background: red !important;
-}
-
+/* Resize handle on elements */
 .joint-paper .resize-corner {
   cursor: se-resize;
 }
 
+/* ===== Node/Port Scrolling Areas ===== */
 
-/* Make the ports container scrollable */
 .joint-shape-processor {
   position: relative;
 }
 
+/* Scrollable ports region inside a custom node */
 .joint-shape-processor .ports {
-  overflow-y: auto;  /* Enables vertical scrolling */
-  height: 200px;     /* Height limit for the ports area */
-  max-height: 400px; /* Optional max height */
-  padding-right: 10px; /* Optional: Adjust space for scroll */
+  overflow-y: auto;
+  height: 200px;
+  max-height: 400px;
+  padding-right: 10px;
 }
 
-
-/* CSS for scrollable nodes */
+/* Generic scrollable body region inside nodes */
 .scrollable-body {
-  overflow-y: auto;  /* Enables vertical scrolling */
-  max-height: 400px; /* Set a maximum height for the body */
-  padding-right: 10px; /* Optional: adds space for the scrollbar */
+  overflow-y: auto;
+  max-height: 400px;
+  padding-right: 10px;
 }
 
-/* Optional: If the body has content inside it, apply styling */
 .scrollable-body .content {
   padding: 10px;
-  word-wrap: break-word; /* Ensure text content breaks properly */
+  word-wrap: break-word;
 }
 
-
+/* ===== Blocks / Buttons ===== */
 
 .block-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  cursor: grab;
-  padding: 6px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: background 0.2s;
+  cursor: pointer;
+  padding: 4px 12px;
+  background-color: #0033ff;
+  color: #fff;
+  border-radius: 4px;
+  border: 1px solid #0033ff;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
 
-  &:hover {
-    background: #e0e0e0;
-  }
+.block-item:hover {
+  background-color: #0022aa;
+  border-color: #0022aa;
 }
 
 .toolbar-title {
@@ -187,131 +209,8 @@ inline-input {
   padding-left: 25px;
 }
 
-.block-item {
-  cursor: pointer;
-  padding: 4px 12px;
-  background-color: #0033ff;
-  color: #fff;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+/* ===== Misc ===== */
 
-  &:hover {
-    background-color: #0022aa;
-  }
-}
-
-// .canvas-host {
-//   position: relative;
-//   width: 100%;
-//   height: 100%;
-//   min-height: 500px; // ensure there’s space to render
-//   overflow: hidden;
-// }
-
-// .canvas {
-//     width: 100%;
-//     height: 100%;
-// }
-
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background-color: #3f51b5;
-  border-bottom: 1px solid #ddd;
-
-  .back-icon {
-    cursor: pointer;
-    font-size: 20px;
-    color: #fff;
-
-    i {
-      color: #fff; // Font Awesome icon
-    }
-  }
-
-  .toolbar-title {
-    flex-grow: 1;
-    // font-weight: bold;
-    font-size: 18px;
-    color: #fff;
-    padding-left: 16px;
-  }
-
-  .block-item {
-    cursor: pointer;
-    padding: 4px 12px;
-    background-color: #3f51b5;
-    color: #fff;
-    border-radius: 4px;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background-color: #0022aa;
-    }
-  }
-
-  .zoom-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-
-    input[type="range"] {
-      width: 120px;
-    }
-  }
-
-  .icon-button {
-    background: none;
-    border: none;
-    padding: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-
-    svg {
-      stroke: #333;
-    }
-
-    &:hover {
-      background-color: #e1e1e1;
-    }
-  }
-
-  .button {
-    background-color: #5c738a;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.15s;
-
-    &:hover {
-      background-color: #4a5e70;
-    }
-
-    &:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
-  .file-input {
-    display: none;
-  }
-}
-
-.paper-scroller-background{
-  width: 100% !important;
-}
-
-.joint-paper{
-   width: 100% !important;
+.joint-paper .resize-corner {
+  cursor: se-resize;
 }

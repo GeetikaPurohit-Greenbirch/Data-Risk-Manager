@@ -222,7 +222,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
 
                 headerIcon: {
                     'xlink:href': '',
-                    x: 10, y: 10, width: 14, height: 14
+                    x: 8, y: 10, width: 14, height: 14
                 },
                 headerLabel: {
                     y: 5,
