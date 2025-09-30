@@ -70,6 +70,7 @@
     max-width: 90%;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     app-diagram {
       flex: 1;
@@ -175,3 +176,4 @@
 .main-container, .dashboard-container {
   height: 100vh;
 }
+

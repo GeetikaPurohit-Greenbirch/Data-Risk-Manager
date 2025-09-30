@@ -3,7 +3,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Lineage } from '../models/usecase.model';
-import { LineageRecord } from '../component/diagram/diagram.component';
+
+interface LineageRecord {
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  name: string;
+  use_case_id: number;
+  lineage_json: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
