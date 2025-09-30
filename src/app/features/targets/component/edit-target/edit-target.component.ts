@@ -456,7 +456,7 @@ export class EditTargetComponent {
    {
      console.log(data, "Target Data Fields");
  
-   // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
+   this.dataFieldsModel.field_id = data.data.field_id;
    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
    this.dataFieldsModel.field_name = data.data.field_name;
    this.dataFieldsModel.field_description = data.data.field_description;
