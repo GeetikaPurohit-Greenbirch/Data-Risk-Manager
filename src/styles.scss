@@ -307,6 +307,17 @@ mat-card.mat-mdc-card.mdc-card{
   flex-direction: column;
 }
 
+.ag-row {
+  height: 30px !important;
+  transform: translateY(34px) !important;
+  position: relative;
+  top: -32px;
+}
+
+.ag-cell {
+  line-height: 25px !important; /* adjust content alignment */
+}
+
 // .tables-wrapper {
 //   display: flex;
 //   justify-content: space-between;

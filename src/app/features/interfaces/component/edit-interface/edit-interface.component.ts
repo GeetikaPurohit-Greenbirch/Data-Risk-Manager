@@ -57,16 +57,17 @@ export class EditInterfaceComponent implements OnInit {
 
 
   columnDefs: (ColDef | ColGroupDef)[]= [
-    { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'user_generated_id', headerName: 'Field No.', editable: true, },
-    { field: 'field_name', headerName: 'Field Name', editable: true },
-    { field: 'data_type', headerName: 'Data Type', editable: true,
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
+    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.',},
+    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name',},
+    { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
+    { field: 'data_type', headerName: 'Data Type', editable: true,headerTooltip: 'Data Type',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
       },
     },
-    { field: 'field_length', headerName: 'Length', editable: true },
+    { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length', },
     // {
     //   headerName: 'DQA',
     //   children: [
@@ -151,7 +152,7 @@ export class EditInterfaceComponent implements OnInit {
     //   ],
 
     // },
-    { field: 'criticality', headerName: 'Criticality', editable: true,
+    { field: 'criticality', headerName: 'Criticality', editable: true,headerTooltip: 'Criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
@@ -173,8 +174,8 @@ export class EditInterfaceComponent implements OnInit {
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -188,8 +189,8 @@ export class EditInterfaceComponent implements OnInit {
         deleteDataFields.style.color = 'red';
         deleteDataFields.style.border = '1px solid lightGrey';
         deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '22px';
-        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.lineHeight = '20px';
+        deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
@@ -413,6 +414,8 @@ export class EditInterfaceComponent implements OnInit {
   this.dataFieldsModel.field_id = data.data.field_id;
   this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
   this.dataFieldsModel.field_name = data.data.field_name;
+  this.dataFieldsModel.field_description = data.data.field_description;
+
   this.dataFieldsModel.dqa_c = "L";
   this.dataFieldsModel.dqa_t = "L";
   this.dataFieldsModel.dqa_a = "L";

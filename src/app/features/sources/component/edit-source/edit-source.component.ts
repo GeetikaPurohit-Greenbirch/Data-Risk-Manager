@@ -63,11 +63,13 @@ export class EditSourceComponent implements OnInit {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
       resizable: true,
+      headerTooltip: 'DQA',
       children: [
         {
-          headerName: 'C= Completeness',
+          headerName: 'Completeness',
           field: 'default_dqa_c',
           editable: true,
+          headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -86,6 +88,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'C Commentary',
           field: 'default_commentary_c',
           editable: true,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -94,9 +97,10 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'T= Timeliness',
+          headerName: 'Timeliness',
           field: 'default_dqa_t',
           editable: true,
+          headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -115,6 +119,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'T Commentary',
           field: 'default_commentary_t',
           editable: true,
+          headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -123,9 +128,10 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'A= Accuracy',
+          headerName: 'Accuracy',
           field: 'default_dqa_a',
           editable: true,
+          headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -144,6 +150,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'A Commentary',
           field: 'default_commentary_a',
           editable: true,
+          headerTooltip: 'A Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -171,8 +178,8 @@ export class EditSourceComponent implements OnInit {
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -191,25 +198,27 @@ export class EditSourceComponent implements OnInit {
  
  
    columnDefs: (ColDef | ColGroupDef)[]= [
-     { field: 'field_id', headerName: 'Field ID', editable: false, },
-     { field: 'user_generated_id', headerName: 'Field No.', editable: true, },
-     { field: 'field_name', headerName: 'Field Name', editable: true },
-     { field: 'field_description', headerName: 'Field Description', editable: true },
-     { field: 'data_type', headerName: 'Data Type', editable: true,
+     { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
+     { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.',},
+     { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Filed Name', },
+     { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description', },
+     { field: 'data_type', headerName: 'Data Type', editable: true, headerTooltip: 'Data Type',
        cellEditor: 'agSelectCellEditor',
        cellEditorParams: {
          values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
        },
      },
-     { field: 'field_length', headerName: 'Length', editable: true },
+     { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length', },
      {
        headerName: 'DQA',
        resizable: true,
+       headerTooltip: 'DQA',
        children: [
          {
-           headerName: 'C= Completeness',
+           headerName: 'Completeness',
            field: 'dqa_c',
            editable: true,
+           headerTooltip: 'Completeness',
           //  valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -229,6 +238,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: true,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -237,9 +247,10 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'T= Timeliness',
+          headerName: 'Timeliness',
           field: 'dqa_t',
           editable: true,
+          headerTooltip: 'Timeliness',
           // valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -259,6 +270,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'T Commentary',
           field: 'commentary_t',
           editable: true,
+          headerTooltip: 'T Commentary',
           width:100,
           minWidth: 100,
           maxWidth: 100,
@@ -267,9 +279,10 @@ export class EditSourceComponent implements OnInit {
          
         },
         {
-          headerName: 'A= Accuracy',
+          headerName: 'Accuracy',
           field: 'dqa_a',
           editable: true,
+          headerTooltip: 'Accuracy',
           // valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -289,6 +302,7 @@ export class EditSourceComponent implements OnInit {
           headerName: 'A Commentary',
           field: 'commentary_a',
           editable: true,
+          headerTooltip: 'A Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -301,6 +315,7 @@ export class EditSourceComponent implements OnInit {
      },
      { field: 'criticality', headerName: 'Criticality', editable: true,
        cellEditor: 'agSelectCellEditor',
+       headerTooltip: 'Criticality',
        cellEditorParams: {
          values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
        },
@@ -321,8 +336,8 @@ export class EditSourceComponent implements OnInit {
          saveDataFields.style.color = 'green';
          saveDataFields.style.border = '1px solid lightGrey';
          saveDataFields.style.borderRadius = '5px';
-         saveDataFields.style.lineHeight = '22px';
-         saveDataFields.style.height = '32px';
+         saveDataFields.style.lineHeight = '20px';
+         saveDataFields.style.height = '24px';
          saveDataFields.title = 'Save';
      
          // Pass row data or node to save
@@ -335,8 +350,8 @@ export class EditSourceComponent implements OnInit {
          deleteDataFields.style.color = 'red';
          deleteDataFields.style.border = '1px solid lightGrey';
          deleteDataFields.style.borderRadius = '5px';
-         deleteDataFields.style.lineHeight = '22px';
-         deleteDataFields.style.height = '32px';
+         deleteDataFields.style.lineHeight = '20px';
+         deleteDataFields.style.height = '24px';
          deleteDataFields.title = 'Delete';
      
          deleteDataFields.addEventListener('click', () => {

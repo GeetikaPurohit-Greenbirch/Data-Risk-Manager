@@ -36,7 +36,7 @@
 .paper-scroll {
   width: 100%;
   height: calc(100vh - 250px); // adjust as needed
-  overflow: auto; // ✅ shows scrollbar
+  // overflow: auto; // ✅ shows scrollbar
   border: 1px solid #ccc;
 }
 
@@ -75,5 +75,52 @@
     height: 100%;
     pointer-events: auto; // needed to interact with links
     z-index: 2;
+  }
+  // .paper-wrapper {
+  //   width: 100%;
+  //   height: 80vh;   // or fixed 600px
+  //   // overflow: scroll !important;  // ✅ force scrollbars
+  //   border: 1px solid #ccc;
+  //   border-radius: 8px;
+  //   background: #fafafa;
+  // }
+  
+  
+  
+  .joint-paper {
+    background-color: transparent !important;
+  }
+  
+  .joint-element rect {
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .joint-element rect:hover {
+    stroke: #ff9800 !important;
+    stroke-width: 3;
+  }
+  
+  
+  // .paper-container {
+  //   width: 100%;
+  //   height: calc(100vh - 100px); // Adjust as needed
+  //   border: 1px solid #ccc;
+  //   // overflow: scroll !important; // ✅ enable scrollbars
+  //   position: relative; // required for JointJS paper
+  // }
+  
+
+  .paper-wrapper {
+    width: 100%;
+    height: 780px;       /* fixed height for viewport */
+    overflow-y: auto;    /* vertical scroll */
+    overflow-x: hidden;  /* disable horizontal scroll unless you want both */
+    border: 1px solid #ccc;
+  }
+  
+  #paper-container {
+    width: 2000px;   /* make wide enough for inbound + outbound */
+    min-height: 100%; /* ensures container fills scroll area */
   }
   

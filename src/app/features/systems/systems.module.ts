@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared/shared.module';
 import { EditSystemDialogComponent } from './edit-system-dialog/edit-system-dialog.component';
 import { EditSystemComponent } from './component/edit-system/edit-system.component';
 import { CreateLineageComponent } from './component/create-lineage/create-lineage.component';
+import { CreateLineageNewComponent } from './component/create-lineage-new/create-lineage-new.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { CreateLineageComponent } from './component/create-lineage/create-lineag
     SystemBuilderComponent,
     EditSystemDialogComponent,
     EditSystemComponent,
-    CreateLineageComponent
+    CreateLineageComponent,
+    CreateLineageNewComponent
   ],
   imports: [
     CommonModule,

@@ -74,23 +74,24 @@ export class EditTargetComponent {
     { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
     { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
     { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
+    { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
     { field: 'data_type', headerName: 'Data Type', editable: true, 
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: { values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
       headerTooltip: 'Data Type'
     },
     { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length' },
-    {
-      headerName: 'DQA',
-      field: 'dqa',
-      resizable: true,
-      headerTooltip: 'DQA',
-      children: [
-        { headerName: 'C= Completeness', field: 'dqa_c', editable: false, headerTooltip: 'C= Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-        { headerName: 'T= Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'T= Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-        { headerName: 'A= Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'A= Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
-      ]
-    },
+    // {
+    //   headerName: 'DQA',
+    //   field: 'dqa',
+    //   resizable: true,
+    //   headerTooltip: 'DQA',
+    //   children: [
+    //     { headerName: 'Completeness', field: 'dqa_c', editable: false, headerTooltip: 'Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+    //     { headerName: 'Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+    //     { headerName: 'Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
+    //   ]
+    // },
     { field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality', cellEditor: 'agSelectCellEditor', 
       cellEditorParams: { values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"] } },
     
@@ -111,8 +112,8 @@ export class EditTargetComponent {
          saveDataFields.style.color = 'green';
          saveDataFields.style.border = '1px solid lightGrey';
          saveDataFields.style.borderRadius = '5px';
-         saveDataFields.style.lineHeight = '22px';
-         saveDataFields.style.height = '32px';
+         saveDataFields.style.lineHeight = '20px';
+         saveDataFields.style.height = '24px';
          saveDataFields.style.cursor = 'pointer';
          saveDataFields.title = 'Save';
      
@@ -126,8 +127,8 @@ export class EditTargetComponent {
          deleteDataFields.style.color = 'red';
          deleteDataFields.style.border = '1px solid lightGrey';
          deleteDataFields.style.borderRadius = '5px';
-         deleteDataFields.style.lineHeight = '22px';
-         deleteDataFields.style.height = '32px';
+         deleteDataFields.style.lineHeight = '20px';
+         deleteDataFields.style.height = '24px';
          deleteDataFields.style.cursor = 'pointer';
          deleteDataFields.title = 'Delete';
      
@@ -446,6 +447,7 @@ export class EditTargetComponent {
          // alert("Target Updated Successfully. Your Target ID is "+ this.targetId);
          this.toastNotificationService.success("Target Updated Successfully. Your Target ID is "+ this.targetId);
          // window.location.reload();
+         this.getDataFields();
        }
      })
    }
@@ -457,6 +459,8 @@ export class EditTargetComponent {
    // this.dataFieldsModel.field_id = data.childGridData[0].fieldId;
    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
    this.dataFieldsModel.field_name = data.data.field_name;
+   this.dataFieldsModel.field_description = data.data.field_description;
+
    this.dataFieldsModel.dqa_c = data.data.dqa_c;
   this.dataFieldsModel.dqa_t = data.data.dqa_t;
   this.dataFieldsModel.dqa_a = data.data.dqa_a;
@@ -466,24 +470,31 @@ export class EditTargetComponent {
    this.dataFieldsModel.entity_type = 'TARGET';
    this.dataFieldsModel.entity_id = this.targetId;
  
-   this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
+   if(!data.data.field_id)
+    {
+      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
+
+      this.toastNotificationService.success("Data field added Successfully.");
+      setTimeout(() => {
+        this.getDataFields(); // refresh
+
+      }, 1000);
+    });
+  }
+    else
+    {
+      this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
+
+        this.toastNotificationService.success("Data field updated Successfully.");
+        setTimeout(() => {
+          this.getDataFields(); // refresh
   
-       // alert("Data field added Successfully.");
-       if(!data.data.field_id)
-       {
-         this.toastNotificationService.success("Data field added Successfully.");
-       } 
-       else
-       {
-         this.toastNotificationService.success("Data field updated Successfully.");
-       }
-       setTimeout(() => {
-         this.getDataFields(); // refresh
- 
-       }, 1000);
-     
-   })
-   }
+        }, 1000);
+      });
+    }
+   
+  }
+
  
  
    deleteDAtaFields(data:any)
@@ -494,7 +505,7 @@ export class EditTargetComponent {
        setTimeout(() => {
          this.getDataFields(); // refresh
  
-       }, 1000);
+       }, 500);
    })
    }
 }

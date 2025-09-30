@@ -186,8 +186,8 @@ controlForm!: FormGroup;
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -201,8 +201,8 @@ controlForm!: FormGroup;
         deleteDataFields.style.color = 'red';
         deleteDataFields.style.border = '1px solid lightGrey';
         deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '22px';
-        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.lineHeight = '20px';
+        deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     

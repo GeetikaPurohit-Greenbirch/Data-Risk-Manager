@@ -13,6 +13,8 @@ import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { TargetService } from 'src/app/features/targets/services/target.service';
 import * as joint from 'jointjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateLineageComponent } from '../create-lineage/create-lineage.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -70,6 +72,7 @@ export class EditSystemComponent{
         private toastNotificationService: ToastnotificationService,
         private interfaceService: InterfaceService,
         private targetService : TargetService,
+        private dialog: MatDialog
         
 
   ) {}
@@ -79,11 +82,13 @@ export class EditSystemComponent{
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
       resizable: true,
+      headerTooltip: 'DQA',
       children: [
         {
-          headerName: 'C= Completeness',
+          headerName: 'Completeness',
           field: 'default_dqa_c',
           editable: true,
+          headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -102,6 +107,7 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'default_commentary_c',
           editable: true,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -110,9 +116,10 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'T= Timeliness',
+          headerName: 'Timeliness',
           field: 'default_dqa_t',
           editable: true,
+          headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -131,6 +138,7 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'default_commentary_t',
           editable: true,
+          headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -139,9 +147,10 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'A= Accuracy',
+          headerName: 'Accuracy',
           field: 'default_dqa_a',
           editable: true,
+          headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -160,6 +169,7 @@ export class EditSystemComponent{
           headerName: 'A Commentary',
           field: 'default_commentary_a',
           editable: true,
+          headerTooltip: 'A Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -186,8 +196,8 @@ export class EditSystemComponent{
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -209,12 +219,14 @@ export class EditSystemComponent{
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
+      headerTooltip: 'DQA',
       resizable: true,
       children: [
         {
-          headerName: 'C= Completeness',
+          headerName: 'Completeness',
           field: 'default_dqa_c',
           editable: true,
+          headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -233,6 +245,7 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'default_commentary_c',
           editable: true,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -241,9 +254,10 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'T= Timeliness',
+          headerName: 'Timeliness',
           field: 'default_dqa_t',
           editable: true,
+          headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -262,6 +276,7 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'default_commentary_t',
           editable: true,
+          headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -270,9 +285,10 @@ export class EditSystemComponent{
          
         },
         {
-          headerName: 'A= Accuracy',
+          headerName: 'Accuracy',
           field: 'default_dqa_a',
           editable: true,
+          headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -291,6 +307,7 @@ export class EditSystemComponent{
           headerName: 'A Commentary',
           field: 'default_commentary_a',
           editable: true,
+          headerTooltip: 'A Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -318,8 +335,8 @@ export class EditSystemComponent{
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -336,28 +353,30 @@ export class EditSystemComponent{
     },
   ]
   columnDefs:(ColDef | ColGroupDef)[]= [
-    { field: 'interface_id', headerName: 'Entity ID', editable: false, },
-    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-    { field: 'entity_type', headerName: 'Entity Type', editable: false, },
-    { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'user_generated_id', headerName: 'Field No.', editable: this.isEditable,},
-    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
-    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
+    { field: 'interface_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID',},
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, headerTooltip: 'Entity Name',},
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type',},
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
+    { field: 'user_generated_id', headerName: 'Field No.', editable: this.isEditable, headerTooltip: 'Field No.',},
+    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable, headerTooltip: 'Filed Name',},
+    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,headerTooltip: 'Data Type',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
       },
     },
-    { field: 'field_length', headerName: 'Length', editable: this.isEditable },
+    { field: 'field_length', headerName: 'Length', editable: this.isEditable, headerTooltip: 'Length', },
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
       resizable: true,
+      headerTooltip: 'DQA',
       children: [
         {
           headerName: 'C',
           field: 'dqa_c',
           editable: this.isEditable,
+          headerTooltip: 'C',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -376,6 +395,7 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: this.isEditable,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -387,6 +407,7 @@ export class EditSystemComponent{
           headerName: 'T',
           field: 'dqa_t',
           editable: this.isEditable,
+          headerTooltip: 'T',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -405,6 +426,7 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'commentary_t',
           editable: this.isEditable,
+          headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -416,6 +438,7 @@ export class EditSystemComponent{
           headerName: 'A',
           field: 'dqa_a',
           editable: this.isEditable,
+          headerTooltip: 'A',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -434,6 +457,7 @@ export class EditSystemComponent{
           headerName: 'A Commentary',
           field: 'commentary_a',
           editable: this.isEditable,
+          headerTooltip: 'A Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -444,7 +468,7 @@ export class EditSystemComponent{
       ],
 
     },
-    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
+    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,headerTooltip: 'Criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
@@ -466,8 +490,8 @@ export class EditSystemComponent{
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
 
@@ -515,29 +539,31 @@ export class EditSystemComponent{
   ];
 
   columnDefsOutbound:(ColDef | ColGroupDef)[]= [
-    { field: 'interface_id', headerName: 'Entity ID', editable: false, },
-    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-    { field: 'entity_type', headerName: 'Entity Type', editable: false, },
+    { field: 'interface_id', headerName: 'Entity ID', editable: false,headerTooltip: 'Entity ID', },
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, headerTooltip: 'Entity Name',},
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type',},
 
-    { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'user_generated_id', headerName: 'Field No.', editable: false, },
-    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable },
-    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
+    { field: 'user_generated_id', headerName: 'Field No.', editable: false, headerTooltip: 'Field No.',},
+    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable, headerTooltip: 'Field Name', },
+    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,headerTooltip: 'Data Type',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
       },
     },
-    { field: 'field_length', headerName: 'Length', editable: this.isEditable },
+    { field: 'field_length', headerName: 'Length', editable: this.isEditable, headerTooltip: 'Length', },
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
       resizable: true,
+      headerTooltip: 'DQA',
       children: [
         {
           headerName: 'C',
           field: 'dqa_c',
           editable: this.isEditable,
+          headerTooltip: 'C',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"]
@@ -556,6 +582,7 @@ export class EditSystemComponent{
           headerName: 'C Commentary',
           field: 'commentary_c',
           editable: this.isEditable,
+          headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -567,6 +594,7 @@ export class EditSystemComponent{
           headerName: 'T',
           field: 'dqa_t',
           editable: this.isEditable,
+          headerTooltip: 'T',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -585,6 +613,7 @@ export class EditSystemComponent{
           headerName: 'T Commentary',
           field: 'commentary_t',
           editable: this.isEditable,
+          headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
           // maxWidth: 100,
@@ -596,6 +625,7 @@ export class EditSystemComponent{
           headerName: 'A',
           field: 'dqa_a',
           editable: this.isEditable,
+          headerTooltip: 'A',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -614,6 +644,7 @@ export class EditSystemComponent{
           headerName: 'A Commentary',
           field: 'commentary_a',
           editable: this.isEditable,
+          headerTooltip: 'A Commentary',
           width:100,
           minWidth: 100,
           maxWidth: 100,
@@ -625,6 +656,7 @@ export class EditSystemComponent{
 
     },
     { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
+      headerTooltip: 'criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
@@ -646,8 +678,8 @@ export class EditSystemComponent{
         saveDataFields.style.color = 'green';
         saveDataFields.style.border = '1px solid lightGrey';
         saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '22px';
-        saveDataFields.style.height = '32px';
+        saveDataFields.style.lineHeight = '20px';
+        saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -661,8 +693,8 @@ export class EditSystemComponent{
         deleteDataFields.style.color = 'red';
         deleteDataFields.style.border = '1px solid lightGrey';
         deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '22px';
-        deleteDataFields.style.height = '32px';
+        deleteDataFields.style.lineHeight = '20px';
+        deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
@@ -1301,9 +1333,29 @@ loadDropdownOptions(): void {
     this.showoutbound = false;
     this.showsystemMapping = true;
 
+    this.openLineagePopup();
     this.cdr.detectChanges();
 
+
   }
+
+  openLineagePopup() {
+    const dialogRef = this.dialog.open(CreateLineageComponent, {
+      width: '80vw',       // adjust width
+      height: '80vh',      // adjust height
+      data: {
+        inboundFields: this.inboundFields,
+        outboundFields: this.outboundFields,
+        systemId: this.systemId
+      }
+    });
+
+      // 👇 you can also listen when it closes
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('Lineage dialog closed', result);
+  });
+  }
+
 
   addInterface()
   {

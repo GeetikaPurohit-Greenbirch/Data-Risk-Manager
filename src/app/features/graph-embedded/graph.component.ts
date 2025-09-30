@@ -38,7 +38,7 @@ export class UseCasesComponent {
 
   gridApi: any;
   gridColumnApi: any;
-  pageSize = 5;
+  pageSize = 20;
   data: any[] = []; // example
 
   usecaseOptions = [
