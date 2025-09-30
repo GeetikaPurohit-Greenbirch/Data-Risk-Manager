@@ -190,7 +190,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
             itemHeight: 25,
             itemOffset: 5,
             padding: { top: 35, left: 10, right: 0, bottom: 0 },
-            itemMinLabelWidth: 100,
+            itemMinLabelWidth: 200,
             scrollTop: 0,
             size: { height: 200, width: 400 },
             itemOverflow: true,
@@ -240,7 +240,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 },
                 itemLabels_0: {
                     magnet: 'passive',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                 },
                 itemBodies_0: {
                     stroke: '#EBEEF0'
@@ -384,7 +384,6 @@ export class Concat extends shapes.standard.HeaderedRecord {
         if (json.collapsed) this.collapse();
     }
 }
-
 
 // export class Concat extends shapes.standard.HeaderedRecord {
 //    override  defaults() {

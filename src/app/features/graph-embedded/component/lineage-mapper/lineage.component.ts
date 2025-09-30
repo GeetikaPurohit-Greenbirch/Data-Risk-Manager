@@ -6,7 +6,8 @@ import {
   AfterViewInit,
   ViewChild,
   Inject,
-  PLATFORM_ID
+  PLATFORM_ID,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   dia,
@@ -36,7 +37,8 @@ type Records = Constant | Concat | GetDate | Record;
 @Component({
   selector: 'app-child-diagram',
   templateUrl: './lineage.component.html',
-  styleUrls: ['./lineage.component.scss']
+  styleUrls: ['./lineage.component.scss'],
+   encapsulation: ViewEncapsulation.None
 })
 export class LineageComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef;
@@ -46,6 +48,8 @@ export class LineageComponent implements AfterViewInit {
   scroller!: ui.PaperScroller;
   scale: number = 1;
   scaleDisplay: number = 100;
+  private freeTransform?: ui.FreeTransform;
+
 
   constructor(
     private dialog: MatDialog,
@@ -116,7 +120,7 @@ export class LineageComponent implements AfterViewInit {
           const targetParsed = JSON.parse(target.node);
           // this.paper.freeze();
           loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceParsed, true);
-          loadExample(this.graph, { x: 500, y: 90 }, this.target, targetParsed, true);
+          loadExample(this.graph, { x: 700, y: 90 }, this.target, targetParsed, true);
           // this.paper.unfreeze();
           // this.scroller.centerContent();
         } catch (e) {
@@ -518,6 +522,54 @@ export class LineageComponent implements AfterViewInit {
         record.setScrollTop(record.getScrollTop() + delta * 10);
       }
     });
+
+   // assuming this.paper is already created and this.graph is set
+
+// Helper to attach FreeTransform to a clicked element
+const attachFreeTransform = (elementView: dia.ElementView) => {
+  // Remove an existing FT first
+  this.freeTransform?.remove();
+
+  // Create a new FT for the selected element
+  this.freeTransform = new ui.FreeTransform({
+    cellView: elementView,
+    // --- useful options ---
+    allowRotation: false,              // show rotation handle
+    allowOrthogonalResize: true,      // side handles
+    preserveAspectRatio: false,       // set true for fixed aspect ratio
+    useModelGeometry: true,           // respect model's size/angle
+    minWidth: 50,
+    minHeight: 30,
+    maxWidth: 800,
+    maxHeight: 600,
+    rotateAngleGrid: 15,              // snap rotation to 15°
+    scaleGrid: 10                     // snap resize in 10px increments
+  });
+
+  // Render and add to the paper DOM so it tracks the element position
+  this.freeTransform.render();
+  this.paper.el.appendChild(this.freeTransform.el);
+
+  // (Optional) listen when user finishes actions
+  this.freeTransform.on('action:stop', () => {
+    const element = elementView.model as dia.Element;
+    const size = element.size();
+    const angle = element.get('angle');
+    // Persist or react to new geometry here
+    // console.log('Resized to', size, 'angle', angle);
+  });
+};
+
+// Attach FT on click
+this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
+  attachFreeTransform(elementView);
+});
+
+// Remove FT when clicking on blank area
+this.paper.on('blank:pointerdown', () => {
+  this.freeTransform?.remove();
+  this.freeTransform = undefined;
+});
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {

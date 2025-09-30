@@ -7,7 +7,8 @@ import {
   Inject,
   PLATFORM_ID,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   dia,
@@ -53,7 +54,8 @@ export type LineageRecord = {
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
-  styleUrls: ['./diagram.component.scss']
+  styleUrls: ['./diagram.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DiagramComponent implements AfterViewInit {
 
@@ -791,4 +793,5 @@ export class DiagramComponent implements AfterViewInit {
     this.diagramCollapsed = !this.diagramCollapsed;
   }
 }
+
 

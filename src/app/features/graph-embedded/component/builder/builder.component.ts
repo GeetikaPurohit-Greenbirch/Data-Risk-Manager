@@ -35,15 +35,16 @@ export class BuilderComponent implements OnInit {
 
   cols: any[] = [
     { field: 'fieldId', header: 'Field ID' },
+     { field: 'fieldNo', header: 'Field No' },
     { field: 'fieldName', header: 'Field Name' },
     { field: 'dataType', header: 'Data Type' },
     { field: 'fieldLength', header: 'Length' },
     { field: 'sourceName', header: 'Source Name' },
-    // { field: 'completenessRisk', header: 'DQA - Completeness' },
+    { field: 'completenessRisk', header: 'Completeness Risk' },
     { field: 'completenessRiskComment', header: 'Completeness Commentary' },
-    // { field: 'timelinessRisk', header: 'DQA - Timeliness' },
+    { field: 'timelinessRisk', header: 'Timeliness Risk' },
     { field: 'timelinessRiskComment', header: 'Timeliness Commentary' },
-    // { field: 'accuracyRisk', header: 'DQA - Accuracy' },
+    { field: 'accuracyRisk', header: 'Accuracy Risk' },
     { field: 'accuracyRiskComment', header: 'Accuracy Commentary' },
     { field: 'criticality', header: 'Criticality' },
     { field: 'actions', header: 'Actions' }
@@ -53,7 +54,7 @@ export class BuilderComponent implements OnInit {
   constructor(private datafieldsService: DatafieldsService, private route: ActivatedRoute, private router: Router,) { }
 
   nodesCollapsed = false;
-  panelSizes: number[] = [99, 1];
+  panelSizes: number[] = [90, 10];
 
   toggleNodes(): void {
     this.nodesCollapsed = !this.nodesCollapsed;
@@ -136,7 +137,8 @@ export class BuilderComponent implements OnInit {
   // ];
 
   getTargetReport(targetId: any) {
-    this.datafieldsService.getTargetReportdata(this.useCaseId, targetId).subscribe({
+    const updatedTargetId = targetId.split("-")[1] || 0; // Default to 0 if targetId is null or undefined
+    this.datafieldsService.getTargetReportdata(this.useCaseId, updatedTargetId).subscribe({
       next: (res: any) => {
         this.fields = res;
       }
