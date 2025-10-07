@@ -410,7 +410,7 @@ if (!scrollContainer) {
         const label = `Interface Name : ${field.interface}\nField ID : ${field.fieldId}\nField Name : ${field.fieldName}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: leftX, y: startY + i * spacing },
-          size: { width: 300, height: 60 },
+          size: { width: 350, height: 70 },
           markup: [
             { tagName: 'rect', selector: 'body' },
             { tagName: 'image', selector: 'image' },  // 👈 add icon element
@@ -438,15 +438,16 @@ if (!scrollContainer) {
               fill: '#333',
               fontSize: 12,
               fontWeight: 'bold',
-              x: 8,
-              refX: 28, // offset right after the icon
-              refY: 22,
+              refX: 10,       // left padding
+              refY: '50%',    // center vertically in rect
               textAnchor: 'start',
+              textVerticalAnchor: 'middle', // 👈 keeps multiline text centered vertically
               style: {
-                whiteSpace: 'pre'   // 👈 preserves line breaks
+                whiteSpace: 'pre',          // preserve line breaks
+                lineHeight: '1.4em'         // add spacing between lines
               },
               textWrap: {
-                width: -20,   // available width inside the rect
+                width: 300,   // available width inside the rect
                 height: 'auto',
                 ellipsis: false
               }
@@ -485,7 +486,7 @@ if (!scrollContainer) {
               if (labelEl) {
                 const bbox = labelEl.getBBox();
                 // 3️⃣ Resize rect height according to text
-                rect.resize(300, bbox.height + 10); // +20 for padding
+                rect.resize(350, bbox.height + 20); // +20 for padding
               }
             }
           }, 0);
@@ -506,7 +507,7 @@ if (!scrollContainer) {
         const label = `Interface Name : ${field.interface}\nField ID : ${field.fieldId}\nField Name : ${field.fieldName}`;
         const rect = new joint.shapes.standard.Rectangle({
           position: { x: rightX, y: startY + i * spacing },
-          size: { width: 300, height: 60 },
+          size: { width: 350, height: 70 },
           markup: [
             { tagName: 'rect', selector: 'body' },
             { tagName: 'image', selector: 'image' },  // 👈 add icon element
@@ -576,7 +577,7 @@ if (!scrollContainer) {
               if (labelEl) {
                 const bbox = labelEl.getBBox();
                 // 3️⃣ Resize rect height according to text
-                rect.resize(320, bbox.height + 10); // +20 for padding
+                rect.resize(350, bbox.height + 20); // +20 for padding
               }
             }
           }, 0);

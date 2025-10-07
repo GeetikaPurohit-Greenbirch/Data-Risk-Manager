@@ -25,6 +25,7 @@ export class ReportBuilderComponent {
     },
     attributes: {
       fieldId: false,
+      fieldNo: false,
       fieldName: false,
       fieldDescription: false,
       dataType: false,
@@ -87,6 +88,7 @@ export class ReportBuilderComponent {
   
       target_data_quality_report_detail: {
         field_id: this.options.attributes.fieldId,
+        field_no: this.options.attributes.fieldNo,
         field_name: this.options.attributes.fieldName,
         field_description: this.options.attributes.fieldDescription,
         data_type: this.options.attributes.dataType,
