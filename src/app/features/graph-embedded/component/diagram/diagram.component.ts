@@ -71,6 +71,7 @@ export class DiagramComponent implements AfterViewInit {
   scaleDisplay: number = 100;
   diagramCollapsed = false;
   use_case_id!: string;
+  private freeTransform?: ui.FreeTransform;
 
 
   constructor(
@@ -419,6 +420,47 @@ export class DiagramComponent implements AfterViewInit {
       // baseWidth: 500,
       // baseHeight: 500,
       cursor: 'grab'
+    });
+
+
+    // Helper to attach FreeTransform to a clicked element
+    const attachFreeTransform = (elementView: dia.ElementView) => {
+      // Remove an existing FT first
+      this.freeTransform?.remove();
+    
+      // Create a new FT for the selected element
+      this.freeTransform = new ui.FreeTransform({
+        cellView: elementView,
+        // --- useful options ---
+        allowRotation: false,              // show rotation handle
+        allowOrthogonalResize: true,      // side handles
+        preserveAspectRatio: false,       // set true for fixed aspect ratio
+        useModelGeometry: true,           // respect model's size/angle
+        minWidth: 50,
+        minHeight: 30,
+        maxWidth: 800,
+        maxHeight: 600,
+        rotateAngleGrid: 15,              // snap rotation to 15°
+        scaleGrid: 10                     // snap resize in 10px increments
+      });
+    
+      // Render and add to the paper DOM so it tracks the element position
+      this.freeTransform.render();
+      this.paper.el.appendChild(this.freeTransform.el);
+    
+      // (Optional) listen when user finishes actions
+      this.freeTransform.on('action:stop', () => {
+        const element = elementView.model as dia.Element;
+        const size = element.size();
+        const angle = element.get('angle');
+        // Persist or react to new geometry here
+        // console.log('Resized to', size, 'angle', angle);
+      });
+    };
+    
+    // Attach FT on click
+    this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
+      attachFreeTransform(elementView);
     });
 
 
