@@ -462,7 +462,33 @@ export class DiagramComponent implements AfterViewInit {
     this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
       attachFreeTransform(elementView);
     });
-
+this.paper.on('element:remove:pointerdown', function (elementView, evt) {
+      evt.stopPropagation();
+      const cell = elementView.model;
+      cell.remove(); // removes from graph
+    });
+    this.paper.on('element:pointerdblclick', (elementView, evt) => {
+      evt.stopPropagation();
+      const node = elementView.model;
+      console.log("elementViewNode", node);
+      const nodeId = node.id.toString();
+      if (nodeId) {
+        const parts = nodeId.split("-");
+        const type = parts[0]; // "SYS"
+        const id = parts[1]; // "21"
+       
+        if (type == "S") {
+          this.router.navigate(['sources/edit-source/', id]);
+        }
+        else if (type == "SYS") {
+          this.router.navigate(['systems/edit-system/', id]);
+        }        
+        else if (type == "TGT") {
+          this.router.navigate(['targets/edit-target/', id]);
+        }
+      }
+    });
+ 
 
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
