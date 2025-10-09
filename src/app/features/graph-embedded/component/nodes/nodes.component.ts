@@ -64,21 +64,21 @@ const blocks = [
 ],
     items: [{ id: 'tradeEnricher', label: 'Trade Enricher' }, { id: 'kraken', label: 'Kraken' }, { id: 'dealfeed', label: 'Deal Feed' }]
   },
-  {
-    type: 'Constant',
-    label: 'Control',
-    args: { x: 215, y: 50 },
-    icon: '<i class="fa fa-sliders" aria-hidden="true"></i>',
-    sicon: 'assets/icons/controls.svg',
-    typeName: 'controls',
-    color: '#fff',
-    size: { width: 120, height: 40 },
-    ports: [
-      { id: 'in2', group: 'in', attrs: { portLabel: { text: 'Input', fontSize: 14, fill: '#000' } } },
-      { id: 'out3', group: 'out', attrs: { portLabel: { text: 'Output', fontSize: 14, fill: '#000' } } }
-    ],
-    items: [{ id: 'Kraken', label: 'Kraken' }, { id: 'dealFeed', label: 'DealFeed' }]
-  },
+  // {
+  //   type: 'Constant',
+  //   label: 'Control',
+  //   args: { x: 215, y: 50 },
+  //   icon: '<i class="fa fa-sliders" aria-hidden="true"></i>',
+  //   sicon: 'assets/icons/controls.svg',
+  //   typeName: 'controls',
+  //   color: '#fff',
+  //   size: { width: 120, height: 40 },
+  //   ports: [
+  //     { id: 'in2', group: 'in', attrs: { portLabel: { text: 'Input', fontSize: 14, fill: '#000' } } },
+  //     { id: 'out3', group: 'out', attrs: { portLabel: { text: 'Output', fontSize: 14, fill: '#000' } } }
+  //   ],
+  //   items: [{ id: 'Kraken', label: 'Kraken' }, { id: 'dealFeed', label: 'DealFeed' }]
+  // },
   {
     type: 'Record',
     label: 'Target',
