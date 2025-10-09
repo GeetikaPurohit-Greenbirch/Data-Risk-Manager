@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
@@ -12,6 +12,8 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 import { PdfService } from 'src/app/features/shared-services/pdf.service';
 import { MatSelectChange } from '@angular/material/select';
 import { HttpClient } from '@angular/common/http';
+import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -37,7 +39,12 @@ export class EditTargetComponent {
    formLoaded = false;
    showReport = false;
    selectedUseCaseId: string | null = null;
+   useCaseId!:number;
+   useCaseName = '';
+   public rowindex = 0;
+   public savedUseCase: string | null = null;
 
+  
  
    // ✅ DataFields table data
    dataFields: any[] = [
@@ -65,8 +72,10 @@ export class EditTargetComponent {
      private toastNotificationService: ToastnotificationService,
      private targetService: TargetService,
      private datafieldsService: DatafieldsService,
+             private dialog: MatDialog,
      private cdr: ChangeDetectorRef,
-     private http: HttpClient
+     private http: HttpClient,
+     private usecaseService: UsecaseService,
    ) {}
  
  
@@ -188,25 +197,7 @@ export class EditTargetComponent {
     this.reportVisible = true;
     this.reportPosition = { x: 150, y: 100 };
   
-    // Fetch use cases for this target
-    const targetId = this.targetId; // make sure you have this set
-    this.http.get<any[]>(`https://api.dev.datariskmanager.net/entity/use_cases/target/${targetId}`)
-      .subscribe({
-        next: (data) => {
-          this.useCases = data;
-          this.formLoaded = true;
-      
-
-        },
-        error: (err) => {
-          console.error('Failed to fetch use cases', err);
-          if (err.status === 404) {
-            alert("No use cases found (404).");
-          } else {
-            alert("An error occurred while fetching use cases.");
-          }
-        }
-      });
+    
   }
 
   closeReportBuilder() {
@@ -214,24 +205,24 @@ export class EditTargetComponent {
     this.showReport = false;
   }
 
-  confirmUseCase() {
-    if (!this.targetUseCaseForm.value.selectedUseCaseId) {
-      alert('Please select a use case first.');
-      return;
-    }
+  // confirmUseCase() {
+  //   if (!this.targetUseCaseForm.value.selectedUseCaseId) {
+  //     alert('Please select a use case first.');
+  //     return;
+  //   }
   
-    // Pass selected useCaseId to report builder options
-    this.options = {
-      ...this.options,
-      contents: {
-        ...this.options.contents,
-        useCaseId: this.targetUseCaseForm.value.selectedUseCaseId
-      }
-    };
+  //   // Pass selected useCaseId to report builder options
+  //   this.options = {
+  //     ...this.options,
+  //     contents: {
+  //       ...this.options.contents,
+  //       useCaseId: this.targetUseCaseForm.value.selectedUseCaseId
+  //     }
+  //   };
   
-    // Now the popup closes and ReportBuilder gets the use case
-    this.reportVisible = true; // keep report visible
-  }
+  //   // Now the popup closes and ReportBuilder gets the use case
+  //   this.reportVisible = true; // keep report visible
+  // }
 
   // onBuildReport(options: any) {
   //   if (!this.gridApi) {
@@ -249,7 +240,7 @@ export class EditTargetComponent {
     console.log('Report payload:', payload);
 
     this.http.post(
-      `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.targetUseCaseForm.value.selectedUseCaseId}?disposition=inline`,
+      `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.useCaseId}?disposition=inline`,
       payload,
       { responseType: 'blob' } // handle PDF/Excel
     ).subscribe({
@@ -325,8 +316,93 @@ export class EditTargetComponent {
   this.targetForm.get('quality_of_service')?.valueChanges.subscribe(value => {
     this.toggleFieldsBasedOnQoS(value);
   });
-       this.getDataFields();
+      //  this.getDataFields();
+       this.getUsecaseList();
+
+        // Check if use case already selected and saved
+      
+   this.savedUseCase = localStorage.getItem('selectedUseCaseTarget');
+
+   if (!this.savedUseCase) {
+     // Open popup only if no use case saved
+     setTimeout(() => {
+       this.openUsecasePopup();
+     }, 100);
+   } else {
+     // Restore saved use case
+     const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
+     this.useCaseId = useCaseId;
+     this.useCaseName = useCaseName;
    }
+   }
+
+   selectUseCase(view: string)
+   {
+     this.activeView = view;
+     this.getUsecaseList();
+     setTimeout(() => {
+       this.openUsecasePopup();
+
+     }, 100);
+   }
+   @ViewChild('useCasePopup') useCasePopup!: TemplateRef<any>;
+   dialogRef!: MatDialogRef<any>;
+
+ 
+ 
+   openUsecasePopup() {
+     this.dialogRef = this.dialog.open(this.useCasePopup, {
+       disableClose: true, // optional, prevent closing without selection
+     });
+   }
+   
+   confirmUseCase() {
+     if (!this.useCaseId) {
+       alert('Please select a use case first.');
+       return;
+     }
+   
+     // Split the value into ID and Name
+     const [useCaseId, useCaseName] = this.useCaseId.toString().split('|');
+   
+     // Save them into separate variables
+     this.useCaseId = parseInt(useCaseId);
+     this.useCaseName = useCaseName;
+   
+     console.log('Use Case ID:', this.useCaseId);
+     console.log('Use Case Name:', this.useCaseName);
+   
+     // ✅ Save to localStorage so popup doesn’t appear again
+     localStorage.setItem(
+       'selectedUseCaseTarget',
+       JSON.stringify({
+         useCaseId: this.useCaseId,
+         useCaseName: this.useCaseName
+       })
+     );
+   
+     // ✅ Close the dialog
+     this.dialogRef.close();
+   }
+
+   getUsecaseList() {
+    this.usecaseService.getLineageUsecase('TARGET',this.targetId).subscribe({
+      next: (usecases: any[]) => {
+        // const usecaseEntities = usecases.map(data => ({
+        //   ...data.useCaseEntity
+        // }));
+  
+        // const useCaseIds = usecaseEntities.map(u => u.use_case_id);
+        this.useCases = usecases;
+      
+      },
+      error: err => {
+        console.error('Error fetching usecases:', err);
+      }
+    });
+  }
+
+  
 
      onFrequencyChange(): void {
           const freq = +this.targetForm.get('frequency_of_update')?.value || 1;
@@ -362,7 +438,7 @@ export class EditTargetComponent {
  
    getDataFields()
    { 
-     this.datafieldsService.getDataFieldsById(this.targetId, 'TARGET').subscribe({
+     this.datafieldsService.getDataFieldsByIdWithUsecase(this.targetId, 'TARGET', this.useCaseId).subscribe({
        next: (res: any) => {
          this.rowData = [...res]; // triggers change
          if (this.gridApi) {
@@ -387,6 +463,7 @@ export class EditTargetComponent {
      this.showDataFieldsTable = true;
      this.showDataFields = true;
      this.showDataQuality = false;
+     this.getDataFields();
    }
  
    showDQA(view:string)
@@ -469,6 +546,7 @@ export class EditTargetComponent {
    this.dataFieldsModel.criticality = data.data.criticality;
    this.dataFieldsModel.entity_type = 'TARGET';
    this.dataFieldsModel.entity_id = this.targetId;
+   this.dataFieldsModel.usecaseid = this.useCaseId;
  
    if(!data.data.field_id)
     {

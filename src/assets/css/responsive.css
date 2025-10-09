@@ -36,7 +36,7 @@ table, th, td { word-wrap: break-word; }
   transition: margin-left 0.3s ease;
   padding: 20px;
   height:92%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Hidden state */

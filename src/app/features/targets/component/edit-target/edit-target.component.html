@@ -98,20 +98,33 @@
           <input matInput formControlName="target_entity" />
         </mat-form-field>
 
+        <div style="width: 48%; float:right;    margin-top: 8px;
+        font-size: 15px;">
+      Usecase ID : {{useCaseId}}
+      <br>
+      Usecase Name : {{useCaseName}}
+    </div>
+
         <!-- Add remaining fields similarly -->
         <div class="updateBtn">
           <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
           </div>
+      
 <!-- Toggle Button -->
 <div style="display: flex; height: 100%;">
   <!-- Left Side Buttons -->
   <div style="width: 100%; padding: 12px;">
     <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-      <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+      <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
       [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
               (click)="addDatafields('datafields')">
         Add Datafields
-      </button> -->
+      </button>
+      <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+      [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
+              (click)="selectUseCase('usecase')">
+        Update Use Case
+      </button>
 
       <!-- <button mat-stroked-button
               style="flex: 0 0 calc(50% - 6px);"
@@ -186,15 +199,11 @@
 
         <!-- Popup -->
 <div *ngIf="reportVisible" class="popup-overlay">
-  <div class="popup-box row">
+  <!-- <div class="popup-box row">
     
 <div class="col-md-5">
   <form [formGroup]="targetUseCaseForm">
-<!-- <select [(ngModel)]="selectedUseCaseId" class="full-width" *ngIf="formLoaded">
-  <option vlaue="">Select Use Case</option>
-  <option *ngFor="let uc of useCases" [value]="uc.use_case_id">        {{ uc.use_case_name }}
-  </option>
-</select> -->
+
   <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
     <mat-label>Select Use Case</mat-label>
     <mat-select formControlName="selectedUseCaseId">
@@ -211,10 +220,8 @@
     
   <button mat-raised-button color="primary" (click)="onCloseBuilder()" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button>
 
-  <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
-
   </div>
-  </div>
+  </div> -->
 </div>
 
         <app-report-builder
@@ -227,65 +234,35 @@
       </div>
     </div>
 
-      <!-- <table mat-table [dataSource]="dataFields" class="mat-elevation-z2 datafieldTable">
-        <ng-container matColumnDef="fieldId">
-          <th mat-header-cell *matHeaderCellDef> Field ID </th>
-          <td mat-cell *matCellDef="let row"> {{ row.fieldId }} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="fieldName">
-          <th mat-header-cell *matHeaderCellDef> Field Name </th>
-          <td mat-cell *matCellDef="let row">
-            <input matInput [(ngModel)]="row.fieldName" />
-          </td>
-        </ng-container>
-
-
-          <ng-container matColumnDef="dataType">
-            <th mat-header-cell *matHeaderCellDef> Data Type </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.dataType" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="fieldLength">
-            <th mat-header-cell *matHeaderCellDef>Length </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.fieldLength" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="riskLevel">
-            <th mat-header-cell *matHeaderCellDef>DQA CTA</th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.riskLevel" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="criticality">
-            <th mat-header-cell *matHeaderCellDef>Criticality </th>
-            <td mat-cell *matCellDef="let row">
-              <input matInput [(ngModel)]="row.criticality" />
-            </td>
-          </ng-container>
-  
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row; let i = index">
-              <button mat-icon-button color="success" matTooltip="Save" (click)="saveDatafields(row)">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteDAtaFields(row, i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-  
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table> -->
     </div>
+
+    <ng-template #useCasePopup>
+    
+      <h2 mat-dialog-title>Select Use Case</h2>
+      <mat-dialog-content>
+        <div class="popup-box row">
+      
+          <div class="col-md-7">
+          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+            <mat-label>Select Use Case</mat-label>
+            <mat-select [(ngModel)]="useCaseId">
+              <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                {{ uc.use_case_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Submit</button>
+              
+            <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
+          
+            <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+          
+            </div>
+            </div>
+          </mat-dialog-content>
+    </ng-template>
     </div>
   </div>
   </mat-card>

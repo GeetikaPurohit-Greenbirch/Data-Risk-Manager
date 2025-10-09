@@ -53,6 +53,13 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        <div style="width: 48%; float:right;    margin-top: 8px;
+    font-size: 15px;">
+  Usecase ID : {{useCaseId}}
+  <br>
+  Usecase Name : {{useCaseName}}
+</div>
   
         <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
@@ -100,6 +107,12 @@
                 (click)="sysMapping('mapping')">
           System Mapping
         </button>
+
+        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+        [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
+                (click)="selectUseCase('usecase')">
+          Update Use Case
+        </button>
       </div>
     </div>
   </div>
@@ -145,6 +158,8 @@
         [defaultColDef]="defaultColDef"
         (cellValueChanged)="inputCellValueChanged($event)"
         rowSelection="single"
+        (rowClicked)="onRowClick($event)"
+        (gridReady)="onGridReady($event)"
         >
         </ag-grid-angular>
         </div>
@@ -252,7 +267,33 @@
     
     </div>
     
-
+  <ng-template #useCasePopup>
+    
+    <h2 mat-dialog-title>Select Use Case</h2>
+    <mat-dialog-content>
+      <div class="popup-box row">
+    
+        <div class="col-md-7">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+          <mat-label>Select Use Case</mat-label>
+          <mat-select [(ngModel)]="useCaseId">
+            <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+              {{ uc.use_case_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Submit</button>
+            
+          <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
+        
+          <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+        
+          </div>
+          </div>
+        </mat-dialog-content>
+  </ng-template>
     <!-- <div class="datafields-header">
      
       <button (click)="addRow()" class="add-btn">Add Row</button>

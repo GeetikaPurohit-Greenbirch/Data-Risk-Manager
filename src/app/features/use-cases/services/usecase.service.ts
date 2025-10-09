@@ -27,6 +27,11 @@ export class UsecaseService {
         const url: string = this.apiUrl + 'use_cases';
         return this.http.get<Usecase[]>(url);
       }
+
+      public getLineageUsecase(entity_type:string,systemid: number): Observable<Usecase[]> {
+        const url: string = this.apiUrl + 'use_cases/'+entity_type+'/'+systemid
+        return this.http.get<Usecase[]>(url);
+      }
     
     public getPermissionsForUsecases(useCaseIds:any): Observable<any> {
       const url: string = this.apiUrl + 'user-use-case/permission';

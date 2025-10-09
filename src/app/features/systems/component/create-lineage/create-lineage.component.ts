@@ -566,6 +566,23 @@ if (!scrollContainer) {
           },
         });
 
+
+        this.graph.on('change:position', (cell: joint.dia.Element) => {
+          if (cell.get('customType') === 'outbound') {
+            const pos = cell.position();
+            const fieldId = cell.get('customFieldId');
+            console.log(`📍 Outbound ${fieldId} moved to`, pos);
+        
+            // store locally so you can send on save
+            this.outboundFields.forEach(f => {
+              if (f.portId === fieldId) {
+                f.savedPosition = pos;  // add/update saved position
+              }
+            });
+          }
+        });
+
+
           // 1️⃣ Add element to graph first
           this.graph.addCell(rect);
 
@@ -606,7 +623,9 @@ if (!scrollContainer) {
             p_field_uuid: fromField.portId, // UUID from array
             c_field_id: toField.fieldId,
             c_field_uuid: toField.portId, 
-            system_id: systemId
+            system_id: systemId,
+             // 👇 also send the saved outbound position
+        outbound_position: toField.savedPosition || null
           };
         }
     

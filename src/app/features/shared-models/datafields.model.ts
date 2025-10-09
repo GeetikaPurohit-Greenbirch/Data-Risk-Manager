@@ -22,4 +22,5 @@ export class Datafields {
     default_commentary_a!:string;
     default_commentary_c!:string;
     id!:number;
+    usecaseid!:number;
 }

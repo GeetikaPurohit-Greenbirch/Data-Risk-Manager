@@ -21,6 +21,13 @@ export class DatafieldsService {
       return this.http.post<Datafields[]>(url, dataFieldsModel);
     }
 
+    public createDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type:any, entity_id:any, usecaseid:any): Observable<any> {
+      const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+usecaseid;
+      console.log(dataFieldsModel)
+  
+      return this.http.post<Datafields[]>(url, dataFieldsModel);
+    }
+
     public createGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
       const url: string = this.apiUrl + 'entity-risk-config';
       console.log(dataFieldsModel)
@@ -30,6 +37,13 @@ export class DatafieldsService {
 
   public updateInterface(dataFieldsModel: Datafields): Observable<any> {
         const url: string = this.apiUrl + 'fields';
+        console.log(dataFieldsModel)
+    
+        return this.http.post<Datafields[]>(url, dataFieldsModel);
+      }
+
+      public updateDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type:any, entity_id:any, usecaseid:any): Observable<any> {
+        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+usecaseid;
         console.log(dataFieldsModel)
     
         return this.http.post<Datafields[]>(url, dataFieldsModel);
@@ -47,6 +61,10 @@ export class DatafieldsService {
         return this.http.get<Datafields[]>(url);
       }
 
+      public getDataFieldsByIdWithUsecase(id:number, entity_type:any, usecaseid:any):Observable<Datafields[]> {
+        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id+'/'+usecaseid;
+        return this.http.get<Datafields[]>(url);
+      }
 
       public getDataFieldsDQA(id:number, entity_type:any):Observable<Datafields[]> {
         const url: string = this.apiUrl + 'entity-risk-config/'+entity_type+'/'+id;

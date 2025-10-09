@@ -12,7 +12,6 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { isRawIdxResponse } from '@okta/okta-auth-js/types/lib/idx/types/idx-js';
-import { Datafields } from 'src/app/features/shared-models/datafields.model';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -56,7 +55,7 @@ controlForm!: FormGroup;
   attachToId!:number;
   activeView!: string; // default view on load
   formLoaded = false;
-  dataFieldsModel : Datafields = new Datafields();
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -67,7 +66,6 @@ controlForm!: FormGroup;
         private datafieldsService: DatafieldsService,
         private cdr: ChangeDetectorRef,
         private interfaceService: InterfaceService,
-      
   ) {}
 
 
@@ -485,49 +483,7 @@ controlForm!: FormGroup;
 
   saveDatafields(data:any)
   {
-    console.log(data, "Interface Data Fields");
-
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
-    this.dataFieldsModel.field_name = data.data.field_name;
-    this.dataFieldsModel.field_description = data.data.field_description;
-    this.dataFieldsModel.dqa_c = data.data.dqa_c;
-    this.dataFieldsModel.dqa_t = data.data.dqa_t;
-    this.dataFieldsModel.dqa_a = data.data.dqa_a;
-    this.dataFieldsModel.commentary_a = data.data.commentary_a;
-    this.dataFieldsModel.commentary_t = data.data.commentary_t;
-    this.dataFieldsModel.commentary_c = data.data.commentary_c;
-    this.dataFieldsModel.data_type = data.data.data_type;
-    this.dataFieldsModel.field_length = data.data.field_length;
-    this.dataFieldsModel.criticality = data.data.criticality;
-    this.dataFieldsModel.entity_type = data.data.entity_type;
-    this.dataFieldsModel.entity_id = data.data.entity_id;
-   
-        // alert("Data field added Successfully.");
-        if(!data.data.field_id)
-        {
-          this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
-  
-          this.toastNotificationService.success("Data field added Successfully.");
-          setTimeout(() => {
-            this.loadInboundInterfaces('datafields'); // refresh
     
-          }, 1000);
-        });
-      }
-        else
-        {
-          this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
-  
-            this.toastNotificationService.success("Data field updated Successfully.");
-            setTimeout(() => {  
-              this.loadInboundInterfaces('datafields'); // refresh
-      
-            }, 1000);
-          });
-        }
-       
-      
   }
 
   deleteDAtaFields(data:any, id:number)

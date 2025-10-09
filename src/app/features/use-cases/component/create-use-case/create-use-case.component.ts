@@ -40,11 +40,30 @@ export class CreateUseCaseComponent {
       ownerEmail: ['', [Validators.required, Validators.email]],
       version: ['', Validators.required],
       status: ['', Validators.required],
-      lastreviewdate:['', Validators.required],
-      reviewedby: ['', Validators.required],
-      nextreviewdate: ['', Validators.required],
-      reviewer:['', Validators.required]
+      lastreviewdate:[''],
+      reviewedby: [''],
+      nextreviewdate: [''],
+      reviewer:['']
     });
+
+     // 👇 Watch status and apply validators conditionally
+  this.usecaseForm.get('status')?.valueChanges.subscribe(status => {
+    const requiresReview = 
+      status === 'APPROVED_READY_FOR_PRODUCTION' || 
+      status === 'APPROVED_IN_PRODUCTION';
+
+    const controls = ['lastreviewdate', 'reviewedby', 'nextreviewdate', 'reviewer'];
+
+    controls.forEach(ctrlName => {
+      const control = this.usecaseForm.get(ctrlName);
+      if (requiresReview) {
+        control?.setValidators(Validators.required);
+      } else {
+        control?.clearValidators();
+      }
+      control?.updateValueAndValidity({ emitEvent: false });
+    });
+  });
   }
 
   onSubmit() {

@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
+import { CellFocusedEvent, ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { filter, forkJoin } from 'rxjs';
@@ -13,8 +13,9 @@ import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { TargetService } from 'src/app/features/targets/services/target.service';
 import * as joint from 'jointjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateLineageComponent } from '../create-lineage/create-lineage.component';
+import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -37,7 +38,10 @@ export class EditSystemComponent{
   public showsystemMapping = false;
   activeView!: string; // default view on load
   isLoading: boolean = false;
-
+  useCaseId!:number;
+  useCaseName = '';
+  public rowindex = 0;
+  public savedUseCase: string | null = null;
  
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
 
@@ -52,7 +56,7 @@ export class EditSystemComponent{
   showGlobalQualityRiskGridInbound = false; // Controls visibility of AG Grid
   showGlobalQualityRiskGridOutbound = false;
   statusOptions: string[] = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
-
+  useCases: any[] = [];
   
   formLoaded = false;
 
@@ -72,8 +76,8 @@ export class EditSystemComponent{
         private toastNotificationService: ToastnotificationService,
         private interfaceService: InterfaceService,
         private targetService : TargetService,
-        private dialog: MatDialog
-        
+        private dialog: MatDialog,
+         private usecaseService: UsecaseService,
 
   ) {}
 
@@ -415,7 +419,7 @@ export class EditSystemComponent{
           // width:65,
           // minWidth: 65,
           // maxWidth: 65,
-          resizable: false,
+          resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
             color: 'blue',
@@ -602,7 +606,7 @@ export class EditSystemComponent{
           // width:65,
           // minWidth: 65,
           // maxWidth: 65,
-          resizable: false,
+          resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
             color: 'blue',
@@ -855,13 +859,48 @@ export class EditSystemComponent{
     this.gridColumnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
+  private focusedCell: CellFocusedEvent | null = null;
 
-  addRow() {
-    this.cdr.detectChanges();
-    const newItem = {entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
-    this.rowDataInput = [...this.rowDataInput, newItem];
+  onRowClick(event: any): void {
+    // console.log(event.rowIndex);
+    this.rowindex = event.rowIndex
+    this.focusedCell = event;
+    const rowNode = this.gridApi.getDisplayedRowAtIndex(this.rowindex);
+ 
   }
 
+  // addRow() {
+  //   this.cdr.detectChanges();
+  //   const newItem = {entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
+  //   this.rowDataInput = [...this.rowDataInput, newItem];
+  // }
+
+  addRow() {
+    const selectedNode = this.gridApi.getSelectedNodes()[0]; // get selected row node
+    const newItem = {
+      entity_type: 'SYSTEM',
+      fieldName: '',
+      dataType: '',
+      value: '',
+      description: ''
+    };
+  
+    if (selectedNode) {
+      // Insert after selected row
+      const selectedIndex = selectedNode.rowIndex;
+      const updatedData = [...this.rowDataInput];
+      updatedData.splice(selectedIndex + 1, 0, newItem); // insert new row after selection
+      this.rowDataInput = updatedData;
+    } else {
+      // If no row selected, add to end
+      this.rowDataInput = [...this.rowDataInput, newItem];
+    }
+  
+    // Optional: refresh the grid display
+    // this.gridApi.setRowData(this.rowDataInput);
+  }
+
+  
   isEditable(params: any): boolean {
     return params.data.entity_type === 'SYSTEM';
   }
@@ -907,9 +946,9 @@ export class EditSystemComponent{
       
       this.formLoaded = true; // triggers re-render
 
-      this.getDataFields();
+      // this.getDataFields();
       // this.getInboundInterface();
-      this.loadInboundInterfaces();
+      // this.loadInboundInterfaces();
       this.rowDataInbound = [{}];
       this.rowDataInput = [{}];
       this.rowDataInboundDQA = [{}];
@@ -921,8 +960,45 @@ export class EditSystemComponent{
       this.rowDataCombined = [{}];
       // this.getInboundInterfaceData();
 
+      this.getUsecaseList();
+
+      // Check if use case already selected and saved
+      
+   this.savedUseCase = localStorage.getItem('selectedUseCaseSystem');
+
+  if (!this.savedUseCase) {
+    // Open popup only if no use case saved
+    setTimeout(() => {
+      this.openUsecasePopup();
+    }, 100);
+  } else {
+    // Restore saved use case
+    const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
+    this.useCaseId = useCaseId;
+    this.useCaseName = useCaseName;
+  }
+      
   }
 
+
+
+  getUsecaseList() {
+    this.usecaseService.getLineageUsecase('SYSTEM',this.systemId).subscribe({
+      next: (usecases: any[]) => {
+        // const usecaseEntities = usecases.map(data => ({
+        //   ...data.useCaseEntity
+        // }));
+  
+        // const useCaseIds = usecaseEntities.map(u => u.use_case_id);
+        this.useCases = usecases;
+      
+      },
+      error: err => {
+        console.error('Error fetching usecases:', err);
+      }
+    });
+  }
+  
   setActiveView(view: string) {
     this.activeView = view;
   }
@@ -931,14 +1007,14 @@ export class EditSystemComponent{
   { 
     // this.isLoading = true; // show loader
 
-    this.datafieldsService.getDataFieldsById(this.systemId, 'SYSTEM').subscribe({
+    this.datafieldsService.getDataFieldsByIdWithUsecase(this.systemId, 'SYSTEM', this.useCaseId).subscribe({
       next: (res: any) => {
         this.rowData = [...res]; // triggers change
 
-        if (this.gridApi) {
-          this.gridApi.setRowData([]); // Clear first to ensure refresh
-          this.gridApi.setRowData(this.rowData);
-        }
+        // if (this.gridApi) {
+        //   this.gridApi.setRowData([]); // Clear first to ensure refresh
+        //   this.gridApi.setRowData(this.rowData);
+        // }
   
         this.cdr.detectChanges(); // trigger Angular change detection
        
@@ -1039,6 +1115,9 @@ loadDropdownOptions(): void {
     this.showoutbound = false;
     this.showsystemMapping = false;
     this.cdr.detectChanges();
+    // this.getDataFields();
+    this.loadInboundInterfaces();
+
     this.getDatafieldsDQA('OUTBOUND');
   }
   
@@ -1051,6 +1130,9 @@ loadDropdownOptions(): void {
     this.showoutbound = false;
     this.showsystemMapping = false;
     this.cdr.detectChanges();
+    // this.getDataFields();
+    this.loadInboundInterfaces();
+
     this.getDatafieldsDQA('INBOUND')
   }
 
@@ -1080,6 +1162,55 @@ loadDropdownOptions(): void {
     console.log('Cell Value Changed:', event);
 
   }
+
+   selectUseCase(view: string)
+    {
+      this.activeView = view;
+      this.getUsecaseList();
+      setTimeout(() => {
+        this.openUsecasePopup();
+
+      }, 100);
+    }
+    @ViewChild('useCasePopup') useCasePopup!: TemplateRef<any>;
+    dialogRef!: MatDialogRef<any>;
+
+  
+  
+    openUsecasePopup() {
+      this.dialogRef = this.dialog.open(this.useCasePopup, {
+        disableClose: true, // optional, prevent closing without selection
+      });
+    }
+    
+    confirmUseCase() {
+      if (!this.useCaseId) {
+        alert('Please select a use case first.');
+        return;
+      }
+    
+      // Split the value into ID and Name
+      const [useCaseId, useCaseName] = this.useCaseId.toString().split('|');
+    
+      // Save them into separate variables
+      this.useCaseId = parseInt(useCaseId);
+      this.useCaseName = useCaseName;
+    
+      console.log('Use Case ID:', this.useCaseId);
+      console.log('Use Case Name:', this.useCaseName);
+    
+      // ✅ Save to localStorage so popup doesn’t appear again
+      localStorage.setItem(
+        'selectedUseCaseSystem',
+        JSON.stringify({
+          useCaseId: this.useCaseId,
+          useCaseName: this.useCaseName
+        })
+      );
+    
+      // ✅ Close the dialog
+      this.dialogRef.close();
+    }
   
   // ✅ Trigger update/save logic
   onUpdate(): void {
@@ -1257,6 +1388,7 @@ loadDropdownOptions(): void {
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;
   this.dataFieldsModel.entity_type = data.data.entity_type;
+  this.dataFieldsModel.usecaseid = this.useCaseId;
   // this.dataFieldsModel.entity_id = data.data.entity_id;
  
       // alert("Data field added Successfully.");
@@ -1486,12 +1618,7 @@ loadDropdownOptions(): void {
                   interface: `${item.interface_id} - ${item.interface_name}`
                 })
             );
-            // this.rowDataInbound = parsedInboundInterfaces.flatMap((item: any) =>
-            //   item.fields.map((field: any) => ({
-            //     ...field,
-            //     interface: `${item.interface_id} - ${item.interface_name}`
-            //   }))
-            // );
+            
           } else {
             // Fallback: show one blank row if no data
             this.rowDataInbound = [{}];
@@ -1524,17 +1651,6 @@ loadDropdownOptions(): void {
             });
           });
 
-          // outboundInterfaces.forEach((intf: any) => {
-          //   intf.fields.forEach((field: any) => {
-          //     combinedFields.push({
-          //       ...field,
-          //       interface_name: intf.interface_name,
-          //       source: 'Outbound'
-          //     });
-          //   });
-          // });
-
-          // this.rowData = combinedFields;
           this.rowData =[].concat(
               ...outboundInterfaces.map((i: any) =>
                 i.fields.map((field: any) => ({
@@ -1544,20 +1660,9 @@ loadDropdownOptions(): void {
                 }))
               )
             );
-          // this.rowDataInput = inboundInterfaces[0].fields;
-          // this.rowDataInput = [].concat(...inboundInterfaces.map((i: { fields: any; }) => i.fields));
+        
           this.rowDataInput = combinedFields;
-          // this.rowDataInput = [].concat(
-          //   ...inboundInterfaces.map((i: any) =>
-          //     i.fields.map((field: any) => ({
-          //       ...field,
-          //       interface_name: i.interface_name,
-          //       interface_id: i.interface_id
-          //     }))
-          //   )
-          // );
-          // this.inboundInterfaceList = inboundInterfaces;
-
+       
           if (parsedOutboundInterfaces?.length > 0) {
             this.rowDataOutbound = parsedOutboundInterfaces.map(
               (item: { interface_id: any; interface_name: any; } ) =>
@@ -1566,12 +1671,7 @@ loadDropdownOptions(): void {
               })
             );
 
-            // this.rowDataOutbound = parsedOutboundInterfaces.flatMap((item: any) =>
-            //   item.fields.map((field: any) => ({
-            //     ...field,
-            //     interface: `${item.interface_id} - ${item.interface_name}`
-            //   }))
-            // );
+         
           } else {
             // Fallback: show one blank row if no data
             this.rowDataOutbound = [{}];
@@ -1621,7 +1721,6 @@ loadDropdownOptions(): void {
 
           // 🔄 Now render fields on the diagram
 
-        // this.renderFields();
   
           this.cdr.detectChanges(); // trigger Angular change detection
         } catch (e) {
@@ -1632,10 +1731,140 @@ loadDropdownOptions(): void {
         console.error('Failed to load interface or inbound data:', err);
       },
       complete: () => {
-        // this.isLoading = false; // hide loader
       }
     });
   }
+
+  // loadInboundInterfaces() {
+  //   const interfaces$ = this.interfaceService.getInterface();
+  //   const interfaceDataFields$ = this.interfaceService.getInboundData(this.systemId);
+  //   const dqaRiskData$ = this.datafieldsService.getDataFieldsByIdWithUsecase(
+  //     this.systemId,
+  //     'SYSTEM',
+  //     this.useCaseId
+  //   );
+  
+  //   forkJoin([interfaces$, interfaceDataFields$, dqaRiskData$]).subscribe({
+  //     next: ([interfaces, interfaceDataFields, dqaRiskData]: [any[], any[], any[]]) => {
+  //       try {
+  //         /** STEP 1️⃣ — Populate dropdown from getInterface() **/
+  //         if (interfaces?.length > 0) {
+  //           this.interfaceOptionList = interfaces.map(
+  //             (item: { interfaceEntity: { interface_id: any; interface_name: any } }) =>
+  //               `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
+  //           );
+  //         }
+  
+  //         /** STEP 2️⃣ — Parse inbound/outbound/system data **/
+  //         const rawData = interfaceDataFields[0];
+  //         const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+  //         const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
+  //         const systemFields = JSON.parse(rawData.system_fields || '[]');
+  
+  //         /** STEP 3️⃣ — Combine system as interface for inbound **/
+  //         const systemAsInterface = {
+  //           interface_id: rawData.system_id,
+  //           interface_name: rawData.system_name,
+  //           source: 'System',
+  //           fields: systemFields.map((f: any) => ({
+  //             ...f,
+  //             entity_type: 'SYSTEM',
+  //             interface_id: rawData.system_id,
+  //             interface_name: rawData.system_name
+  //           }))
+  //         };
+  
+  //         const parsedInboundInterfacesforMapping = [systemAsInterface, ...inboundInterfaces];
+  
+  //         /** STEP 4️⃣ — Merge inbound/outbound fields **/
+  //         let combinedFields: any[] = [];
+  
+  //         // System
+  //         systemFields.forEach((field: any) => {
+  //           combinedFields.push({
+  //             ...field,
+  //             interface_name: rawData.system_name,
+  //             interface_id: rawData.system_id,
+  //             source: 'System'
+  //           });
+  //         });
+  
+  //         // Inbound
+  //         inboundInterfaces.forEach((intf: any) => {
+  //           intf.fields.forEach((field: any) => {
+  //             combinedFields.push({
+  //               ...field,
+  //               interface_name: intf.interface_name,
+  //               interface_id: intf.interface_id,
+  //               source: 'Inbound'
+  //             });
+  //           });
+  //         });
+  
+  //         // Outbound
+  //         outboundInterfaces.forEach((intf: any) => {
+  //           intf.fields.forEach((field: any) => {
+  //             combinedFields.push({
+  //               ...field,
+  //               interface_name: intf.interface_name,
+  //               interface_id: intf.interface_id,
+  //               source: 'Outbound'
+  //             });
+  //           });
+  //         });
+
+  //                 this.outboundInterfaceList = outboundInterfaces;
+
+  //                 this.rowData =[].concat(
+  //                               ...outboundInterfaces.map((i: any) =>
+  //                                 i.fields.map((field: any) => ({
+  //                                   ...field,
+  //                                   interface_name: i.interface_name,
+  //                                   interface_id: i.interface_id
+  //                                 }))
+  //                               )
+  //                             );
+  
+  //         /** STEP 5️⃣ — Merge DQA risk levels (from new API) **/
+  //         combinedFields = combinedFields.map((field: any) => {
+  //           const matchedRisk = dqaRiskData.find(
+  //             (r: any) => r.field_id === field.field_id
+  //           );
+  //           if (matchedRisk) {
+  //             return {
+  //               ...field,
+  //               dqa_a: matchedRisk.accuracy_risk,
+  //               commentary_a: matchedRisk.accuracy_risk_comment,
+  //               dqa_c: matchedRisk.completeness_risk,
+  //               commentary_c: matchedRisk.completeness_risk_comment,
+  //               dqa_t: matchedRisk.timeliness_risk,
+  //               commentary_t: matchedRisk.timeliness_risk_comment
+  //             };
+  //           }
+  //           return field;
+  //         });
+  
+  //         /** STEP 6️⃣ — Bind to grid/UI **/
+  //         this.rowDataInput = combinedFields;
+  
+  //         // Example binding to grid:
+  //         if (this.gridApi) {
+  //           this.gridApi.setRowData([]);
+  //           this.gridApi.setRowData(this.rowDataInput);
+  //         }
+  
+  //         this.cdr.detectChanges();
+  //       } catch (e) {
+  //         console.error('Error parsing interface data:', e);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load interface or inbound data:', err);
+  //     }
+  //   });
+  // }
+  
+  
     
 
   getInterfaceDataFields(interfaceId: any) {
