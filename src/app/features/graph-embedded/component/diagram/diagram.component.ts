@@ -71,6 +71,7 @@ export class DiagramComponent implements AfterViewInit {
   scaleDisplay: number = 100;
   diagramCollapsed = false;
   use_case_id!: string;
+  private freeTransform?: ui.FreeTransform;
 
 
   constructor(
@@ -421,6 +422,73 @@ export class DiagramComponent implements AfterViewInit {
       cursor: 'grab'
     });
 
+
+    // Helper to attach FreeTransform to a clicked element
+    const attachFreeTransform = (elementView: dia.ElementView) => {
+      // Remove an existing FT first
+      this.freeTransform?.remove();
+    
+      // Create a new FT for the selected element
+      this.freeTransform = new ui.FreeTransform({
+        cellView: elementView,
+        // --- useful options ---
+        allowRotation: false,              // show rotation handle
+        allowOrthogonalResize: true,      // side handles
+        preserveAspectRatio: false,       // set true for fixed aspect ratio
+        useModelGeometry: true,           // respect model's size/angle
+        minWidth: 50,
+        minHeight: 30,
+        maxWidth: 800,
+        maxHeight: 600,
+        rotateAngleGrid: 15,              // snap rotation to 15°
+        scaleGrid: 10                     // snap resize in 10px increments
+      });
+    
+      // Render and add to the paper DOM so it tracks the element position
+      this.freeTransform.render();
+      this.paper.el.appendChild(this.freeTransform.el);
+    
+      // (Optional) listen when user finishes actions
+      this.freeTransform.on('action:stop', () => {
+        const element = elementView.model as dia.Element;
+        const size = element.size();
+        const angle = element.get('angle');
+        // Persist or react to new geometry here
+        // console.log('Resized to', size, 'angle', angle);
+      });
+    };
+    
+    // Attach FT on click
+    this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
+      attachFreeTransform(elementView);
+    });
+this.paper.on('element:remove:pointerdown', function (elementView, evt) {
+      evt.stopPropagation();
+      const cell = elementView.model;
+      cell.remove(); // removes from graph
+    });
+    this.paper.on('element:pointerdblclick', (elementView, evt) => {
+      evt.stopPropagation();
+      const node = elementView.model;
+      console.log("elementViewNode", node);
+      const nodeId = node.id.toString();
+      if (nodeId) {
+        const parts = nodeId.split("-");
+        const type = parts[0]; // "SYS"
+        const id = parts[1]; // "21"
+       
+        if (type == "S") {
+          this.router.navigate(['sources/edit-source/', id]);
+        }
+        else if (type == "SYS") {
+          this.router.navigate(['systems/edit-system/', id]);
+        }        
+        else if (type == "TGT") {
+          this.router.navigate(['targets/edit-target/', id]);
+        }
+      }
+    });
+ 
 
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas

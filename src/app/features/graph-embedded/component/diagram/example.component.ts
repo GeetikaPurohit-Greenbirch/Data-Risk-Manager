@@ -363,6 +363,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
 
 
             }).setName(selectedValue || blockDefinition.typeName)
+            //.setName2("Controll name")
                 // .setItems(dataToPass)
                 .addPorts(result.noType)
 
@@ -381,6 +382,9 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
+            // if (blockDefinition?.sicon) {
+            //     (newCell as Concat).setIcon(blockDefinition.cicon);
+            // }
             if(blockDefinition?.reportIcon && blockDefinition?.detailIcon){
                 (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon);
                 // (newCell as Concat).setHeaderActions2(blockDefinition?.detailIcon);

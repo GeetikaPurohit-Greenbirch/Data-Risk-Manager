@@ -232,6 +232,33 @@ export class Concat extends shapes.standard.HeaderedRecord {
                     fontSize: 12,
                     textWrap: { ellipsis: true, height: 30, width: 120 }
                 },
+                headerIcon2: {
+                    'xlink:href': '',
+                    x: 8, y: -20, width: 14, height: 14
+                },
+                headerLabel2: {
+                    x: 35,
+                    y: -10,
+                    fontFamily: 'Sans-serif',
+                    fontWeight: 50,
+                    margin: 10,
+                    fontSize: 12,
+                    textWrap: { ellipsis: true, height: 20, width: 120 }
+                },
+                remove_icon: {
+                    ref: 'body',
+                    refX: '100%',
+                    refY: 0,
+                    x: -10,
+                    y: -25,
+                    width: 18,
+                    height: 18,
+                    cursor: 'pointer',
+                    'xlink:href': 'assets/images/remove.svg', // or inline SVG path below
+                    visibility: 'hidden',
+                    event: 'element:remove:pointerdown'
+                },
+
                 headerAction1: {
                     ref: 'header',
                     refX: '75%',
@@ -296,13 +323,24 @@ export class Concat extends shapes.standard.HeaderedRecord {
             { tagName: 'image', selector: 'headerAction1' },   // ← new
             { tagName: 'image', selector: 'headerAction2' },   // ← new
             { tagName: 'g', selector: 'inPorts', groupSelector: 'in' },
-            { tagName: 'g', selector: 'outPorts', groupSelector: 'out' }
+            { tagName: 'g', selector: 'outPorts', groupSelector: 'out' },
+            { tagName: 'image', selector: 'headerIcon2' },
+            { tagName: 'text', selector: 'headerLabel2' },
+            { tagName: 'image', selector: 'remove_icon' }
+
         ];
     }
 
     // ---------- convenience ----------
     private get headerHeight(): number {
         return (this.attr('header/height') as number) ?? 35;
+    }
+
+    setName2(name: string, opt?: object) {
+        return this.attr(['headerLabel2', 'textWrap', 'text'], name, opt);
+    }
+ setIcon2(iconPath: string, opt?: object) {
+        return this.attr('headerIcon2/xlink:href', iconPath, opt);
     }
 
 

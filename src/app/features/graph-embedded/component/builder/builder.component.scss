@@ -177,3 +177,7 @@
   height: 100vh;
 }
 
+.p-datatable-wrapper{
+  max-height: 200px !important;
+  overflow: auto !important;
+}

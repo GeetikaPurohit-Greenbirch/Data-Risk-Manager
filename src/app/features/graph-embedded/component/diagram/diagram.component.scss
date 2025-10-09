@@ -355,3 +355,12 @@ inline-input {
   flex: 1 1 0;
   height: 100%;
 }
+.joint-element [joint-selector="remove_icon"] {
+  transition: visibility 0.2s, opacity 0.2s;
+  opacity: 0;
+}
+ 
+.joint-element:hover [joint-selector="remove_icon"] {
+  visibility: visible !important;
+  opacity: 1;
+}

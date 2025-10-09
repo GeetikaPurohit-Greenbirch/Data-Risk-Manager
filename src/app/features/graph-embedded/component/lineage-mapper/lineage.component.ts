@@ -219,7 +219,6 @@ export class LineageComponent implements AfterViewInit {
   }
 
 
-
   buildFieldToEntityMap(nodes: any) {
     const map = new Map<number, { nodeId: string; portId: string; entityType: string }>();
     for (const n of nodes) {
@@ -236,42 +235,102 @@ export class LineageComponent implements AfterViewInit {
    * Create JointJS Link cells from mapping response.
    * Pass your Link constructor (e.g., `Link`) if it isn't globally available.
    */
-  createLinksFromResponse(
-    resp: any,
-    LinkCtor: any /* e.g., Link class */
-  ) {
-    const fieldMap = this.buildFieldToEntityMap(resp.nodes);
-    const links: any[] = [];
-    const missing: any[] = [];
+  // createLinksFromResponse(
+  //   resp: any,
+  //   LinkCtor: any /* e.g., Link class */
+  // ) {
+  //   const fieldMap = this.buildFieldToEntityMap(resp.nodes);
+  //   const links: any[] = [];
+  //   const missing: any[] = [];
 
-    for (const edge of resp.edges) {
-      const from = fieldMap.get(edge.from_field_id);
-      const to = fieldMap.get(edge.to_field_id);
+  //   for (const edge of resp.edges) {
+  //     const from = fieldMap.get(edge.from_field_id);
+  //     const to = fieldMap.get(edge.to_field_id);
 
-      if (!from || !to) {
-        // Capture missing mappings for debugging
-        missing.push(edge);
+  //     if (!from || !to) {
+  //       // Capture missing mappings for debugging
+  //       missing.push(edge);
+  //       continue;
+  //     }
+
+  //     // Build the link exactly like your example
+  //     const link = new LinkCtor({
+  //       source: { id: from.nodeId, port: from.portId },
+  //       target: { id: to.nodeId, port: to.portId }
+  //     });
+
+  //     links.push(link);
+  //   }
+
+  //   // Optional: log or return missing for diagnostics
+  //   if (missing.length) {
+  //     console.warn('Missing field mappings for edges:', missing);
+  //   }
+
+  //   return links;
+  // }
+
+  /**
+ * Create visual links between nodes in the graph from API response.
+ * @param resp - The response containing edges (and possibly nodes)
+ * @param LinkCtor - Optional custom JointJS link class to use
+ */
+createLinksFromResponseNew(resp: any, LinkCtor: any) {
+  if (!this.graph) {
+    console.error('Graph not initialized — cannot create links.');
+    return [];
+  }
+
+  const edges = resp?.edges || [];
+  const nodes = resp?.nodes || [];
+  const createdLinks: dia.Link[] = [];
+
+  if (!edges.length) {
+    console.warn('No edges found in response.');
+    return [];
+  }
+
+  console.log(`Creating ${edges.length} link(s) from response...`);
+  
+  for (const edge of edges) {
+    try {
+      
+     const fromNode= nodes.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
+     const toNode= nodes.find((item: { field_id: number; }) => item.field_id === edge.to_field_id);
+
+      if (!fromNode || !toNode) {
+        console.warn('Invalid edge — missing node IDs:', edge);
+        continue;
+      }
+      const fromNodeId=(fromNode.entity_type.toLowerCase()=="source"? "S-":fromNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-") + fromNode.entity_id;
+      const toNodeId=(toNode.entity_type.toLowerCase()=="source"? "S-":toNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-") + toNode.entity_id;
+     
+      const sourceElement = this.graph.getCell(fromNodeId.toString());
+      const targetElement = this.graph.getCell(toNodeId.toString());
+
+      if (!sourceElement || !targetElement) {
+        console.warn('Skipped edge — node not found in graph:', edge);
         continue;
       }
 
-      // Build the link exactly like your example
-      const link = new LinkCtor({
-        source: { id: from.nodeId, port: from.portId },
-        target: { id: to.nodeId, port: to.portId }
-      });
+      // Optional: support port-level connections if present
+      const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
+      const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
+     
+      const link = new LinkCtor({});
+      link.source({ id: sourceElement.id, port: sourcePort });
+      link.target({ id: targetElement.id, port: targetPort });
 
-      links.push(link);
+      this.graph.addCell(link);
+      createdLinks.push(link);
+    } catch (err) {
+      console.error('Failed to create link for edge:', edge, err);
     }
-
-    // Optional: log or return missing for diagnostics
-    if (missing.length) {
-      console.warn('Missing field mappings for edges:', missing);
-    }
-
-    return links;
   }
 
-
+  console.log(`✅ Created ${createdLinks.length}/${edges.length} link(s).`);
+  return createdLinks;
+}
 
   createLinksFromEdges(edges: any, fieldIdToNodePortMap: any) {
     const links: dia.Link[] = [];
@@ -320,11 +379,14 @@ export class LineageComponent implements AfterViewInit {
       // const links = this.createLinksFromEdges(response.edges, fieldIdToNodePortMap);
 
       // Example: manual link creation (replace ids/ports with real ones)
-      const links = this.createLinksFromResponse(response, Link); // <-- pass your Link class
-      links.forEach(l => this.graph.addCell(l));
+      // const links = this.createLinksFromResponse(response, Link); // <-- pass your Link class
+      // links.forEach(l => this.graph.addCell(l));
 
-      console.log(links, this.graph.getCells(), 'cells after add');
-      console.log(this.graph.getLinks(), 'links after add');
+      // console.log(links, this.graph.getCells(), 'cells after add');
+      // console.log(this.graph.getLinks(), 'links after add');
+     
+
+       this.createLinksFromResponseNew(response,Link);
     } catch (err) {
       console.error('Failed to get target to source mapping:', err);
       this.toastNotificationService.error('Failed to fetch target to source mapping');
