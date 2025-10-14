@@ -352,7 +352,7 @@ export class EditTargetComponent {
  
    openUsecasePopup() {
      this.dialogRef = this.dialog.open(this.useCasePopup, {
-       disableClose: true, // optional, prevent closing without selection
+       disableClose: false, // optional, prevent closing without selection
      });
    }
    
@@ -388,14 +388,24 @@ export class EditTargetComponent {
    getUsecaseList() {
     this.usecaseService.getLineageUsecase('TARGET',this.targetId).subscribe({
       next: (usecases: any[]) => {
-        // const usecaseEntities = usecases.map(data => ({
-        //   ...data.useCaseEntity
-        // }));
-  
-        // const useCaseIds = usecaseEntities.map(u => u.use_case_id);
+       
         this.useCases = usecases;
-      
-      },
+      // ✅ Extract all use case IDs from API response
+      const apiUseCaseIds = this.useCases.map(u => u.use_case_id);
+
+      // ✅ Check if there's a stored use case in localStorage
+      const storedUseCase = JSON.parse(localStorage.getItem('selectedUseCaseTarget') || 'null');
+
+      if (storedUseCase) {
+        const storedUseCaseId = storedUseCase.useCaseId;
+
+        // ✅ If stored use case ID is NOT found in API response, remove it
+        if (!apiUseCaseIds.includes(storedUseCaseId)) {
+          console.warn(`Use case ID ${storedUseCaseId} not found in API response. Removing from localStorage.`);
+          localStorage.removeItem('selectedUseCaseTarget');
+        }
+      }
+    },
       error: err => {
         console.error('Error fetching usecases:', err);
       }

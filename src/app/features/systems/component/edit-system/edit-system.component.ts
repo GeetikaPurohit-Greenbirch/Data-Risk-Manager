@@ -566,7 +566,7 @@ export class EditSystemComponent{
         {
           headerName: 'C',
           field: 'dqa_c',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'C',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -585,7 +585,7 @@ export class EditSystemComponent{
         {
           headerName: 'C Commentary',
           field: 'commentary_c',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'C Commentary',
           // width:100,
           // minWidth: 100,
@@ -597,7 +597,7 @@ export class EditSystemComponent{
         {
           headerName: 'T',
           field: 'dqa_t',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'T',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -616,7 +616,7 @@ export class EditSystemComponent{
         {
           headerName: 'T Commentary',
           field: 'commentary_t',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'T Commentary',
           // width:100,
           // minWidth: 100,
@@ -628,7 +628,7 @@ export class EditSystemComponent{
         {
           headerName: 'A',
           field: 'dqa_a',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'A',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -647,7 +647,7 @@ export class EditSystemComponent{
         {
           headerName: 'A Commentary',
           field: 'commentary_a',
-          editable: this.isEditable,
+          editable: true,
           headerTooltip: 'A Commentary',
           width:100,
           minWidth: 100,
@@ -659,7 +659,7 @@ export class EditSystemComponent{
       ],
 
     },
-    { field: 'criticality', headerName: 'Criticality', editable: this.isEditable,
+    { field: 'criticality', headerName: 'Criticality', editable: true,
       headerTooltip: 'criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -948,7 +948,7 @@ export class EditSystemComponent{
 
       // this.getDataFields();
       // this.getInboundInterface();
-      // this.loadInboundInterfaces();
+      this.loadInboundInterfaces();
       this.rowDataInbound = [{}];
       this.rowDataInput = [{}];
       this.rowDataInboundDQA = [{}];
@@ -1007,7 +1007,7 @@ export class EditSystemComponent{
   { 
     // this.isLoading = true; // show loader
 
-    this.datafieldsService.getDataFieldsByIdWithUsecase(this.systemId, 'SYSTEM', this.useCaseId).subscribe({
+    this.datafieldsService.getDataFieldsById(this.systemId, 'SYSTEM').subscribe({
       next: (res: any) => {
         this.rowData = [...res]; // triggers change
 
@@ -1115,7 +1115,7 @@ loadDropdownOptions(): void {
     this.showoutbound = false;
     this.showsystemMapping = false;
     this.cdr.detectChanges();
-    // this.getDataFields();
+    this.getDataFields();
     this.loadInboundInterfaces();
 
     this.getDatafieldsDQA('OUTBOUND');
@@ -1130,7 +1130,7 @@ loadDropdownOptions(): void {
     this.showoutbound = false;
     this.showsystemMapping = false;
     this.cdr.detectChanges();
-    // this.getDataFields();
+    this.getDataFields();
     this.loadInboundInterfaces();
 
     this.getDatafieldsDQA('INBOUND')
@@ -1389,7 +1389,7 @@ loadDropdownOptions(): void {
   this.dataFieldsModel.criticality = data.data.criticality;
   this.dataFieldsModel.entity_type = data.data.entity_type;
   this.dataFieldsModel.usecaseid = this.useCaseId;
-  // this.dataFieldsModel.entity_id = data.data.entity_id;
+  this.dataFieldsModel.entity_id = data.data.entity_id;
  
       // alert("Data field added Successfully.");
       if(!data.data.field_id)
@@ -1618,7 +1618,12 @@ loadDropdownOptions(): void {
                   interface: `${item.interface_id} - ${item.interface_name}`
                 })
             );
-            
+            // this.rowDataInbound = parsedInboundInterfaces.flatMap((item: any) =>
+            //   item.fields.map((field: any) => ({
+            //     ...field,
+            //     interface: `${item.interface_id} - ${item.interface_name}`
+            //   }))
+            // );
           } else {
             // Fallback: show one blank row if no data
             this.rowDataInbound = [{}];
@@ -1651,6 +1656,17 @@ loadDropdownOptions(): void {
             });
           });
 
+          outboundInterfaces.forEach((intf: any) => {
+            intf.fields.forEach((field: any) => {
+              combinedFields.push({
+                ...field,
+                interface_name: intf.interface_name,
+                source: 'Outbound'
+              });
+            });
+          });
+
+          // this.rowData = combinedFields;
           this.rowData =[].concat(
               ...outboundInterfaces.map((i: any) =>
                 i.fields.map((field: any) => ({
@@ -1660,9 +1676,20 @@ loadDropdownOptions(): void {
                 }))
               )
             );
-        
+          // this.rowDataInput = inboundInterfaces[0].fields;
+          // this.rowDataInput = [].concat(...inboundInterfaces.map((i: { fields: any; }) => i.fields));
           this.rowDataInput = combinedFields;
-       
+          // this.rowDataInput = [].concat(
+          //   ...inboundInterfaces.map((i: any) =>
+          //     i.fields.map((field: any) => ({
+          //       ...field,
+          //       interface_name: i.interface_name,
+          //       interface_id: i.interface_id
+          //     }))
+          //   )
+          // );
+          // this.inboundInterfaceList = inboundInterfaces;
+
           if (parsedOutboundInterfaces?.length > 0) {
             this.rowDataOutbound = parsedOutboundInterfaces.map(
               (item: { interface_id: any; interface_name: any; } ) =>
@@ -1671,7 +1698,12 @@ loadDropdownOptions(): void {
               })
             );
 
-         
+            // this.rowDataOutbound = parsedOutboundInterfaces.flatMap((item: any) =>
+            //   item.fields.map((field: any) => ({
+            //     ...field,
+            //     interface: `${item.interface_id} - ${item.interface_name}`
+            //   }))
+            // );
           } else {
             // Fallback: show one blank row if no data
             this.rowDataOutbound = [{}];
@@ -1721,6 +1753,7 @@ loadDropdownOptions(): void {
 
           // 🔄 Now render fields on the diagram
 
+        // this.renderFields();
   
           this.cdr.detectChanges(); // trigger Angular change detection
         } catch (e) {
@@ -1731,11 +1764,12 @@ loadDropdownOptions(): void {
         console.error('Failed to load interface or inbound data:', err);
       },
       complete: () => {
+        // this.isLoading = false; // hide loader
       }
     });
   }
-
-  // loadInboundInterfaces() {
+    
+    // loadInboundInterfaces() {
   //   const interfaces$ = this.interfaceService.getInterface();
   //   const interfaceDataFields$ = this.interfaceService.getInboundData(this.systemId);
   //   const dqaRiskData$ = this.datafieldsService.getDataFieldsByIdWithUsecase(
@@ -1863,9 +1897,6 @@ loadDropdownOptions(): void {
   //     }
   //   });
   // }
-  
-  
-    
 
   getInterfaceDataFields(interfaceId: any) {
     
