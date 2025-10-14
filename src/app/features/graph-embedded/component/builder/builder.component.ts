@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Table } from 'primeng/table';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 
 
@@ -51,55 +52,35 @@ export class BuilderComponent implements OnInit {
   ];
 
 
-  constructor(private datafieldsService: DatafieldsService, private route: ActivatedRoute, private router: Router,) { }
-
+constructor(private datafieldsService: DatafieldsService, private route: ActivatedRoute, private router: Router,) { }
+  
   nodesCollapsed = false;
   panelSizes: number[] = [90, 10];
 
   toggleNodes(): void {
-    this.nodesCollapsed = !this.nodesCollapsed;
-    // If your JointJS paper needs a resize after layout changes,
-    // call your diagram component's `onResize()` here (via ViewChild) after a tick.
-    // Example:
-    // setTimeout(() => this.diagramRef?.onResize?.(), 0);
+    this.nodesCollapsed = !this.nodesCollapsed;    
   }
 
   ngOnInit(): void {
     // Any initialization logic
-
     this.useCaseId = +this.route.snapshot.paramMap.get('usecaseId')!;
-
     console.log('Use Case ID:', this.useCaseId);
-
-    this.selectedColumns = this.cols // By default all visible
-
-
-
+    this.selectedColumns = this.cols // By default all visible    
   }
-
-  showMeta() {
-    this.panelSizes = [70, 30];      // 70/30 split
-  }
-
-  hideMeta() {
-    this.panelSizes = [99, 1];      // collapse second panel
-  }
-
+ 
   toggleDiagram(param: any) {
     console.log(param)
     this.getTargetReport(param);
     this.targetId = param
     this.diagramCollapsed = !this.diagramCollapsed;
     if (this.diagramCollapsed) {
-      this.panelSizes = [99, 1]; // Collapse the second panel
+      this.panelSizes = [40, 60]; // Collapse the second panel
     } else {
-      this.panelSizes = [70, 30]; // Restore to 70/30 split
+      this.panelSizes = [90, 10]; // Restore to 70/30 split
     }
   }
 
-
-  title = 'PrimeNG Table Example';
-
+  //title = 'PrimeNG Table Example';
   // fields: FieldData[] = [
   //   {
   //     id: 1,
@@ -140,7 +121,7 @@ export class BuilderComponent implements OnInit {
     const updatedTargetId = targetId.split("-")[1] || 0; // Default to 0 if targetId is null or undefined
     this.datafieldsService.getTargetReportdata(this.useCaseId, updatedTargetId).subscribe({
       next: (res: any) => {
-        this.fields = res;
+        this.fields = res;          
       }
       // Force refresh with setRowData
 
@@ -161,13 +142,10 @@ export class BuilderComponent implements OnInit {
   editRow(row: FieldData) {
     console.log('Edit:', row);
 
-
-
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
     const layoutId = (segments[segments.length - 1] || '').toUpperCase();
     const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
-
     // console.log(itemId,model,"modelmodelmodel")
     const selectedField = row.fieldId;
 
@@ -188,5 +166,10 @@ export class BuilderComponent implements OnInit {
 
   deleteRow(row: FieldData) {
     console.log('Delete:', row);
+  } 
+  onCloseDetailTable()
+  {
+    this.diagramCollapsed=false;
+     this.panelSizes = [90, 10]; // Restore to 70/30 split
   }
 }

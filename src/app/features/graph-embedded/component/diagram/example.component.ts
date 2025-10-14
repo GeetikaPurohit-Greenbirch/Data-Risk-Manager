@@ -321,7 +321,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
 
         case 'Concat':
             const result = buildTypeHierarchy(selectedItemDetails?.ports || []);
-            console.log(result, "buildPortsAndItems result")
+            //console.log(result, "buildPortsAndItems result")
 
             let targetData: any = []
             if (selectedItemDetails?.type === "target") {
@@ -329,7 +329,11 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
 
             }
             const dataToPass = selectedItemDetails?.type === "target" ? [targetData] : [result.in, result.out]
-
+            let controlName="";
+            if(selectedItemDetails?.controls?.length>0)
+            {
+                 controlName = selectedItemDetails?.controls[0].name;
+            }
             // if (result.ports.length === 0) {
             newCell = new Concat({
                 position: { x: dropX, y: dropY },
@@ -347,33 +351,19 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                         width: 'calc(w)',
                         fill: getColorByTab(blockDefinition.label),
                         stroke: getColorByTab(blockDefinition.label),
-                    },
-                    // caret: {
-                    //     ref: 'header',
-                    //     refX: '85%',
-                    //     refY: 14,
-                    //     width: 12,
-                    //     height: 12,
-                    //     cursor: 'pointer',
-                    //     d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-                    //     fill: '#6B7280',
-                    //     event: 'element:caret:pointerdown',
-                    // },
+                    }                 
                 },
-
-
             }).setName(selectedValue || blockDefinition.typeName)
-            //.setName2("Controll name")
-                // .setItems(dataToPass)
-                .addPorts(result.noType)
+            .setName2(controlName)              
+            .addPorts(result.noType)
 
             newCell.attr('forksGroups/stroke', 'lightgray');
-            (newCell as Concat).setCaretIcon()
+            //(newCell as Concat).setCaretIcon()
+            //(newCell as Concat).setRmoveIcon("assets/images/remove.svg")
 
             if(selectedItemDetails?.type === "target"){
                 (newCell as Concat).setItems(dataToPass)
             }
-
 
             //     .setName(selectedValue || blockDefinition.typeName)
             //     .addPorts(result.ports)
@@ -382,14 +372,14 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
-            // if (blockDefinition?.sicon) {
-            //     (newCell as Concat).setIcon(blockDefinition.cicon);
-            // }
+            if (blockDefinition?.cicon && controlName!="") {
+                (newCell as Concat).setIcon2(blockDefinition.cicon);
+            }
             if(blockDefinition?.reportIcon && blockDefinition?.detailIcon){
                 (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon);
-                // (newCell as Concat).setHeaderActions2(blockDefinition?.detailIcon);
-        
+                // (newCell as Concat).setHeaderActions2(blockDefinition?.detailIcon);        
             }
+           
 
 
             break;

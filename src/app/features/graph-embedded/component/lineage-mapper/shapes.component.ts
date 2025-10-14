@@ -198,25 +198,25 @@ export class Concat extends shapes.standard.HeaderedRecord {
             expandedSize: null,
             id: '',
             attrs: {
-                root: { magnet: false },
+                root: { magnet: true },
                 body: { stroke: '#EBEEF0', 'pointer-events': 'none', },
                 header: { height: 35, fill: '#FFFFFF', stroke: '#EBEEF0', 'pointer-events': 'auto', },
                 tabColor: { height: 5, x: 0, y: 0, width: 'calc(w)', fill: '#FF4365', stroke: '#FF4365' },
 
-                // caret toggle icon inside header (click target)
-                // caret: {
-                //   ref: 'header',
-                //   refX: '85%',
-                //   refY: 14,
-                //   width: 12,
-                //   height: 12,
-                //   cursor: 'pointer',
-                //   d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-                //   fill: '#6B7280'
-                // },
-                //   buttonsGroups: {
-                //             stroke: '#7C90A6'
-                //         },
+                //caret toggle icon inside header (click target)
+                caret: {
+                  ref: 'header',
+                  refX: '85%',
+                  refY: 14,
+                  width: 12,
+                  height: 12,
+                  cursor: 'pointer',
+                  d: 'M 0 0 L 12 0 L 6 8 z', // ▼
+                  fill: '#6B7280'
+                },
+                  buttonsGroups: {
+                            stroke: '#7C90A6'
+                        },
                 forksGroups: {
                     stroke: '#FFF'
                 },
@@ -277,7 +277,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
             { tagName: 'rect', selector: 'body' },
             { tagName: 'rect', selector: 'header' },
             { tagName: 'rect', selector: 'tabColor' },
-            //   { tagName: 'path', selector: 'caret' },               // <— caret
+            { tagName: 'path', selector: 'caret' },               // <— caret
             { tagName: 'image', selector: 'headerIcon' },
             { tagName: 'text', selector: 'headerLabel' },
             {

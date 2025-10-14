@@ -594,7 +594,7 @@ const attachFreeTransform = (elementView: dia.ElementView) => {
 
   // Create a new FT for the selected element
   this.freeTransform = new ui.FreeTransform({
-    cellView: elementView,
+    cellView: elementView,   
     // --- useful options ---
     allowRotation: false,              // show rotation handle
     allowOrthogonalResize: true,      // side handles
@@ -624,18 +624,20 @@ const attachFreeTransform = (elementView: dia.ElementView) => {
 
 // Attach FT on click
 this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
+  console.log("pointerclick",elementView);
   attachFreeTransform(elementView);
 });
 
 // Remove FT when clicking on blank area
 this.paper.on('blank:pointerdown', () => {
+   console.log("pointerdown");
   this.freeTransform?.remove();
   this.freeTransform = undefined;
 });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
-      this.showLinkTools(linkView);
+      this.showLinkTools(linkView);     
     });
 
     this.paper.on('link:mouseleave', (linkView: dia.LinkView) => {
@@ -951,6 +953,7 @@ this.paper.on('blank:pointerdown', () => {
   }
 
   loadGraphFromJSON(json: any) {
+    this.graph.clear();
     this.graph.fromJSON(JSON.parse(json));
     // this.scroller.centerContent();
     this.hasGraph = true;

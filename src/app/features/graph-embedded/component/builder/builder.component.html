@@ -2,40 +2,28 @@
   [style]="{ height: '100vh' }" 
   styleClass="mb-5" 
   [panelSizes]="panelSizes"
-  layout="vertical">
+  layout="vertical" >
 
   <!-- Panel 1 -->
   <ng-template pTemplate="panel">
     <div class="col flex align-items-center justify-content-center" style="width: 100%;">
-      <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
-        <!-- <button 
-        pButton 
-        type="button" 
-        icon="pi pi-minus" 
-        (click)="toggleDiagram()" 
-        label="Toggle Grid">
-      </button> -->
+      <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">       
         <app-diagram (toggle)="toggleDiagram($event)"></app-diagram>
       </div>
     </div>
   </ng-template>
 
   <!-- Panel 2 -->
-  <ng-template pTemplate="panel" [collapsed]="diagramCollapsed" [collapsible]="true" >
+  <ng-template pTemplate="panel" [collapsed]="diagramCollapsed" [collapsible]="true" (onExpand)="dt.reset()" (onResizeEnd)="dt.reset()" >
     <div class="col flex align-items-center justify-content-center" style="width: 100%;">
-      <div class="card" style="max-height:300px;width: 100%; overflow: auto;" *ngIf="diagramCollapsed">
-        <h2>Field Metadata</h2>
-
-        <!-- Column Toggle -->
-        <p-multiSelect
-          [options]="cols"
-          [(ngModel)]="selectedColumns"
-          optionLabel="header"
-          display="chip"
-          placeholder="Choose columns"
-          class="mb-3"
-        ></p-multiSelect>
-
+      <div class="card" style="height:400px;width: 100%; overflow: auto;" *ngIf="diagramCollapsed">
+        <div class="row">
+          <h2 class="col-2" style="margin-left: 10px;">Field Metadata</h2>
+          <!-- Column Toggle -->
+          <p-multiSelect class="col-8" [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" display="chip" placeholder="Choose columns" 
+          ></p-multiSelect>          
+          <span class="col-1 material-icons" (click)="onCloseDetailTable()" style="cursor:pointer;position: absolute;right: 0px;text-align: right;">close</span>
+      </div>
         <!-- PrimeNG Table -->
         <p-table
           #dt
@@ -47,7 +35,8 @@
           columnResizeMode="expand"
           [globalFilterFields]="['fieldName','dataType','sourceName','criticality']"
           [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[5, 10, 20]"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"         
         >
           <!-- Global Filter -->
           <ng-template pTemplate="caption">

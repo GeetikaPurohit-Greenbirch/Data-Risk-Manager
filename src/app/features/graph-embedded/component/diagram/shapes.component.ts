@@ -248,20 +248,18 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 remove_icon: {
                     ref: 'body',
                     refX: '100%',
-                    refY: 0,
-                    x: -10,
-                    y: -25,
-                    width: 18,
-                    height: 18,
+                    refY: -25,                  
+                    width: 14,
+                    height: 14,
                     cursor: 'pointer',
                     'xlink:href': 'assets/images/remove.svg', // or inline SVG path below
-                    visibility: 'hidden',
+                    visibility: 'visible',
                     event: 'element:remove:pointerdown'
                 },
 
                 headerAction1: {
                     ref: 'header',
-                    refX: '75%',
+                    refX: '80%',
                     refY: 14,
                     // refDx: -32,    
                     width: 14,
@@ -276,7 +274,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 },
                 headerAction2: {
                     ref: 'header',
-                    refX: '85%',
+                    refX: '82%',
                     refY: 14,
                     width: 14,
                     height: 14,
@@ -317,11 +315,11 @@ export class Concat extends shapes.standard.HeaderedRecord {
             { tagName: 'rect', selector: 'body' },
             { tagName: 'rect', selector: 'header' },
             { tagName: 'rect', selector: 'tabColor' },
-            //   { tagName: 'path', selector: 'caret' },               // <— caret
+            { tagName: 'path', selector: 'caret' },               // <— caret
             { tagName: 'image', selector: 'headerIcon' },
             { tagName: 'text', selector: 'headerLabel' },
             { tagName: 'image', selector: 'headerAction1' },   // ← new
-            { tagName: 'image', selector: 'headerAction2' },   // ← new
+            //{ tagName: 'image', selector: 'headerAction2' },   // ← new
             { tagName: 'g', selector: 'inPorts', groupSelector: 'in' },
             { tagName: 'g', selector: 'outPorts', groupSelector: 'out' },
             { tagName: 'image', selector: 'headerIcon2' },
@@ -339,11 +337,12 @@ export class Concat extends shapes.standard.HeaderedRecord {
     setName2(name: string, opt?: object) {
         return this.attr(['headerLabel2', 'textWrap', 'text'], name, opt);
     }
- setIcon2(iconPath: string, opt?: object) {
+    setIcon2(iconPath: string, opt?: object) {
         return this.attr('headerIcon2/xlink:href', iconPath, opt);
     }
-
-
+    setRmoveIcon(iconPath: string, opt?: object) {
+        return this.attr('remove_icon/xlink:href', iconPath, opt);
+    }
     setItems(items: any[]) {
         return this.prop('items', items);
     }
@@ -358,17 +357,17 @@ export class Concat extends shapes.standard.HeaderedRecord {
 
     setHeaderActions(icon1: string, icon2: string, opt?: object) {
         this.attr('headerAction1/xlink:href', icon1, opt);
-        this.attr('headerAction2/xlink:href', icon2, opt);
+        // this.attr('headerAction2/xlink:href', icon2, opt);
     }
 
 
     setCaretIcon() {
         return this.attr('caret', {
             ref: 'header',
-            refX: '85%',
-            refY: 14,
-            width: 12,
-            height: 12,
+            refX: '90%',
+            refY: 16,
+            width: 14,
+            height: 14,
             cursor: 'pointer',
             d: 'M 0 0 L 12 0 L 6 8 z', // ▼
             fill: '#6B7280',
