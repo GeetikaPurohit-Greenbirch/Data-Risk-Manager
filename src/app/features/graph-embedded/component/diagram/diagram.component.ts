@@ -460,13 +460,15 @@ export class DiagramComponent implements AfterViewInit {
     
     // Attach FT on click
     this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
-      attachFreeTransform(elementView);
+      //attachFreeTransform(elementView);
     });
-this.paper.on('element:remove:pointerdown', function (elementView, evt) {
+
+    this.paper.on('element:remove:pointerdown', function (elementView, evt) {
       evt.stopPropagation();
       const cell = elementView.model;
       cell.remove(); // removes from graph
     });
+    
     this.paper.on('element:pointerdblclick', (elementView, evt) => {
       evt.stopPropagation();
       const node = elementView.model;

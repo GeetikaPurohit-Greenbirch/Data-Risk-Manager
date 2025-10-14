@@ -11,6 +11,8 @@ import { NodesComponent } from './component/nodes/nodes.component';
 import { ConfirmDialogComponent } from './component/delete-confirmation/deleteConfirmation.component';
 import { LineageComponent } from './component/lineage-mapper/lineage.component';
 import { SplitterModule } from 'primeng/splitter';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 
 // import { NodesComponent } from "../nodes/nodes.component";
 // import { DiagramComponent } from "../diagram/diagram.component";
@@ -30,7 +32,9 @@ import { SplitterModule } from 'primeng/splitter';
     CommonModule,
     SharedModule,
     SplitterModule,
-    UseCaseRoutingModule
+    UseCaseRoutingModule,
+    TableModule,
+    PaginatorModule,
   ]
 })
 export class GraphModuleEmbedded { }

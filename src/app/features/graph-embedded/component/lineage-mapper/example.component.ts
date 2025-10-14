@@ -234,12 +234,10 @@ export const loadExample = function (graph: dia.Graph, selectedValue: any, dropp
             let sourceData: any = []
             if (selectedItem?.type === "target") {
                 targetData = result.in[0].items
-
             }
             if(selectedItem?.type === "source"){
                 sourceData = result.out[0]?.items || []
-            }
-            
+            }           
 
             let dataToPass = []
 
@@ -251,8 +249,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: any, dropp
                 dataToPass=[result.in,result.out]
             }
 
-
-            console.log(dataToPass, result, "resultresultresultresultresultresultresultresultresultresultresultresultresultresult")
+            //console.log(dataToPass, result, "resultresultresultresultresultresultresultresultresultresultresultresultresultresult")
 
             console.log(result, "buildPortsAndItems result", blockDefinition)
             newCell = new Concat({
