@@ -9,7 +9,7 @@
         <div class="container">
           <!-- Left: Edit Interface Form -->
           <div class="left-panel">
-        <form [formGroup]="interfaceForm" (ngSubmit)="onSubmit()">
+        <form *ngIf="interfaceForm" [formGroup]="interfaceForm" (ngSubmit)="onSubmit()">
           <!-- <div class="form-grid"> -->
             <mat-form-field appearance="outline">
               <mat-label>Interface Name</mat-label>

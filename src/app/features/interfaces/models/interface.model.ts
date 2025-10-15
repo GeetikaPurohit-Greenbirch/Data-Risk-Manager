@@ -12,4 +12,5 @@ export class Interface {
     interface_owner!:string;
     interface_owner_email!:string;
   static interfaceEntity: any;
+  isClone!:boolean;
 }
