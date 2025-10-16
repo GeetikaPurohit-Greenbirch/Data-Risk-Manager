@@ -3,67 +3,128 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Interface } from '../../models/interface.model';
 import { InterfaceService } from '../../services/interface.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-interface-builder',
-  // standalone: true,
-  // imports: [],
   templateUrl: './interface-builder.component.html',
   styleUrl: './interface-builder.component.scss'
 })
 export class InterfaceBuilderComponent {
-interfaceForm!: FormGroup;
-  statusOptions = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
+  interfaceForm!: FormGroup;
+  interfaceData: any;
+  isClone = false;
+  originalVersion = '';
+
+  statusOptions = ['NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
-  interfaceTypeOptions = ['SYSTEM', 'MANUAL ENTRY']
-  interfaceModel : Interface = new Interface();
+  interfaceTypeOptions = ['SYSTEM', 'MANUAL ENTRY'];
   timeOptions: string[] = [];
   frequencyLimit = 1;
   scheduleLimitReached = false;
-  constructor(private fb: FormBuilder, private interfaceService: InterfaceService,
+
+  constructor(
+    private fb: FormBuilder,
+    private interfaceService: InterfaceService,
     private router: Router,
-    private toastNotificationService: ToastnotificationService,
-  ) {} 
+    private toast: ToastnotificationService
+  ) {
+    // // ✅ Check navigation state for cloned interface
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const nav = this.router.getCurrentNavigation();
+        const state = nav?.extras?.state as { clonedInterface?: any };
+        if (state?.clonedInterface) {
+          this.interfaceData = state.clonedInterface;
+          this.isClone = true;
+          this.originalVersion = this.interfaceData.interface_version_number;
+          this.resetFormForClone();
+        }
+      });
+  }
 
   ngOnInit(): void {
     this.interfaceForm = this.fb.group({
       interfaceName: ['', Validators.required],
       serviceQuality: ['', Validators.required],
-      frequencyUpdate:[1,Validators.required],
-      updateSchedule: [[], Validators.required],
-      transferMethodology:['',Validators.required],
-      interfaceType:['',Validators.required],
+      frequencyUpdate: [1, Validators.required],
+      updateSchedule: ['', Validators.required],
+      transferMethodology: ['', Validators.required],
+      interfaceType: ['', Validators.required],
       version: ['', Validators.required],
       status: ['', Validators.required],
       owner: ['', Validators.required],
       ownerEmail: ['', [Validators.required, Validators.email]],
-      });
-      this.generateTimeOptions();
+    });
 
-       // Watch for changes in serviceQuality
-  this.interfaceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
-    if (value === 'STREAMING' || value === 'AD_HOC') {
-      this.interfaceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
-      this.interfaceForm.get('updateSchedule')?.disable({ emitEvent: false });
-    } else {
-      this.interfaceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
-      this.interfaceForm.get('updateSchedule')?.enable({ emitEvent: false });
-    }
-  });
+    this.generateTimeOptions();
+
+    // Disable freq/schedule for certain service qualities
+    this.interfaceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+      if (value === 'STREAMING' || value === 'AD_HOC') {
+        this.interfaceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
+        this.interfaceForm.get('updateSchedule')?.disable({ emitEvent: false });
+      } else {
+        this.interfaceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
+        this.interfaceForm.get('updateSchedule')?.enable({ emitEvent: false });
+      }
+    });
+
+    // Read router state data
+    // const nav = this.router.getCurrentNavigation();
+    // this.interfaceData = nav?.extras?.state?.['clonedInterface'];
   }
 
+  ngAfterViewInit(): void {
+    // 🔹 Patch only after view is fully initialized
+    if (this.interfaceData) {
+      this.isClone = true;
+      this.originalVersion = this.interfaceData.interface_version_number;
+      this.prefillForm(this.interfaceData);
+    }
+  }
+
+  resetFormForClone(): void {
+    this.interfaceForm.reset();
+    this.prefillForm(this.interfaceData);
+    this.interfaceForm.enable();
+  }
+
+  prefillForm(data: any): void {
+    this.interfaceForm.patchValue({
+      interfaceName: data.interface_name,
+      serviceQuality: data.quality_of_service,
+      frequencyUpdate: data.frequency_of_update,
+      updateSchedule: data.schedule_of_update,
+      transferMethodology: data.methodology_of_transfer,
+      interfaceType: data.interface_type,
+      version: data.interface_version_number, // ✅ correct field name
+      status: data.interface_status,
+      owner: data.interface_owner,
+      ownerEmail: data.interface_owner_email,
+    });
+
+   
+  }
+
+  checkVersionChange(currentVersion: string): void {
+    if (this.isClone) {
+      if (!currentVersion || currentVersion === this.originalVersion) {
+        this.interfaceForm.get('version')?.setErrors({ versionUnchanged: true });
+      } else {
+        this.interfaceForm.get('version')?.setErrors(null);
+      }
+    }
+  }
 
   generateTimeOptions(): void {
     this.timeOptions = [];
     for (let hour = 0; hour < 24; hour++) {
-      const time = hour.toString().padStart(2, '0') + ':00';
-      this.timeOptions.push(time);
+      this.timeOptions.push(hour.toString().padStart(2, '0') + ':00');
     }
-
-
-    
   }
 
   onFrequencyChange(): void {
@@ -91,40 +152,39 @@ interfaceForm!: FormGroup;
     return (this.interfaceForm.get('updateSchedule')?.value || []).join(', ');
   }
 
-  onSubmit() {
-    if (this.interfaceForm.valid) {
-      console.log('Interface Data:', this.interfaceForm.value);
-      // call API here
-      const payload = {
-        interfaceEntity: {
-          interface_name : this.interfaceForm.value.interfaceName,
-          quality_of_service : this.interfaceForm.value.serviceQuality,
-          frequency_of_update:this.interfaceForm.value.frequencyUpdate,
-          schedule_of_update:this.interfaceForm.value.updateSchedule,
-          methodology_of_transfer:this.interfaceForm.value.transferMethodology,
-          interface_type:this.interfaceForm.value.interfaceType,
-          interface_version_number : this.interfaceForm.value.version,
-          interface_status : this.interfaceForm.value.status,
-          interface_owner: this.interfaceForm.value.owner,
-          interface_owner_email: this.interfaceForm.value.ownerEmail
-     
-     
-        }
-      }
-      this.interfaceService.createInterface(payload).subscribe((res: { interfaceEntity: { interface_id: string; }; }) => {
-        if(res)
-        {
-          console.log(res, "Interface builder created");
-          // alert("Interface Created Successfully. Your Interface ID is "+ res.interfaceEntity.interface_id);
-          this.toastNotificationService.success("Interface Created Successfully. Your Interface ID is "+ res.interfaceEntity.interface_id);
 
-          // Navigate to Edit Interface page with the ID
-          this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
-        }
-      })
-      
-    } else {
-      this.interfaceForm.markAllAsTouched(); // show validation errors
+  onSubmit(): void {
+    if (this.interfaceForm.invalid) {
+      this.interfaceForm.markAllAsTouched();
+      return;
     }
+
+    if (this.isClone && this.interfaceForm.value.version === this.originalVersion) {
+      this.toast.error('Please change the version number before saving the cloned interface.');
+      return;
+    }
+
+    const payload = {
+      interfaceEntity: {
+        interface_name: this.interfaceForm.value.interfaceName,
+        quality_of_service: this.interfaceForm.value.serviceQuality,
+        frequency_of_update: this.interfaceForm.value.frequencyUpdate,
+        schedule_of_update: this.interfaceForm.value.updateSchedule,
+        methodology_of_transfer: this.interfaceForm.value.transferMethodology,
+        interface_type: this.interfaceForm.value.interfaceType,
+        interface_version_number: this.interfaceForm.value.version,
+        interface_status: this.interfaceForm.value.status,
+        interface_owner: this.interfaceForm.value.owner,
+        interface_owner_email: this.interfaceForm.value.ownerEmail,
+      }
+    };
+
+    this.interfaceService.createInterface(payload).subscribe({
+      next: (res: any) => {
+        this.toast.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
+        this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+      },
+      error: () => this.toast.error('Failed to create interface.')
+    });
   }
 }

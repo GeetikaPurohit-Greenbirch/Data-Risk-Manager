@@ -1179,7 +1179,7 @@ loadDropdownOptions(): void {
   
     openUsecasePopup() {
       this.dialogRef = this.dialog.open(this.useCasePopup, {
-        disableClose: true, // optional, prevent closing without selection
+        disableClose: false, // optional, prevent closing without selection
       });
     }
     

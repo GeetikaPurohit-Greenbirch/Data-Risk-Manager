@@ -7,7 +7,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 export class ToastnotificationService {
 
   private defaultConfig: MatSnackBarConfig = {
-    // duration: 2000,
+    duration: 3000,
     horizontalPosition: 'center',  // Only used to keep config valid
     verticalPosition: 'top',
     panelClass: ['custom-snackbar-overlay']  // Default class
@@ -15,11 +15,11 @@ export class ToastnotificationService {
 
   constructor(private snackBar: MatSnackBar) {}
 
-  success(message: string, duration: number = 2000): void {
+  success(message: string, duration: number = 3000): void {
     this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-success']);
   }
 
-  error(message: string, duration: number = 2000): void {
+  error(message: string, duration: number = 3000): void {
     this.show(message, duration, ['custom-snackbar-overlay', 'snackbar-error']);
   }
 

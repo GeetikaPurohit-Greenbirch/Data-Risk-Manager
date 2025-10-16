@@ -93,10 +93,24 @@ export class InterfacesComponent {
         deleteDataFields.addEventListener('click', () => {
           this.deleteInterface(params.node);
         });
+
+        // 🧬 Clone Button
+    const cloneBtn = document.createElement('button');
+    cloneBtn.className = 'fa fa-clone';
+    cloneBtn.style.color = 'blue';
+    cloneBtn.style.border = '1px solid lightGrey';
+    cloneBtn.style.borderRadius = '5px';
+    cloneBtn.style.height = '24px';
+    cloneBtn.style.cursor = 'pointer';
+    cloneBtn.title = 'Clone';
+    cloneBtn.addEventListener('click', () => {
+      this.cloneInterface(params.node.data);
+    });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
-    
+        div.appendChild(cloneBtn);
+
         return div;
       }
     },
@@ -200,4 +214,18 @@ export class InterfacesComponent {
     this.router.navigate(['/interfaces/edit-interface', interfaces.data.interface_id]);
 
   }
+
+  cloneInterface(interfaceData: Interface) {
+    // Remove unique IDs (if any) and flag it as cloned
+    const clonedData = { ...interfaceData };
+  
+    // Optional: mark this as a clone for validation later
+    clonedData.isClone = true;
+  
+    // Navigate to Interface Builder with prefilled data
+    this.router.navigate(['/interfaces/interface-builder'], {
+      state: { clonedInterface: clonedData }
+    });
+  }
+  
 }
