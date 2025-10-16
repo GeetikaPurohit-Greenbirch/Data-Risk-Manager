@@ -1,54 +1,40 @@
-<p-splitter 
-  [style]="{ height: '100vh' }" 
-  styleClass="mb-5" 
-  [panelSizes]="panelSizes"
-  layout="vertical" >
-
+<p-splitter [style]="{ height: 'calc(100vh - 64px)' }" [panelSizes]="panelSizes"
+  layout="vertical">
   <!-- Panel 1 -->
   <ng-template pTemplate="panel">
-    <div class="col flex align-items-center justify-content-center" style="width: 100%;">
-      <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">       
+    <div class="col flex align-items-center justify-content-center w-full h-full" style="width: 100%;">
+      <div class="graph-box" [class.nodes-collapsed]="nodesCollapsed">
         <app-diagram (toggle)="toggleDiagram($event)"></app-diagram>
       </div>
     </div>
   </ng-template>
 
   <!-- Panel 2 -->
-  <ng-template pTemplate="panel" [collapsed]="diagramCollapsed" [collapsible]="true" (onExpand)="dt.reset()" (onResizeEnd)="dt.reset()" >
-    <div class="col flex align-items-center justify-content-center" style="width: 100%;">
-      <div class="card" style="height:400px;width: 100%; overflow: auto;" *ngIf="diagramCollapsed">
+  <ng-template pTemplate="panel" [collapsed]="diagramCollapsed" [collapsible]="true">
+    <div class="col flex align-items-center justify-content-center w-full h-full " style="width: 100%;">
+      <div class="card w-full h-full" style="width: 100%;
+    max-height: calc(100vh - 400px);
+    overflow: auto;" *ngIf="diagramCollapsed">
         <div class="row">
           <h2 class="col-2" style="margin-left: 10px;">Field Metadata</h2>
           <!-- Column Toggle -->
-          <p-multiSelect class="col-8" [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" display="chip" placeholder="Choose columns" 
-          ></p-multiSelect>          
-          <span class="col-1 material-icons" (click)="onCloseDetailTable()" style="cursor:pointer;position: absolute;right: 0px;text-align: right;">close</span>
-      </div>
+          <p-multiSelect class="col-8" [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+            display="chip" placeholder="Choose columns"></p-multiSelect>
+          <span class="col-1 material-icons" (click)="onCloseDetailTable()"
+            style="cursor:pointer;position: absolute;right: 0px;text-align: right;">close</span>
+        </div>
         <!-- PrimeNG Table -->
-        <p-table
-          #dt
-          [value]="fields"
-          [columns]="selectedColumns"
-          [paginator]="true"
-          [rows]="5"
-          [resizableColumns]="true"
-          columnResizeMode="expand"
-          [globalFilterFields]="['fieldName','dataType','sourceName','criticality']"
-          [showCurrentPageReport]="true"
-          [rowsPerPageOptions]="[5, 10, 20]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"         
-        >
+        <p-table #dt [value]="fields" [columns]="selectedColumns" [paginator]="true" [rows]="10"
+          [resizableColumns]="true" columnResizeMode="expand"
+          [globalFilterFields]="['fieldName','dataType','sourceName','criticality']" [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 15, 20]"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
           <!-- Global Filter -->
           <ng-template pTemplate="caption">
             <div class="flex justify-between">
               <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <input
-                  pInputText
-                  type="text"
-                  (input)="onGlobalFilter($event, dt)"
-                  placeholder="Global Search"
-                />
+                <input pInputText type="text" (input)="onGlobalFilter($event, dt)" placeholder="Global Search" />
               </span>
             </div>
           </ng-template>
@@ -69,26 +55,17 @@
               <td *ngFor="let col of columns">
                 <ng-container [ngSwitch]="col.field">
                   <span *ngSwitchCase="'actions'">
-                    <button
-                      pButton
-                      icon="pi pi-pencil"
-                      class="p-button-rounded p-button-text"
-                      (click)="editRow(row)"
-                      pTooltip="Edit"
-                    ></button>
-                    <button
-                      pButton
-                      icon="pi pi-trash"
-                      class="p-button-rounded p-button-danger p-button-text"
-                      (click)="deleteRow(row)"
-                      pTooltip="Delete"
-                    ></button>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="editRow(row)"
+                      pTooltip="Edit"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text"
+                      (click)="deleteRow(row)" pTooltip="Delete"></button>
                   </span>
                   <span *ngSwitchDefault>{{ row[col.field] }}</span>
                 </ng-container>
               </td>
             </tr>
           </ng-template>
+
         </p-table>
       </div>
     </div>

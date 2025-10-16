@@ -235,40 +235,40 @@ export class LineageComponent implements AfterViewInit {
    * Create JointJS Link cells from mapping response.
    * Pass your Link constructor (e.g., `Link`) if it isn't globally available.
    */
-  // createLinksFromResponse(
-  //   resp: any,
-  //   LinkCtor: any /* e.g., Link class */
-  // ) {
-  //   const fieldMap = this.buildFieldToEntityMap(resp.nodes);
-  //   const links: any[] = [];
-  //   const missing: any[] = [];
+  createLinksFromResponse(
+    resp: any,
+    LinkCtor: any /* e.g., Link class */
+  ) {
+    const fieldMap = this.buildFieldToEntityMap(resp.nodes);
+    const links: any[] = [];
+    const missing: any[] = [];
 
-  //   for (const edge of resp.edges) {
-  //     const from = fieldMap.get(edge.from_field_id);
-  //     const to = fieldMap.get(edge.to_field_id);
+    for (const edge of resp.edges) {
+      const from = fieldMap.get(edge.from_field_id);
+      const to = fieldMap.get(edge.to_field_id);
 
-  //     if (!from || !to) {
-  //       // Capture missing mappings for debugging
-  //       missing.push(edge);
-  //       continue;
-  //     }
+      if (!from || !to) {
+        // Capture missing mappings for debugging
+        missing.push(edge);
+        continue;
+      }
 
-  //     // Build the link exactly like your example
-  //     const link = new LinkCtor({
-  //       source: { id: from.nodeId, port: from.portId },
-  //       target: { id: to.nodeId, port: to.portId }
-  //     });
+      // Build the link exactly like your example
+      const link = new LinkCtor({
+        source: { id: from.nodeId, port: from.portId },
+        target: { id: to.nodeId, port: to.portId }
+      });
 
-  //     links.push(link);
-  //   }
+      links.push(link);
+    }
 
-  //   // Optional: log or return missing for diagnostics
-  //   if (missing.length) {
-  //     console.warn('Missing field mappings for edges:', missing);
-  //   }
+    // Optional: log or return missing for diagnostics
+    if (missing.length) {
+      console.warn('Missing field mappings for edges:', missing);
+    }
 
-  //   return links;
-  // }
+    return links;
+  }
 
   /**
  * Create visual links between nodes in the graph from API response.
@@ -281,14 +281,20 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
     return [];
   }
 
-  const edges = resp?.edges || [];
+  const res_edges = resp?.edges || [];
   const nodes = resp?.nodes || [];
-  const createdLinks: dia.Link[] = [];
+  const createdLinks: dia.Link[] = [];  
+
+  const edges = res_edges.filter(
+      (item: { from_field_id: number }) => item.from_field_id === resp?.start.field_id
+  );
 
   if (!edges.length) {
     console.warn('No edges found in response.');
     return [];
   }
+
+  //let edge= edges.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
 
   console.log(`Creating ${edges.length} link(s) from response...`);
   
@@ -302,11 +308,18 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
         console.warn('Invalid edge — missing node IDs:', edge);
         continue;
       }
-      const fromNodeId=(fromNode.entity_type.toLowerCase()=="source"? "S-":fromNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-") + fromNode.entity_id;
-      const toNodeId=(toNode.entity_type.toLowerCase()=="source"? "S-":toNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-") + toNode.entity_id;
+      let fromNodeId=(fromNode.entity_type.toLowerCase()=="source"? "S-":fromNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-");
+      let toNodeId=(toNode.entity_type.toLowerCase()=="source"? "S-":toNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-");
      
-      const sourceElement = this.graph.getCell(fromNodeId.toString());
-      const targetElement = this.graph.getCell(toNodeId.toString());
+      fromNodeId=(fromNode.entity_type.toLowerCase()=="source" || fromNode.entity_type.toLowerCase()=="target" || fromNode.entity_type.toLowerCase()=="system")? fromNodeId+fromNode.entity_id: fromNodeId+fromNode.attached_system_id;
+      toNodeId=(toNode.entity_type.toLowerCase()=="source" || toNode.entity_type.toLowerCase()=="target" || toNode.entity_type.toLowerCase()=="system")? toNodeId+toNode.entity_id: toNodeId+toNode.attached_system_id;
+     
+      // const sourceElement = this.graph.getCell(fromNodeId.toString());
+      // const targetElement = this.graph.getCell(toNodeId.toString());
+
+      
+      const sourceElement = this.graph.getCell(toNodeId.toString());
+      const targetElement = this.graph.getCell(fromNodeId.toString());
 
       if (!sourceElement || !targetElement) {
         console.warn('Skipped edge — node not found in graph:', edge);
@@ -314,12 +327,21 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
       }
 
       // Optional: support port-level connections if present
-      const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
-      const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
+      // const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
+      // const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
+
+      const sourcePort = edge.to_field_id;
+      const targetPort = edge.from_field_id;
      
       const link = new LinkCtor({});
       link.source({ id: sourceElement.id, port: sourcePort });
       link.target({ id: targetElement.id, port: targetPort });
+
+      // const link = new LinkCtor({
+      //   source: { id: targetElement.id, port: targetPort },
+      //   target: { id: sourceElement.id, port: sourcePort }
+      // });
+
 
       this.graph.addCell(link);
       createdLinks.push(link);

@@ -1,32 +1,22 @@
-
 <div class="main-container">
 
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Lineage List</h2>
-          <button mat-raised-button color="primary" (click)="openAddLineageDialogFromGrid()">
-    + Add Lineage
-  </button>
-      </section>
-      <div class="system-table-container">
-         
- <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        
-        (cellValueChanged)="onCellValueChanged($event)"
-        rowSelection="single"
-        [suppressColumnVirtualisation]="true"
-        [domLayout]="'normal'"
-        >
-        </ag-grid-angular>
+      <h2>Lineage List</h2>
+      <button mat-raised-button color="primary" (click)="openAddLineageDialogFromGrid()">
+        + Add Lineage
+      </button>
+    </section>
+    <div class="system-table-container">
 
-      </div>
-      
-</main>
+      <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (cellValueChanged)="onCellValueChanged($event)"
+        rowSelection="single" [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
+      </ag-grid-angular>
+
+    </div>
+
+  </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->

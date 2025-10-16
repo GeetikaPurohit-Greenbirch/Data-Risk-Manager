@@ -204,16 +204,16 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 tabColor: { height: 5, x: 0, y: 0, width: 'calc(w)', fill: '#FF4365', stroke: '#FF4365' },
 
                 //caret toggle icon inside header (click target)
-                caret: {
-                  ref: 'header',
-                  refX: '85%',
-                  refY: 14,
-                  width: 12,
-                  height: 12,
-                  cursor: 'pointer',
-                  d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-                  fill: '#6B7280'
-                },
+                // caret: {
+                //   ref: 'header',
+                //   refX: '85%',
+                //   refY: 14,
+                //   width: 12,
+                //   height: 12,
+                //   cursor: 'pointer',
+                //   d: 'M 0 0 L 12 0 L 6 8 z', // ▼
+                //   fill: '#6B7280'
+                // },
                   buttonsGroups: {
                             stroke: '#7C90A6'
                         },

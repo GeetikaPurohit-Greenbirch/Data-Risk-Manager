@@ -4,7 +4,6 @@ import { Table } from 'primeng/table';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 
 
-
 interface FieldData {
   id: number;
   fieldName: string;
@@ -55,7 +54,7 @@ export class BuilderComponent implements OnInit {
 constructor(private datafieldsService: DatafieldsService, private route: ActivatedRoute, private router: Router,) { }
   
   nodesCollapsed = false;
-  panelSizes: number[] = [90, 10];
+  panelSizes: number[] = [99, 1];
 
   toggleNodes(): void {
     this.nodesCollapsed = !this.nodesCollapsed;    
@@ -74,9 +73,9 @@ constructor(private datafieldsService: DatafieldsService, private route: Activat
     this.targetId = param
     this.diagramCollapsed = !this.diagramCollapsed;
     if (this.diagramCollapsed) {
-      this.panelSizes = [40, 60]; // Collapse the second panel
+      this.panelSizes = [50, 50]; // Collapse the second panel
     } else {
-      this.panelSizes = [90, 10]; // Restore to 70/30 split
+      this.panelSizes = [99, 1]; // Restore to 70/30 split
     }
   }
 

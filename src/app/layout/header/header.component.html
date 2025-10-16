@@ -1,14 +1,17 @@
-<mat-toolbar color="primary" class="header">
+<mat-toolbar color="secondary" class="header">
   <span class="title">DATA RISK MANAGER</span>
-  <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+  <button mat-icon-button id="sidebarToggle" class="sidebar-toggle">☰</button>
 
   <span class="spacer"></span>
 
-  <mat-icon class="icon">notifications</mat-icon>
+  <button mat-icon-button>
+    <mat-icon class="icon">notifications</mat-icon>
+  </button>
+
 
   <!-- Account Icon with Menu Trigger -->
   <button mat-icon-button [matMenuTriggerFor]="userMenu">
-    <mat-icon>account_circle</mat-icon>
+    <mat-icon class="icon">account_circle</mat-icon>
   </button>
 
   <!-- User Menu -->

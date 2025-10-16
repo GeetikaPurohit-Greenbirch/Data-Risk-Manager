@@ -815,7 +815,6 @@ export class DiagramComponent implements AfterViewInit {
 
   goBack = () => {
     this.router.navigate(['/graph-embedded']);
-
   }
 
   loadGraphFromFile(e: any) {
@@ -839,10 +838,12 @@ export class DiagramComponent implements AfterViewInit {
 
   loadGraphFromJSON(json: any) {
     console.log('Loading graph from JSON:', json);
-    this.graph.fromJSON(JSON.parse(json));
-    this.scroller.centerContent();
-    this.hasGraph = true;
-
+    if(json!=undefined && json!="{}")
+    {
+      this.graph.fromJSON(JSON.parse(json));
+      this.scroller.centerContent();
+      this.hasGraph = true;
+    }
   }
 
   onZoomSliderChange(e: any) {
