@@ -72,4 +72,8 @@ export class SystemBuilderComponent implements OnInit {
       this.systemForm.markAllAsTouched(); // show validation errors
     }
   }
+  onBack()
+  {
+     this.router.navigate(['/systems']);
+  }
 }

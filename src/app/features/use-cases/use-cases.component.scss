@@ -34,3 +34,7 @@
     border: none;
     border-radius: 0px;
   }
+
+  ::ng-deep .model-cell-renderer {
+    background: red;
+  }

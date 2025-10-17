@@ -127,5 +127,9 @@ export class CreateUserComponent {
       });
     }
   }
+  onBack()
+  {
+     this.router.navigate(['/user-list']);
+  }
   
 }

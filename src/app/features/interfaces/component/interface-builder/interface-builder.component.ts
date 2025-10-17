@@ -187,4 +187,8 @@ export class InterfaceBuilderComponent {
       error: () => this.toast.error('Failed to create interface.')
     });
   }
+   onBack()
+  {
+     this.router.navigate(['/interfaces']);
+  }
 }

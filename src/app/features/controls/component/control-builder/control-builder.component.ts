@@ -131,4 +131,8 @@ controlForm!: FormGroup;
       this.controlForm.markAllAsTouched(); // show validation errors
     }
   }
+   onBack()
+  {
+     this.router.navigate(['/controls']);
+  }
 }

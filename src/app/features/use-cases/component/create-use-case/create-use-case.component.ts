@@ -102,4 +102,9 @@ export class CreateUseCaseComponent {
       this.usecaseForm.markAllAsTouched(); // show validation errors
     }
   }
+   onBack()
+  {
+     this.router.navigate(['/use-cases']);
+  }
+  
 }

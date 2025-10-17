@@ -131,4 +131,6 @@ export class UserListComponent implements OnInit {
     this.router.navigate(['/create-user']);
   }
 
+  
+
 }
