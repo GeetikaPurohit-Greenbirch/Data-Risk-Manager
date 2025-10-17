@@ -129,4 +129,8 @@ export class SourceBuilderComponent {
       this.sourceForm.markAllAsTouched(); // show validation errors
     }
   }
+  onBack()
+  {
+     this.router.navigate(['/sources']);
+  }
 }

@@ -130,4 +130,8 @@ targetForm!: FormGroup;
       this.targetForm.markAllAsTouched(); // show validation errors
     }
   }
+   onBack()
+  {
+     this.router.navigate(['/targets']);
+  }
 }
