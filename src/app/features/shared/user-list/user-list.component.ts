@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../shared-services/user.service';
 import { PrivilegeService } from '../../shared-services/privilege.service';
+import { Router } from '@angular/router';
 
 interface User {
   id:string;
@@ -28,7 +29,7 @@ export class UserListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private http: HttpClient,private userService: UserService,
+  constructor(private http: HttpClient,private userService: UserService, private router: Router,
     private privilegeService: PrivilegeService
   ) {}
 
@@ -124,4 +125,10 @@ export class UserListComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;
   }
+
+  addUser()
+  {
+    this.router.navigate(['/create-user']);
+  }
+
 }
