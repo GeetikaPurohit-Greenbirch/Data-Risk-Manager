@@ -23,4 +23,8 @@ export class Datafields {
     default_commentary_c!:string;
     id!:number;
     usecaseid!:number;
+    post_control_timeliness!:string;
+    post_control_accuracy!:string;
+    post_control_completeness!:string;
+    control_id!:any;
 }

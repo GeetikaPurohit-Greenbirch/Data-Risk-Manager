@@ -12,6 +12,7 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { isRawIdxResponse } from '@okta/okta-auth-js/types/lib/idx/types/idx-js';
+import { Datafields } from 'src/app/features/shared-models/datafields.model';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -55,6 +56,7 @@ controlForm!: FormGroup;
   attachToId!:number;
   activeView!: string; // default view on load
   formLoaded = false;
+  dataFieldsModel : Datafields = new Datafields();
 
   constructor(
     private route: ActivatedRoute,
@@ -70,37 +72,42 @@ controlForm!: FormGroup;
 
 
   columnDefs:(ColDef | ColGroupDef)[]= [
-    { field: 'field_id', headerName: 'Field ID', editable: false, },
-    { field: 'entity_id', headerName: 'Entity ID', editable: false, },
-    { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-    { field: 'entity_type', headerName: 'Entity Type', editable: false },
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID'},
+    { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name'},
+    { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID'},
+    // { field: 'interface_name', headerName: 'Entity Name', editable: false, },
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type' },
+    { field: 'field_length', headerName: 'Field Length', editable: false, headerTooltip: 'Field Length' },
+    { field: 'field_description', headerName: 'Field Description', editable: false, headerTooltip: 'Field Description' },
+    
+    
     // { field: 'data_type', headerName: 'Data Type', editable: true,
     //   cellEditor: 'agSelectCellEditor',
     //   cellEditorParams: {
     //     values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
     //   },
     // },
-    {
-      headerName: 'Before Control Completeness',
-      field: 'dqa_c',
-      editable: false,
-      // valueGetter: () => 'L', // Always returns 'L'
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"],
-      },
-      // width:65,
-      // minWidth: 65,
-      // maxWidth: 65,
-      resizable: true,
-      suppressSizeToFit: true,
-      cellStyle: {
-        color: 'red',
-        fontWeight: 'bold'
-      },
-    },
-    { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
-    { field: 'aftercompleteness', headerName: 'After Control Completeness', editable: true,
+    // {
+    //   headerName: 'Before Control Completeness',
+    //   field: 'dqa_c',
+    //   editable: false,
+    //   // valueGetter: () => 'L', // Always returns 'L'
+    //   cellEditor: 'agSelectCellEditor',
+    //   cellEditorParams: {
+    //     values: ["H", "M", "L"],
+    //   },
+    //   // width:65,
+    //   // minWidth: 65,
+    //   // maxWidth: 65,
+    //   resizable: true,
+    //   suppressSizeToFit: true,
+    //   cellStyle: {
+    //     color: 'red',
+    //     fontWeight: 'bold'
+    //   },
+    // },
+    // { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
+    { field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -110,27 +117,27 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       },
      },
-    {
-      headerName: 'Before Control Timeliness',
-      field: 'dqa_t',
-      editable: false,
-      // valueGetter: () => 'L', // Always returns 'L'
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"],
-      },
-      // width:65,
-      // minWidth: 65,
-      // maxWidth: 65,
-      resizable: true,
-      suppressSizeToFit: true,
-      cellStyle: {
-        color: 'blue',
-        fontWeight: 'bold'
-      }
-    },
-    { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
-    { field: 'aftertimliness', headerName: 'After Control Timeliness', editable: true,
+    // {
+    //   headerName: 'Before Control Timeliness',
+    //   field: 'dqa_t',
+    //   editable: false,
+    //   // valueGetter: () => 'L', // Always returns 'L'
+    //   cellEditor: 'agSelectCellEditor',
+    //   cellEditorParams: {
+    //     values: ["H", "M", "L"],
+    //   },
+    //   // width:65,
+    //   // minWidth: 65,
+    //   // maxWidth: 65,
+    //   resizable: true,
+    //   suppressSizeToFit: true,
+    //   cellStyle: {
+    //     color: 'blue',
+    //     fontWeight: 'bold'
+    //   }
+    // },
+    // { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
+    { field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -140,27 +147,27 @@ controlForm!: FormGroup;
         fontWeight: 'bold'
       },
      },
-    {
-      headerName: 'After Control Accuracy',
-      field: 'dqa_a',
-      editable: false,
-      // valueGetter: () => 'L', // Always returns 'L'
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["H", "M", "L"],
-      },
-      // width:65,
-      // minWidth: 65,
-      // maxWidth: 65,
-      resizable: true,
-      suppressSizeToFit: true,
-      cellStyle: {
-        color: 'purple',
-        fontWeight: 'bold'
-      }
-    },
-    { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
-    { field: 'afteraccuracy', headerName: 'After Control Accuracy', editable: true,
+    // {
+    //   headerName: 'After Control Accuracy',
+    //   field: 'dqa_a',
+    //   editable: false,
+    //   // valueGetter: () => 'L', // Always returns 'L'
+    //   cellEditor: 'agSelectCellEditor',
+    //   cellEditorParams: {
+    //     values: ["H", "M", "L"],
+    //   },
+    //   // width:65,
+    //   // minWidth: 65,
+    //   // maxWidth: 65,
+    //   resizable: true,
+    //   suppressSizeToFit: true,
+    //   cellStyle: {
+    //     color: 'purple',
+    //     fontWeight: 'bold'
+    //   }
+    // },
+    // { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
+    { field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["H", "M", "L"],
@@ -211,7 +218,7 @@ controlForm!: FormGroup;
         });
     
         div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
+        // div.appendChild(deleteDataFields);
     
         return div;
       }
@@ -356,6 +363,30 @@ controlForm!: FormGroup;
 
   interfaceOptionList: string[] = [];
 
+  getControlsDatafields(view:string)
+  {
+    this.activeView = view;
+    this.showDataFields = true;
+
+    this.datafieldsService.getControlsDatafields(this.controlId).subscribe({
+      next: (res: any) => {
+        this.rowData = [...res]; // triggers change
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowData);
+        }
+  
+        this.cdr.detectChanges(); // trigger Angular change detection
+        
+        error: (err: any) => {
+          console.error('Failed to load Controls:', err);
+        }
+      }
+         // Force refresh with setRowData
+    
+    });
+
+  }
 
   loadInboundInterfaces(view:string) {
     this.activeView = view;
@@ -479,11 +510,27 @@ controlForm!: FormGroup;
   }
 
 
-   
-
   saveDatafields(data:any)
-  {
+   {
+     console.log(data, "Control Data Fields");
+ 
+   this.dataFieldsModel.id = data.data.id;
+   this.dataFieldsModel.control_id = this.controlId;
+   this.dataFieldsModel.field_id = data.data.field_id;
+   this.dataFieldsModel.post_control_timeliness = data.data.post_control_dqa_t;
+   this.dataFieldsModel.post_control_accuracy = data.data.post_control_dqa_a;
+   this.dataFieldsModel.post_control_completeness = data.data.post_control_dqa_c;
     
+      this.datafieldsService.updateControlsDatafields(this.dataFieldsModel).subscribe(() => {
+
+        this.toastNotificationService.success("Data field updated Successfully.");
+        setTimeout(() => {
+          this.getControlsDatafields('datafields'); // refresh
+  
+        }, 1000);
+      });
+    
+   
   }
 
   deleteDAtaFields(data:any, id:number)
