@@ -28,15 +28,15 @@ export class SidebarComponent implements OnInit {
     { label: 'Sources', route: '/sources', icon: 'fa-database', feature: 'sb_sources' },
     { label: 'Targets', route: '/targets', icon: 'fa-bullseye', feature: 'sb_targets' },
     { label: 'Controls', route: '/controls', icon: 'fa-sliders', feature: 'sb_controls' },
-    { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
-    { label: 'Use Case Builder', route: '/use-cases/create-use-case', icon: 'fa-clipboard', subIcon: 'fa-plus', feature: 'sb_create_use_cases' },
-    { label: 'System Builder', route: '/systems/system-builder', icon: 'fa-cogs', subIcon: 'fa-plus', feature: 'sb_system_builder' },
-    { label: 'Interface Builder', route: '/interfaces/interface-builder', icon: 'fa-random', subIcon: 'fa-plus', feature: 'sb_interface_builder' },
-    { label: 'Source Builder', route: '/sources/source-builder', icon: 'fa-database', subIcon: 'fa-plus', feature: 'sb_source_builder' },
-    { label: 'Target Builder', route: '/targets/target-builder', icon: 'fa-bullseye', subIcon: 'fa-plus', feature: 'sb_target_builder' },
-    { label: 'Control Builder', route: '/controls/control-builder', icon: 'fa-sliders', subIcon: 'fa-plus', feature: 'sb_control_builder' },
-    { label: 'Create User', route: '/create-user', icon: 'fa-user', feature: 'create_user' },
-    { label: 'User List', route: '/user-list', icon: 'fa-users', feature: 'sb_user_list' }
+   { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
+    // { label: 'Use Case Builder', route: '/use-cases/create-use-case', icon: 'fa-clipboard', subIcon: 'fa-plus', feature: 'sb_create_use_cases' },
+    // { label: 'System Builder', route: '/systems/system-builder', icon: 'fa-cogs', subIcon: 'fa-plus', feature: 'sb_system_builder' },
+    // { label: 'Interface Builder', route: '/interfaces/interface-builder', icon: 'fa-random', subIcon: 'fa-plus', feature: 'sb_interface_builder' },
+    // { label: 'Source Builder', route: '/sources/source-builder', icon: 'fa-database', subIcon: 'fa-plus', feature: 'sb_source_builder' },
+    // { label: 'Target Builder', route: '/targets/target-builder', icon: 'fa-bullseye', subIcon: 'fa-plus', feature: 'sb_target_builder' },
+    // { label: 'Control Builder', route: '/controls/control-builder', icon: 'fa-sliders', subIcon: 'fa-plus', feature: 'sb_control_builder' },
+    // { label: 'Create User', route: '/create-user', icon: 'fa-user', feature: 'create_user' },
+    { label: 'Uses', route: '/user-list', icon: 'fa-users', feature: 'sb_user_list' }
   ];
 
   constructor(private auth: AuthService, private router: Router,

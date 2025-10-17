@@ -1,24 +1,32 @@
 .main-container {
-    display: flex;
+  display: flex;
+}
+
+.dashboard-container {
+  flex-grow: 1;
+  padding: 1rem;
+  background: #f5f7f9;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.welcome-banner {
+  color: white;
+  padding: .6rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(to right, #4f46e5, #6366f1);
+
+  h2,
+  p {
+    margin: 0rem;
   }
-  .dashboard-container {
-    flex-grow: 1;
-    padding: 1rem;
-    background: #f5f7f9;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-  .welcome-banner {
-    background: linear-gradient(to right, #4f46e5, #6366f1);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
-  }
-  .mat-select[disabled] {
-    color: black;
-    -webkit-text-fill-color: black; /* For Safari */
-    opacity: 1; /* Remove default opacity */
-  }
-  
+}
+
+.mat-select[disabled] {
+  color: black;
+  -webkit-text-fill-color: black;
+  /* For Safari */
+  opacity: 1;
+  /* Remove default opacity */
+}

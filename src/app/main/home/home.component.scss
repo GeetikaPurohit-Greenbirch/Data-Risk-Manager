@@ -123,12 +123,15 @@
   background-color: #e6ffed;
   color: #4caf50;
 }
+
 ::ng-deep .mat-sort-header-content {
   width: max-content;
 }
+
 ::ng-deep .mdc-data-table__cell {
   font-size: 13px;
 }
+
 ::ng-deep .mat-tab-labels {
   justify-content: space-around;
   border-bottom: 1px solid #eee;

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from '../../shared-services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
@@ -19,7 +20,7 @@ export class CreateUserComponent {
     { label: 'Client Support', value: 'client_support' }
   ];
   
-  constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService,private userService: UserService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService,private userService: UserService,private router: Router) {
     this.createUserForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -116,7 +117,8 @@ export class CreateUserComponent {
         next: (res) => {
           console.log('User saved successfully:', res);
           alert('User Created Successfully!');
-          this.createUserForm.reset();
+          //this.createUserForm.reset();
+          this.router.navigate(['/user-list']);
         },
         error: (err) => {
           console.error('Error saving user:', err);
