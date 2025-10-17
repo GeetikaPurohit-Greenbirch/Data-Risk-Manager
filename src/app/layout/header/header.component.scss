@@ -17,6 +17,10 @@ $color:#111c2d;
   .sidebar-toggle {
     font-size: 16px;
     color: var($color);
+    &.tog-collapse {
+      padding: 0px;
+      font-size: 24px;
+    }
   }
   .icon {
     color: var($color);

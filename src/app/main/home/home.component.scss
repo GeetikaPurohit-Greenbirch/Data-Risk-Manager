@@ -3,136 +3,188 @@
 .main-container {
   display: flex;
 }
+
 .dashboard-container {
   flex-grow: 1;
   padding: 1rem;
-  background: #f5f7fa;
+  background: #f5f7f9;
   height: 100vh;
   overflow-y: auto;
 }
 
 .welcome-banner {
-    background: linear-gradient(to right, #4f46e5, #6366f1);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
+  color: white;
+  padding: .6rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(to right, #4f46e5, #6366f1);
+
+  h2,
+  p {
+    margin: 0rem;
   }
-  
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+}
+
+.card-grid {
+  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+  h1 {
+    font-size: 26px;
+    color: #000000;
+    font-weight: 600;
+    margin: 1rem 0rem;
   }
-  
-  .status-card {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    .statuses {
-      margin-top: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      span {
-        &.not-started { color: red; }
-        &.expired { color: orange; }
-        &.complete { color: green; }
+}
+
+.tabs-container {
+  padding: 4px;
+  margin-top: 2.2rem;
+  border-radius: 4px;
+  background-color: #ffffff;
+
+  .mat-sort-header-container {
+    width: max-content;
+  }
+}
+
+.status-card {
+  padding: 1rem;
+  border-radius: 0.4rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+  .statuses {
+    display: flex;
+    font-size: 0.8rem;
+    margin-top: 1.5rem;
+    justify-content: space-between;
+
+    span {
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      &.not-started {
+        color: #d92d20;
+      }
+
+      &.expired {
+        color: #fd853a;
+      }
+
+      &.complete {
+        color: #039855;
       }
     }
   }
+}
 
-  .table-container {
-    padding: 1rem;
-    background: white;
-    border-radius: 12px;
-  }
-  
-  .search-box {
-    width: 300px;
-    margin-bottom: 16px;
-  }
-  
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-  
-  .status-badge {
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: capitalize;
-  }
-  
-  .status-badge.in\ process {
-    background-color: #fff7e6;
-    color: #ff9800;
-  }
-  
-  .status-badge.overdue {
-    background-color: #fdecea;
-    color: #f44336;
-  }
-  
-  .status-badge.done {
-    background-color: #e6ffed;
-    color: #4caf50;
-  }
-  ::ng-deep .mat-tab-labels {
-    justify-content: space-around;
-    border-bottom: 1px solid #eee;
-  }
-  
-  ::ng-deep .mat-tab-label {
-    font-weight: 500;
-    color: #607d8b;
-    font-size: 14px;
-  }
-  
-  ::ng-deep .mat-tab-label-active {
-    color: #263238;
-    font-weight: 600;
-  }
-  
-  ::ng-deep .mat-ink-bar {
-    background-color: #263238;
-    height: 3px;
-    border-radius: 2px;
-  }
-  
-  .tab-placeholder {
-    padding: 1rem;
-    color: #888;
-    font-style: italic;
-  }
-  .icon{
-    margin:0 auto;
-  }
-  .icon span{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #e8f0fe;     /* Background color */
-    border-radius: 8px;            /* Rounded corners */
-    width: 40px;                   /* Square size */
-    height: 40px;
-    float: left;
-    font-size: 20px;
-  }
-  i.fa{
-    font-size: 20px !important;
-     color: #1a237e;
+.table-container {
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+}
+
+.search-box {
+  width: 300px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.in\ process {
+  background-color: #fff7e6;
+  color: #ff9800;
+}
+
+.status-badge.overdue {
+  background-color: #fdecea;
+  color: #f44336;
+}
+
+.status-badge.done {
+  background-color: #e6ffed;
+  color: #4caf50;
+}
+::ng-deep .mat-sort-header-content {
+  width: max-content;
+}
+::ng-deep .mdc-data-table__cell {
+  font-size: 13px;
+}
+::ng-deep .mat-tab-labels {
+  justify-content: space-around;
+  border-bottom: 1px solid #eee;
+}
+
+::ng-deep .mat-tab-label {
+  font-weight: 500;
+  color: #607d8b;
+  font-size: 14px;
+}
+
+::ng-deep .mat-tab-label-active {
+  color: #263238;
+  font-weight: 600;
+}
+
+::ng-deep .mat-ink-bar {
+  height: 3px;
+  border-radius: 2px;
+  background-color: #263238;
+}
+
+.tab-placeholder {
+  padding: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.icon {
+  gap: 16px;
+  display: flex;
+
+  h1 {
+    margin: 0rem;
+    font-size: 26px;
   }
 
-  .icon h3{
-    float: left;
-    margin-left: 12px;
-    margin-top: 8px;
+  h3 {
+    margin: 0rem;
+    font-size: 1rem;
   }
-  
+}
+
+.icon span {
+  width: 56px;
+  float: left;
+  height: 56px;
+  font-size: 20px;
+  border-radius: 6px;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  background-color: #e8f0fe;
+}
+
+i.fa {
+  font-size: 20px !important;
+  color: #1a237e;
+}

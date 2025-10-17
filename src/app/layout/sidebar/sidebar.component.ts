@@ -9,7 +9,7 @@ interface NavItem {
   icon: string;
   subIcon?: string; // Optional second icon for Builder items
   // rolesAllowed: string[]; // 👈 Add which roles can access this
-  feature: string;  
+  feature: string;
 }
 
 @Component({
@@ -28,7 +28,7 @@ export class SidebarComponent implements OnInit {
     { label: 'Sources', route: '/sources', icon: 'fa-database', feature: 'sb_sources' },
     { label: 'Targets', route: '/targets', icon: 'fa-bullseye', feature: 'sb_targets' },
     { label: 'Controls', route: '/controls', icon: 'fa-sliders', feature: 'sb_controls' },
-   { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
+    { label: 'Lineage Builder', route: '/graph-embedded', icon: 'fa-tachometer', feature: 'sb_dashboard' },
     { label: 'Use Case Builder', route: '/use-cases/create-use-case', icon: 'fa-clipboard', subIcon: 'fa-plus', feature: 'sb_create_use_cases' },
     { label: 'System Builder', route: '/systems/system-builder', icon: 'fa-cogs', subIcon: 'fa-plus', feature: 'sb_system_builder' },
     { label: 'Interface Builder', route: '/interfaces/interface-builder', icon: 'fa-random', subIcon: 'fa-plus', feature: 'sb_interface_builder' },
@@ -41,11 +41,11 @@ export class SidebarComponent implements OnInit {
 
   constructor(private auth: AuthService, private router: Router,
     private privilegeService: PrivilegeService
-  ) {}
+  ) { }
   ngOnInit() {
     // setTimeout(() => { // wait for localStorage (simulate async)
-      this.userRole = localStorage.getItem('userRole'); 
-      this.isLoading = false;
+    this.userRole = localStorage.getItem('userRole');
+    this.isLoading = false;
     // }, 10); // 300ms delay, you can adjust
   }
 

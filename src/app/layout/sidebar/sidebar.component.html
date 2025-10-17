@@ -5,12 +5,14 @@
     {{ item.label }}
   </a>
 </mat-nav-list> -->
+<div>
 <mat-nav-list *ngIf="!isLoading">
   <ng-container *ngFor="let item of navItems">
     <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" *ngIf="canAccess(item.feature)">
-      <i class="fa nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
-      <i aria-colcount="nav-label" *ngIf="item.subIcon" class="fa" [ngClass]="item.subIcon" aria-hidden="true"></i>
-      {{ item.label }}
-    </a>
+        <i class="fa nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
+        <i class="fa nav-icon" *ngIf="item.subIcon" [ngClass]="item.subIcon" aria-hidden="true" style="color: #667085;"></i>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
   </ng-container>
 </mat-nav-list>
+</div>

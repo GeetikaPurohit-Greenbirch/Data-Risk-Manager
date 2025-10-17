@@ -9,26 +9,15 @@ mat-nav-list {
   height: 100%;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  .mdc-list-item__primary-text {
-    background-color: green;
-  }
 }
 
-.nav-icon,
+.nav-icon {
+  color: #667085;
+  margin-right: 12px;
+}
+
 .nav-label {
-  // color: red;
-}
-
-.custom-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-}
-
-.fa .fa-plus {
-  font-size: 14px;
-  color: blue;
-  margin-left: -2px;
-  position: relative;
-  top: -3px;
+  color: #344054;
+  font-size: 15px;
+  font-weight: 400;
 }

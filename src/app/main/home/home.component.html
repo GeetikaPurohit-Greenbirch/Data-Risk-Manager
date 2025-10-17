@@ -1,182 +1,190 @@
 <div class="main-container">
-  
+
   <main class="dashboard-container">
-<section class="welcome-banner">
-    <h2>Dashboard</h2>
-    <p>Welcome to London Stock Exchange Data Quality</p>
-  </section>
-  
-  <div class="card-grid">
-    <mat-card *ngFor="let item of stats" class="status-card">
-      <div class="icon" >
-        <span [ngStyle]="{ 'background-color': item.bgColor }" [innerHTML]="item.icon">
-  <!-- {{item.icon}} -->
-</span>
-<h3>{{ item.title }}</h3>
-</div>
-      
-      <h1>{{ item.total }}</h1>
-      <div class="statuses">
-        <span class="not-started">{{ item.notStarted }} Not Started</span>
-        <span class="expired">{{ item.expired }} Expired</span>
-        <span class="complete">{{ item.complete }} Complete</span>
-      </div>
-    </mat-card>
-  </div>
+    <section class="welcome-banner">
+      <h2>Dashboard</h2>
+      <p>Welcome to London Stock Exchange Data Quality</p>
+    </section>
 
-  <mat-tab-group>
-    <!-- Use Cases Tab -->
-    <mat-tab label="Use Cases">
-      <p class="tab-placeholder">Use Case content goes here.</p>
-      <div class="system-table-container">
-        <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
-          <table mat-table [dataSource]="dataSource_5" matSort multiTemplateDataRows class="mat-elevation-z2">
+    <div class="card-grid">
+      <mat-card *ngFor="let item of stats" class="status-card">
+        <div class="icon">
+          <span [ngStyle]="{ 'background-color': item.bgColor }" [innerHTML]="item.icon">
+            <!-- {{item.icon}} -->
+          </span>
+          <div style="display: flex;flex-direction: column;">
+            <h1>{{ item.total }}</h1>
+            <h3>{{ item.title }}</h3>
+          </div>
+        </div>
 
-      
-          <!-- Checkbox Column -->
-          <!-- <ng-container matColumnDef="select">
+
+        <div class="statuses">
+          <span class="not-started">
+            <label for="">{{ item.notStarted }}</label>
+            Not Started</span>
+          <span class="expired">
+            <label for="">{{ item.expired }}</label>
+            Expired</span>
+          <span class="complete">
+            <label for="">{{ item.complete }}</label>
+            Complete</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="tabs-container">
+      <mat-tab-group>
+        <!-- Use Cases Tab -->
+        <mat-tab label="Use Cases">
+          <p class="tab-placeholder">Use Case content goes here.</p>
+          <div class="system-table-container">
+            <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
+            <table mat-table [dataSource]="dataSource_5" matSort multiTemplateDataRows class="mat-elevation-z2">
+
+
+              <!-- Checkbox Column -->
+              <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
           </ng-container> -->
-          <ng-container matColumnDef="usecaseid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Use Case ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.use_case_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.use_case_name }}</td>
-          </ng-container>
-      
-          <!-- Service Quality -->
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-            <td mat-cell *matCellDef="let row">{{ row.use_case_description }}</td>
-          </ng-container>
+              <ng-container matColumnDef="usecaseid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Use Case ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.use_case_id }}</td>
+              </ng-container>
 
-            <!-- Owner -->
-            <ng-container matColumnDef="owner">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-              <td mat-cell *matCellDef="let row">
-                <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-                {{ row.use_case_owner }}
-              </td>
-            </ng-container>
-  
-             <!-- Owner Email -->
-             <ng-container matColumnDef="owner_email">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-              <td mat-cell *matCellDef="let row">
-                <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-                {{ row.use_case_owner_email }}
-              </td>
-            </ng-container>
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.use_case_name }}</td>
+              </ng-container>
 
-            
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.version }}</td>
-          </ng-container>
+              <!-- Service Quality -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                <td mat-cell *matCellDef="let row">{{ row.use_case_description }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">{{ row.status }}</td>
-          </ng-container>
+              <!-- Owner -->
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.use_case_owner }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="owner_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.use_case_owner_email }}
+                </td>
+              </ng-container>
 
 
-          <ng-container matColumnDef="last_review_date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Review Date</th>
-            <td mat-cell *matCellDef="let row">{{ row.last_review_date }}</td>
-          </ng-container>
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.version }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="reviewed_by">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Reviewed By</th>
-            <td mat-cell *matCellDef="let row">{{ row.reviewed_by }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="next_review_date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Next Review Date</th>
-            <td mat-cell *matCellDef="let row">{{ row.next_review_date }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="reviewer">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Reviewer</th>
-            <td mat-cell *matCellDef="let row">{{ row.reviewer }}</td>
-          </ng-container>
-      
-          
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsUsecase"></tr>
-            <!-- Main row -->
-  <tr mat-row 
-  *matRowDef="let row; columns: displayedColumnsUsecase"
-  class="main-row">
-</tr>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+              </ng-container>
 
 
-          
-        </table>
-      </div>
-    </mat-tab>
-  
-    <!-- Other Tabs -->
-    <mat-tab label="Systems">
-      <p class="tab-placeholder">Systems content goes here.</p>
-      <div class="system-table-container">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
-      
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox></mat-checkbox>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="systemid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>System ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.system_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.system_name }}</td>
-          </ng-container>
-      
-          <!-- Description -->
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-            <td mat-cell *matCellDef="let row">{{ row.description }}</td>
-          </ng-container>
-      
-          <!-- Owner -->
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.owner }}
-            </td>
-          </ng-container>
+              <ng-container matColumnDef="last_review_date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Review Date</th>
+                <td mat-cell *matCellDef="let row">{{ row.last_review_date }}</td>
+              </ng-container>
 
-           <!-- Owner Email -->
-           <ng-container matColumnDef="owner_email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.owner_email }}
-            </td>
-          </ng-container>
-      
-          <!-- LeanIX ID -->
-          <ng-container matColumnDef="leanixId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>LeanIX ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.leanix_id }}</td>
-          </ng-container>
-      
-          <!-- <ng-container matColumnDef="accuracyRisk">
+              <ng-container matColumnDef="reviewed_by">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Reviewed By</th>
+                <td mat-cell *matCellDef="let row">{{ row.reviewed_by }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="next_review_date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Next Review Date</th>
+                <td mat-cell *matCellDef="let row">{{ row.next_review_date }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="reviewer">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Reviewer</th>
+                <td mat-cell *matCellDef="let row">{{ row.reviewer }}</td>
+              </ng-container>
+
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsUsecase"></tr>
+              <!-- Main row -->
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsUsecase" class="main-row">
+              </tr>
+
+
+
+            </table>
+          </div>
+        </mat-tab>
+
+        <!-- Other Tabs -->
+        <mat-tab label="Systems">
+          <p class="tab-placeholder">Systems content goes here.</p>
+          <div class="system-table-container">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
+
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox></mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="systemid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>System ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.system_id }}</td>
+              </ng-container>
+
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.system_name }}</td>
+              </ng-container>
+
+              <!-- Description -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                <td mat-cell *matCellDef="let row">{{ row.description }}</td>
+              </ng-container>
+
+              <!-- Owner -->
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.owner }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="owner_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.owner_email }}
+                </td>
+              </ng-container>
+
+              <!-- LeanIX ID -->
+              <ng-container matColumnDef="leanixId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>LeanIX ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.leanix_id }}</td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="accuracyRisk">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Accuracy Risk</th>
             <td mat-cell *matCellDef="let row">{{ row.accuracy_risk }}</td>
           </ng-container>
@@ -185,31 +193,31 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Timeliness Risk</th>
             <td mat-cell *matCellDef="let row">{{ row.timeliness_risk }}</td>
           </ng-container> -->
-      
-          <!-- Ctrls -->
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.version_number }}</td>
-          </ng-container>
-      
-          <!-- Trgts -->
-          <!-- <ng-container matColumnDef="trgts">
+
+              <!-- Ctrls -->
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.version_number }}</td>
+              </ng-container>
+
+              <!-- Trgts -->
+              <!-- <ng-container matColumnDef="trgts">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Trgts</th>
             <td mat-cell *matCellDef="let row">{{ row.trgts }}</td>
           </ng-container> -->
-      
-          <!-- Status -->
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">
-              <span [ngClass]="row.status.toLowerCase().replace(' ', '-') + '-badge'" class="status-badge">
-                {{ row.status }}
-              </span>
-            </td>
-          </ng-container>
-      
-          <!-- Actions -->
-          <!-- <ng-container matColumnDef="actions">
+
+              <!-- Status -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">
+                  <span [ngClass]="row.status.toLowerCase().replace(' ', '-') + '-badge'" class="status-badge">
+                    {{ row.status }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <!-- <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let row">
               <button mat-icon-button color="primary" (click)="editSystem(row)">
@@ -220,391 +228,383 @@
               </button>
             </td>
           </ng-container> -->
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsSystems"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsSystems;"></tr>
-        </table>
-      </div>
-    </mat-tab>
-  
-    <mat-tab label="Sources">
-      <p class="tab-placeholder">Sources content goes here.</p>
-      <div class="system-table-container">
-        <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
-          <table mat-table [dataSource]="dataSource_1" matSort multiTemplateDataRows class="mat-elevation-z2">
 
-      
-          <!-- Checkbox Column -->
-          <!-- <ng-container matColumnDef="select">
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsSystems"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsSystems;"></tr>
+            </table>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Sources">
+          <p class="tab-placeholder">Sources content goes here.</p>
+          <div class="system-table-container">
+            <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
+            <table mat-table [dataSource]="dataSource_1" matSort multiTemplateDataRows class="mat-elevation-z2">
+
+
+              <!-- Checkbox Column -->
+              <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
           </ng-container> -->
-          <ng-container matColumnDef="sourceid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Source ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.source_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.source_name }}</td>
-          </ng-container>
-      
-          <!-- Service Quality -->
-          <ng-container matColumnDef="servicequality">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
-            <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
-          </ng-container>
+              <ng-container matColumnDef="sourceid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Source ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.source_id }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="frequencyupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
-          </ng-container>
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.source_name }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="scheduleupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
-          </ng-container>
+              <!-- Service Quality -->
+              <ng-container matColumnDef="servicequality">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
+                <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="transfermethodology">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
-            <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
-          </ng-container>
+              <ng-container matColumnDef="frequencyupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="sourcetype">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Source Type</th>
-            <td mat-cell *matCellDef="let row">{{ row.source_type }}</td>
-          </ng-container>
-      
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.source_version_number }}</td>
-          </ng-container>
+              <ng-container matColumnDef="scheduleupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">{{ row.source_status }}</td>
-          </ng-container>
+              <ng-container matColumnDef="transfermethodology">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
+                <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
+              </ng-container>
 
-          <!-- Owner -->
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.source_owner }}
-            </td>
-          </ng-container>
+              <ng-container matColumnDef="sourcetype">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Source Type</th>
+                <td mat-cell *matCellDef="let row">{{ row.source_type }}</td>
+              </ng-container>
 
-           <!-- Owner Email -->
-           <ng-container matColumnDef="owner_email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.source_owner_email }}
-            </td>
-          </ng-container>
-          
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.source_version_number }}</td>
+              </ng-container>
 
-       
-          
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsSource"></tr>
-            <!-- Main row -->
-  <tr mat-row 
-  *matRowDef="let row; columns: displayedColumnsSource"
-  class="main-row">
-</tr>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{ row.source_status }}</td>
+              </ng-container>
+
+              <!-- Owner -->
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.source_owner }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="owner_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.source_owner_email }}
+                </td>
+              </ng-container>
 
 
-          
-        </table>
-      </div>
-    </mat-tab>
-  
-    <mat-tab label="Controls">
-      <p class="tab-placeholder">Controls content goes here.</p>
-      <div class="system-table-container">
-        <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
-          <table mat-table [dataSource]="dataSource_2" matSort multiTemplateDataRows class="mat-elevation-z2">
 
-      
-          <!-- Checkbox Column -->
-          <!-- <ng-container matColumnDef="select">
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsSource"></tr>
+              <!-- Main row -->
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsSource" class="main-row">
+              </tr>
+
+
+
+            </table>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Controls">
+          <p class="tab-placeholder">Controls content goes here.</p>
+          <div class="system-table-container">
+            <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
+            <table mat-table [dataSource]="dataSource_2" matSort multiTemplateDataRows class="mat-elevation-z2">
+
+
+              <!-- Checkbox Column -->
+              <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
           </ng-container> -->
-          <ng-container matColumnDef="controlid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Control ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.control_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.control_name }}</td>
-          </ng-container>
-      
-          <!-- Service Quality -->
-          <ng-container matColumnDef="controldesc">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Control Description</th>
-            <td mat-cell *matCellDef="let row">{{ row.control_description }}</td>
-          </ng-container>
+              <ng-container matColumnDef="controlid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Control ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.control_id }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="attachto">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Attach To</th>
-            <td mat-cell *matCellDef="let row">{{ row.attach_to }}</td>
-          </ng-container>
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.control_name }}</td>
+              </ng-container>
 
-      
-          <ng-container matColumnDef="attachtoid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Attach To ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.attach_to_id }}</td>
-          </ng-container>
+              <!-- Service Quality -->
+              <ng-container matColumnDef="controldesc">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Control Description</th>
+                <td mat-cell *matCellDef="let row">{{ row.control_description }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Control Owner</th>
-            <td mat-cell *matCellDef="let row">{{ row.control_owner }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="owneremail">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-            <td mat-cell *matCellDef="let row">{{ row.control_owner_email }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.version_number }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">{{ row.status }}</td>
-          </ng-container>
-
-          <!-- Owner -->
-          <ng-container matColumnDef="applicationdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Application Date</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.application_date }}
-            </td>
-          </ng-container>
-
-           <!-- Owner Email -->
-           <ng-container matColumnDef="applicationdatestatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Application Date Status</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.application_date_status }}
-            </td>
-          </ng-container>
-      
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsControls"></tr>
-            <!-- Main row -->
-  <tr mat-row 
-  *matRowDef="let row; columns: displayedColumnsControls"
-  class="main-row">
-</tr>
+              <ng-container matColumnDef="attachto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Attach To</th>
+                <td mat-cell *matCellDef="let row">{{ row.attach_to }}</td>
+              </ng-container>
 
 
-          
-        </table>
-      </div>
-    </mat-tab>
-  
-    <mat-tab label="Targets">
-      <p class="tab-placeholder">Targets content goes here.</p>
-      <div class="system-table-container">
-        <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
-          <table mat-table [dataSource]="dataSource_3" matSort multiTemplateDataRows class="mat-elevation-z2">
+              <ng-container matColumnDef="attachtoid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Attach To ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.attach_to_id }}</td>
+              </ng-container>
 
-      
-          <!-- Checkbox Column -->
-          <!-- <ng-container matColumnDef="select">
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Control Owner</th>
+                <td mat-cell *matCellDef="let row">{{ row.control_owner }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="owneremail">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">{{ row.control_owner_email }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.version_number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+              </ng-container>
+
+              <!-- Owner -->
+              <ng-container matColumnDef="applicationdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Application Date</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.application_date }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="applicationdatestatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Application Date Status</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.application_date_status }}
+                </td>
+              </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsControls"></tr>
+              <!-- Main row -->
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsControls" class="main-row">
+              </tr>
+
+
+
+            </table>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Targets">
+          <p class="tab-placeholder">Targets content goes here.</p>
+          <div class="system-table-container">
+            <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
+            <table mat-table [dataSource]="dataSource_3" matSort multiTemplateDataRows class="mat-elevation-z2">
+
+
+              <!-- Checkbox Column -->
+              <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
           </ng-container> -->
-          <ng-container matColumnDef="targetid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Target ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_name }}</td>
-          </ng-container>
-      
-          <!-- Service Quality -->
-          <ng-container matColumnDef="servicequality">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
-            <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
-          </ng-container>
+              <ng-container matColumnDef="targetid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Target ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_id }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="frequencyupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
-          </ng-container>
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_name }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="scheduleupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
-          </ng-container>
+              <!-- Service Quality -->
+              <ng-container matColumnDef="servicequality">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
+                <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="transfermethodology">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
-            <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
-          </ng-container>
+              <ng-container matColumnDef="frequencyupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="targettype">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Target Type</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_type }}</td>
-          </ng-container>
+              <ng-container matColumnDef="scheduleupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="targetentity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Target Entity</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_entity }}</td>
-          </ng-container>
-      
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_version_number }}</td>
-          </ng-container>
+              <ng-container matColumnDef="transfermethodology">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
+                <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">{{ row.target_status }}</td>
-          </ng-container>
+              <ng-container matColumnDef="targettype">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Target Type</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_type }}</td>
+              </ng-container>
 
-          <!-- Owner -->
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.target_owner }}
-            </td>
-          </ng-container>
+              <ng-container matColumnDef="targetentity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Target Entity</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_entity }}</td>
+              </ng-container>
 
-           <!-- Owner Email -->
-           <ng-container matColumnDef="owner_email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.target_owner_email }}
-            </td>
-          </ng-container>
-     
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsTargets"></tr>
-            <!-- Main row -->
-  <tr mat-row 
-  *matRowDef="let row; columns: displayedColumnsTargets"
-  class="main-row">
-</tr>
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_version_number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{ row.target_status }}</td>
+              </ng-container>
+
+              <!-- Owner -->
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.target_owner }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="owner_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.target_owner_email }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsTargets"></tr>
+              <!-- Main row -->
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsTargets" class="main-row">
+              </tr>
 
 
-          
-        </table>
-      </div>
-    </mat-tab>
-  
-    <mat-tab label="Interfaces">
-      <p class="tab-placeholder">Interfaces content goes here.</p>
-      <div class="system-table-container">
-        <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
-          <table mat-table [dataSource]="dataSource_4" matSort multiTemplateDataRows class="mat-elevation-z2">
 
-      
-          <!-- Checkbox Column -->
-          <!-- <ng-container matColumnDef="select">
+            </table>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Interfaces">
+          <p class="tab-placeholder">Interfaces content goes here.</p>
+          <div class="system-table-container">
+            <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2"> -->
+            <table mat-table [dataSource]="dataSource_4" matSort multiTemplateDataRows class="mat-elevation-z2">
+
+
+              <!-- Checkbox Column -->
+              <!-- <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox></mat-checkbox>
             </td>
           </ng-container> -->
-          <ng-container matColumnDef="interfaceid">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Interface ID</th>
-            <td mat-cell *matCellDef="let row">{{ row.interface_id }}</td>
-          </ng-container>
-      
-          <!-- Name -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.interface_name }}</td>
-          </ng-container>
-      
-          <!-- Service Quality -->
-          <ng-container matColumnDef="servicequality">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
-            <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
-          </ng-container>
+              <ng-container matColumnDef="interfaceid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Interface ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.interface_id }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="frequencyupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
-          </ng-container>
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{ row.interface_name }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="scheduleupdate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
-            <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
-          </ng-container>
+              <!-- Service Quality -->
+              <ng-container matColumnDef="servicequality">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quality Of Service</th>
+                <td mat-cell *matCellDef="let row">{{ row.quality_of_service }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="transfermethodology">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
-            <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
-          </ng-container>
+              <ng-container matColumnDef="frequencyupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Frequency Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.frequency_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="interfacetype">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Interface Type</th>
-            <td mat-cell *matCellDef="let row">{{ row.interface_type }}</td>
-          </ng-container>
-      
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
-            <td mat-cell *matCellDef="let row">{{ row.interface_version_number }}</td>
-          </ng-container>
+              <ng-container matColumnDef="scheduleupdate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Of Update</th>
+                <td mat-cell *matCellDef="let row">{{ row.schedule_of_update }}</td>
+              </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let row">{{ row.interface_status }}</td>
-          </ng-container>
+              <ng-container matColumnDef="transfermethodology">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Methodology Of Transfer</th>
+                <td mat-cell *matCellDef="let row">{{ row.methodology_of_transfer }}</td>
+              </ng-container>
 
-          <!-- Owner -->
-          <ng-container matColumnDef="owner">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.interface_owner }}
-            </td>
-          </ng-container>
+              <ng-container matColumnDef="interfacetype">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Interface Type</th>
+                <td mat-cell *matCellDef="let row">{{ row.interface_type }}</td>
+              </ng-container>
 
-           <!-- Owner Email -->
-           <ng-container matColumnDef="owner_email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
-            <td mat-cell *matCellDef="let row">
-              <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
-              {{ row.interface_owner_email }}
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsInterface"></tr>
-            <!-- Main row -->
-  <tr mat-row 
-  *matRowDef="let row; columns: displayedColumnsInterface"
-  class="main-row">
-</tr>
+              <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+                <td mat-cell *matCellDef="let row">{{ row.interface_version_number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{ row.interface_status }}</td>
+              </ng-container>
+
+              <!-- Owner -->
+              <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.interface_owner }}
+                </td>
+              </ng-container>
+
+              <!-- Owner Email -->
+              <ng-container matColumnDef="owner_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Email</th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- <img [src]="row.ownerImg" class="owner-img" alt="owner" /> -->
+                  {{ row.interface_owner_email }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsInterface"></tr>
+              <!-- Main row -->
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsInterface" class="main-row">
+              </tr>
 
 
-          
-        </table>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</main>
+
+            </table>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </main>
 </div>
-  
