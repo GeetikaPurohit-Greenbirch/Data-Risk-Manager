@@ -10,31 +10,27 @@
   overflow-y: auto;
 }
 
-.welcome-banner {
-  color: white;
-  padding: .6rem 2rem;
-  margin-bottom: 2rem;
-  border-radius: 0.4rem;
-  background: linear-gradient(to right, #4f46e5, #6366f1);
-
-  h2,
-  p {
-    margin: 0rem;
-  }
-}
-
 .system-table-container {
   background: white;
   height: calc(100% - 220px);
 }
-::ng-deep .mat-mdc-paginator-page-size-label {
-      min-width: 90px;
-}
-::ng-deep .ag-root-wrapper {
-    border: none;
-    border-radius: 0px;
-  }
 
-  ::ng-deep .model-cell-renderer {
-    background: red;
+::ng-deep .mat-mdc-paginator-page-size-label {
+  min-width: 90px;
+}
+
+::ng-deep .ag-root-wrapper {
+  border: none;
+  border-radius: 0px;
+}
+
+::ng-deep .model-cell-renderer {
+  display: flex;
+  gap: 6px;
+
+  button {
+    border: none;
+    font-size: 16px;
+    background-color: transparent;
   }
+}

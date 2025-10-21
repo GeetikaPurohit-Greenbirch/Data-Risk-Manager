@@ -1,23 +1,24 @@
 .main-container {
-    display: flex;
-  }
-  .dashboard-container {
-    flex-grow: 1;
-    padding: 1rem;
-    background: #f5f7f9;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-   .welcome-banner {
-  color: white;
-  padding: .6rem 2rem;
-  margin-bottom: 2rem;
-  border-radius: 0.4rem;
-  background: linear-gradient(to right, #4f46e5, #6366f1);
-
-  h2,
-  p {
-    margin: 0rem;
-  }
+  display: flex;
 }
+
+.dashboard-container {
+  flex-grow: 1;
+  padding: 1rem;
+  background: #f5f7f9;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+// .welcome-banner {
+//   color: white;
+//   padding: .6rem 2rem;
+//   margin-bottom: 2rem;
+//   border-radius: 0.4rem;
+//   background: linear-gradient(to right, #4f46e5, #6366f1);
+
+//   h2,
+//   p {
+//     margin: 0rem;
+//   }
+// }

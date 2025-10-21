@@ -1,61 +1,61 @@
-
 <div class="main-container">
   <main class="dashboard-container">
-    <section class="welcome-banner">     
-        <h2>User List</h2>
-         <button mat-raised-button color="primary" (click)="addUser()">
+    <section class="welcome-banner">
+      <h2>User List</h2>
+      <button mat-raised-button color="primary" (click)="addUser()">
         <i class="fa nav-icon fa-user" style="margin-right: 8px;"></i>
         Create User
       </button>
-      </section>
-      
-<div class="user-list-container">
-  
-    <mat-form-field appearance="outline">
-      <mat-label>Search Users</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Search by username or role">
-    </mat-form-field>
-  
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    </section>
 
-         <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let user"> {{user.id}} </td>
-      </ng-container>
-  
-      <!-- Username Column -->
-      <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> User Name </th>
-        <td mat-cell *matCellDef="let user"> {{user.username}} </td>
-      </ng-container>
-  
-      <!-- Role Column -->
-      <ng-container matColumnDef="userRole">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
-        <td mat-cell *matCellDef="let user"> {{user.userRole}} </td>
-      </ng-container>
-  
+    <div class="user-list-container">
+      <div class="search-container" style="display: flex; justify-content: flex-end;">
+        <mat-form-field appearance="outline" class="small-search-box" style="width: 250px !important;">
+          <mat-label>Search Users</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search by username or role">
+        </mat-form-field>
+      </div>
 
-      <!-- Add actions column -->
-<ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let user">
-      <!-- <button mat-icon-button color="primary">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+        </ng-container>
+
+        <!-- Username Column -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> User Name </th>
+          <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="userRole">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+          <td mat-cell *matCellDef="let user"> {{user.userRole}} </td>
+        </ng-container>
+
+
+        <!-- Add actions column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let user">
+            <!-- <button mat-icon-button color="primary">
         <mat-icon>edit</mat-icon>
       </button> -->
-      <button mat-icon-button color="warn" (click)="deleteUser(user.username)" [disabled]="!canAccess('del_usr')">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  
-    </table>
-  
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-</main>
+            <button mat-icon-button color="warn" (click)="deleteUser(user.username)" [disabled]="!canAccess('del_usr')">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </main>
 </div>

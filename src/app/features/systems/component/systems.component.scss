@@ -1,0 +1,40 @@
+.main-container {
+    display: flex;
+}
+
+.dashboard-container {
+    flex-grow: 1;
+    padding: 1rem;
+    background: #f5f7f9;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.system-table-container {
+    background: white;
+    height: calc(100% - 220px);
+}
+
+::ng-deep .mat-mdc-paginator-page-size-label {
+    min-width: 90px;
+}
+
+::ng-deep .ag-root-wrapper {
+    border: none;
+    border-radius: 0px;
+}
+
+::ng-deep .model-cell-renderer {
+    display: flex;
+    gap: 6px;
+
+    button {
+        border: none;
+        font-size: 16px;
+        background-color: transparent;
+    }
+}
+
+:host ::ng-deep .ag-theme-alpine {
+    font-size: 14px;
+}

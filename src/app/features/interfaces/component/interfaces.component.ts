@@ -67,11 +67,11 @@ export class InterfacesComponent {
     
         const saveDataFields = document.createElement('button');
         saveDataFields.className = 'fa fa-edit';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
+        saveDataFields.style.color = '#098236';
+        // saveDataFields.style.border = '1px solid lightGrey';
+        // saveDataFields.style.borderRadius = '5px';
+        // saveDataFields.style.lineHeight = '20px';
+        // saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
@@ -82,11 +82,11 @@ export class InterfacesComponent {
     
         const deleteDataFields = document.createElement('button');
         deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
+        deleteDataFields.style.color = '#c10007';
+        // deleteDataFields.style.border = '1px solid lightGrey';
+        // deleteDataFields.style.borderRadius = '5px';
+        // deleteDataFields.style.lineHeight = '20px';
+        // deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
@@ -97,10 +97,10 @@ export class InterfacesComponent {
         // 🧬 Clone Button
     const cloneBtn = document.createElement('button');
     cloneBtn.className = 'fa fa-clone';
-    cloneBtn.style.color = 'blue';
-    cloneBtn.style.border = '1px solid lightGrey';
-    cloneBtn.style.borderRadius = '5px';
-    cloneBtn.style.height = '24px';
+    cloneBtn.style.color = '#1347e6';
+    // cloneBtn.style.border = '1px solid lightGrey';
+    // cloneBtn.style.borderRadius = '5px';
+    // cloneBtn.style.height = '24px';
     cloneBtn.style.cursor = 'pointer';
     cloneBtn.title = 'Clone';
     cloneBtn.addEventListener('click', () => {

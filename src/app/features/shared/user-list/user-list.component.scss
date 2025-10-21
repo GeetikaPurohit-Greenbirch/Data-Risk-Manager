@@ -1,44 +1,44 @@
 .main-container {
-    display: flex;
-  }
-  .dashboard-container {
-    flex-grow: 1;
-    padding: 1rem;
-    background: #f5f7f9;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-   .welcome-banner {
-  color: white;
-  padding: .6rem 2rem;
-  margin-bottom: 2rem;
-  border-radius: 0.4rem;
-  background: linear-gradient(to right, #4f46e5, #6366f1);
-
-  h2,
-  p {
-    margin: 0rem;
-  }
+  display: flex;
 }
 
+.dashboard-container {
+  flex-grow: 1;
+  padding: 1rem;
+  background: #f5f7f9;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+// .welcome-banner {
+//   color: white;
+//   padding: .6rem 2rem;
+//   margin-bottom: 2rem;
+//   border-radius: 0.4rem;
+//   background: linear-gradient(to right, #4f46e5, #6366f1);
+
+//   h2,
+//   p {
+//     margin: 0rem;
+//   }
+// }
+
 .user-list-container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-  
-    h2 {
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-  
-    mat-form-field {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  
-    table {
-      width: 100%;
-    }
+  max-width: 100%;
+  margin: 0px auto;
+  padding: 0px 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
   }
-  
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+  }
+}

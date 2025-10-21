@@ -7,7 +7,8 @@
       <mat-label>Name</mat-label>
       <input matInput formControlName="lineage_name" placeholder="Enter lineage name" required />
       <mat-hint *ngIf="data.mode==='edit' && data.value?.lineage_id">ID: {{ data.value?.lineage_id }}</mat-hint>
-      <mat-error *ngIf="form.get('lineage_name')?.invalid && (form.get('lineage_name')?.touched || form.get('lineage_name')?.dirty)">
+      <mat-error
+        *ngIf="form.get('lineage_name')?.invalid && (form.get('lineage_name')?.touched || form.get('lineage_name')?.dirty)">
         Name is required
       </mat-error>
     </mat-form-field>
@@ -19,7 +20,8 @@
           {{ u.name }} ({{ u.id }})
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="form.get('use_case_id')?.invalid && (form.get('use_case_id')?.touched || form.get('use_case_id')?.dirty)">
+      <mat-error
+        *ngIf="form.get('use_case_id')?.invalid && (form.get('use_case_id')?.touched || form.get('use_case_id')?.dirty)">
         Usecase is required
       </mat-error>
     </mat-form-field>

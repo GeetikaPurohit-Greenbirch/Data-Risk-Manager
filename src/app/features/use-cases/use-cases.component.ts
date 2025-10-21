@@ -79,12 +79,12 @@ export class UseCasesComponent {
     
         const saveDataFields = document.createElement('button');
         saveDataFields.className = 'fa fa-edit';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.color = '#098236';
+        // saveDataFields.style.border = '1px solid lightGrey';
+        // saveDataFields.style.borderRadius = '5px';
+        // saveDataFields.style.lineHeight = '20px';
+        // saveDataFields.style.height = '24px';
+        // saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
     
         // Pass row data or node to save
@@ -94,12 +94,12 @@ export class UseCasesComponent {
     
         const deleteDataFields = document.createElement('button');
         deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.color = '#c10007';
+        // deleteDataFields.style.border = '1px solid lightGrey';
+        // deleteDataFields.style.borderRadius = '5px';
+        // deleteDataFields.style.lineHeight = '20px';
+        // deleteDataFields.style.height = '24px';
+        // deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
     
         deleteDataFields.addEventListener('click', () => {
@@ -108,12 +108,12 @@ export class UseCasesComponent {
 
         const shareUsecase = document.createElement('button');
         shareUsecase.className = 'fa fa-share';
-        shareUsecase.style.color = 'red';
-        shareUsecase.style.border = '1px solid lightGrey';
-        shareUsecase.style.borderRadius = '5px';
-        shareUsecase.style.lineHeight = '20px';
-        shareUsecase.style.height = '24px';
-        shareUsecase.style.cursor = 'pointer';
+        shareUsecase.style.color = '#c10007';
+        // shareUsecase.style.border = '1px solid lightGrey';
+        // shareUsecase.style.borderRadius = '5px';
+        // shareUsecase.style.lineHeight = '20px';
+        // shareUsecase.style.height = '24px';
+        // shareUsecase.style.cursor = 'pointer';
         shareUsecase.title = 'Share';
     
         shareUsecase.addEventListener('click', () => {
@@ -122,12 +122,12 @@ export class UseCasesComponent {
 
         const goToLineage = document.createElement('button');
         goToLineage.className = 'fa fa-arrow-right';
-        goToLineage.style.color = 'blue';
-        goToLineage.style.border = '1px solid lightGrey';
-        goToLineage.style.borderRadius = '5px';
-        goToLineage.style.lineHeight = '20px';
-        goToLineage.style.height = '24px';
-        goToLineage.style.cursor = 'pointer';
+        goToLineage.style.color = '#1347e6';
+        // goToLineage.style.border = '1px solid lightGrey';
+        // goToLineage.style.borderRadius = '5px';
+        // goToLineage.style.lineHeight = '20px';
+        // goToLineage.style.height = '24px';
+        // goToLineage.style.cursor = 'pointer';
         goToLineage.title = 'Navigate to Lineage';
     
         goToLineage.addEventListener('click', () => {
