@@ -25,10 +25,24 @@ export interface Lineage {
   // standalone: true,
   // imports: [],
   templateUrl: './use-cases.component.html',
-  styleUrl: './use-cases.component.scss'
+  styleUrl: './use-cases.component.scss',
 })
 export class UseCasesComponent {
- displayedColumns: string[] = ['usecaseid', 'name', 'description', 'owner', 'owner_email', 'version', 'status', 'last_review_date', 'reviewed_by', 'next_review_date', 'reviewer', 'permission', 'actions'];
+  displayedColumns: string[] = [
+    'usecaseid',
+    'name',
+    'description',
+    'owner',
+    'owner_email',
+    'version',
+    'status',
+    'last_review_date',
+    'reviewed_by',
+    'next_review_date',
+    'reviewer',
+    'permission',
+    'actions',
+  ];
   public rowData: any;
   dataSource = new MatTableDataSource<Usecase>();
   gridApi: any;
@@ -45,25 +59,40 @@ export class UseCasesComponent {
   data: any[] = []; // example
   // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
   pageSizeOptions: number[] = [];
-  constructor(private usecaseService: UsecaseService,
+  constructor(
+    private usecaseService: UsecaseService,
     private router: Router,
     private toastNotificationService: ToastnotificationService,
     private dialog: MatDialog
-  ) { }
+  ) {}
 
-  
-
- columnDefs: (ColDef | ColGroupDef)[]= [
-    { field: 'use_case_id', headerName: 'Use Case ID', editable: false, },
+  columnDefs: (ColDef | ColGroupDef)[] = [
+    { field: 'use_case_id', headerName: 'Use Case ID', editable: false },
     { field: 'use_case_name', headerName: 'Name', editable: true },
-    { field: 'use_case_description', headerName: 'Description', editable: true },
+    {
+      field: 'use_case_description',
+      headerName: 'Description',
+      editable: true,
+    },
     { field: 'use_case_owner', headerName: 'Owner', editable: true },
-    { field: 'use_case_owner_email', headerName: 'Owner Email', editable: true },
+    {
+      field: 'use_case_owner_email',
+      headerName: 'Owner Email',
+      editable: true,
+    },
     { field: 'version', headerName: 'Version', editable: true },
     { field: 'status', headerName: 'Status', editable: true },
-    { field: 'last_review_date', headerName: 'Last Review Date', editable: true },
+    {
+      field: 'last_review_date',
+      headerName: 'Last Review Date',
+      editable: true,
+    },
     { field: 'reviewed_by', headerName: 'Reviewed By', editable: true },
-    { field: 'next_review_date', headerName: 'Next Review Date', editable: true },
+    {
+      field: 'next_review_date',
+      headerName: 'Next Review Date',
+      editable: true,
+    },
     { field: 'reviewer', headerName: 'Reviewer', editable: true },
     { field: 'permission', headerName: 'Permission', editable: true },
     {
@@ -71,12 +100,12 @@ export class UseCasesComponent {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
-      flex:1,
+      minWidth: 100,
+      flex: 1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
-    
+
         const saveDataFields = document.createElement('button');
         saveDataFields.className = 'fa fa-edit';
         saveDataFields.style.color = '#098236';
@@ -86,12 +115,12 @@ export class UseCasesComponent {
         // saveDataFields.style.height = '24px';
         // saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
-    
+
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
           this.editUseCase(params.node);
         });
-    
+
         const deleteDataFields = document.createElement('button');
         deleteDataFields.className = 'fa fa-trash';
         deleteDataFields.style.color = '#c10007';
@@ -101,7 +130,7 @@ export class UseCasesComponent {
         // deleteDataFields.style.height = '24px';
         // deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
-    
+
         deleteDataFields.addEventListener('click', () => {
           this.deleteUseCase(params.node);
         });
@@ -115,7 +144,7 @@ export class UseCasesComponent {
         // shareUsecase.style.height = '24px';
         // shareUsecase.style.cursor = 'pointer';
         shareUsecase.title = 'Share';
-    
+
         shareUsecase.addEventListener('click', () => {
           this.openShareComponent(params.node);
         });
@@ -129,30 +158,35 @@ export class UseCasesComponent {
         // goToLineage.style.height = '24px';
         // goToLineage.style.cursor = 'pointer';
         goToLineage.title = 'Navigate to Lineage';
-    
+
         goToLineage.addEventListener('click', () => {
           this.openLineageComponent(params.node);
         });
-    
+
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
         div.appendChild(shareUsecase);
         div.appendChild(goToLineage);
-    
+
         return div;
-      }
+      },
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
-    sortable: true,
-    resizable: true,
-    filter:true,
-    suppressSizeToFit: true
-  };
+  // defaultColDef = {
+  //   flex: 1,
+  //   sortable: true,
+  //   resizable: true,
+  //   filter:true,
+  //   suppressSizeToFit: true
+  // };
 
-  
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true,
+    suppressSizeToFit: true,
+  };
 
   // rowData = [
   //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
@@ -160,7 +194,6 @@ export class UseCasesComponent {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
-  
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -168,14 +201,11 @@ export class UseCasesComponent {
     this.getUsecaseList();
   }
 
-
   onCellValueChanged(event: any) {
     console.log('Updated row:', event.data);
   }
 
-
   ngOnInit(): void {
-    
     this.getUsecaseList();
   }
 
@@ -186,7 +216,9 @@ export class UseCasesComponent {
   }
   patchAllLabel() {
     setTimeout(() => {
-      const options = document.querySelectorAll('mat-option span.mdc-list-item__primary-text');
+      const options = document.querySelectorAll(
+        'mat-option span.mdc-list-item__primary-text'
+      );
       options.forEach((opt: any) => {
         if (opt.textContent?.trim() === String(this.rowData.length)) {
           opt.textContent = 'All';
@@ -202,66 +234,69 @@ export class UseCasesComponent {
       this.pageSize = event.pageSize;
     }
   }
- 
 
   getUsecaseList() {
     this.usecaseService.getUsecase().subscribe({
       next: (usecases: any[]) => {
-        const usecaseEntities = usecases.map(data => ({
-          ...data.useCaseEntity
+        const usecaseEntities = usecases.map((data) => ({
+          ...data.useCaseEntity,
         }));
-  
-        const useCaseIds = usecaseEntities.map(u => u.use_case_id);
-  
+
+        const useCaseIds = usecaseEntities.map((u) => u.use_case_id);
+
         // Call permission API with use case IDs
         this.usecaseService.getPermissionsForUsecases(useCaseIds).subscribe({
           next: (permissions: any[]) => {
             // Merge permission with usecaseEntities
-            const finalUsecases = usecaseEntities.map(uc => {
-              const perm = permissions.find(p => p.use_case_id === uc.use_case_id);
+            const finalUsecases = usecaseEntities.map((uc) => {
+              const perm = permissions.find(
+                (p) => p.use_case_id === uc.use_case_id
+              );
               return {
                 ...uc,
-                permission: perm?.is_editable ? 'Edit' : 'View' // or use boolean if needed
+                permission: perm?.is_editable ? 'Edit' : 'View', // or use boolean if needed
               };
             });
             this.patchAllLabel();
             this.rowData = finalUsecases;
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
-             
           },
-          error: err => {
+          error: (err) => {
             console.error('Error fetching permissions:', err);
-          }
+          },
         });
       },
-      error: err => {
+      error: (err) => {
         console.error('Error fetching usecases:', err);
-      }
+      },
     });
   }
-  
-  
 
-  deleteUseCase(usecases:any) {
-    this.usecaseService.deleteUsecase(usecases.data.use_case_id).subscribe(() => {
+  deleteUseCase(usecases: any) {
+    this.usecaseService
+      .deleteUsecase(usecases.data.use_case_id)
+      .subscribe(() => {
         // alert("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.usecase_id);
-        this.toastNotificationService.error("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.data.use_case_id);
+        this.toastNotificationService.error(
+          'Usecase Deleted Successfully. Deleted Usecase ID is ' +
+            usecases.data.use_case_id
+        );
         setTimeout(() => {
           this.getUsecaseList(); // refresh
         }, 1000);
-    })
+      });
   }
 
-  addUseCaseScreen()
-  {
+  addUseCaseScreen() {
     this.router.navigate(['/use-cases/create-use-case']);
-
   }
 
-  editUseCase(usecases:any) {
-    this.router.navigate(['/use-cases/edit-usecase', usecases.data.use_case_id]);
-
+  editUseCase(usecases: any) {
+    this.router.navigate([
+      '/use-cases/edit-usecase',
+      usecases.data.use_case_id,
+    ]);
   }
 
   // openShareDialog(row: any) {
@@ -273,7 +308,7 @@ export class UseCasesComponent {
   //         users: users // should include: id, name, alreadyShared flag
   //       }
   //     });
-  
+
   //     dialogRef.afterClosed().subscribe(result => {
   //       if (result) {
   //         // Call API to share use case
@@ -285,37 +320,37 @@ export class UseCasesComponent {
   //   });
   // }
 
-
   openShareComponent(row: any) {
     this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
   }
 
   openLineageComponent(row: any) {
     const useCaseId = row.data.use_case_id;
-  
+
     this.usecaseService.navigateToLineage(useCaseId).subscribe({
       next: (response) => {
         const lineage_json = Array.isArray(response) ? response[0] : response;
-        if(lineage_json.lineage_json !==  "{}")
-        {
-        const lineage = Array.isArray(response) ? response[0] : response;
-        if (lineage) {
-          this.router.navigate(['/graph-embedded/edit-lineage', useCaseId, lineage.id]);
+        if (lineage_json.lineage_json !== '{}') {
+          const lineage = Array.isArray(response) ? response[0] : response;
+          if (lineage) {
+            this.router.navigate([
+              '/graph-embedded/edit-lineage',
+              useCaseId,
+              lineage.id,
+            ]);
+          }
+        } else {
+          this.toastNotificationService.error(
+            'No lineage found for useCaseId : ' + useCaseId
+          );
+          setTimeout(() => {
+            this.getUsecaseList(); // refresh
+          }, 1000);
         }
-      }
-      else
-      {
-        this.toastNotificationService.error("No lineage found for useCaseId : " + useCaseId);
-        setTimeout(() => {
-          this.getUsecaseList(); // refresh
-        }, 1000);
-      }
       },
       error: (err) => {
-        console.error("Failed to fetch lineageId:", err);
-      }
+        console.error('Failed to fetch lineageId:', err);
+      },
     });
   }
-  
-  
 }

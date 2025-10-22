@@ -5,20 +5,37 @@
 .dashboard-container {
   flex-grow: 1;
   padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
+  // height: 100vh;
   overflow-y: auto;
+  background: #f5f7f9;
 }
 
-// .welcome-banner {
-//   color: white;
-//   padding: .6rem 2rem;
-//   margin-bottom: 2rem;
-//   border-radius: 0.4rem;
-//   background: linear-gradient(to right, #4f46e5, #6366f1);
+.system-table-container {
+  background: white;
+  height: calc(100% - 56px);
+  // height: calc(100% - 220px);
+}
 
-//   h2,
-//   p {
-//     margin: 0rem;
-//   }
-// }
+::ng-deep .mat-mdc-paginator-page-size-label {
+  min-width: 90px;
+}
+
+::ng-deep .ag-root-wrapper {
+  border: none;
+  border-radius: 0px;
+}
+
+::ng-deep .model-cell-renderer {
+  display: flex;
+  gap: 2px;
+
+  button {
+    border: none;
+    font-size: 16px;
+    background-color: transparent;
+  }
+}
+
+:host ::ng-deep .ag-theme-alpine {
+  font-size: 14px;
+}

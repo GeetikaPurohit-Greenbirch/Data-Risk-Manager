@@ -1,16 +1,20 @@
-
 <div class="main-container">
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2><i class="fa fa-arrow-left" (click)="onBack()" ></i>Control Builder</h2>
-      </section>
-      <mat-card>
-        <div class="container">
-          <!-- Left: Edit Control Form -->
-          <div class="left-panel">
-        <form [formGroup]="controlForm" (ngSubmit)="onSubmit()">
-          <!-- <div class="form-grid"> -->
+      <h2>
+        <div class="back-icon">
+          <button><i class="fa fa-arrow-left" (click)="onBack()"></i></button>
+        </div>
+        Control Builder
+      </h2>
+    </section>
+    <mat-card>
+      <div class="container">
+        <!-- Left: Edit Control Form -->
+        <div class="left-panel">
+          <form [formGroup]="controlForm" (ngSubmit)="onSubmit()">
+            <!-- <div class="form-grid"> -->
             <mat-form-field appearance="outline">
               <mat-label>Control Name</mat-label>
               <input matInput formControlName="controlName">
@@ -47,7 +51,7 @@
               <input matInput formControlName="owner">
               <mat-error *ngIf="controlForm.get('owner')?.hasError('required')">Required</mat-error>
             </mat-form-field>
-      
+
             <mat-form-field appearance="outline">
               <mat-label>Owner Email</mat-label>
               <input matInput formControlName="ownerEmail">
@@ -61,15 +65,15 @@
               <mat-error *ngIf="controlForm.get('version')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            
+
             <mat-form-field appearance="outline">
               <mat-label>Control Status</mat-label>
               <mat-select formControlName="status">
                 <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
               <mat-error *ngIf="controlForm.get('status')?.hasError('required')">Required</mat-error>
-            </mat-form-field>      
-            
+            </mat-form-field>
+
             <mat-form-field appearance="outline" style="width: 50%;">
               <mat-label>Application Date</mat-label>
               <input matInput [matDatepicker]="nextPicker" formControlName="applicationDate">
@@ -83,19 +87,19 @@
               <mat-select formControlName="applicationStatus" [disabled]="true">
                 <mat-option *ngFor="let option of applicationStatusOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
-               <mat-error *ngIf="controlForm.get('applicationStatus')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="controlForm.get('applicationStatus')?.hasError('required')">Required</mat-error>
             </mat-form-field>
-            
-          <!-- </div> -->
-          <div class="form-grid">
-          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+
+            <!-- </div> -->
+            <div class="form-grid">
+              <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
     margin: 0 auto;">Create Control</button>
-          </div>
-        </form>
+            </div>
+          </form>
         </div>
-        </div>
-      </mat-card>
-      
-</main>
+      </div>
+    </mat-card>
+
+  </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->

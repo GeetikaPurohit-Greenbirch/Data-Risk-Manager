@@ -1,241 +1,202 @@
-
 <div class="main-container">
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Edit System</h2>
-      </section>
-      <mat-card>
-        <div class="overlay-loader" *ngIf="isLoading">
-          <mat-spinner diameter="50"></mat-spinner>
-        </div>
-<div class="container">
-    <!-- Left: Edit System Form -->
-    <div class="left-panel">
-      <!-- <h2>System</h2> -->
-      <form [formGroup]="systemForm">
-        <!-- Your form controls for editing the system -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>System Name</mat-label>
-          <input matInput formControlName="system_name" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>LeanIX ID</mat-label>
-          <input matInput formControlName="leanix_id" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <input matInput formControlName="description" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner</mat-label>
-          <input matInput formControlName="owner" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner Email</mat-label>
-          <input matInput formControlName="owner_email" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Version</mat-label>
-          <input matInput formControlName="version_number" />
-        </mat-form-field>
+      <h2>Edit System</h2>
+    </section>
+    <mat-card>
+      <div class="overlay-loader" *ngIf="isLoading">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+      <div class="container">
+        <!-- Left: Edit System Form -->
+        <div class="left-panel">
+          <!-- <h2>System</h2> -->
+          <form [formGroup]="systemForm">
+            <!-- Your form controls for editing the system -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>System Name</mat-label>
+              <input matInput formControlName="system_name" />
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option *ngFor="let status of statusOptions" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>LeanIX ID</mat-label>
+              <input matInput formControlName="leanix_id" />
+            </mat-form-field>
 
-        <div style="width: 48%; float:right;    margin-top: 8px;
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <input matInput formControlName="description" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Owner</mat-label>
+              <input matInput formControlName="owner" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="owner_email" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Version</mat-label>
+              <input matInput formControlName="version_number" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of statusOptions" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div style="width: 48%; float:right;    margin-top: 8px;
     font-size: 15px;">
-  Usecase ID : {{useCaseId}}
-  <br>
-  Usecase Name : {{useCaseName}}
-</div>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
+              Usecase ID : {{useCaseId}}
+              <br>
+              Usecase Name : {{useCaseName}}
+            </div>
+
+            <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
           <input matInput formControlName="status" />
         </mat-form-field> -->
 
-        <div class="updateBtn">
-            <!-- Update System -->
-    <button mat-raised-button color="primary" (click)="onUpdate()">
-      Save
-    </button>
-  </div>
+            <div class="updateBtn">
+              <!-- Update System -->
+              <button mat-raised-button color="primary" (click)="onUpdate()">
+                Save
+              </button>
+            </div>
 
-  <div style="display: flex; height: 100%;">
-    <!-- Left Side Buttons -->
-    <div style="width: 100%; padding: 12px;">
-      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-        <button mat-raised-button
-        style="flex: 0 0 calc(50% - 6px);"
-        [ngClass]="{ 'inverse': activeView === 'interfaces', 'primary': activeView !== 'interfaces' }"
-        (click)="addInbound('interfaces')">
-        Interfaces
-      </button>
-        <!-- <button mat-raised-button color="primary"
+            <div style="display: flex; height: 100%;">
+              <!-- Left Side Buttons -->
+              <div style="width: 100%; padding: 12px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'interfaces', 'primary': activeView !== 'interfaces' }"
+                    (click)="addInbound('interfaces')">
+                    Interfaces
+                  </button>
+                  <!-- <button mat-raised-button color="primary"
                 style="flex: 0 0 calc(50% - 6px);"
                 [color]="activeView === 'interfaces' ? 'primary' : 'accent'"
                 (click)="addInbound('interfaces')">
           Interfaces
         </button> -->
-  
-        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-        [ngClass]="{ 'inverse': activeView === 'input', 'primary': activeView !== 'input' }"
-                (click)="addInputDatafields('input')">
-          Input DataFields
-        </button>
-  
-        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-        [ngClass]="{ 'inverse': activeView === 'output', 'primary': activeView !== 'output' }"
-                (click)="addDatafields('output')">
-          Output DataFields
-        </button>
-  
-        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-        [ngClass]="{ 'inverse': activeView === 'mapping', 'primary': activeView !== 'mapping' }"
-                (click)="sysMapping('mapping')">
-          System Mapping
-        </button>
 
-        <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-        [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
-                (click)="selectUseCase('usecase')">
-          Update Use Case
-        </button>
-      </div>
-    </div>
-  </div>
-  
-      </form>
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'input', 'primary': activeView !== 'input' }"
+                    (click)="addInputDatafields('input')">
+                    Input DataFields
+                  </button>
 
-    </div>
-  
-    <!-- Right: DataFields Table -->
-    <div class="right-panel" >
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'output', 'primary': activeView !== 'output' }"
+                    (click)="addDatafields('output')">
+                    Output DataFields
+                  </button>
 
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'mapping', 'primary': activeView !== 'mapping' }"
+                    (click)="sysMapping('mapping')">
+                    System Mapping
+                  </button>
 
-      <div class="datafields-table" *ngIf="showInputDataFields">
-        <div class="datafields-header">
-          <button (click)="addRow()" class="add-btn">Add Row</button>
-        
-          <!-- Checkbox to toggle grid visibility -->
-          <label style="margin-left: 16px;">
-            <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
-            (change)="toggleInboundGrid($event)" />
-            Set Global Quality Risk
-          </label>
-        
-          <!-- Conditional rendering of the AG Grid -->
-          <ag-grid-angular
-            *ngIf="showGlobalQualityRiskGridInbound"
-            class="ag-theme-alpine"
-            style="width: 100%; height: 180px; margin-top: 10px;"
-            [rowData]="rowDataInboundDQA"
-            [columnDefs]="columnDefsInboundDQA"
-            [defaultColDef]="defaultColDef"
-            (gridReady)="onInboundGridReady($event)"
-            rowSelection="single"
-          >
-          </ag-grid-angular>
-        </div>
-        
-      <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
-        [rowData]="rowDataInput"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        (cellValueChanged)="inputCellValueChanged($event)"
-        rowSelection="single"
-        (rowClicked)="onRowClick($event)"
-        (gridReady)="onGridReady($event)"
-        >
-        </ag-grid-angular>
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
+                    (click)="selectUseCase('usecase')">
+                    Update Use Case
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+
         </div>
 
-              <!-- Information Box -->
-           
-        <div class="info-box-table" *ngIf="showInbound">
-          <div class="datafields-header">
-            <button (click)="addInterface()" class="add-btn">Add Inbound Interface</button>
+        <!-- Right: DataFields Table -->
+        <div class="right-panel">
+
+
+          <div class="datafields-table" *ngIf="showInputDataFields">
+            <div class="datafields-header">
+              <button (click)="addRow()" class="add-btn">Add Row</button>
+
+              <!-- Checkbox to toggle grid visibility -->
+              <label style="margin-left: 16px;">
+                <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
+                  (change)="toggleInboundGrid($event)" />
+                Set Global Quality Risk
+              </label>
+
+              <!-- Conditional rendering of the AG Grid -->
+              <ag-grid-angular *ngIf="showGlobalQualityRiskGridInbound" class="ag-theme-alpine"
+                style="width: 100%; height: 180px; margin-top: 10px;" [rowData]="rowDataInboundDQA"
+                [columnDefs]="columnDefsInboundDQA" [defaultColDef]="defaultColDef"
+                (gridReady)="onInboundGridReady($event)" rowSelection="single">
+              </ag-grid-angular>
+            </div>
+
+            <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataInput"
+              [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+              (cellValueChanged)="inputCellValueChanged($event)" rowSelection="single" (rowClicked)="onRowClick($event)"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+
+          <!-- Information Box -->
+
+          <div class="info-box-table" *ngIf="showInbound">
+            <div class="datafields-header">
+              <button (click)="addInterface()" class="add-btn">Add Inbound Interface</button>
+
+            </div>
+            <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataInbound"
+              [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
+              (cellValueChanged)="inboundOnCellValueChanged($event)" rowSelection="single">
+            </ag-grid-angular>
+          </div>
+
+
+          <div class="datafields-table" *ngIf="showDataFields">
+
+            <!-- Checkbox to toggle grid visibility -->
+            <label style="margin-left: 16px;">
+              <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound"
+                (change)="toggleOutboundGrid($event)" />
+              Set Global Quality Risk
+            </label>
+
+            <!-- Conditional rendering of the AG Grid -->
+            <ag-grid-angular *ngIf="showGlobalQualityRiskGridOutbound" class="ag-theme-alpine"
+              style="width: 100%; height: 180px; margin-top: 10px;" [rowData]="rowDataoutboundDQA"
+              [columnDefs]="columnDefsOoutboundDQA" [defaultColDef]="defaultColDef"
+              (gridReady)="onOutboundGridReady($event)" rowSelection="single">
+            </ag-grid-angular>
+
+            <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
+              [columnDefs]="columnDefsOutbound" [defaultColDef]="defaultColDef"
+              (cellValueChanged)="onCellValueChanged($event)" rowSelection="single">
+            </ag-grid-angular>
 
           </div>
-          <ag-grid-angular
-          class="ag-theme-alpine"
-          style="width: 100%; height: 400px;"
-          [rowData]="rowDataInbound"
-          [columnDefs]="inboundColumnDefs"
-          [defaultColDef]="defaultColDef"
-          (cellValueChanged)="inboundOnCellValueChanged($event)"
-          rowSelection="single"
-          >
-          </ag-grid-angular>
-          </div>
 
-                 
-      <div class="datafields-table" *ngIf="showDataFields">
-
-        <!-- Checkbox to toggle grid visibility -->
-        <label style="margin-left: 16px;">
-          <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound" 
-          (change)="toggleOutboundGrid($event)"/>
-          Set Global Quality Risk
-        </label>
-      
-        <!-- Conditional rendering of the AG Grid -->
-        <ag-grid-angular
-          *ngIf="showGlobalQualityRiskGridOutbound"
-          class="ag-theme-alpine"
-          style="width: 100%; height: 180px; margin-top: 10px;"
-          [rowData]="rowDataoutboundDQA"
-          [columnDefs]="columnDefsOoutboundDQA"
-          [defaultColDef]="defaultColDef"
-          (gridReady)="onOutboundGridReady($event)"
-          rowSelection="single"
-        >
-        </ag-grid-angular>
-      
-        <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefsOutbound"
-        [defaultColDef]="defaultColDef"
-        (cellValueChanged)="onCellValueChanged($event)"
-        rowSelection="single"
-        >
-        </ag-grid-angular>
-     
-    </div>
-
-    <div class="info-box-table" *ngIf="showoutbound">
-      <div class="datafields-header">
-        <button (click)="addOutInterface()" class="add-btn">Add Outbound Interface</button>
-        &nbsp;&nbsp;&nbsp;
-        <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
-      </div>
-      <ag-grid-angular
-      class="ag-theme-alpine"
-      style="width: 100%; height: 400px;"
-      [rowData]="rowDataOutbound"
-      [columnDefs]="outBoundColumnDefs"
-      [defaultColDef]="defaultColDef"
-      (cellValueChanged)="outboundOnCellValueChanged($event)"
-      rowSelection="single"
-      >
-      </ag-grid-angular>
-      <!-- <ag-grid-angular
+          <div class="info-box-table" *ngIf="showoutbound">
+            <div class="datafields-header">
+              <button (click)="addOutInterface()" class="add-btn">Add Outbound Interface</button>
+              &nbsp;&nbsp;&nbsp;
+              <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
+            </div>
+            <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataOutbound"
+              [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
+              (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
+            </ag-grid-angular>
+            <!-- <ag-grid-angular
       class="ag-theme-alpine"
       style="width: 100%; height: 200px;"
       [rowData]="rowDataOutboundTarget"
@@ -245,62 +206,60 @@
       rowSelection="single"
       >
       </ag-grid-angular> -->
-    </div>
+          </div>
 
 
-    <div class="lineage-wrapper" *ngIf="showsystemMapping">
-      <div class="tables-wrapper">
-    
-    <app-create-lineage
-    [inboundFields]="inboundFields"
-  [outboundFields]="outboundFields"
-  [systemId]="systemId"
-  ></app-create-lineage>
+          <div class="lineage-wrapper" *ngIf="showsystemMapping">
+            <div class="tables-wrapper">
 
-  <!-- <app-create-lineage-new
+              <app-create-lineage [inboundFields]="inboundFields" [outboundFields]="outboundFields"
+                [systemId]="systemId"></app-create-lineage>
+
+              <!-- <app-create-lineage-new
   [inboundFields]="inboundFields"
 [outboundFields]="outboundFields"
 [systemId]="systemId"
 ></app-create-lineage-new> -->
-      
-      </div>
-    
-    </div>
-    
-  <ng-template #useCasePopup>
-    
-    <h2 mat-dialog-title>Select Use Case</h2>
-    <mat-dialog-content>
-      <div class="popup-box row">
-    
-        <div class="col-md-7">
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Select Use Case</mat-label>
-          <mat-select [(ngModel)]="useCaseId">
-            <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
-              {{ uc.use_case_name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        </div>
-        <div class="col-md-4">
-          <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Submit</button>
-            
-          <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
-        
-          <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
-        
+
+            </div>
+
           </div>
-          </div>
-        </mat-dialog-content>
-  </ng-template>
-    <!-- <div class="datafields-header">
+
+          <ng-template #useCasePopup>
+
+            <h2 mat-dialog-title>Select Use Case</h2>
+            <mat-dialog-content>
+              <div class="popup-box row">
+
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded"  style="width: 100%;">
+                    <mat-label>Select Use Case</mat-label>
+                    <mat-select [(ngModel)]="useCaseId">
+                      <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                        {{ uc.use_case_name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <button mat-raised-button color="primary" (click)="confirmUseCase()"
+                    style="height: 43px; margin-top: 6px;">Submit</button>
+
+                  <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
+
+                  <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+
+                </div>
+              </div>
+            </mat-dialog-content>
+          </ng-template>
+          <!-- <div class="datafields-header">
      
       <button (click)="addRow()" class="add-btn">Add Row</button>
 
     </div> -->
-    </div>
-  </div>
-  </mat-card>
+        </div>
+      </div>
+    </mat-card>
   </main>
-  </div>
+</div>

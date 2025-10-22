@@ -10,15 +10,27 @@
   overflow-y: auto;
 }
 
-// .welcome-banner {
-//   color: white;
-//   padding: .6rem 2rem;
-//   margin-bottom: 2rem;
-//   border-radius: 0.4rem;
-//   background: linear-gradient(to right, #4f46e5, #6366f1);
+.welcome-banner {
+  h2 {
+    gap: 10px;
+    display: flex;
+    align-items: center;
 
-//   h2,
-//   p {
-//     margin: 0rem;
-//   }
-// }
+    .back-icon {
+      button {
+        width: 34px;
+        border: none;
+        height: 34px;
+        color: #000000;
+        // color: #ffffff;
+        border-radius: 100%;
+        background-color: #ccdbfa;
+        // background-color: #6467f1;
+
+        i {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}

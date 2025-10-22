@@ -116,11 +116,18 @@ export class InterfacesComponent {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
-    sortable: true,
+  // defaultColDef = {
+  //   flex: 1,
+  //   sortable: true,
+  //   resizable: true,
+  //   filter:true,
+  //   suppressSizeToFit: true
+  // };
+
+  defaultColDef: ColDef = {
     resizable: true,
-    filter:true,
+    sortable: true,
+    filter: true,
     suppressSizeToFit: true
   };
 

@@ -54,7 +54,7 @@ export class BuilderComponent implements OnInit {
 constructor(private datafieldsService: DatafieldsService, private route: ActivatedRoute, private router: Router,) { }
   
   nodesCollapsed = false;
-  panelSizes: number[] = [99, 1];
+  panelSizes: number[] = [99.99, 0.1];
 
   toggleNodes(): void {
     this.nodesCollapsed = !this.nodesCollapsed;    
@@ -75,7 +75,7 @@ constructor(private datafieldsService: DatafieldsService, private route: Activat
     if (this.diagramCollapsed) {
       this.panelSizes = [50, 50]; // Collapse the second panel
     } else {
-      this.panelSizes = [99, 1]; // Restore to 70/30 split
+      this.panelSizes = [99.99, 0.1]; // Restore to 70/30 split
     }
   }
 
@@ -169,6 +169,6 @@ constructor(private datafieldsService: DatafieldsService, private route: Activat
   onCloseDetailTable()
   {
     this.diagramCollapsed=false;
-     this.panelSizes = [90, 10]; // Restore to 70/30 split
+     this.panelSizes = [99.99, 0.1]; // Restore to 70/30 split
   }
 }

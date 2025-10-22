@@ -7,9 +7,9 @@
 .dashboard-container {
   flex-grow: 1;
   padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
+  // height: 100vh;
   overflow-y: auto;
+  background: #f5f7f9;
 }
 
 // .welcome-banner {
@@ -42,15 +42,3 @@
   flex-direction: column;
 }
 
-.full-width {
-  width: 100%;
-}
-
-.search-container {
-  display: flex;
-  justify-content: flex-end;
-
-  .small-search-box {
-    width: 250px;
-  }
-}

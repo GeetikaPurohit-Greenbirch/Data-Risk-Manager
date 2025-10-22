@@ -5,14 +5,15 @@
 .dashboard-container {
   flex-grow: 1;
   padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
+  // height: 100vh;
   overflow-y: auto;
+  background: #f5f7f9;
 }
 
 .system-table-container {
   background: white;
-  height: calc(100% - 220px);
+  height: calc(100% - 56px);
+  // height: calc(100% - 220px);
 }
 
 ::ng-deep .mat-mdc-paginator-page-size-label {
@@ -26,7 +27,7 @@
 
 ::ng-deep .model-cell-renderer {
   display: flex;
-  gap: 6px;
+  gap: 2px;
 
   button {
     border: none;

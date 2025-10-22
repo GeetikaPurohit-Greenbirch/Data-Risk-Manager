@@ -5,23 +5,10 @@
 .dashboard-container {
   flex-grow: 1;
   padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
+  // height: 100vh;
   overflow-y: auto;
+  background: #f5f7f9;
 }
-
-// .welcome-banner {
-//   color: white;
-//   padding: .6rem 2rem;
-//   margin-bottom: 2rem;
-//   border-radius: 0.4rem;
-//   background: linear-gradient(to right, #4f46e5, #6366f1);
-
-//   h2,
-//   p {
-//     margin: 0rem;
-//   }
-// }
 
 .user-list-container {
   max-width: 100%;
@@ -35,8 +22,36 @@
 
   mat-form-field {
     width: 100%;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
   }
+
+  .search-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+.search-box {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.search-box .mat-mdc-form-field-flex {
+  background-color: white !important;
+  border-radius: 8px;
+}
+
+.search-box .mat-mdc-text-field-wrapper {
+  padding: 0 8px !important;
+  height: 40px !important;
+}
+
+.search-box input {
+  font-size: 14px;
+}
+
 
   table {
     width: 100%;

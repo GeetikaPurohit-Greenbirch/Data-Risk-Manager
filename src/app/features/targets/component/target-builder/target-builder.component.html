@@ -1,15 +1,19 @@
-
 <div class="main-container">
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2><i class="fa fa-arrow-left" (click)="onBack()" ></i>Target Builder</h2>
-      </section>
-      <mat-card>
-        <div class="container">
-          <!-- Left: Edit Interface Form -->
-          <div class="left-panel">
-        <form [formGroup]="targetForm" (ngSubmit)="onSubmit()">
+      <h2>
+        <div class="back-icon">
+          <button><i class="fa fa-arrow-left" (click)="onBack()"></i></button>
+        </div>
+        Target Builder
+      </h2>
+    </section>
+    <mat-card>
+      <div class="container">
+        <!-- Left: Edit Interface Form -->
+        <div class="left-panel">
+          <form [formGroup]="targetForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline">
               <mat-label>Target Name</mat-label>
               <input matInput formControlName="targetName">
@@ -24,7 +28,7 @@
               <mat-error *ngIf="targetForm.get('serviceQuality')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-           <!-- Frequency Of Update -->
+            <!-- Frequency Of Update -->
             <mat-form-field appearance="outline">
               <mat-label>Frequency Of Update</mat-label>
               <input matInput type="number" formControlName="frequencyUpdate" (input)="onFrequencyChange()" min="1" />
@@ -36,11 +40,8 @@
             <!-- Schedule Of Update (Multi-select Dropdown) -->
             <mat-form-field appearance="outline">
               <mat-label>Schedule Of Update</mat-label>
-              <mat-select
-                formControlName="updateSchedule"
-                multiple
-                (selectionChange)="onScheduleSelectionChange($event)"
-              >
+              <mat-select formControlName="updateSchedule" multiple
+                (selectionChange)="onScheduleSelectionChange($event)">
                 <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
               </mat-select>
               <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
@@ -72,21 +73,21 @@
               <mat-error *ngIf="targetForm.get('version')?.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            
+
             <mat-form-field appearance="outline">
               <mat-label>Target Status</mat-label>
               <mat-select formControlName="status">
                 <mat-option *ngFor="let option of statusOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
               <mat-error *ngIf="targetForm.get('status')?.hasError('required')">Required</mat-error>
-            </mat-form-field>      
-            
+            </mat-form-field>
+
             <mat-form-field appearance="outline">
               <mat-label>Target Owner</mat-label>
               <input matInput formControlName="owner">
               <mat-error *ngIf="targetForm.get('owner')?.hasError('required')">Required</mat-error>
             </mat-form-field>
-      
+
             <mat-form-field appearance="outline">
               <mat-label>Owner Email</mat-label>
               <input matInput formControlName="ownerEmail">
@@ -99,17 +100,17 @@
               <input matInput formControlName="entity">
               <mat-error *ngIf="targetForm.get('entity')?.hasError('required')">Required</mat-error>
             </mat-form-field>
-      
-            
-          <div class="form-grid">
-          <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
+
+
+            <div class="form-grid">
+              <button mat-raised-button color="primary" class="create-btn" type="submit" style="width: 40%;
     margin: 0 auto;">Create Target</button>
-          </div>
-        </form>
+            </div>
+          </form>
         </div>
-        </div>
-      </mat-card>
-      
-</main>
+      </div>
+    </mat-card>
+
+  </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->
