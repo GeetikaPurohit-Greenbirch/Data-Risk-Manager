@@ -403,5 +403,9 @@ saveLineage() {
   });
 }
 
+onBack() {
+    this.router.navigate(['/use-cases']);
+  }
+
 
 }

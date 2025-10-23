@@ -1,12 +1,12 @@
-$color:#111c2d;
+$color: #111c2d;
 
 .header {
   height: 48px;
   display: flex;
   align-items: center;
-  background: #ffffff;
+  background-color: #fcfcfc;
   justify-content: space-between;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid rgb(232, 232, 232);
 
   .title {
     font-size: 18px;
@@ -17,11 +17,13 @@ $color:#111c2d;
   .sidebar-toggle {
     font-size: 16px;
     color: var($color);
+
     &.tog-collapse {
       padding: 0px;
       font-size: 24px;
     }
   }
+
   .icon {
     color: var($color);
   }

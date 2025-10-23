@@ -4,23 +4,27 @@
     <section class="welcome-banner">
       <h2>
         <div class="back-icon">
-          <button>
-            <i class="fa fa-arrow-left" (click)="onBack()"></i>
+          <button (click)="onBack()">
+            <i class="fa fa-arrow-left"></i>
           </button>
         </div>
         Create Use Case
       </h2>
     </section>
+
     <mat-card>
       <div class="container">
         <div class="left-panel">
           <form class="usecase-form" [formGroup]="usecaseForm" (ngSubmit)="onSubmit()">
             <div class="form-field-group">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="small-input">
                 <mat-label>Use Case Name</mat-label>
                 <input matInput formControlName="usecaseName" placeholder="Enter use case name">
-                <mat-error *ngIf="usecaseForm.get('usecaseName')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="usecaseForm.get('usecaseName')?.hasError('required')">
+                  Required
+                </mat-error>
               </mat-form-field>
+
 
               <mat-form-field appearance="outline">
                 <mat-label>Use Case Description</mat-label>
@@ -86,8 +90,13 @@
               </mat-form-field>
             </div>
 
+            <!-- <div class="form-grid">
+              <button type="submit">Create Use Case</button>
+            </div> -->
             <div class="form-grid">
-              <button mat-raised-button color="primary" type="submit" class="create-btn">Create Use Case</button>
+              <button title="Back" type="submit" matTooltipPosition="above">
+                Create Use Case
+              </button>
             </div>
           </form>
         </div>

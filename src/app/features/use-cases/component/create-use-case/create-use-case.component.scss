@@ -1,21 +1,45 @@
+.mat-mdc-card {
+    margin: 0 auto;
+    box-shadow: none;
+    background: transparent;
+    width: calc(100% - 2rem);
+}
+
 .container {
-    padding: 16px;
+    padding: 0rem;
+    // padding: 16px;
 }
 
 .left-panel {
     width: 100%;
+    padding: 0rem;
     background-color: transparent;
+
+    .usecase-form {
+        padding: 1rem;
+        max-width: 1200px;
+        border-radius: .5rem;
+        background: #ffffff;
+        border: 1px solid rgb(232, 232, 232);
+
+        ::ng-deep .mdc-text-field--outlined .mdc-floating-label {
+            top: 22px;
+            font-size: 14px;
+        }
+    }
 }
 
+
 .form-field-group {
+    gap: 2px;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
 }
 
 mat-form-field {
     flex: 1 1 calc(25% - 16px);
     min-width: 250px;
+    width: 250px;
 }
 
 @media (max-width: 768px) {
@@ -25,14 +49,22 @@ mat-form-field {
 }
 
 .form-grid {
-    display: flex;
-    margin-top: 24px;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
+    margin-top: 4px;
+    display: inline;
+    padding: 0rem 6px;
 
-.create-btn {
-    float: left;
-    width: 200px;
-    min-height: 46px;
+    button {
+        border: none;
+        color: white;
+        font-size: 12px;
+        box-shadow: none;
+        width: fit-content;
+        border-radius: 4px;
+        padding: .6rem 1rem;
+        background-color: rgb(62, 99, 221);
+
+        &:hover {
+            background-color: rgb(58, 92, 204);
+        }
+    }
 }

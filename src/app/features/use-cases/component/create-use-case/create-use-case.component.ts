@@ -9,28 +9,31 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
   // standalone: true,
   // imports: [],
   templateUrl: './create-use-case.component.html',
-  styleUrl: './create-use-case.component.scss'
+  styleUrl: './create-use-case.component.scss',
 })
+
+
+
 export class CreateUseCaseComponent {
- usecaseForm!: FormGroup;
+  usecaseForm!: FormGroup;
   statusOptions = ['NEW',
-'DRAFT',
-'READY_FOR_REVIEW',
-'IN_REVIEW',
-'APPROVED_READY_FOR_PRODUCTION',
-'APPROVED_IN_PRODUCTION',
-'NEEDS_REVIEW',
-'EXPIRED',
-'REJECTED'];
+    'DRAFT',
+    'READY_FOR_REVIEW',
+    'IN_REVIEW',
+    'APPROVED_READY_FOR_PRODUCTION',
+    'APPROVED_IN_PRODUCTION',
+    'NEEDS_REVIEW',
+    'EXPIRED',
+    'REJECTED'];
   accuracyRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   timlinessRiskOptions = ['LOW', 'MEDIUM', 'HIGH'];
   // usecaseModel : UseCasesModel = new UseCasesModel();
 
-  constructor(private fb: FormBuilder, 
+  constructor(private fb: FormBuilder,
     private usecaseService: UsecaseService,
     private router: Router,
-     private toastNotificationService: ToastnotificationService,
-  ) {}
+    private toastNotificationService: ToastnotificationService,
+  ) { }
 
   ngOnInit(): void {
     this.usecaseForm = this.fb.group({
@@ -40,71 +43,69 @@ export class CreateUseCaseComponent {
       ownerEmail: ['', [Validators.required, Validators.email]],
       version: ['', Validators.required],
       status: ['', Validators.required],
-      lastreviewdate:[''],
+      lastreviewdate: [''],
       reviewedby: [''],
       nextreviewdate: [''],
-      reviewer:['']
+      reviewer: ['']
     });
 
-     // 👇 Watch status and apply validators conditionally
-  this.usecaseForm.get('status')?.valueChanges.subscribe(status => {
-    const requiresReview = 
-      status === 'APPROVED_READY_FOR_PRODUCTION' || 
-      status === 'APPROVED_IN_PRODUCTION';
+    // 👇 Watch status and apply validators conditionally
+    this.usecaseForm.get('status')?.valueChanges.subscribe(status => {
+      const requiresReview =
+        status === 'APPROVED_READY_FOR_PRODUCTION' ||
+        status === 'APPROVED_IN_PRODUCTION';
 
-    const controls = ['lastreviewdate', 'reviewedby', 'nextreviewdate', 'reviewer'];
+      const controls = ['lastreviewdate', 'reviewedby', 'nextreviewdate', 'reviewer'];
 
-    controls.forEach(ctrlName => {
-      const control = this.usecaseForm.get(ctrlName);
-      if (requiresReview) {
-        control?.setValidators(Validators.required);
-      } else {
-        control?.clearValidators();
-      }
-      control?.updateValueAndValidity({ emitEvent: false });
+      controls.forEach(ctrlName => {
+        const control = this.usecaseForm.get(ctrlName);
+        if (requiresReview) {
+          control?.setValidators(Validators.required);
+        } else {
+          control?.clearValidators();
+        }
+        control?.updateValueAndValidity({ emitEvent: false });
+      });
     });
-  });
   }
 
   onSubmit() {
     if (this.usecaseForm.valid) {
       console.log('UseCase Data:', this.usecaseForm.value);
-      
+
       const payload = {
         useCaseEntity: {
-            use_case_name : this.usecaseForm.value.usecaseName,
-            use_case_description : this.usecaseForm.value.description,
-            use_case_owner : this.usecaseForm.value.owner,
-            use_case_owner_email : this.usecaseForm.value.ownerEmail,
-            version : this.usecaseForm.value.version,
-            status : this.usecaseForm.value.status,
-            last_review_date : this.usecaseForm.value.lastreviewdate,
-            reviewed_by : this.usecaseForm.value.reviewedby,
-            next_review_date : this.usecaseForm.value.nextreviewdate,
-            reviewer : this.usecaseForm.value.reviewer
-    
+          use_case_name: this.usecaseForm.value.usecaseName,
+          use_case_description: this.usecaseForm.value.description,
+          use_case_owner: this.usecaseForm.value.owner,
+          use_case_owner_email: this.usecaseForm.value.ownerEmail,
+          version: this.usecaseForm.value.version,
+          status: this.usecaseForm.value.status,
+          last_review_date: this.usecaseForm.value.lastreviewdate,
+          reviewed_by: this.usecaseForm.value.reviewedby,
+          next_review_date: this.usecaseForm.value.nextreviewdate,
+          reviewer: this.usecaseForm.value.reviewer
+
         }
       }
       this.usecaseService.createUsecase(payload).subscribe(res => {
-        if(res)
-        {
+        if (res) {
           console.log(res, "UseCase builder created");
           // alert("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
-          this.toastNotificationService.success("UseCase Created Successfully. Your UseCase ID is "+ res.useCaseEntity.use_case_id);
+          this.toastNotificationService.success("UseCase Created Successfully. Your UseCase ID is " + res.useCaseEntity.use_case_id);
 
           // window.location.reload();
           this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
 
         }
       })
-      
+
     } else {
       this.usecaseForm.markAllAsTouched(); // show validation errors
     }
   }
-   onBack()
-  {
-     this.router.navigate(['/use-cases']);
+  onBack() {
+    this.router.navigate(['/use-cases']);
   }
-  
+
 }

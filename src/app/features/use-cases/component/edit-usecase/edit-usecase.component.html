@@ -1,132 +1,126 @@
-
 <div class="main-container">
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Edit Use Case</h2>
-      </section>
-      <mat-card>
+      <h2>
+        <div class="back-icon">
+          <button (click)="onBack()"><i class="fa fa-arrow-left"></i></button>
+        </div>
+        Edit Use Case
+      </h2>
+    </section>
+    <mat-card>
 
-<div class="container">
-    <!-- Left: Edit Use Case Form -->
-    <div class="left-panel">
-      <!-- <h2>Use Case</h2> -->
-      <form [formGroup]="usecaseForm">
-        <!-- Your form use_cases for editing the use_case -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Use Case Name</mat-label>
-          <input matInput formControlName="use_case_name" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Use Case Description</mat-label>
-          <input matInput formControlName="use_case_description" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner</mat-label>
-          <input matInput formControlName="use_case_owner" />
-        </mat-form-field>
+      <div class="container">
+        <!-- Left: Edit Use Case Form -->
+        <div class="left-panel">
+          <!-- <h2>Use Case</h2> -->
+          <form [formGroup]="usecaseForm">
+            <!-- Your form use_cases for editing the use_case -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Use Case Name</mat-label>
+              <input matInput formControlName="use_case_name" />
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Owner Email</mat-label>
-            <input matInput formControlName="use_case_owner_email" />
-          </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Version</mat-label>
-          <input matInput formControlName="version" />
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Use Case Description</mat-label>
+              <input matInput formControlName="use_case_description" />
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Status</mat-label>
-          <!-- <select formControlName="status">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Owner</mat-label>
+              <input matInput formControlName="use_case_owner" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Owner Email</mat-label>
+              <input matInput formControlName="use_case_owner_email" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Version</mat-label>
+              <input matInput formControlName="version" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+              <mat-label>Status</mat-label>
+              <!-- <select formControlName="status">
             <option *ngFor="let status of statusOptions" [value]="status">{{}}</option>
           </select> -->
-          <mat-select formControlName="status">
-            <mat-option *ngFor="let status of statusOptions" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of statusOptions" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
           <input matInput formControlName="status" />
         </mat-form-field> -->
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
+
+            <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Last Review Date</mat-label>
           <input matInput formControlName="last_review_date" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
-          <mat-label>Last Review Date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            formControlName="last_review_date"
-            placeholder="Choose a date"
-          />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Reviewed By</mat-label>
-          <input matInput formControlName="reviewed_by" />
-        </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
+              <mat-label>Last Review Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="last_review_date" placeholder="Choose a date" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
-            <mat-label>Next Review Date</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker1"
-              formControlName="next_review_date"
-              placeholder="Choose a date"
-            />
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Reviewed By</mat-label>
+              <input matInput formControlName="reviewed_by" />
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Reviewer</mat-label>
-            <input matInput formControlName="reviewer" />
-          </mat-form-field>
-        <!-- Add remaining fields similarly -->
-        <div class="updateBtn">
-        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
-      </div>
+            <mat-form-field appearance="outline" *ngIf="formLoaded" class="half-width">
+              <mat-label>Next Review Date</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="next_review_date"
+                placeholder="Choose a date" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
 
-      <div style="display: flex; height: 100%;">
-        <!-- Left Side Buttons -->
-        <div style="width: 100%; padding: 12px;">
-          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-            <button mat-raised-button
-            style="flex: 0 0 calc(50% - 6px);"
-            [ngClass]="{ 'inverse': activeView === 'existing', 'primary': activeView !== 'existing' }"
-            (click)="existingLineage('existing')">
-            Existing Lineage
-          </button>
-      
-            <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-            [ngClass]="{ 'inverse': activeView === 'new', 'primary': activeView !== 'new' }"
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Reviewer</mat-label>
+              <input matInput formControlName="reviewer" />
+            </mat-form-field>
+            <!-- Add remaining fields similarly -->
+            <div class="updateBtn">
+              <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
+            </div>
+
+            <div style="display: flex; height: 100%;">
+              <!-- Left Side Buttons -->
+              <div style="width: 100%; padding: 12px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'existing', 'primary': activeView !== 'existing' }"
+                    (click)="existingLineage('existing')">
+                    Existing Lineage
+                  </button>
+
+                  <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                    [ngClass]="{ 'inverse': activeView === 'new', 'primary': activeView !== 'new' }"
                     (click)="newLineage('new')">
-              Create New Lineage
-            </button>
-      
-          </div>
+                    Create New Lineage
+                  </button>
+
+                </div>
+              </div>
+            </div>
+
+          </form>
+
         </div>
-      </div>
 
-      </form>
-
-    </div>
-  
-    <!-- Right: DataFields Table -->
-    <div class="right-panel" *ngIf="showDataFields">
-              <!-- Information Box -->
-        <!-- <div class="info-box-table">
+        <!-- Right: DataFields Table -->
+        <div class="right-panel" *ngIf="showDataFields">
+          <!-- Information Box -->
+          <!-- <div class="info-box-table">
             <table>
               <thead>
                 <tr>
@@ -157,41 +151,35 @@
             <button (click)="addRow()" class="add-btn">Add Row</button>
 
           </div>
-          
-      <div class="datafields-table">
-        <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        (cellValueChanged)="onCellValueChanged($event)"
-        rowSelection="single"
-        >
-        </ag-grid-angular>
-     
-    </div>
-    </div>
-  </div>
-  </mat-card>
-  </main>
-  </div>
 
-  <ng-template #lineagePopup>
-    <h2 mat-dialog-title>Create Lineage</h2>
-    <mat-dialog-content>
-      <mat-form-field class="w-100">
-        <mat-label>Use Case Name</mat-label>
-        <input matInput [value]="useCaseName" disabled />
-      </mat-form-field>
-  
-      <mat-form-field class="w-100">
-        <mat-label>Lineage Name</mat-label>
-        <input matInput [(ngModel)]="lineageName" placeholder="Enter lineage name" />
-      </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" (click)="saveLineage()">Add</button>
-    </mat-dialog-actions>
-  </ng-template>
+          <div class="datafields-table">
+            <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
+              [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (cellValueChanged)="onCellValueChanged($event)"
+              rowSelection="single">
+            </ag-grid-angular>
+
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </main>
+</div>
+
+<ng-template #lineagePopup>
+  <h2 mat-dialog-title>Create Lineage</h2>
+  <mat-dialog-content>
+    <mat-form-field class="w-100">
+      <mat-label>Use Case Name</mat-label>
+      <input matInput [value]="useCaseName" disabled />
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>Lineage Name</mat-label>
+      <input matInput [(ngModel)]="lineageName" placeholder="Enter lineage name" />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="saveLineage()">Add</button>
+  </mat-dialog-actions>
+</ng-template>

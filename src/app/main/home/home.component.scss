@@ -6,29 +6,18 @@
 
 .dashboard-container {
   flex-grow: 1;
-  padding: 1rem;
-  background: #f5f7f9;
+  // padding: 0rem;
+  // // background: #f5f7f9;
   height: 100vh;
-  overflow-y: auto;
+  // overflow-y: auto;
 }
-
-// .welcome-banner {
-//   color: white;
-//   padding: .6rem 2rem;
-//   margin-bottom: 2rem;
-//   border-radius: 0.4rem;
-//   background: linear-gradient(to right, #4f46e5, #6366f1);
-
-//   h2,
-//   p {
-//     margin: 0rem;
-//   }
-// }
 
 .card-grid {
   gap: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 0 auto;
+  width: calc(100% - 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(218px, 1fr));
 
   h1 {
     font-size: 26px;
@@ -40,8 +29,11 @@
 
 .tabs-container {
   padding: 4px;
+  margin: 0 auto;
+  margin-top: 2rem;
   margin-top: 2.2rem;
   border-radius: 4px;
+  width: calc(100% - 2rem);
   background-color: #ffffff;
 
   .mat-sort-header-container {
@@ -192,6 +184,6 @@ i.fa {
   color: #1a237e;
 }
 
-.mat-mdc-row{
+.mat-mdc-row {
   height: 30px;
 }
