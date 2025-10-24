@@ -2,6 +2,15 @@
 
   <main class="dashboard-container">
     <section class="welcome-banner">
+      <!-- <h2>
+        <div class="back-icon">
+          <button (click)="onBack()">
+            <i class="fa fa-arrow-left"></i>
+             <lucide-icon name="chevron-left"></lucide-icon>
+          </button>
+        </div>
+        Create Use Case
+      </h2> -->
       <h2>
         <div class="back-icon">
           <button (click)="onBack()">
@@ -9,7 +18,7 @@
              <!-- <lucide-icon name="chevron-left"></lucide-icon> -->
           </button>
         </div>
-        Create Use Case
+        {{ pageTitle }}
       </h2>
     </section>
 
@@ -20,8 +29,8 @@
             <div class="form-field-group">
               <mat-form-field appearance="outline" class="small-input">
                 <mat-label>Use Case Name</mat-label>
-                <input matInput formControlName="usecaseName" placeholder="Enter use case name">
-                <mat-error *ngIf="usecaseForm.get('usecaseName')?.hasError('required')">
+                <input matInput formControlName="use_case_name" placeholder="Enter use case name">
+                <mat-error *ngIf="usecaseForm.get('use_case_name')?.hasError('required')">
                   Required
                 </mat-error>
               </mat-form-field>
@@ -29,21 +38,22 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>Use Case Description</mat-label>
-                <textarea matInput formControlName="description" rows="1" placeholder="Enter description"></textarea>
-                <mat-error *ngIf="usecaseForm.get('description')?.hasError('required')">Required</mat-error>
+                <textarea matInput formControlName="use_case_description" rows="1"
+                  placeholder="Enter description"></textarea>
+                <mat-error *ngIf="usecaseForm.get('use_case_description')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Use Case Owner</mat-label>
-                <input matInput formControlName="owner" placeholder="Enter owner name">
-                <mat-error *ngIf="usecaseForm.get('owner')?.hasError('required')">Required</mat-error>
+                <input matInput formControlName="use_case_owner" placeholder="Enter owner name">
+                <mat-error *ngIf="usecaseForm.get('use_case_owner')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Owner Email</mat-label>
-                <input matInput formControlName="ownerEmail" placeholder="Enter owner email">
-                <mat-error *ngIf="usecaseForm.get('ownerEmail')?.hasError('required')">Required</mat-error>
-                <mat-error *ngIf="usecaseForm.get('ownerEmail')?.hasError('email')">Invalid email</mat-error>
+                <input matInput formControlName="use_case_owner_email" placeholder="Enter owner email">
+                <mat-error *ngIf="usecaseForm.get('use_case_owner_email')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="usecaseForm.get('use_case_owner_email')?.hasError('email')">Invalid email</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
@@ -62,26 +72,26 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>Last Review Date</mat-label>
-                <input matInput [matDatepicker]="lastPicker" formControlName="lastreviewdate"
+                <input matInput [matDatepicker]="lastPicker" formControlName="last_review_date"
                   placeholder="Choose last review date">
                 <mat-datepicker-toggle matSuffix [for]="lastPicker"></mat-datepicker-toggle>
                 <mat-datepicker #lastPicker></mat-datepicker>
-                <mat-error *ngIf="usecaseForm.get('lastreviewdate')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="usecaseForm.get('last_review_date')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Reviewed By</mat-label>
-                <input matInput formControlName="reviewedby" placeholder="Enter reviewer name">
-                <mat-error *ngIf="usecaseForm.get('reviewedby')?.hasError('required')">Required</mat-error>
+                <input matInput formControlName="reviewed_by" placeholder="Enter reviewer name">
+                <mat-error *ngIf="usecaseForm.get('reviewed_by')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Next Review Date</mat-label>
-                <input matInput [matDatepicker]="nextPicker" formControlName="nextreviewdate"
+                <input matInput [matDatepicker]="nextPicker" formControlName="next_review_date"
                   placeholder="Choose next review date">
                 <mat-datepicker-toggle matSuffix [for]="nextPicker"></mat-datepicker-toggle>
                 <mat-datepicker #nextPicker></mat-datepicker>
-                <mat-error *ngIf="usecaseForm.get('nextreviewdate')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="usecaseForm.get('next_review_date')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
@@ -91,21 +101,33 @@
               </mat-form-field>
             </div>
 
-            <!-- <div class="form-grid">
-              <button type="submit">Create Use Case</button>
-            </div> -->
             <div class="form-grid">
-              <button title="Back" type="submit" matTooltipPosition="above">
-                Create Use Case
-              </button>
+              <button title="Save" type="submit" matTooltipPosition="Save"> Save </button>
+              <button class="m-2" *ngIf="usecaseId>0" (click)="existingLineage('existing')"> Existing Lineage </button>
+              <button *ngIf="usecaseId>0" (click)="newLineage('new')"> Create New Lineage </button>
             </div>
           </form>
         </div>
       </div>
     </mat-card>
-
-
-
   </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->
+<ng-template #lineagePopup>
+  <h2 mat-dialog-title>Create Lineage</h2>
+  <mat-dialog-content>
+    <mat-form-field class="w-100">
+      <mat-label>Use Case Name</mat-label>
+      <input matInput [value]="useCaseName" disabled />
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>Lineage Name</mat-label>
+      <input matInput [(ngModel)]="lineageName" placeholder="Enter lineage name" />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="saveLineage()">Add</button>
+  </mat-dialog-actions>
+</ng-template>

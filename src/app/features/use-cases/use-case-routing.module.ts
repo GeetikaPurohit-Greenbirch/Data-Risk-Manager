@@ -8,7 +8,7 @@ import { ShareAccessComponent } from './component/share-access/share-access.comp
 const routes: Routes = [
   { path: '', component: UseCasesComponent },
   {path:'create-use-case', component: CreateUseCaseComponent},
-  {path: 'edit-usecase/:id', component:EditUsecaseComponent},
+  {path: 'edit-usecase/:id', component:CreateUseCaseComponent},
   { path: 'share-usecase/:useCaseId', component: ShareAccessComponent }
 
 

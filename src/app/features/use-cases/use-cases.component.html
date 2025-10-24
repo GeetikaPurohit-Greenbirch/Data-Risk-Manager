@@ -22,7 +22,7 @@
 
         <!-- ✅ Paginator -->
         <div class="paginator-container">
-          <mat-paginator [length]="rowData.length" [pageSize]="pageSize" [pageSizeOptions]="[rowData.length, 5, 10, 50]"
+          <mat-paginator [length]="rowData?.length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 50]"
             (page)="onPageChange($event)" (click)="patchAllLabel()">
           </mat-paginator>
         </div>

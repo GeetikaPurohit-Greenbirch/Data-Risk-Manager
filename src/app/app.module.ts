@@ -54,6 +54,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 // ✅ Import Lucide Angular
 import { LucideAngularModule, icons } from 'lucide-angular';
+// import { LucideAngularModule, ChevronLeft } from 'lucide-angular';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -134,18 +135,18 @@ export function HttpLoaderFactory(http: HttpClient) {
     InputTextModule,
     MultiSelectModule,
     TooltipModule,
+    //  LucideAngularModule,
 
     LucideAngularModule.pick({
       ChevronLeft: icons.ChevronLeft,
       Plus: icons.Plus,
-      Trash2: icons.Trash2
     }),
 
   ],
 
-  exports: [
-    LucideAngularModule
-  ],
+  // exports: [
+  //   LucideAngularModule
+  // ],
 
   providers: [
     provideAnimationsAsync(),

@@ -13,14 +13,14 @@
 .left-panel {
     width: 100%;
     padding: 0rem;
-    background-color: transparent;
+    background: #ffffff;
+    border: 1px solid rgb(232, 232, 232);
 
     .usecase-form {
         padding: 1rem;
         max-width: 1200px;
         border-radius: .5rem;
-        background: #ffffff;
-        border: 1px solid rgb(232, 232, 232);
+
 
         ::ng-deep .mdc-text-field--outlined .mdc-floating-label {
             top: 22px;
@@ -68,4 +68,3 @@ mat-form-field {
         }
     }
 }
-
