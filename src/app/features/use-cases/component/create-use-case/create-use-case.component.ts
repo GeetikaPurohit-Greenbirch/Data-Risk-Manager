@@ -63,7 +63,7 @@ export class CreateUseCaseComponent {
       use_case_name: ['', Validators.required],
       use_case_description: ['', Validators.required],
       use_case_owner: ['', Validators.required],
-      use_case_owner_email: ['', Validators.required, Validators.email],
+      use_case_owner_email: ['', [Validators.required, Validators.email]],
       status: ['', Validators.required],
       version: ['', Validators.required],
       last_review_date: [null],
