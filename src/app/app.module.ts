@@ -52,6 +52,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 
+// ✅ Import Lucide Angular
+import { LucideAngularModule, icons } from 'lucide-angular';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -98,7 +101,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       domain: environment.auth.domain,
       clientId: environment.auth.clientId,
       authorizationParams: {
-        redirect_uri: window.location.origin+ '/callback',
+        redirect_uri: window.location.origin + '/callback',
         audience: environment.auth.audience, // Replace with your API identifier from Auth0
         scope: 'openid profile email offline_access',
       },
@@ -131,7 +134,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     InputTextModule,
     MultiSelectModule,
     TooltipModule,
-    
+
+    LucideAngularModule.pick({
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2
+    }),
+
+  ],
+
+  exports: [
+    LucideAngularModule
   ],
 
   providers: [

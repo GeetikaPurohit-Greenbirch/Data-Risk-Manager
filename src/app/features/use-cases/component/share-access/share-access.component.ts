@@ -5,7 +5,8 @@ import { UsecaseService } from '../../services/usecase.service';
 
 @Component({
   selector: 'app-share-access',
-  templateUrl: './share-access.component.html'
+  templateUrl: './share-access.component.html',
+  styleUrl: './share-access.component.scss',
 })
 export class ShareAccessComponent implements OnInit {
   useCaseId: string = '';

@@ -1,13 +1,105 @@
-.full-width-table {
-    width: 100%;
+.usecase-container {
+  .action-button {
+    width: calc(100% - 2rem);
+    margin: 1rem auto 2rem auto;
   }
-  
-  .small-select {
-    width: 100px;
+
+  ::ng-deep .mat-mdc-row,
+  ::ng-deep .mat-mdc-header-row {
+    height: 44px !important;
   }
-  .disabled-row {
-    background-color: #f2f2f2;
-    pointer-events: none;
-    opacity: 0.6;
+
+  ::ng-deep .mdc-data-table__cell {
+    height: 32px !important;
   }
-    
+
+  ::ng-deep .mat-mdc-cell,
+  ::ng-deep .mat-mdc-header-cell {
+    font-size: 13px;
+    padding: 4px 8px !important;
+  }
+
+  ::ng-deep .small-select {
+    .mat-mdc-form-field-infix {
+      padding: 0 4px !important;
+    }
+
+    &.mat-mdc-form-field {
+      --mdc-shape-small: 4px;
+      --mat-select-trigger-height: 32px;
+      --mat-select-trigger-text-line-height: 32px;
+      --mdc-filled-text-field-container-height: 32px;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      height: 32px !important;
+      padding: 0 4px !important;
+      min-height: 32px !important;
+    }
+
+    .mat-mdc-form-field-infix {
+      display: flex;
+      align-items: center;
+      height: 32px !important;
+      padding: 0 4px !important;
+    }
+
+    .mat-mdc-select-trigger {
+      top: -12px;
+      display: flex;
+      font-size: 14px;
+      align-items: center;
+      height: 32px !important;
+    }
+
+    .mat-mdc-option {
+      height: 32px !important;
+      line-height: 32px !important;
+    }
+  }
+
+  // ::ng-deep .small-select .mat-mdc-form-field-infix {
+  //   padding: 0 4px !important;
+  // }
+
+  // ::ng-deep .small-select.mat-mdc-form-field {
+  //   --mdc-shape-small: 4px;
+  //   --mat-select-trigger-height: 32px;
+  //   --mat-select-trigger-text-line-height: 32px;
+  //   --mdc-filled-text-field-container-height: 32px;
+  // }
+
+  // ::ng-deep .small-select .mat-mdc-text-field-wrapper {
+  //   height: 32px !important;
+  //   padding: 0 4px !important;
+  //   min-height: 32px !important;
+  // }
+
+  // ::ng-deep .small-select .mat-mdc-form-field-infix {
+  //   display: flex;
+  //   align-items: center;
+  //   height: 28px !important;
+  //   padding: 0 4px !important;
+  // }
+
+  // ::ng-deep .small-select .mat-mdc-select-trigger {
+  //   top: -12px;
+  //   display: flex;
+  //   font-size: 14px;
+  //   align-items: center;
+  //   height: 28px !important;
+  // }
+
+  // ::ng-deep .mat-mdc-option {
+  //   height: 32px !important;
+  //   line-height: 32px !important;
+  // }
+}
+
+.disabled-row {
+  opacity: 0.6;
+  pointer-events: none;
+  background-color: #f2f2f2;
+}

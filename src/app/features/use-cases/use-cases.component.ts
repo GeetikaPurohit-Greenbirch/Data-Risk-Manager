@@ -9,6 +9,7 @@ import { UsecaseService } from './services/usecase.service';
 import { ToastnotificationService } from '../shared-services/toastnotification.service';
 import { ShareDialogComponent } from './component/share-dialog/share-dialog.component';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { icons, createElement } from 'lucide';
 
 export interface Lineage {
   createdBy: string;
@@ -64,37 +65,41 @@ export class UseCasesComponent {
     private router: Router,
     private toastNotificationService: ToastnotificationService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   columnDefs: (ColDef | ColGroupDef)[] = [
-    { field: 'use_case_id', headerName: 'Use Case ID', editable: false },
-    { field: 'use_case_name', headerName: 'Name', editable: true },
+    { field: 'use_case_id', headerName: 'Use Case ID', editable: false, },
+    { field: 'use_case_name', headerName: 'Name', editable: true, },
     {
       field: 'use_case_description',
       headerName: 'Description',
       editable: true,
+     
     },
-    { field: 'use_case_owner', headerName: 'Owner', editable: true },
+    { field: 'use_case_owner', headerName: 'Owner', editable: true, },
     {
       field: 'use_case_owner_email',
       headerName: 'Owner Email',
       editable: true,
+     
     },
-    { field: 'version', headerName: 'Version', editable: true },
-    { field: 'status', headerName: 'Status', editable: true },
+    { field: 'version', headerName: 'Version', editable: true, },
+    { field: 'status', headerName: 'Status', editable: true, },
     {
       field: 'last_review_date',
       headerName: 'Last Review Date',
       editable: true,
+     
     },
-    { field: 'reviewed_by', headerName: 'Reviewed By', editable: true },
+    { field: 'reviewed_by', headerName: 'Reviewed By', editable: true, },
     {
       field: 'next_review_date',
       headerName: 'Next Review Date',
       editable: true,
+     
     },
-    { field: 'reviewer', headerName: 'Reviewer', editable: true },
-    { field: 'permission', headerName: 'Permission', editable: true },
+    { field: 'reviewer', headerName: 'Reviewer', editable: true, },
+    { field: 'permission', headerName: 'Permission', editable: true, },
     {
       headerName: 'Actions',
       editable: false,
@@ -102,66 +107,100 @@ export class UseCasesComponent {
       sortable: false,
       minWidth: 100,
       flex: 1,
+      pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
-        const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-edit';
-        saveDataFields.style.color = '#098236';
-        // saveDataFields.style.border = '1px solid lightGrey';
-        // saveDataFields.style.borderRadius = '5px';
-        // saveDataFields.style.lineHeight = '20px';
-        // saveDataFields.style.height = '24px';
-        // saveDataFields.style.cursor = 'pointer';
-        saveDataFields.title = 'Save';
+        // const saveDataFields = document.createElement('button');
+        // saveDataFields.className = 'fa fa-edit';
+        // saveDataFields.style.color = '#098236';
+        // // saveDataFields.style.border = '1px solid lightGrey';
+        // // saveDataFields.style.borderRadius = '5px';
+        // // saveDataFields.style.lineHeight = '20px';
+        // // saveDataFields.style.height = '24px';
+        // // saveDataFields.style.cursor = 'pointer';
+        // saveDataFields.title = 'Save';
 
-        // Pass row data or node to save
+        // EDIT ICON
+        const saveDataFields = document.createElement('button');
+        saveDataFields.title = 'Edit';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const editIcon = createElement(icons.Pencil, {
+          color: '#098236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(editIcon);
+
         saveDataFields.addEventListener('click', () => {
           this.editUseCase(params.node);
         });
 
+
+        // DELETE ICON
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = '#c10007';
-        // deleteDataFields.style.border = '1px solid lightGrey';
-        // deleteDataFields.style.borderRadius = '5px';
-        // deleteDataFields.style.lineHeight = '20px';
-        // deleteDataFields.style.height = '24px';
-        // deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
 
         deleteDataFields.addEventListener('click', () => {
           this.deleteUseCase(params.node);
         });
 
+
+        // SHARE ICON
         const shareUsecase = document.createElement('button');
-        shareUsecase.className = 'fa fa-share';
-        shareUsecase.style.color = '#c10007';
-        // shareUsecase.style.border = '1px solid lightGrey';
-        // shareUsecase.style.borderRadius = '5px';
-        // shareUsecase.style.lineHeight = '20px';
-        // shareUsecase.style.height = '24px';
-        // shareUsecase.style.cursor = 'pointer';
         shareUsecase.title = 'Share';
+        shareUsecase.style.border = 'none';
+        shareUsecase.style.padding = '0px';
+        shareUsecase.style.cursor = 'pointer';
+        shareUsecase.style.background = 'transparent';
+
+        const shareIcon = createElement(icons.Share2, {
+          color: '#333',
+          height: '14px',
+          strokeWidth: 2
+        });
+        shareUsecase.appendChild(shareIcon);
 
         shareUsecase.addEventListener('click', () => {
           this.openShareComponent(params.node);
         });
 
+        // GOTO LINEAGE ICON
         const goToLineage = document.createElement('button');
-        goToLineage.className = 'fa fa-arrow-right';
-        goToLineage.style.color = '#1347e6';
-        // goToLineage.style.border = '1px solid lightGrey';
-        // goToLineage.style.borderRadius = '5px';
-        // goToLineage.style.lineHeight = '20px';
-        // goToLineage.style.height = '24px';
-        // goToLineage.style.cursor = 'pointer';
         goToLineage.title = 'Navigate to Lineage';
+        goToLineage.style.border = 'none';
+        goToLineage.style.padding = '0px';
+        goToLineage.style.cursor = 'pointer';
+        goToLineage.style.background = 'transparent';
+
+        const navigateIcon = createElement(icons.Navigation, {
+          color: '#333',
+          height: '14px',
+          strokeWidth: 2
+        });
+        goToLineage.appendChild(navigateIcon);
 
         goToLineage.addEventListener('click', () => {
           this.openLineageComponent(params.node);
         });
+
+
 
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
@@ -280,7 +319,7 @@ export class UseCasesComponent {
         // alert("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.usecase_id);
         this.toastNotificationService.error(
           'Usecase Deleted Successfully. Deleted Usecase ID is ' +
-            usecases.data.use_case_id
+          usecases.data.use_case_id
         );
         setTimeout(() => {
           this.getUsecaseList(); // refresh

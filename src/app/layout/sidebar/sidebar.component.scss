@@ -22,3 +22,10 @@ mat-nav-list {
   font-size: 15px;
   font-weight: 400;
 }
+
+::ng-deep .mdc-list-item {
+  margin: 0 auto;
+  margin-top: 4px;
+  width: 94% !important;
+  height: 42px !important;
+}
