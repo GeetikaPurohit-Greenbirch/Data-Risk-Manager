@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared/shared.module';
 import { EditUsecaseComponent } from './component/edit-usecase/edit-usecase.component';
 import { ShareDialogComponent } from './component/share-dialog/share-dialog.component';
 import { ShareAccessComponent } from './component/share-access/share-access.component';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
@@ -19,7 +20,13 @@ import { ShareAccessComponent } from './component/share-access/share-access.comp
   imports: [
     CommonModule,
     SharedModule,
-    UseCaseRoutingModule
+    UseCaseRoutingModule,
+    LucideAngularModule.pick({
+          ChevronLeft: icons.ChevronLeft,
+          Plus: icons.Plus,
+          Trash2: icons.Trash2
+        }),
+    
   ]
 })
 export class UseCaseModule { }
