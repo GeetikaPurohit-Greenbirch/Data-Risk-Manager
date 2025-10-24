@@ -40,7 +40,7 @@ export class UsecaseService {
       return this.http.post<any>(url, useCaseIds);
     }
   
-     public updateInterface(payload:any): Observable<any> {
+     public updateUseCase(payload:any): Observable<any> {
         const url: string = this.apiUrl + 'use_cases';
         console.log(payload)
     

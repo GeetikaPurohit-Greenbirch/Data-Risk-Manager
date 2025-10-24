@@ -43,7 +43,7 @@ export class UseCasesComponent {
     'permission',
     'actions',
   ];
-  public rowData: any;
+  public rowData?: any;
   dataSource = new MatTableDataSource<Usecase>();
   gridApi: any;
   gridColumnApi: any;

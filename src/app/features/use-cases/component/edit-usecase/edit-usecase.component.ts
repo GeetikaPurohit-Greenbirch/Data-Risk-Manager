@@ -199,7 +199,7 @@ usecaseForm!: FormGroup;
 
   // ✅ Trigger update/save logic
   onUpdate(): void {
-    console.log('Form data:', this.usecaseForm.value);
+    //console.log('Form data:', this.usecaseForm.value);
     // Submit or save logic here
     const payload = {
       useCaseEntity: {
@@ -217,11 +217,11 @@ usecaseForm!: FormGroup;
   
       }
     }
-    this.usecaseService.updateInterface(payload).subscribe(res => {
+    this.usecaseService.updateUseCase(payload).subscribe(res => {
       if(res)
       {
         // alert("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
-        this.toastNotificationService.success("Interface Updated Successfully. Your Interface ID is "+ this.usecaseId);
+        this.toastNotificationService.success("Usecase Updated Successfully.");
         // window.location.reload();
       }
     })
