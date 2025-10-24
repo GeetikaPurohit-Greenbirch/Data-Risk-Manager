@@ -12,8 +12,6 @@ import { ToastnotificationService } from 'src/app/features/shared-services/toast
   styleUrl: './create-use-case.component.scss',
 })
 
-
-
 export class CreateUseCaseComponent {
   usecaseForm!: FormGroup;
   statusOptions = ['NEW',

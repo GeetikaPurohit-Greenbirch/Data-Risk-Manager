@@ -2,7 +2,14 @@
 
   <main class="dashboard-container">
     <section class="welcome-banner">
-      <h2>Use Cases</h2>
+      <h2>
+        <div class="back-icon">
+          <button (click)="onBack()">
+            <i class="fa fa-arrow-left"></i>
+             <!-- <lucide-icon name="chevron-left"></lucide-icon> -->
+          </button>
+        </div>
+        Use Cases</h2>
     </section>
     <div class="system-table-container">
       <div class="usecase-container">

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UsecaseService } from '../../services/usecase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-share-access',
@@ -15,11 +16,12 @@ export class ShareAccessComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-   private usecaseService: UsecaseService,
-  ) {}
+    private router: Router,
+    private usecaseService: UsecaseService,
+  ) { }
 
   ngOnInit(): void {
-    this.userID = localStorage.getItem('userID'); 
+    this.userID = localStorage.getItem('userID');
     this.useCaseId = this.route.snapshot.paramMap.get('useCaseId') || '';
 
     this.usecaseService.getAccessFlags(this.useCaseId).subscribe((users: any[]) => {
@@ -40,21 +42,21 @@ export class ShareAccessComponent implements OnInit {
         user_name: user.username,
         is_editable: user.access === 'Edit'
       }));
-  
+
     if (user_permissions.length === 0) {
       alert('Please select at least one user to share the use case.');
       return;
     }
-  
+
     const payload = {
       use_case_id: this.useCaseId,
       user_permissions
     };
-  
+
     // const sharingUser = 'john.doe'; // Get current logged-in user dynamically
-  
+
     this.usecaseService.assignUseCase(payload).subscribe({
-      next: (res:string) => {
+      next: (res: string) => {
         alert(res);
       },
       error: (err) => {
@@ -63,5 +65,7 @@ export class ShareAccessComponent implements OnInit {
       }
     });
   }
-  
+  onBack() {
+    this.router.navigate(['/use-cases']);
+  }
 }
