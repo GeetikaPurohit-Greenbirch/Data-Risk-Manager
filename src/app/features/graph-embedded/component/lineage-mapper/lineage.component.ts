@@ -24,7 +24,7 @@ import { Link, Constant, Concat, GetDate, Record } from './shapes.component';
 import { SourceArrowhead, TargetArrowhead, Button } from '../diagram/link-tools.component';
 import { routerNamespace } from '../diagram/routers.component';
 import { anchorNamespace } from '../diagram/anchors.component';
-import { loadExample } from './example.component';
+import { buildTypeHierarchy, loadExample } from './example.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
 import { L001, L002, L003 } from '../diagram/diagrams';
@@ -38,7 +38,7 @@ type Records = Constant | Concat | GetDate | Record;
   selector: 'app-child-diagram',
   templateUrl: './lineage.component.html',
   styleUrls: ['./lineage.component.scss'],
-   encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class LineageComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef;
@@ -112,7 +112,7 @@ export class LineageComponent implements AfterViewInit {
 
       if (lineageStr.length > 0) {
         // NOTE: loadGraphFromJSON does JSON.parse internally—pass the string
-        this.loadGraphFromJSON(lineageStr);
+        this.loadGraphFromJSON(lineageStr, source, target);
       } else {
         // Fall back (same behavior as when lineage_json has no length)
         try {
@@ -275,84 +275,84 @@ export class LineageComponent implements AfterViewInit {
  * @param resp - The response containing edges (and possibly nodes)
  * @param LinkCtor - Optional custom JointJS link class to use
  */
-createLinksFromResponseNew(resp: any, LinkCtor: any) {
-  if (!this.graph) {
-    console.error('Graph not initialized — cannot create links.');
-    return [];
-  }
-
-  const res_edges = resp?.edges || [];
-  const nodes = resp?.nodes || [];
-  const createdLinks: dia.Link[] = [];  
-
-  const edges = res_edges.filter(
-      (item: { from_field_id: number }) => item.from_field_id === resp?.start.field_id
-  );
-
-  if (!edges.length) {
-    console.warn('No edges found in response.');
-    return [];
-  }
-
-  //let edge= edges.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
-
-  console.log(`Creating ${edges.length} link(s) from response...`);
-  
-  for (const edge of edges) {
-    try {
-      
-     const fromNode= nodes.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
-     const toNode= nodes.find((item: { field_id: number; }) => item.field_id === edge.to_field_id);
-
-      if (!fromNode || !toNode) {
-        console.warn('Invalid edge — missing node IDs:', edge);
-        continue;
-      }
-      let fromNodeId=(fromNode.entity_type.toLowerCase()=="source"? "S-":fromNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-");
-      let toNodeId=(toNode.entity_type.toLowerCase()=="source"? "S-":toNode.entity_type.toLowerCase()=="target"? "TGT-":"SYS-");
-     
-      fromNodeId=(fromNode.entity_type.toLowerCase()=="source" || fromNode.entity_type.toLowerCase()=="target" || fromNode.entity_type.toLowerCase()=="system")? fromNodeId+fromNode.entity_id: fromNodeId+fromNode.attached_system_id;
-      toNodeId=(toNode.entity_type.toLowerCase()=="source" || toNode.entity_type.toLowerCase()=="target" || toNode.entity_type.toLowerCase()=="system")? toNodeId+toNode.entity_id: toNodeId+toNode.attached_system_id;
-     
-      // const sourceElement = this.graph.getCell(fromNodeId.toString());
-      // const targetElement = this.graph.getCell(toNodeId.toString());
-
-      
-      const sourceElement = this.graph.getCell(toNodeId.toString());
-      const targetElement = this.graph.getCell(fromNodeId.toString());
-
-      if (!sourceElement || !targetElement) {
-        console.warn('Skipped edge — node not found in graph:', edge);
-        continue;
-      }
-
-      // Optional: support port-level connections if present
-      // const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
-      // const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
-
-      const sourcePort = edge.to_field_id;
-      const targetPort = edge.from_field_id;
-     
-      const link = new LinkCtor({});
-      link.source({ id: sourceElement.id, port: sourcePort });
-      link.target({ id: targetElement.id, port: targetPort });
-
-      // const link = new LinkCtor({
-      //   source: { id: targetElement.id, port: targetPort },
-      //   target: { id: sourceElement.id, port: sourcePort }
-      // });
-
-
-      this.graph.addCell(link);
-      createdLinks.push(link);
-    } catch (err) {
-      console.error('Failed to create link for edge:', edge, err);
+  createLinksFromResponseNew(resp: any, LinkCtor: any) {
+    if (!this.graph) {
+      console.error('Graph not initialized — cannot create links.');
+      return [];
     }
-  }
 
-  console.log(`✅ Created ${createdLinks.length}/${edges.length} link(s).`);
-  return createdLinks;
-}
+    const res_edges = resp?.edges || [];
+    const nodes = resp?.nodes || [];
+    const createdLinks: dia.Link[] = [];
+
+    const edges = res_edges.filter(
+      (item: { from_field_id: number }) => item.from_field_id === resp?.start.field_id
+    );
+
+    if (!edges.length) {
+      console.warn('No edges found in response.');
+      return [];
+    }
+
+    //let edge= edges.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
+
+    console.log(`Creating ${edges.length} link(s) from response...`);
+
+    for (const edge of edges) {
+      try {
+
+        const fromNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
+        const toNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.to_field_id);
+
+        if (!fromNode || !toNode) {
+          console.warn('Invalid edge — missing node IDs:', edge);
+          continue;
+        }
+        let fromNodeId = (fromNode.entity_type.toLowerCase() == "source" ? "S-" : fromNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
+        let toNodeId = (toNode.entity_type.toLowerCase() == "source" ? "S-" : toNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
+
+        fromNodeId = (fromNode.entity_type.toLowerCase() == "source" || fromNode.entity_type.toLowerCase() == "target" || fromNode.entity_type.toLowerCase() == "system") ? fromNodeId + fromNode.entity_id : fromNodeId + fromNode.attached_system_id;
+        toNodeId = (toNode.entity_type.toLowerCase() == "source" || toNode.entity_type.toLowerCase() == "target" || toNode.entity_type.toLowerCase() == "system") ? toNodeId + toNode.entity_id : toNodeId + toNode.attached_system_id;
+
+        // const sourceElement = this.graph.getCell(fromNodeId.toString());
+        // const targetElement = this.graph.getCell(toNodeId.toString());
+
+
+        const sourceElement = this.graph.getCell(toNodeId.toString());
+        const targetElement = this.graph.getCell(fromNodeId.toString());
+
+        if (!sourceElement || !targetElement) {
+          console.warn('Skipped edge — node not found in graph:', edge);
+          continue;
+        }
+
+        // Optional: support port-level connections if present
+        // const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
+        // const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
+
+        const sourcePort = edge.to_field_id;
+        const targetPort = edge.from_field_id;
+
+        const link = new LinkCtor({});
+        link.source({ id: sourceElement.id, port: sourcePort });
+        link.target({ id: targetElement.id, port: targetPort });
+
+        // const link = new LinkCtor({
+        //   source: { id: targetElement.id, port: targetPort },
+        //   target: { id: sourceElement.id, port: sourcePort }
+        // });
+
+
+        this.graph.addCell(link);
+        createdLinks.push(link);
+      } catch (err) {
+        console.error('Failed to create link for edge:', edge, err);
+      }
+    }
+
+    console.log(`✅ Created ${createdLinks.length}/${edges.length} link(s).`);
+    return createdLinks;
+  }
 
   createLinksFromEdges(edges: any, fieldIdToNodePortMap: any) {
     const links: dia.Link[] = [];
@@ -406,9 +406,9 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
 
       // console.log(links, this.graph.getCells(), 'cells after add');
       // console.log(this.graph.getLinks(), 'links after add');
-     
 
-       this.createLinksFromResponseNew(response,Link);
+
+      this.createLinksFromResponseNew(response, Link);
     } catch (err) {
       console.error('Failed to get target to source mapping:', err);
       this.toastNotificationService.error('Failed to fetch target to source mapping');
@@ -595,9 +595,9 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
       padding: 0,
       cursor: 'grab'
     });
-     this.scroller.positionContent('top-left');
+    this.scroller.positionContent('top-left');
     this.canvas.nativeElement.appendChild(this.scroller.el); // this.scroller.centerContent(); scroller to canvas
-  
+
 
     this.paper.on('element:mousewheel', (recordView: dia.ElementView, evt: dia.Event, x: number, y: number, delta: number) => {
       evt.preventDefault();
@@ -607,59 +607,59 @@ createLinksFromResponseNew(resp: any, LinkCtor: any) {
       }
     });
 
-   // assuming this.paper is already created and this.graph is set
+    // assuming this.paper is already created and this.graph is set
 
-// Helper to attach FreeTransform to a clicked element
-const attachFreeTransform = (elementView: dia.ElementView) => {
-  // Remove an existing FT first
-  this.freeTransform?.remove();
+    // Helper to attach FreeTransform to a clicked element
+    const attachFreeTransform = (elementView: dia.ElementView) => {
+      // Remove an existing FT first
+      this.freeTransform?.remove();
 
-  // Create a new FT for the selected element
-  this.freeTransform = new ui.FreeTransform({
-    cellView: elementView,   
-    // --- useful options ---
-    allowRotation: false,              // show rotation handle
-    allowOrthogonalResize: true,      // side handles
-    preserveAspectRatio: false,       // set true for fixed aspect ratio
-    useModelGeometry: true,           // respect model's size/angle
-    minWidth: 50,
-    minHeight: 30,
-    maxWidth: 800,
-    maxHeight: 600,
-    rotateAngleGrid: 15,              // snap rotation to 15°
-    scaleGrid: 10                     // snap resize in 10px increments
-  });
+      // Create a new FT for the selected element
+      this.freeTransform = new ui.FreeTransform({
+        cellView: elementView,
+        // --- useful options ---
+        allowRotation: false,              // show rotation handle
+        allowOrthogonalResize: true,      // side handles
+        preserveAspectRatio: false,       // set true for fixed aspect ratio
+        useModelGeometry: true,           // respect model's size/angle
+        minWidth: 50,
+        minHeight: 30,
+        maxWidth: 800,
+        maxHeight: 600,
+        rotateAngleGrid: 15,              // snap rotation to 15°
+        scaleGrid: 10                     // snap resize in 10px increments
+      });
 
-  // Render and add to the paper DOM so it tracks the element position
-  this.freeTransform.render();
-  this.paper.el.appendChild(this.freeTransform.el);
+      // Render and add to the paper DOM so it tracks the element position
+      this.freeTransform.render();
+      this.paper.el.appendChild(this.freeTransform.el);
 
-  // (Optional) listen when user finishes actions
-  this.freeTransform.on('action:stop', () => {
-    const element = elementView.model as dia.Element;
-    const size = element.size();
-    const angle = element.get('angle');
-    // Persist or react to new geometry here
-    // console.log('Resized to', size, 'angle', angle);
-  });
-};
+      // (Optional) listen when user finishes actions
+      this.freeTransform.on('action:stop', () => {
+        const element = elementView.model as dia.Element;
+        const size = element.size();
+        const angle = element.get('angle');
+        // Persist or react to new geometry here
+        // console.log('Resized to', size, 'angle', angle);
+      });
+    };
 
-// Attach FT on click
-this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
-  console.log("pointerclick",elementView);
-  attachFreeTransform(elementView);
-});
+    // Attach FT on click
+    this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
+      console.log("pointerclick", elementView);
+      attachFreeTransform(elementView);
+    });
 
-// Remove FT when clicking on blank area
-this.paper.on('blank:pointerdown', () => {
-   console.log("pointerdown");
-  this.freeTransform?.remove();
-  this.freeTransform = undefined;
-});
+    // Remove FT when clicking on blank area
+    this.paper.on('blank:pointerdown', () => {
+      console.log("pointerdown");
+      this.freeTransform?.remove();
+      this.freeTransform = undefined;
+    });
 
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
-      this.showLinkTools(linkView);     
+      this.showLinkTools(linkView);
     });
 
     this.paper.on('link:mouseleave', (linkView: dia.LinkView) => {
@@ -974,10 +974,31 @@ this.paper.on('blank:pointerdown', () => {
     }
   }
 
-  loadGraphFromJSON(json: any) {
+  loadGraphFromJSON(json: any, sourcedata: any, targetdata: any) {
     this.graph.clear();
-    this.graph.fromJSON(JSON.parse(json));
-    // this.scroller.centerContent();
+    let graphJson = JSON.parse(json);
+    let sourceJson = JSON.parse(sourcedata.node);
+    let targetJson = JSON.parse(targetdata.node);
+    console.log("graphJson", graphJson);
+    console.log("sourceJson", sourceJson);
+    console.log("targetJson", targetJson);
+    // Example: change label text for system node
+    graphJson.cells.forEach((cell: any) => {
+      if (cell.id == sourceJson.id) {
+        cell.attrs.headerLabel.textWrap.text = sourceJson.name;
+        let newItems = this.getPortItems(sourceJson);
+        cell.items = newItems;
+      }
+      else if (cell.id == targetJson.id) {
+        cell.attrs.headerLabel.textWrap.text = targetJson.name;
+        let newItems = this.getPortItems(targetJson);
+        cell.items = newItems;
+      }
+    });
+
+    // Load modified JSON into JointJS graph
+    this.graph.fromJSON(graphJson);
+    //this.graph.fromJSON(JSON.parse(json));   
     this.hasGraph = true;
   }
 
@@ -993,5 +1014,28 @@ this.paper.on('blank:pointerdown', () => {
     this.scaleDisplay = 100;
     this.scroller.zoom(1, { absolute: true });
     this.scroller.centerContent(); // Center content after resetting zoom
+  }
+
+  getPortItems(jsonObject: any) {
+    let result = buildTypeHierarchy(jsonObject?.ports || []);
+    let targetData: any = []
+    let sourceData: any = []
+    if (jsonObject?.type === "target") {
+      targetData = result.in[0].items
+    }
+    if (jsonObject?.type === "source") {
+      sourceData = result.out[0]?.items || []
+    }
+
+    let dataToPass = []
+
+    if (jsonObject?.type === "source") {
+      dataToPass = [[], [...sourceData]]
+    } else if (jsonObject?.type === "target") {
+      dataToPass = [targetData]
+    } else {
+      dataToPass = [result.in, result.out]
+    }
+    return dataToPass;
   }
 }

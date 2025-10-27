@@ -321,14 +321,17 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
 
         case 'Concat':
             const result = buildTypeHierarchy(selectedItemDetails?.ports || []);
-            //console.log(result, "buildPortsAndItems result")
+            console.log(result, "buildPortsAndItems result")
+            
 
             let targetData: any = []
             if (selectedItemDetails?.type === "target") {
                 targetData = result.in[0].items
 
             }
+            console.log(targetData, "targetData")
             const dataToPass = selectedItemDetails?.type === "target" ? [targetData] : [result.in, result.out]
+            console.log(dataToPass, "dataToPass")
             let controlName="";
             if(selectedItemDetails?.controls?.length>0)
             {
@@ -364,6 +367,8 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if(selectedItemDetails?.type === "target"){
                 (newCell as Concat).setItems(dataToPass)
             }
+
+            let j= [[],[]]
 
             //     .setName(selectedValue || blockDefinition.typeName)
             //     .addPorts(result.ports)
