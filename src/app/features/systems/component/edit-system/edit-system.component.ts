@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CellFocusedEvent, ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -16,6 +16,7 @@ import * as joint from 'jointjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateLineageComponent } from '../create-lineage/create-lineage.component';
 import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
+import { icons, createElement } from 'lucide';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -71,13 +72,14 @@ export class EditSystemComponent{
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private systemService: SystemServiceService,
-     private datafieldsService: DatafieldsService,
-        private cdr: ChangeDetectorRef,
-        private toastNotificationService: ToastnotificationService,
+    private datafieldsService: DatafieldsService,
+    private cdr: ChangeDetectorRef,
+    private toastNotificationService: ToastnotificationService,
         private interfaceService: InterfaceService,
         private targetService : TargetService,
         private dialog: MatDialog,
          private usecaseService: UsecaseService,
+         private router: Router,
 
   ) {}
 
@@ -190,20 +192,33 @@ export class EditSystemComponent{
       filter: false,
       sortable: false,
       minWidth: 100, 
+      pinned:'right',
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
+        // saveDataFields.className = 'fa fa-save';
+        // saveDataFields.style.color = 'green';
+        // saveDataFields.style.border = '1px solid lightGrey';
+        // saveDataFields.style.borderRadius = '5px';
+        // saveDataFields.style.lineHeight = '20px';
+        // saveDataFields.style.height = '24px';
+        // saveDataFields.style.cursor = 'pointer';
+        // saveDataFields.title = 'Save';
         saveDataFields.title = 'Save';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#098236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
     
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -329,6 +344,7 @@ export class EditSystemComponent{
       filter: false,
       sortable: false,
       minWidth: 100, 
+      pinned:'right',
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
@@ -484,6 +500,7 @@ export class EditSystemComponent{
       filter: false,
       sortable: false,
       minWidth: 100, 
+      pinned:'right',
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
@@ -672,6 +689,7 @@ export class EditSystemComponent{
       filter: false,
       sortable: false,
       minWidth: 100, 
+      pinned:'right',
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
@@ -737,7 +755,8 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
+      minWidth: 100,
+      pinned:'right', 
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
@@ -795,6 +814,7 @@ export class EditSystemComponent{
       filter: false,
       sortable: false,
       minWidth: 100, 
+      pinned:'right',
       flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
@@ -837,11 +857,18 @@ export class EditSystemComponent{
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
+  // defaultColDef = {
+  //   flex: 1,
+  //   resizable: true,
+  //   filter:true,
+  //   suppressSizeToFit: true
+  // };
+  
+defaultColDef: ColDef = {
     resizable: true,
-    filter:true,
-    suppressSizeToFit: true
+    sortable: true,
+    filter: true,
+    suppressSizeToFit: true,
   };
 
   rowData: any;
@@ -928,6 +955,8 @@ export class EditSystemComponent{
       // add other form controls as needed
     });
     this.systemId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.addInbound('interfaces')
 
       // Step 2: Fetch data from API and patch to form
       this.systemService.getSystemById(this.systemId).subscribe({
@@ -1920,7 +1949,9 @@ loadDropdownOptions(): void {
     });
   }
   
-
+onBack() {
+    this.router.navigate(['/systems']);
+  }
 }
 
 

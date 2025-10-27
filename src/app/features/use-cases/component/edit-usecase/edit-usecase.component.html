@@ -12,11 +12,8 @@
     <mat-card>
 
       <div class="container">
-        <!-- Left: Edit Use Case Form -->
         <div class="left-panel">
-          <!-- <h2>Use Case</h2> -->
           <form [formGroup]="usecaseForm">
-            <!-- Your form use_cases for editing the use_case -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Use Case Name</mat-label>
               <input matInput formControlName="use_case_name" />
@@ -117,7 +114,6 @@
 
         </div>
 
-        <!-- Right: DataFields Table -->
         <div class="right-panel" *ngIf="showDataFields">
           <!-- Information Box -->
           <!-- <div class="info-box-table">
