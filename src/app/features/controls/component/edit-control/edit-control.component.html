@@ -99,9 +99,15 @@
 
 <div style="width: 100%; padding: 12px;">
   <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-    <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+    <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
     [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
             (click)="loadInboundInterfaces('datafields')">
+            DataField Control
+    </button> -->
+
+    <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
+    [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
+            (click)="getControlsDatafields('datafields')">
             DataField Control
     </button>
 
