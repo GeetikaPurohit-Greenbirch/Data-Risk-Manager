@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrl: './edit-usecase.component.scss'
 })
 export class EditUsecaseComponent {
-usecaseForm!: FormGroup;
+  usecaseForm!: FormGroup;
   showDataFields = false;
   lineage_json: any;
 
@@ -33,17 +33,17 @@ usecaseForm!: FormGroup;
 
   // ✅ Table column names
   statusOptions: string[] = ['NEW',
-'DRAFT',
-'READY_FOR_REVIEW',
-'IN_REVIEW',
-'APPROVED_READY_FOR_PRODUCTION',
-'APPROVED_IN_PRODUCTION',
-'NEEDS_REVIEW',
-'EXPIRED',
-'REJECTED'];
+    'DRAFT',
+    'READY_FOR_REVIEW',
+    'IN_REVIEW',
+    'APPROVED_READY_FOR_PRODUCTION',
+    'APPROVED_IN_PRODUCTION',
+    'NEEDS_REVIEW',
+    'EXPIRED',
+    'REJECTED'];
   displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   usecaseId!: any;
-  useCaseName = '';   
+  useCaseName = '';
   lineageName = '';
   gridApi: any;
   gridColumnApi: any;
@@ -53,17 +53,17 @@ usecaseForm!: FormGroup;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-        private router: Router,
+    private router: Router,
     private usecaseService: UsecaseService,
     private toastNotificationService: ToastnotificationService,
-            private cdr: ChangeDetectorRef,
-            private dialog: MatDialog,
-            private lineageService: LineageService,
-    
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private lineageService: LineageService,
+
+  ) { }
 
 
-  columnDefs: ColDef[]= [
+  columnDefs: ColDef[] = [
     { field: 'fieldName', headerName: 'Field Name', editable: true },
     { field: 'dataType', headerName: 'Data Type', editable: true },
     { field: 'value', headerName: 'Value', editable: true },
@@ -73,13 +73,13 @@ usecaseForm!: FormGroup;
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
-      flex:1,
+      minWidth: 100,
+      flex: 1,
       cellRenderer: (params: any) => {
         const value = params.value || '';
 
         const div = document.createElement('div');
-        div.className = 'model-cell-renderer';  
+        div.className = 'model-cell-renderer';
         const buttonar = document.createElement('button');
         buttonar.className = 'fa fa-trash';
         // buttonar.style.marginRight = '5px';
@@ -103,7 +103,7 @@ usecaseForm!: FormGroup;
   defaultColDef = {
     flex: 1,
     resizable: true,
-    filter:true,
+    filter: true,
   };
 
   rowData = [
@@ -111,7 +111,7 @@ usecaseForm!: FormGroup;
     { fieldName: 'Age', dataType: 'Number', value: 30, description: 'User age' }
   ];
 
-  
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -127,8 +127,7 @@ usecaseForm!: FormGroup;
     console.log('Updated row:', event.data);
   }
 
-  onDeleteRecord()
-  {
+  onDeleteRecord() {
 
   }
 
@@ -136,43 +135,43 @@ usecaseForm!: FormGroup;
     console.log('Editing usecase with ID:', this.usecaseId);
     this.usecaseForm = this.fb.group({
       use_case_name: [''],
-      use_case_description:[''],
-      use_case_owner:[''],
+      use_case_description: [''],
+      use_case_owner: [''],
       use_case_owner_email: [''],
       status: [''],
       version: [''],
       last_review_date: [null],
       reviewed_by: [''],
       next_review_date: [null],
-      reviewer:[''],
-         });
+      reviewer: [''],
+    });
 
-          // 🧹 Clear any stale Angular Material overlays
+    // 🧹 Clear any stale Angular Material overlays
     this.usecaseId = Number(this.route.snapshot.paramMap.get('id'));
 
-      // Step 2: Fetch data from API and patch to form
-      this.usecaseService.getUsecaseById(this.usecaseId).subscribe({
-        next: (res: any) => {
-          const data = res.useCaseEntity;
-          this.useCaseName = data.use_case_name;
-          this.usecaseForm.patchValue({
-            ...data,
-            last_review_date: data.last_review_date ? new Date(data.last_review_date) : null,
-            next_review_date: data.next_review_date ? new Date(data.next_review_date) : null
-          });
+    // Step 2: Fetch data from API and patch to form
+    this.usecaseService.getUsecaseById(this.usecaseId).subscribe({
+      next: (res: any) => {
+        const data = res.useCaseEntity;
+        this.useCaseName = data.use_case_name;
+        this.usecaseForm.patchValue({
+          ...data,
+          last_review_date: data.last_review_date ? new Date(data.last_review_date) : null,
+          next_review_date: data.next_review_date ? new Date(data.next_review_date) : null
+        });
 
-          setTimeout(() => {
-            this.cdr.detectChanges(); // ensure UI updates  
-          }, 100);
-          
-          this.formLoaded = true; // triggers re-render
+        setTimeout(() => {
+          this.cdr.detectChanges(); // ensure UI updates  
+        }, 100);
 
-        },
-        error: (err: any) => {
-          console.error('Failed to load usecase:', err);
-        }
-      });
-    
+        this.formLoaded = true; // triggers re-render
+
+      },
+      error: (err: any) => {
+        console.error('Failed to load usecase:', err);
+      }
+    });
+
   }
 
   setActiveView(view: string) {
@@ -203,23 +202,22 @@ usecaseForm!: FormGroup;
     // Submit or save logic here
     const payload = {
       useCaseEntity: {
-        use_case_id : this.usecaseId,
-          use_case_name : this.usecaseForm.value.use_case_name,
-          use_case_description : this.usecaseForm.value.use_case_description,
-          use_case_owner : this.usecaseForm.value.use_case_owner,
-          use_case_owner_email : this.usecaseForm.value.use_case_owner_email,
-          version : this.usecaseForm.value.version,
-          status : this.usecaseForm.value.status,
-          last_review_date : this.usecaseForm.value.last_review_date,
-          reviewed_by : this.usecaseForm.value.reviewed_by,
-          next_review_date : this.usecaseForm.value.next_review_date,
-          reviewer : this.usecaseForm.value.reviewer
-  
+        use_case_id: this.usecaseId,
+        use_case_name: this.usecaseForm.value.use_case_name,
+        use_case_description: this.usecaseForm.value.use_case_description,
+        use_case_owner: this.usecaseForm.value.use_case_owner,
+        use_case_owner_email: this.usecaseForm.value.use_case_owner_email,
+        version: this.usecaseForm.value.version,
+        status: this.usecaseForm.value.status,
+        last_review_date: this.usecaseForm.value.last_review_date,
+        reviewed_by: this.usecaseForm.value.reviewed_by,
+        next_review_date: this.usecaseForm.value.next_review_date,
+        reviewer: this.usecaseForm.value.reviewer
+
       }
     }
     this.usecaseService.updateUseCase(payload).subscribe(res => {
-      if(res)
-      {
+      if (res) {
         // alert("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
         this.toastNotificationService.success("Usecase Updated Successfully.");
         // window.location.reload();
@@ -227,38 +225,33 @@ usecaseForm!: FormGroup;
     })
   }
 
-  saveDatafields(data:any)
-  {
+  saveDatafields(data: any) {
 
   }
 
-  deleteDAtaFields(data:any, id:number)
-  {
+  deleteDAtaFields(data: any, id: number) {
 
   }
 
 
-  existingLineage(view: string)
-  {
+  existingLineage(view: string) {
     this.activeView = view;
-  
+
     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
       next: (response) => {
         this.lineage_json = Array.isArray(response) ? response[0] : response;
-        if(this.lineage_json.lineage_json !==  "{}")
-        {
-        const lineage = Array.isArray(response) ? response[0] : response;
-        if (lineage) {
-          this.router.navigate(['/graph-embedded/edit-lineage', this.usecaseId, lineage.id]);
+        if (this.lineage_json.lineage_json !== "{}") {
+          const lineage = Array.isArray(response) ? response[0] : response;
+          if (lineage) {
+            this.router.navigate(['/graph-embedded/edit-lineage', this.usecaseId, lineage.id]);
+          }
         }
-      }
-      else
-      {
-        this.toastNotificationService.error("No lineage found for useCaseId : " + this.usecaseId);
-        // setTimeout(() => {
-        //   this.getUsecaseList(); // refresh
-        // }, 1000);
-      }
+        else {
+          this.toastNotificationService.error("No lineage found for useCaseId : " + this.usecaseId);
+          // setTimeout(() => {
+          //   this.getUsecaseList(); // refresh
+          // }, 1000);
+        }
       },
       error: (err) => {
         console.error("Failed to fetch lineageId:", err);
@@ -267,8 +260,7 @@ usecaseForm!: FormGroup;
     // this.router.navigate(['/graph-embedded/edit-lineage/', this.usecaseId, this.usecaseForm.value.lineageId]);
 
   }
-  newLineage(view: string)
-  {
+  newLineage(view: string) {
     this.activeView = view;
 
     this.openLineagePopup();
@@ -285,127 +277,125 @@ usecaseForm!: FormGroup;
   }
 
 
-//   saveLineage() {
-//     // this.existingLineage('existing');
-//     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
-//       next: (response) => {
-//         this.lineage_json = Array.isArray(response) ? response[0] : response;
-      
-//     const payload = {
-//       use_case_id: this.usecaseId,
-//       lineage_name: this.lineageName,
-//       lineage_json: this.lineage_json.lineage_json
-//     };
+  //   saveLineage() {
+  //     // this.existingLineage('existing');
+  //     this.usecaseService.navigateToLineage(this.usecaseId).subscribe({
+  //       next: (response) => {
+  //         this.lineage_json = Array.isArray(response) ? response[0] : response;
 
-//     if(this.lineage_json.lineage_json == '{}')
-//     {
-//     this.lineageService.createLineage(payload).subscribe({
-//       next: (res) => {
-//         console.log('Lineage created:', res);
-//         this.dialog.closeAll();
-//         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
-//       },
-//       error: (err) => {
-//         console.error('Error creating lineage:', err);
-//       }
-      
-//     });
-//   }
-//   else
-//   {
+  //     const payload = {
+  //       use_case_id: this.usecaseId,
+  //       lineage_name: this.lineageName,
+  //       lineage_json: this.lineage_json.lineage_json
+  //     };
 
-//     const payload = {};
-//     this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
-//       next: (res) => {
-//         console.log('Lineage created:', res);
-//         this.dialog.closeAll();
-//         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
-//       },
-//       error: (err) => {
-//         console.error('Error creating lineage:', err);
-//       }
-      
-//     });
-//   }
-//   }
-// })}
+  //     if(this.lineage_json.lineage_json == '{}')
+  //     {
+  //     this.lineageService.createLineage(payload).subscribe({
+  //       next: (res) => {
+  //         console.log('Lineage created:', res);
+  //         this.dialog.closeAll();
+  //         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+  //       },
+  //       error: (err) => {
+  //         console.error('Error creating lineage:', err);
+  //       }
+
+  //     });
+  //   }
+  //   else
+  //   {
+
+  //     const payload = {};
+  //     this.lineageService.updateLineage(payload,this.usecaseId,this.lineageName).subscribe({
+  //       next: (res) => {
+  //         console.log('Lineage created:', res);
+  //         this.dialog.closeAll();
+  //         this.router.navigate(['/graph-embedded']); // redirect to graph with lineage id
+  //       },
+  //       error: (err) => {
+  //         console.error('Error creating lineage:', err);
+  //       }
+
+  //     });
+  //   }
+  //   }
+  // })}
 
 
 
-private isEmptyLineage(value: any): boolean {
-  // Accepts string or object and treats {}, empty string, null/undefined as empty
-  if (value == null) return true;
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    return trimmed === '' || trimmed === '{}' || trimmed === '[]';
-  }
-  if (typeof value === 'object') {
-    return Object.keys(value).length === 0;
-  }
-  return false;
-}
-
-saveLineage() {
-  this.usecaseService.navigateToLineage(this.usecaseId).pipe(
-    // Normalize response shape (array vs object)
-    map((resp: any) => Array.isArray(resp) ? resp[0] : resp),
-
-    // Decide create vs update based on response content
-    switchMap((resp: any) => {
-      const existingLineageJsonRaw =
-        resp?.lineage_json?.lineage_json ?? // case: nested object with lineage_json.lineage_json (string)
-        resp?.lineage_json ??               // case: lineage_json is directly the string/object
-        null;
-
-      const shouldCreate = !resp || this.isEmptyLineage(existingLineageJsonRaw);
-
-      // Build payload. If we’re creating because nothing exists, send "{}" as a minimal body.
-      const payload = {
-        use_case_id: this.usecaseId,
-        lineage_name: this.lineageName,
-        lineage_json: shouldCreate
-          ? '{}' // create with a blank body if none exists
-          : existingLineageJsonRaw
-      };
-
-      if (shouldCreate) {
-        return this.lineageService.createLineage(payload).pipe(
-          tap(() => console.log('Lineage created (no existing or empty).'))
-        );
-      } else {
-        return this.lineageService.updateLineage(payload, this.usecaseId, this.lineageName).pipe(
-          tap(() => console.log('Lineage updated (existing & non-empty).'))
-        );
-      }
-    }),
-
-    // If the initial fetch FAILED, we create
-    catchError((err) => {
-      console.error('Fetch lineage failed, creating instead:', err);
-      const fallbackPayload = {
-        use_case_id: this.usecaseId,
-        lineage_name: this.lineageName,
-        lineage_json: '{}'
-      };
-      return this.lineageService.createLineage(fallbackPayload).pipe(
-        tap(() => console.log('Lineage created (fallback after fetch failure).'))
-      );
-    })
-  )
-  .subscribe({
-    next: () => {
-      this.dialog.closeAll();
-      this.router.navigate(['/graph-embedded']);
-    },
-    error: (err) => {
-      console.error('Final error in saveLineage flow:', err);
+  private isEmptyLineage(value: any): boolean {
+    // Accepts string or object and treats {}, empty string, null/undefined as empty
+    if (value == null) return true;
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed === '' || trimmed === '{}' || trimmed === '[]';
     }
-  });
-}
+    if (typeof value === 'object') {
+      return Object.keys(value).length === 0;
+    }
+    return false;
+  }
 
-onBack() {
+  saveLineage() {
+    this.usecaseService.navigateToLineage(this.usecaseId).pipe(
+      // Normalize response shape (array vs object)
+      map((resp: any) => Array.isArray(resp) ? resp[0] : resp),
+
+      // Decide create vs update based on response content
+      switchMap((resp: any) => {
+        const existingLineageJsonRaw =
+          resp?.lineage_json?.lineage_json ?? // case: nested object with lineage_json.lineage_json (string)
+          resp?.lineage_json ??               // case: lineage_json is directly the string/object
+          null;
+
+        const shouldCreate = !resp || this.isEmptyLineage(existingLineageJsonRaw);
+
+        // Build payload. If we’re creating because nothing exists, send "{}" as a minimal body.
+        const payload = {
+          use_case_id: this.usecaseId,
+          lineage_name: this.lineageName,
+          lineage_json: shouldCreate
+            ? '{}' // create with a blank body if none exists
+            : existingLineageJsonRaw
+        };
+
+        if (shouldCreate) {
+          return this.lineageService.createLineage(payload).pipe(
+            tap(() => console.log('Lineage created (no existing or empty).'))
+          );
+        } else {
+          return this.lineageService.updateLineage(payload, this.usecaseId, this.lineageName).pipe(
+            tap(() => console.log('Lineage updated (existing & non-empty).'))
+          );
+        }
+      }),
+
+      // If the initial fetch FAILED, we create
+      catchError((err) => {
+        console.error('Fetch lineage failed, creating instead:', err);
+        const fallbackPayload = {
+          use_case_id: this.usecaseId,
+          lineage_name: this.lineageName,
+          lineage_json: '{}'
+        };
+        return this.lineageService.createLineage(fallbackPayload).pipe(
+          tap(() => console.log('Lineage created (fallback after fetch failure).'))
+        );
+      })
+    )
+      .subscribe({
+        next: () => {
+          this.dialog.closeAll();
+          this.router.navigate(['/graph-embedded']);
+        },
+        error: (err) => {
+          console.error('Final error in saveLineage flow:', err);
+        }
+      });
+  }
+
+  onBack() {
     this.router.navigate(['/use-cases']);
   }
-
-
 }

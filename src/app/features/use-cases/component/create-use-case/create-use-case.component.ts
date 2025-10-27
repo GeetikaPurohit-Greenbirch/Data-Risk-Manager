@@ -15,8 +15,6 @@ import { catchError, map, switchMap, tap } from 'rxjs';
   styleUrl: './create-use-case.component.scss',
 })
 
-
-
 export class CreateUseCaseComponent {
   usecaseForm!: FormGroup;
   statusOptions = ['NEW',
@@ -36,6 +34,7 @@ export class CreateUseCaseComponent {
   lineage_json: any;
   lineageName = "";
   useCaseName="";
+  pageTitle: string = 'Create Use Case';
 
   constructor(private fb: FormBuilder,
     private usecaseService: UsecaseService,
@@ -94,6 +93,7 @@ export class CreateUseCaseComponent {
     this.usecaseId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.usecaseId > 0) {
       this.bindUseCaseData(this.usecaseId);
+      this.pageTitle = 'Edit Use Case';
     }
   }
 
@@ -113,7 +113,6 @@ export class CreateUseCaseComponent {
         console.error('Failed to load usecase:', err);
       }
     });
-
   }
 
   onSubmit() {

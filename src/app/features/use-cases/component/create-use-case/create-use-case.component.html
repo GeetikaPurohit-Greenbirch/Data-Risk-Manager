@@ -2,13 +2,22 @@
 
   <main class="dashboard-container">
     <section class="welcome-banner">
+      <!-- <h2>
+        <div class="back-icon">
+          <button (click)="onBack()">
+            <i class="fa fa-arrow-left"></i>
+             <lucide-icon name="chevron-left"></lucide-icon>
+          </button>
+        </div>
+        Create Use Case
+      </h2> -->
       <h2>
         <div class="back-icon">
           <button (click)="onBack()">           
              <lucide-icon name="chevron-left"></lucide-icon>
           </button>
         </div>
-        Create Use Case
+        {{ pageTitle }}
       </h2>
     </section>
 
@@ -28,7 +37,8 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>Use Case Description</mat-label>
-                <textarea matInput formControlName="use_case_description" rows="1" placeholder="Enter description"></textarea>
+                <textarea matInput formControlName="use_case_description" rows="1"
+                  placeholder="Enter description"></textarea>
                 <mat-error *ngIf="usecaseForm.get('use_case_description')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
@@ -90,9 +100,8 @@
               </mat-form-field>
             </div>
 
-          
             <div class="form-grid">
-              <button title="Save" type="submit" matTooltipPosition="Save">  Save </button>
+              <button title="Save" type="submit" matTooltipPosition="Save"> Save </button>
               <button class="m-2" *ngIf="usecaseId>0" (click)="existingLineage('existing')"> Existing Lineage </button>
               <button *ngIf="usecaseId>0" (click)="newLineage('new')"> Create New Lineage </button>
             </div>
@@ -100,13 +109,10 @@
         </div>
       </div>
     </mat-card>
-
-
-
   </main>
 </div>
 <!-- <router-outlet></router-outlet> child pages like builder will open here -->
- <ng-template #lineagePopup>
+<ng-template #lineagePopup>
   <h2 mat-dialog-title>Create Lineage</h2>
   <mat-dialog-content>
     <mat-form-field class="w-100">
