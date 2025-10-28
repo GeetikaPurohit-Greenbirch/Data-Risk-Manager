@@ -1052,6 +1052,7 @@ defaultColDef: ColDef = {
        
       },
       error: (err: any) => {
+        this.rowData=[];
         console.error('Failed to load data fields:', err);
       },
       complete: () => {
