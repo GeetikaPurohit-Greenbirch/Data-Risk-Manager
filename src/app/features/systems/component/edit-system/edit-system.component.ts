@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CellFocusedEvent, ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
@@ -945,13 +945,13 @@ defaultColDef: ColDef = {
   ngOnInit(): void {
     console.log('Editing system with ID:', this.systemId);
     this.systemForm = this.fb.group({
-      system_name: [''],
-      leanix_id: [''],
-      description: [''],
-      owner: [''],
-      owner_email: [''],
-      version_number: [''],
-      status: [''],
+      system_name:['', Validators.required],
+      leanix_id: ['', Validators.required],
+      description: ['', Validators.required],
+      owner: ['', Validators.required],
+      owner_email: ['', [Validators.required, Validators.email]],
+      version_number: ['', Validators.required],
+      status:['', Validators.required],
     
       // add other form controls as needed
     });
@@ -1008,6 +1008,9 @@ defaultColDef: ColDef = {
       this.useCaseId = useCaseId;
       this.useCaseName = useCaseName;
     }
+  }
+  else{
+    this.formLoaded = true; // triggers re-render
   }
       
 }
@@ -1244,24 +1247,23 @@ loadDropdownOptions(): void {
   onUpdate(): void {
     console.log('Form data:', this.systemForm.value);
     if (this.systemForm.valid) {
-      const payload = {
-        systemEntity: {
-      // this.systemModel.system_id = this.systemForm.value.systemId;
-      system_id: this.systemId,
-      system_name : this.systemForm.value.system_name,
-      leanix_id : this.systemForm.value.leanix_id,
-      description : this.systemForm.value.description,
-      owner : this.systemForm.value.owner,
-      owner_email : this.systemForm.value.owner_email,
-      version_number : this.systemForm.value.version_number,
-      status : this.systemForm.value.status,
-      // this.systemModel.accuracy_risk = this.systemForm.value.accuracyRisk;
-      // this.systemModel.timeliness_risk = this.systemForm.value.timlinessRisk;
-        }
-      }
+      
       if(this.systemId>0)
         {
-        this.systemService.updateSystem(payload).subscribe(res => {
+          let payload = {
+            systemEntity: {  
+              system_id:this.systemId,
+              system_name : this.systemForm.value.system_name,
+              leanix_id : this.systemForm.value.leanix_id,
+              description : this.systemForm.value.description,
+              owner : this.systemForm.value.owner,
+              owner_email : this.systemForm.value.owner_email,
+              version_number : this.systemForm.value.version_number,
+              status : this.systemForm.value.status      
+            }
+          }
+         
+          this.systemService.updateSystem(payload).subscribe(res => {
           if(res)
           {          
             this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ this.systemId);            
@@ -1269,6 +1271,17 @@ loadDropdownOptions(): void {
         })
     }
     else{
+      let payload = {
+            systemEntity: {                
+              system_name : this.systemForm.value.system_name,
+              leanix_id : this.systemForm.value.leanix_id,
+              description : this.systemForm.value.description,
+              owner : this.systemForm.value.owner,
+              owner_email : this.systemForm.value.owner_email,
+              version_number : this.systemForm.value.version_number,
+              status : this.systemForm.value.status      
+            }
+          }
       this.systemService.createSystem(payload).subscribe(res => {
         if(res)
         {

@@ -109,49 +109,49 @@ export class SystemsComponent implements OnInit {
     {
       field: 'system_name',
       headerName: 'Name',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'description',
       headerName: 'Description',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'owner',
       headerName: 'Owner',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'owner_email',
       headerName: 'Owner Email',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'leanix_id',
       headerName: 'LeanIX ID',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'version_number',
       headerName: 'Version',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
     {
       field: 'status',
       headerName: 'Status',
-      editable: true,
+      editable: false,
       sortable: true,
       // sort: 'asc',
     },
@@ -227,6 +227,7 @@ export class SystemsComponent implements OnInit {
     sortable: true,
     filter: true,
     suppressSizeToFit: true,
+    editable:false
   };
 
   // rowData = [

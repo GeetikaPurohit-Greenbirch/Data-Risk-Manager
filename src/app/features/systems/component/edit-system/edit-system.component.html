@@ -69,7 +69,7 @@
                 <mat-error *ngIf="systemForm.get('version_number')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width" >
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" >
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
                   <mat-option *ngFor="let status of statusOptions" [value]="status">

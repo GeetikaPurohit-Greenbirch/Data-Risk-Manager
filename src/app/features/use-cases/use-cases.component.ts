@@ -69,17 +69,17 @@ export class UseCasesComponent {
 
   columnDefs: (ColDef | ColGroupDef)[] = [
     { field: 'use_case_id', headerName: 'Use Case ID', editable: false, },
-    { field: 'use_case_name', headerName: 'Name', editable: true, },
-    { field: 'use_case_description', headerName: 'Description', editable: true, },
-    { field: 'use_case_owner', headerName: 'Owner', editable: true, },
-    { field: 'use_case_owner_email', headerName: 'Owner Email', editable: true, },
-    { field: 'version', headerName: 'Version', editable: true, },
-    { field: 'status', headerName: 'Status', editable: true, },
-    { field: 'last_review_date', headerName: 'Last Review Date', editable: true, },
-    { field: 'reviewed_by', headerName: 'Reviewed By', editable: true, },
-    { field: 'next_review_date', headerName: 'Next Review Date', editable: true, },
-    { field: 'reviewer', headerName: 'Reviewer', editable: true, },
-    { field: 'permission', headerName: 'Permission', editable: true, },
+    { field: 'use_case_name', headerName: 'Name', editable: false, },
+    { field: 'use_case_description', headerName: 'Description', editable: false, },
+    { field: 'use_case_owner', headerName: 'Owner', editable: false, },
+    { field: 'use_case_owner_email', headerName: 'Owner Email', editable: false, },
+    { field: 'version', headerName: 'Version', editable: false, },
+    { field: 'status', headerName: 'Status', editable: false, },
+    { field: 'last_review_date', headerName: 'Last Review Date', editable: false, },
+    { field: 'reviewed_by', headerName: 'Reviewed By', editable: false, },
+    { field: 'next_review_date', headerName: 'Next Review Date', editable: false, },
+    { field: 'reviewer', headerName: 'Reviewer', editable: false, },
+    { field: 'permission', headerName: 'Permission', editable: false, },
     {
       headerName: 'Actions',
       editable: false,
@@ -205,6 +205,7 @@ export class UseCasesComponent {
     sortable: true,
     filter: true,
     suppressSizeToFit: true,
+    editable: false,  
   };
 
   // rowData = [
