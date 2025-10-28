@@ -81,7 +81,7 @@ export class EditTargetComponent {
  
    columnDefs: (ColDef | ColGroupDef)[]= [
     { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
-    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
+    { field: 'field_no', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
     { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
     { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
     { field: 'data_type', headerName: 'Data Type', editable: true, 
@@ -156,6 +156,7 @@ export class EditTargetComponent {
    defaultColDef = {
      flex: 1,
      resizable: true,
+     sortable: true,
      filter:true,
      suppressSizeToFit: true
    };
@@ -260,9 +261,8 @@ export class EditTargetComponent {
     this.showReport = false;
   }
 
-
    addRow() {
-     const newItem = {fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA:'',  criticality: '' };
+     const newItem = {fieldId: '', fieldNo: '', fieldName: '', description:'', dataType: '', fieldLength: '', criticality: '' };
      this.rowData = [...this.rowData, newItem];
    }
  
@@ -452,8 +452,8 @@ export class EditTargetComponent {
        next: (res: any) => {
          this.rowData = [...res]; // triggers change
          if (this.gridApi) {
-           this.gridApi.setRowData([]); // Clear first to ensure refresh
-           this.gridApi.setRowData(this.rowData);
+          //  this.gridApi.setRowData([]); // Clear first to ensure refresh
+          //  this.gridApi.setRowData(this.rowData);
          }
    
          this.cdr.detectChanges(); // trigger Angular change detection
@@ -544,7 +544,7 @@ export class EditTargetComponent {
      console.log(data, "Target Data Fields");
  
    this.dataFieldsModel.field_id = data.data.field_id;
-   this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
+   this.dataFieldsModel.user_generated_id = data.data.field_no;
    this.dataFieldsModel.field_name = data.data.field_name;
    this.dataFieldsModel.field_description = data.data.field_description;
 

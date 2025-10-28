@@ -342,10 +342,13 @@ body {
 }
 
 //// ag grid /// 
+
 .ag-theme-alpine {
   --ag-foreground-color: #333;
   --ag-background-color: #fff;
   --ag-header-background-color: #f0f0f0;
+  overflow: hidden !important;
+
 }
 
 .add-btn {

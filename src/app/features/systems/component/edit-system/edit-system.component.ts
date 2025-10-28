@@ -98,7 +98,7 @@ export class EditSystemComponent{
           headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"]
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -129,7 +129,7 @@ export class EditSystemComponent{
           headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -160,7 +160,7 @@ export class EditSystemComponent{
           headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -249,7 +249,7 @@ export class EditSystemComponent{
           headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"]
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -280,7 +280,7 @@ export class EditSystemComponent{
           headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -311,7 +311,7 @@ export class EditSystemComponent{
           headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -400,7 +400,7 @@ export class EditSystemComponent{
           headerTooltip: 'C',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"]
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -431,7 +431,7 @@ export class EditSystemComponent{
           headerTooltip: 'T',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -462,7 +462,7 @@ export class EditSystemComponent{
           headerTooltip: 'A',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -561,14 +561,14 @@ export class EditSystemComponent{
   ];
 
   columnDefsOutbound:(ColDef | ColGroupDef)[]= [
-    { field: 'interface_id', headerName: 'Entity ID', editable: false,headerTooltip: 'Entity ID', },
-    { field: 'interface_name', headerName: 'Entity Name', editable: false, headerTooltip: 'Entity Name',},
-    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type',},
+    { field: 'entity_id', headerName: 'Entity ID', editable: false,headerTooltip: 'Entity ID', resizable: true,},
+    { field: 'interface_name', headerName: 'Entity Name', editable: false, headerTooltip: 'Entity Name',resizable: true,},
+    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type',resizable: true,},
 
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
-    { field: 'user_generated_id', headerName: 'Field No.', editable: false, headerTooltip: 'Field No.',},
-    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable, headerTooltip: 'Field Name', },
-    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,headerTooltip: 'Data Type',
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',resizable: true,},
+    { field: 'user_generated_id', headerName: 'Field No.', editable: false, headerTooltip: 'Field No.',resizable: true,},
+    { field: 'field_name', headerName: 'Field Name', editable: this.isEditable, headerTooltip: 'Field Name', resizable: true,},
+    { field: 'data_type', headerName: 'Data Type', editable: this.isEditable,headerTooltip: 'Data Type',resizable: true,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
@@ -588,7 +588,7 @@ export class EditSystemComponent{
           headerTooltip: 'C',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"]
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -619,7 +619,7 @@ export class EditSystemComponent{
           headerTooltip: 'T',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -650,7 +650,7 @@ export class EditSystemComponent{
           headerTooltip: 'A',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -677,7 +677,7 @@ export class EditSystemComponent{
       ],
 
     },
-    { field: 'criticality', headerName: 'Criticality', editable: true,
+    { field: 'criticality', headerName: 'Criticality', editable: true,resizable: true,
       headerTooltip: 'criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -1668,6 +1668,7 @@ loadDropdownOptions(): void {
             //   }))
             // );
           } else {
+            
             // Fallback: show one blank row if no data
             this.rowDataInbound = [{}];
           }
@@ -1687,38 +1688,26 @@ loadDropdownOptions(): void {
             });
           });
 
+        
+
           // From inbound_interfaces
           inboundInterfaces.forEach((intf: any) => {
-            intf.fields.forEach((field: any) => {
-              combinedFields.push({
-                ...field,
-                interface_name: intf.interface_name,
-                interface_id: intf.interface_id,
-                source: 'Inbound'
-              });
-            });
-          });
-
-          outboundInterfaces.forEach((intf: any) => {
-            intf.fields.forEach((field: any) => {
-              combinedFields.push({
-                ...field,
-                interface_name: intf.interface_name,
-                source: 'Outbound'
-              });
-            });
-          });
-
-          // this.rowData = combinedFields;
-          this.rowData =[].concat(
-              ...outboundInterfaces.map((i: any) =>
-                i.fields.map((field: any) => ({
+            if (Array.isArray(intf?.fields) && intf.fields.length > 0) {
+              intf.fields.forEach((field: any) => {
+                combinedFields.push({
                   ...field,
-                  interface_name: i.interface_name,
-                  interface_id: i.interface_id
-                }))
-              )
-            );
+                  interface_name: intf.interface_name,
+                  interface_id: intf.interface_id,
+                  source: 'Outbound'
+                });
+              });
+            } else {
+              console.warn(`No fields found for interface: ${intf.interface_name || '(Unnamed Interface)'}`);
+            }
+          });
+    
+
+        
           // this.rowDataInput = inboundInterfaces[0].fields;
           // this.rowDataInput = [].concat(...inboundInterfaces.map((i: { fields: any; }) => i.fields));
           this.rowDataInput = combinedFields;
@@ -1752,12 +1741,42 @@ loadDropdownOptions(): void {
             this.rowDataOutbound = [{}];
           }
   
+
+          let combinedFieldsOut: any[] = [];
+
+          outboundInterfaces.forEach((intf: any) => {
+            // Proceed only if fields exist and are an array
+            if (Array.isArray(intf?.fields) && intf.fields.length > 0) {
+              intf.fields.forEach((field: any) => {
+                combinedFieldsOut.push({
+                  ...field,
+                  interface_name: intf.interface_name,
+                  interface_id: intf.interface_id,
+                  source: 'Outbound'
+                });
+              });
+            } else {
+              console.warn(`No fields found for interface: ${intf.interface_name || '(Unnamed Interface)'}`);
+            }
+          });
+
+          // this.rowData = combinedFields;
+          this.rowData =[].concat(
+              ...outboundInterfaces.map((i: any) =>
+                i.fields.map((field: any) => ({
+                  ...field,
+                  interface_name: i.interface_name,
+                  interface_id: i.interface_id
+                }))
+              )
+            );
+
           // Refresh grid
           if (this.gridApi) {
-            this.gridApi.setRowData([]);
-            this.gridApi.setRowData(this.rowDataInput);
-            this.gridApi.setRowData(this.rowDataInbound);
-            this.gridApi.setRowData(this.rowDataOutbound);
+            // this.gridApi.setRowData([]);
+            // this.gridApi.setRowData(this.rowDataInput);
+            // this.gridApi.setRowData(this.rowDataInbound);
+            // this.gridApi.setRowData(this.rowDataOutbound);
           }
 
 
@@ -1768,31 +1787,40 @@ loadDropdownOptions(): void {
 
           // 🔄 Flatten inbound
         parsedInboundInterfacesforMapping.forEach((intf: any) => {
-          intf.fields.forEach((field: any) => {
-            this.inboundFields.push({
-              interface: intf.interface_name,
-              fieldId: field.field_id,
-              entityType: field.entity_type,
-              fieldName: field.field_name,
-              dataType: field.data_type,
-              length: field.field_length,
+          if (intf?.fields && Array.isArray(intf.fields)) {
+            intf.fields.forEach((field: any) => {
+              if (field) { // handle null field objects too
+                this.inboundFields.push({
+                  interface: intf.interface_name,
+                  fieldId: field.field_id,
+                  entityType: field.entity_type,
+                  fieldName: field.field_name,
+                  dataType: field.data_type,
+                  length: field.field_length,
+                });
+              }
             });
-          });
+          }
         });
 
-         // 🔄 Flatten outbound
+        // 🔄 Flatten outbound
         parsedOutboundInterfaces.forEach((intf: any) => {
-          intf.fields.forEach((field: any) => {
-            this.outboundFields.push({
-              interface: intf.interface_name,
-              fieldId: field.field_id,
-              entityType: field.entity_type,
-              fieldName: field.field_name,
-              dataType: field.data_type,
-              length: field.field_length,
+          if (intf?.fields && Array.isArray(intf.fields)) {
+            intf.fields.forEach((field: any) => {
+              if (field) {
+                this.outboundFields.push({
+                  interface: intf.interface_name,
+                  fieldId: field.field_id,
+                  entityType: field.entity_type,
+                  fieldName: field.field_name,
+                  dataType: field.data_type,
+                  length: field.field_length,
+                });
+              }
             });
-          });
+          }
         });
+
 
           // 🔄 Now render fields on the diagram
 
