@@ -9,6 +9,7 @@ import { EditSystemDialogComponent } from './edit-system-dialog/edit-system-dial
 import { EditSystemComponent } from './component/edit-system/edit-system.component';
 import { CreateLineageComponent } from './component/create-lineage/create-lineage.component';
 import { CreateLineageNewComponent } from './component/create-lineage-new/create-lineage-new.component';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
@@ -23,7 +24,12 @@ import { CreateLineageNewComponent } from './component/create-lineage-new/create
   imports: [
     CommonModule,
     SharedModule,
-    SystemsRoutingModule
+    SystemsRoutingModule,
+    LucideAngularModule.pick({
+              ChevronLeft: icons.ChevronLeft,
+              Plus: icons.Plus,
+              Trash2: icons.Trash2
+            }),
   ]
 })
 export class SystemsModule { }

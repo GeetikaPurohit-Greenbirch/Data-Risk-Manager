@@ -43,6 +43,7 @@ export class EditSystemComponent{
   useCaseName = '';
   public rowindex = 0;
   public savedUseCase: string | null = null;
+  useCaseModel!:number;
  
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
 
@@ -955,8 +956,9 @@ defaultColDef: ColDef = {
       // add other form controls as needed
     });
     this.systemId = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.addInbound('interfaces')
+    if(this.systemId>0)
+    {
+      this.addInbound('interfaces')
 
       // Step 2: Fetch data from API and patch to form
       this.systemService.getSystemById(this.systemId).subscribe({
@@ -993,24 +995,22 @@ defaultColDef: ColDef = {
 
       // Check if use case already selected and saved
       
-   this.savedUseCase = localStorage.getItem('selectedUseCaseSystem');
-
-  if (!this.savedUseCase) {
-    // Open popup only if no use case saved
-    setTimeout(() => {
-      this.openUsecasePopup();
-    }, 100);
-  } else {
-    // Restore saved use case
-    const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
-    this.useCaseId = useCaseId;
-    this.useCaseName = useCaseName;
+    this.savedUseCase = localStorage.getItem('selectedUseCaseSystem');
+      
+    if (!this.savedUseCase) {
+      // Open popup only if no use case saved
+      setTimeout(() => {
+        this.openUsecasePopup();
+      }, 100);
+    } else {
+      // Restore saved use case
+      const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
+      this.useCaseId = useCaseId;
+      this.useCaseName = useCaseName;
+    }
   }
       
-  }
-
-
-
+}
   getUsecaseList() {
     this.usecaseService.getLineageUsecase('SYSTEM',this.systemId).subscribe({
       next: (usecases: any[]) => {
@@ -1205,7 +1205,6 @@ loadDropdownOptions(): void {
     dialogRef!: MatDialogRef<any>;
 
   
-  
     openUsecasePopup() {
       this.dialogRef = this.dialog.open(this.useCasePopup, {
         disableClose: false, // optional, prevent closing without selection
@@ -1213,20 +1212,20 @@ loadDropdownOptions(): void {
     }
     
     confirmUseCase() {
-      if (!this.useCaseId) {
+      if (!this.useCaseModel) {
         alert('Please select a use case first.');
         return;
       }
     
       // Split the value into ID and Name
-      const [useCaseId, useCaseName] = this.useCaseId.toString().split('|');
+      const [useCaseId, useCaseName] = this.useCaseModel.toString().split('|');
     
       // Save them into separate variables
       this.useCaseId = parseInt(useCaseId);
       this.useCaseName = useCaseName;
     
-      console.log('Use Case ID:', this.useCaseId);
-      console.log('Use Case Name:', this.useCaseName);
+      // console.log('Use Case ID:', this.useCaseId);
+      // console.log('Use Case Name:', this.useCaseName);
     
       // ✅ Save to localStorage so popup doesn’t appear again
       localStorage.setItem(
@@ -1244,29 +1243,44 @@ loadDropdownOptions(): void {
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.systemForm.value);
-    const payload = {
-      systemEntity: {
-    // this.systemModel.system_id = this.systemForm.value.systemId;
-    system_id: this.systemId,
-   system_name : this.systemForm.value.system_name,
-    leanix_id : this.systemForm.value.leanix_id,
-    description : this.systemForm.value.description,
-    owner : this.systemForm.value.owner,
-    owner_email : this.systemForm.value.owner_email,
-    version_number : this.systemForm.value.version_number,
-    status : this.systemForm.value.status,
-    // this.systemModel.accuracy_risk = this.systemForm.value.accuracyRisk;
-    // this.systemModel.timeliness_risk = this.systemForm.value.timlinessRisk;
+    if (this.systemForm.valid) {
+      const payload = {
+        systemEntity: {
+      // this.systemModel.system_id = this.systemForm.value.systemId;
+      system_id: this.systemId,
+      system_name : this.systemForm.value.system_name,
+      leanix_id : this.systemForm.value.leanix_id,
+      description : this.systemForm.value.description,
+      owner : this.systemForm.value.owner,
+      owner_email : this.systemForm.value.owner_email,
+      version_number : this.systemForm.value.version_number,
+      status : this.systemForm.value.status,
+      // this.systemModel.accuracy_risk = this.systemForm.value.accuracyRisk;
+      // this.systemModel.timeliness_risk = this.systemForm.value.timlinessRisk;
+        }
       }
+      if(this.systemId>0)
+        {
+        this.systemService.updateSystem(payload).subscribe(res => {
+          if(res)
+          {          
+            this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ this.systemId);            
+          }
+        })
     }
-    this.systemService.updateSystem(payload).subscribe(res => {
-      if(res)
-      {
-        // alert("System Updated Successfully. Your System ID is "+ this.systemId);
-        this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ this.systemId)
-        // window.location.reload();
-      }
-    })
+    else{
+      this.systemService.createSystem(payload).subscribe(res => {
+        if(res)
+        {
+          this.toastNotificationService.success("System Created Successfully. Your System ID is "+ res.systemEntity.system_id);
+
+          this.router.navigate(['/systems/edit-system', res.systemEntity.system_id]);
+        }
+      })
+    }
+    } else {
+      this.systemForm.markAllAsTouched(); // show validation errors
+    }
   }
 
   onInboundGridReady(params: any) {

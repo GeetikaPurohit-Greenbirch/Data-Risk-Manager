@@ -4,9 +4,11 @@
     <section class="welcome-banner">
       <h2>
         <div class="back-icon">
-          <button (click)="onBack()"><i class="fa fa-arrow-left"></i></button>
+          <button (click)="onBack()">           
+              <lucide-icon name="chevron-left"></lucide-icon>
+          </button>
         </div>
-        Edit System
+        {{ systemId > 0 ? 'Edit System' : 'Add System' }}
       </h2>
     </section>
     <mat-card>
@@ -16,7 +18,7 @@
       <div class="container">
         <div class="systemedit-container">
           <div class="left-panel">
-            <div class="usecaseid-container">
+            <div class="usecaseid-container" *ngIf="systemId>0">
               <div style="display: flex;gap: 1rem;align-items: center;">
                 <p>Usecase ID : {{useCaseId}}</p>
                 <p>Usecase Name : {{useCaseName}}</p>
@@ -33,40 +35,48 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>System Name</mat-label>
                 <input matInput formControlName="system_name" />
+                 <mat-error *ngIf="systemForm.get('system_name')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>LeanIX ID</mat-label>
                 <input matInput formControlName="leanix_id" />
+                <mat-error *ngIf="systemForm.get('leanix_id')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Description</mat-label>
                 <input matInput formControlName="description" />
+                <mat-error *ngIf="systemForm.get('description')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner</mat-label>
                 <input matInput formControlName="owner" />
+                <mat-error *ngIf="systemForm.get('owner')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner Email</mat-label>
                 <input matInput formControlName="owner_email" />
+                <mat-error *ngIf="systemForm.get('owner_email')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="systemForm.get('owner_email')?.hasError('email')">Invalid email</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Version</mat-label>
                 <input matInput formControlName="version_number" />
+                <mat-error *ngIf="systemForm.get('version_number')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+              <mat-form-field appearance="outline" class="full-width" >
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
                   <mat-option *ngFor="let status of statusOptions" [value]="status">
                     {{ status }}
                   </mat-option>
                 </mat-select>
+                <mat-error *ngIf="systemForm.get('status')?.hasError('required')">Required</mat-error>
               </mat-form-field>
               <!-- <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Status</mat-label>
@@ -78,7 +88,7 @@
             </div>
           </div>
 
-          <div class="right-panel">
+          <div class="right-panel" *ngIf="systemId>0">
             <!-- TABS CONTAINER -->
             <div class="tab-container">
               <button [ngClass]="{ 'inverse': activeView === 'interfaces' }" (click)="addInbound('interfaces')">
@@ -214,7 +224,7 @@
                   <div class="col-md-12">
                     <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
                       <mat-label>Select Use Case</mat-label>
-                      <mat-select [(ngModel)]="useCaseId">
+                      <mat-select [(ngModel)]="useCaseModel">
                         <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
                           {{ uc.use_case_name }}
                         </mat-option>

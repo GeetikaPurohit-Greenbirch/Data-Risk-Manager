@@ -7,7 +7,7 @@ import { EditSystemComponent } from './component/edit-system/edit-system.compone
 
 const routes: Routes = [
   { path: '', component: SystemsComponent },
-  {path: 'system-builder', component:SystemBuilderComponent},
+  {path: 'system-builder', component:EditSystemComponent},
   {path:'edit-system-dialog', component:EditSystemDialogComponent},
     {path: 'edit-system/:id', component:EditSystemComponent},
 ];
