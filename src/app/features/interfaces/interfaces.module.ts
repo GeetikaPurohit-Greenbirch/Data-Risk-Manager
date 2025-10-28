@@ -6,6 +6,7 @@ import { InterfacesComponent } from '../interfaces/component/interfaces.componen
 import { InterfaceBuilderComponent } from './component/interface-builder/interface-builder.component';
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditInterfaceComponent } from './component/edit-interface/edit-interface.component';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
@@ -17,7 +18,12 @@ import { EditInterfaceComponent } from './component/edit-interface/edit-interfac
   imports: [
     CommonModule,
     SharedModule,
-    InterfacesRoutingModule
+    InterfacesRoutingModule,
+    LucideAngularModule.pick({
+                  ChevronLeft: icons.ChevronLeft,
+                  Plus: icons.Plus,
+                  Trash2: icons.Trash2
+                }),
   ]
 })
 export class InterfacesModule { }

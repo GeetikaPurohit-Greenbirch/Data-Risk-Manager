@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InterfaceService } from '../../services/interface.service';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
@@ -23,11 +23,12 @@ export class EditInterfaceComponent implements OnInit {
   showDataFields = true;
   showDataQuality = false;
   showDataFieldsTable = true;
-  interfaceTypeOptions = [ 'SYSTEM', 'MANUAL_ENTRY' ]
-  statusOptions: string[] = [  'NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
+  interfaceTypeOptions = ['SYSTEM', 'MANUAL_ENTRY']
+  statusOptions: string[] = ['NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   serviceQualityOptions: string[] = ['STREAMING', 'PERIODIC', 'AD_HOC'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
   formLoaded = false;
+  isLoading: boolean = false;
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -45,23 +46,25 @@ export class EditInterfaceComponent implements OnInit {
   scheduleLimitReached = false;
 
   // rowData: any;
-  dataFieldsModel : Datafields = new Datafields();
+  dataFieldsModel: Datafields = new Datafields();
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private toastNotificationService: ToastnotificationService,
     private interfaceService: InterfaceService,
     private datafieldsService: DatafieldsService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) { }
 
 
-  columnDefs: (ColDef | ColGroupDef)[]= [
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID',},
-    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.',},
-    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name',},
+  columnDefs: (ColDef | ColGroupDef)[] = [
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID', },
+    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.', },
+    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name', },
     { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
-    { field: 'data_type', headerName: 'Data Type', editable: true,headerTooltip: 'Data Type',
+    {
+      field: 'data_type', headerName: 'Data Type', editable: true, headerTooltip: 'Data Type',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
@@ -95,7 +98,7 @@ export class EditInterfaceComponent implements OnInit {
     //       maxWidth: 100,
     //       resizable: true,
     //       suppressSizeToFit: true,
-         
+
     //     },
     //     {
     //       headerName: 'T',
@@ -121,7 +124,7 @@ export class EditInterfaceComponent implements OnInit {
     //       maxWidth: 100,
     //       resizable: true,
     //       suppressSizeToFit: true,
-         
+
     //     },
     //     {
     //       headerName: 'A',
@@ -147,28 +150,29 @@ export class EditInterfaceComponent implements OnInit {
     //       maxWidth: 100,
     //       resizable: true,
     //       suppressSizeToFit: true,
-         
+
     //     },
     //   ],
 
     // },
-    { field: 'criticality', headerName: 'Criticality', editable: true,headerTooltip: 'Criticality',
+    {
+      field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
       },
-     },
+    },
     {
       headerName: 'Actions',
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
-      flex:1,
+      minWidth: 100,
+      flex: 1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
-    
+
         const saveDataFields = document.createElement('button');
         saveDataFields.className = 'fa fa-save';
         saveDataFields.style.color = 'green';
@@ -178,12 +182,12 @@ export class EditInterfaceComponent implements OnInit {
         saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
-    
+
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
           this.saveDatafields(params.node);
         });
-    
+
         const deleteDataFields = document.createElement('button');
         deleteDataFields.className = 'fa fa-trash';
         deleteDataFields.style.color = 'red';
@@ -193,14 +197,14 @@ export class EditInterfaceComponent implements OnInit {
         deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
-    
+
         deleteDataFields.addEventListener('click', () => {
           this.deleteDAtaFields(params.node);
         });
-    
+
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
-    
+
         return div;
       }
     },
@@ -209,7 +213,7 @@ export class EditInterfaceComponent implements OnInit {
   defaultColDef = {
     flex: 1,
     resizable: true,
-    filter:true,
+    filter: true,
     suppressSizeToFit: true
   };
 
@@ -221,7 +225,7 @@ export class EditInterfaceComponent implements OnInit {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
-  
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -230,7 +234,7 @@ export class EditInterfaceComponent implements OnInit {
   }
 
   addRow() {
-    const newItem = {fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA:'',  criticality: '' };
+    const newItem = { fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA: '', criticality: '' };
     this.rowData = [...this.rowData, newItem];
   }
 
@@ -241,20 +245,20 @@ export class EditInterfaceComponent implements OnInit {
   ngOnInit(): void {
     console.log('Editing interface with ID:', this.interfaceId);
     this.interfaceForm = this.fb.group({
-      interface_name: [''],
-      quality_of_service: [''],
-      frequency_of_update: [''],
-      schedule_of_update: [''],
-      methodology_of_transfer: [''],
-      interface_type: [''],
-      interface_version_number: [''],
-      interface_status: [''],
-      interface_owner: [''],
-      interface_owner_email: [''],
+      interface_name: ['', Validators.required],
+      quality_of_service: ['', Validators.required],
+      frequency_of_update: ['', Validators.required],
+      schedule_of_update: ['', Validators.required],
+      methodology_of_transfer: ['', Validators.required],
+      interface_type: ['', Validators.required],
+      interface_version_number: ['', Validators.required],
+      interface_status: ['', Validators.required],
+      interface_owner: ['', Validators.required],
+      interface_owner_email: ['', [Validators.required, Validators.email]],
       // add other form controls as needed
     });
     this.interfaceId = Number(this.route.snapshot.paramMap.get('id'));
-
+    if (this.interfaceId > 0) {
       // Step 2: Fetch data from API and patch to form
       this.interfaceService.getInterfaceById(this.interfaceId).subscribe({
         next: (res: any) => {
@@ -270,19 +274,37 @@ export class EditInterfaceComponent implements OnInit {
       setTimeout(() => {
         this.cdr.detectChanges(); // ensure UI updates  
       }, 100);
-      
+
       this.formLoaded = true; // triggers re-render
 
-  // Watch for changes in quality_of_service
-  this.interfaceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
-    this.toggleFieldsBasedOnQoS(value);
-  });
-
-
-
+      // Watch for changes in quality_of_service
+      this.interfaceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
+        this.toggleFieldsBasedOnQoS(value);
+      });
       this.getDataFields();
+    }
+    else {
+      this.formLoaded = true; // triggers re-render
+      this.generateTimeOptions();
 
-      
+      // Disable freq/schedule for certain service qualities
+      this.interfaceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+        if (value === 'STREAMING' || value === 'AD_HOC') {
+          this.interfaceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
+          this.interfaceForm.get('updateSchedule')?.disable({ emitEvent: false });
+        } else {
+          this.interfaceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
+          this.interfaceForm.get('updateSchedule')?.enable({ emitEvent: false });
+        }
+      });
+    }
+  }
+
+  generateTimeOptions(): void {
+    this.timeOptions = [];
+    for (let hour = 0; hour < 24; hour++) {
+      this.timeOptions.push(hour.toString().padStart(2, '0') + ':00');
+    }
   }
 
   onFrequencyChange(): void {
@@ -294,17 +316,17 @@ export class EditInterfaceComponent implements OnInit {
       this.interfaceForm.get('schedule_of_update')?.setValue(currentSelection.slice(0, freq));
     }
   }
-  
-    onScheduleSelectionChange(event: MatSelectChange): void {
-      const selected = event.value || [];
-      if (selected.length > this.frequencyLimit) {
-        this.scheduleLimitReached = true;
-        // Keep only allowed number of selections
-        this.interfaceForm.get('schedule_of_update')?.setValue(selected.slice(0, this.frequencyLimit));
-      } else {
-        this.scheduleLimitReached = false;
-      }
+
+  onScheduleSelectionChange(event: MatSelectChange): void {
+    const selected = event.value || [];
+    if (selected.length > this.frequencyLimit) {
+      this.scheduleLimitReached = true;
+      // Keep only allowed number of selections
+      this.interfaceForm.get('schedule_of_update')?.setValue(selected.slice(0, this.frequencyLimit));
+    } else {
+      this.scheduleLimitReached = false;
     }
+  }
 
   private toggleFieldsBasedOnQoS(value: string): void {
     if (value === 'STREAMING' || value === 'AD_HOC') {
@@ -316,8 +338,7 @@ export class EditInterfaceComponent implements OnInit {
     }
   }
 
-  getDataFields()
-  { 
+  getDataFields() {
     this.datafieldsService.getDataFieldsById(this.interfaceId, 'INTERFACE').subscribe({
       next: (res: any) => {
         this.rowData = [...res]; // triggers change
@@ -325,28 +346,26 @@ export class EditInterfaceComponent implements OnInit {
           this.gridApi.setRowData([]); // Clear first to ensure refresh
           this.gridApi.setRowData(this.rowData);
         }
-  
+
         this.cdr.detectChanges(); // trigger Angular change detection
-        
+
         error: (err: any) => {
           console.error('Failed to load interface:', err);
         }
       }
-         // Force refresh with setRowData
-    
+      // Force refresh with setRowData
+
     });
   }
 
-  addDatafields(view:string)
-  {
+  addDatafields(view: string) {
     this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = true;
     this.showDataQuality = false;
   }
 
-  showDQA(view:string)
-  {
+  showDQA(view: string) {
     this.activeView = view;
     this.showDataFieldsTable = true;
     this.showDataFields = false;
@@ -373,96 +392,129 @@ export class EditInterfaceComponent implements OnInit {
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.interfaceForm.value);
-
+    if (this.interfaceForm.invalid) {
+      this.interfaceForm.markAllAsTouched();
+      return;
+    }
     // Extract form values
-  const formValues = this.interfaceForm.value;
+    const formValues = this.interfaceForm.value;
 
-  // If QoS is STREAMING or AD_HOC, nullify these fields
-  const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
+    // If QoS is STREAMING or AD_HOC, nullify these fields
+    const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
 
     // Submit or save logic here
-    const payload = {
-      interfaceEntity: {
-    // this.interfaceModel.interface_id = this.interfaceForm.value.interfaceId;
-    interface_id: this.interfaceId,
-    interface_name : this.interfaceForm.value.interface_name,
-    quality_of_service : this.interfaceForm.value.quality_of_service,
-    frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
-      schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
-    methodology_of_transfer:this.interfaceForm.value.methodology_of_transfer,
-    interface_type:this.interfaceForm.value.interface_type,
-    interface_version_number : this.interfaceForm.value.interface_version_number,
-    interface_status : this.interfaceForm.value.interface_status,
-    interface_owner: this.interfaceForm.value.interface_owner,
-    interface_owner_email: this.interfaceForm.value.interface_owner_email
+    if (this.interfaceId > 0) {
+      const payload = {
+        interfaceEntity: {
+          // this.interfaceModel.interface_id = this.interfaceForm.value.interfaceId;
+          interface_id: this.interfaceId,
+          interface_name: this.interfaceForm.value.interface_name,
+          quality_of_service: this.interfaceForm.value.quality_of_service,
+          frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+          schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
+          methodology_of_transfer: this.interfaceForm.value.methodology_of_transfer,
+          interface_type: this.interfaceForm.value.interface_type,
+          interface_version_number: this.interfaceForm.value.interface_version_number,
+          interface_status: this.interfaceForm.value.interface_status,
+          interface_owner: this.interfaceForm.value.interface_owner,
+          interface_owner_email: this.interfaceForm.value.interface_owner_email
+        }
       }
+      // this.interfaceService.updateInterface(payload).subscribe(res => {
+      //   if (res) {
+      //     // alert("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
+      //     this.toastNotificationService.success("Interface Updated Successfully. Your Interface ID is " + this.interfaceId);
+      //     // window.location.reload();
+      //   }
+      // })
+      this.interfaceService.updateInterface(payload).subscribe({
+          next: (res: any) => {
+            this.toastNotificationService.success('Interface Updated Successfully. Your Interface ID is ' + this.interfaceId);            
+          },
+          error: () => this.toastNotificationService.error('Failed to update interface.')
+        });
     }
-    this.interfaceService.updateInterface(payload).subscribe(res => {
-      if(res)
-      {
-        // alert("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
-        this.toastNotificationService.success("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
-        // window.location.reload();
-      }
-    })
+    else {
+      const payload = {
+        interfaceEntity: {
+          interface_name: this.interfaceForm.value.interface_name,
+          quality_of_service: this.interfaceForm.value.quality_of_service,
+          frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+          schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
+          methodology_of_transfer: this.interfaceForm.value.methodology_of_transfer,
+          interface_type: this.interfaceForm.value.interface_type,
+          interface_version_number: this.interfaceForm.value.interface_version_number,
+          interface_status: this.interfaceForm.value.interface_status,
+          interface_owner: this.interfaceForm.value.interface_owner,
+          interface_owner_email: this.interfaceForm.value.interface_owner_email
+        }
+      };
+
+    this.interfaceService.createInterface(payload).subscribe({
+      next: (res: any) => {
+        this.toastNotificationService.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
+        this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+      },
+      error: () => this.toastNotificationService.error('Failed to create interface.')
+    });
+    }
   }
 
-  saveDatafields(data:any)
-  {
+  saveDatafields(data: any) {
     console.log(data, "Interface Data Fields");
 
-  this.dataFieldsModel.field_id = data.data.field_id;
-  this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
-  this.dataFieldsModel.field_name = data.data.field_name;
-  this.dataFieldsModel.field_description = data.data.field_description;
+    this.dataFieldsModel.field_id = data.data.field_id;
+    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
+    this.dataFieldsModel.field_name = data.data.field_name;
+    this.dataFieldsModel.field_description = data.data.field_description;
 
-  // this.dataFieldsModel.dqa_c = "L";
-  // this.dataFieldsModel.dqa_t = "L";
-  // this.dataFieldsModel.dqa_a = "L";
-  // this.dataFieldsModel.commentary_a = data.data.commentary_a;
-  // this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  // this.dataFieldsModel.commentary_c = data.data.commentary_c;
-  this.dataFieldsModel.data_type = data.data.data_type;
-  this.dataFieldsModel.field_length = data.data.field_length;
-  this.dataFieldsModel.criticality = data.data.criticality;
-  this.dataFieldsModel.entity_type = 'INTERFACE';
-  this.dataFieldsModel.entity_id = this.interfaceId;
+    // this.dataFieldsModel.dqa_c = "L";
+    // this.dataFieldsModel.dqa_t = "L";
+    // this.dataFieldsModel.dqa_a = "L";
+    // this.dataFieldsModel.commentary_a = data.data.commentary_a;
+    // this.dataFieldsModel.commentary_t = data.data.commentary_t;
+    // this.dataFieldsModel.commentary_c = data.data.commentary_c;
+    this.dataFieldsModel.data_type = data.data.data_type;
+    this.dataFieldsModel.field_length = data.data.field_length;
+    this.dataFieldsModel.criticality = data.data.criticality;
+    this.dataFieldsModel.entity_type = 'INTERFACE';
+    this.dataFieldsModel.entity_id = this.interfaceId;
 
-  if(!data.data.field_id)
-    {
+    if (!data.data.field_id) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
 
-      this.toastNotificationService.success("Data field added Successfully.");
-      setTimeout(() => {
-        this.getDataFields(); // refresh
+        this.toastNotificationService.success("Data field added Successfully.");
+        setTimeout(() => {
+          this.getDataFields(); // refresh
 
-      }, 1000);
-    });
-  }
-    else
-    {
+        }, 1000);
+      });
+    }
+    else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
 
         this.toastNotificationService.success("Data field updated Successfully.");
         setTimeout(() => {
           this.getDataFields(); // refresh
-  
+
         }, 1000);
       });
     }
-   
+
   }
 
 
-  deleteDAtaFields(data:any)
-  {
+  deleteDAtaFields(data: any) {
     this.datafieldsService.deleteDataFields(data.data.field_id, 'INTERFACE', this.interfaceId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 
       }, 1000);
-  })
+    })
+  }
+  onBack() {
+    this.router.navigate(['/interfaces']);
   }
 }

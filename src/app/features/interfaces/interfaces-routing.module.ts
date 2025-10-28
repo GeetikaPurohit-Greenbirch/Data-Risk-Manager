@@ -6,7 +6,7 @@ import { EditInterfaceComponent } from './component/edit-interface/edit-interfac
 
 const routes: Routes = [
   { path: '', component: InterfacesComponent },
-  {path : 'interface-builder', component:InterfaceBuilderComponent},
+  {path : 'interface-builder', component:EditInterfaceComponent},
   {path: 'edit-interface/:id', component:EditInterfaceComponent},
 ];
 

@@ -44,16 +44,16 @@ export class InterfacesComponent {
   
  columnDefs: (ColDef | ColGroupDef)[]= [
     { field: 'interface_id', headerName: 'Interface ID', editable: false, },
-    { field: 'interface_name', headerName: 'Name', editable: true },
-    { field: 'quality_of_service', headerName: 'Quality Of Service', editable: true },
-    { field: 'frequency_of_update', headerName: 'Frequency Of Update', editable: true },
-    { field: 'schedule_of_update', headerName: 'Schedule Of Update', editable: true },
-    { field: 'methodology_of_transfer', headerName: 'Methodology Of Transfer', editable: true },
-    { field: 'interface_type', headerName: 'Interface Type', editable: true },
-    { field: 'interface_version_number', headerName: 'Version', editable: true },
-    { field: 'interface_status', headerName: 'Status', editable: true },
-    { field: 'interface_owner', headerName: 'Owner', editable: true },
-    { field: 'interface_owner_email', headerName: 'Owner Email', editable: true },
+    { field: 'interface_name', headerName: 'Name', editable: false },
+    { field: 'quality_of_service', headerName: 'Quality Of Service', editable: false },
+    { field: 'frequency_of_update', headerName: 'Frequency Of Update', editable: false },
+    { field: 'schedule_of_update', headerName: 'Schedule Of Update', editable: false },
+    { field: 'methodology_of_transfer', headerName: 'Methodology Of Transfer', editable: false },
+    { field: 'interface_type', headerName: 'Interface Type', editable: false },
+    { field: 'interface_version_number', headerName: 'Version', editable: false },
+    { field: 'interface_status', headerName: 'Status', editable: false },
+    { field: 'interface_owner', headerName: 'Owner', editable: false },
+    { field: 'interface_owner_email', headerName: 'Owner Email', editable: false },
     {
       headerName: 'Actions',
       editable: false,
@@ -115,30 +115,13 @@ export class InterfacesComponent {
       }
     },
   ];
-
-  // defaultColDef = {
-  //   flex: 1,
-  //   sortable: true,
-  //   resizable: true,
-  //   filter:true,
-  //   suppressSizeToFit: true
-  // };
-
+ 
   defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
     filter: true,
     suppressSizeToFit: true
-  };
-
-  
-
-  // rowData = [
-  //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
-  //     dqaT: 'L',
-  //     dqaA: 'L', criticality: 'HIGH' },
-  // ];
-
+  }; 
   
   onGridReady(params: any) {
     this.gridApi = params.api;
