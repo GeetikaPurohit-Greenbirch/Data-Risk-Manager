@@ -237,21 +237,36 @@ export class EditTargetComponent {
   //   this.reportVisible = false;
   // }
 
+  // onBuildReport(payload: any) {
+  //   console.log('Report payload:', payload);
+
+  //   this.http.post(
+  //     `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.useCaseId}?disposition=inline`,
+  //     payload,
+  //     { responseType: 'blob' } // handle PDF/Excel
+  //   ).subscribe({
+  //     next: (response: BlobPart) => {
+  //       const blob = new Blob([response], { type: 'application/pdf' });
+  //       const url = window.URL.createObjectURL(blob);
+  //       window.open(url, '_blank');
+  //     },
+  //     error: (err) => {
+  //       console.error('Report generation failed', err);
+  //     }
+  //   });
+  // }
+
   onBuildReport(payload: any) {
     console.log('Report payload:', payload);
 
-    this.http.post(
-      `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.useCaseId}?disposition=inline`,
-      payload,
-      { responseType: 'blob' } // handle PDF/Excel
-    ).subscribe({
-      next: (response: BlobPart) => {
+    this.targetService.downloadSampleReport(this.useCaseId, payload).subscribe({
+      next: (response: Blob) => {
         const blob = new Blob([response], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');
       },
       error: (err) => {
-        console.error('Report generation failed', err);
+        console.error('Error downloading report:', err);
       }
     });
   }
@@ -451,21 +466,23 @@ export class EditTargetComponent {
      this.datafieldsService.getDataFieldsByIdWithUsecase(this.targetId, 'TARGET', this.useCaseId).subscribe({
        next: (res: any) => {
          this.rowData = [...res]; // triggers change
-         if (this.gridApi) {
+         if (!res) {
           //  this.gridApi.setRowData([]); // Clear first to ensure refresh
           //  this.gridApi.setRowData(this.rowData);
          }
    
          this.cdr.detectChanges(); // trigger Angular change detection
-         
+        },
          error: (err: any) => {
+          this.rowData = [];
+
            console.error('Failed to load target:', err);
          }
-       }
+       });
+      }
           // Force refresh with setRowData
+      
      
-     });
-   }
  
    addDatafields(view:string)
    {

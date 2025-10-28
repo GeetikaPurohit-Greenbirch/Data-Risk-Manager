@@ -9,7 +9,7 @@ import { Target } from '../models/target.model';
 })
 export class TargetService {
 private apiUrl = environment.apiAllBaseUrl // Base URL
-
+private apiLineageBaseUrl = environment.apiLineageBaseUrl
 
   constructor(private http: HttpClient) { }
 
@@ -40,5 +40,11 @@ private apiUrl = environment.apiAllBaseUrl // Base URL
             console.log(payload)
         
             return this.http.post<Target[]>(url, payload);
+          }
+    
+          ////// Download report ////
+          public downloadSampleReport(useCaseId: number, payload: any): Observable<Blob> {
+            const url = this.apiLineageBaseUrl+'reports/sample/'+useCaseId+'?disposition=inline';
+            return this.http.post(url, payload, { responseType: 'blob' });
           }
 }
