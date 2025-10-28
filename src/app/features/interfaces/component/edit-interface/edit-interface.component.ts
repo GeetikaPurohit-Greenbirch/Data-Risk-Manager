@@ -416,12 +416,12 @@ export class EditInterfaceComponent implements OnInit {
   this.dataFieldsModel.field_name = data.data.field_name;
   this.dataFieldsModel.field_description = data.data.field_description;
 
-  this.dataFieldsModel.dqa_c = "L";
-  this.dataFieldsModel.dqa_t = "L";
-  this.dataFieldsModel.dqa_a = "L";
-  this.dataFieldsModel.commentary_a = data.data.commentary_a;
-  this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  this.dataFieldsModel.commentary_c = data.data.commentary_c;
+  // this.dataFieldsModel.dqa_c = "L";
+  // this.dataFieldsModel.dqa_t = "L";
+  // this.dataFieldsModel.dqa_a = "L";
+  // this.dataFieldsModel.commentary_a = data.data.commentary_a;
+  // this.dataFieldsModel.commentary_t = data.data.commentary_t;
+  // this.dataFieldsModel.commentary_c = data.data.commentary_c;
   this.dataFieldsModel.data_type = data.data.data_type;
   this.dataFieldsModel.field_length = data.data.field_length;
   this.dataFieldsModel.criticality = data.data.criticality;

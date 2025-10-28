@@ -72,7 +72,7 @@ export class EditSourceComponent implements OnInit {
           headerTooltip: 'Completeness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"]
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -103,7 +103,7 @@ export class EditSourceComponent implements OnInit {
           headerTooltip: 'Timeliness',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -134,7 +134,7 @@ export class EditSourceComponent implements OnInit {
           headerTooltip: 'Accuracy',
           cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
           // width:65,
           // minWidth: 65,
@@ -222,7 +222,7 @@ export class EditSourceComponent implements OnInit {
           //  valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: ["H", "M", "L"]
+            values: ["High", "Medium", "Low"],
           },
           //  width:65,
           //  minWidth: 65,
@@ -254,7 +254,8 @@ export class EditSourceComponent implements OnInit {
           // valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: ["H", "M", "L"]
+            values: ["High", "Medium", "Low"],
+            // values: ["H", "M", "L"],
           },
           // width:65,
           // minWidth: 65,
@@ -286,7 +287,7 @@ export class EditSourceComponent implements OnInit {
           // valueGetter: () => 'L', // Always returns 'L'
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: ["H", "M", "L"]
+            values: ["High", "Medium", "Low"],
           },
           // width:65,
           // minWidth: 65,

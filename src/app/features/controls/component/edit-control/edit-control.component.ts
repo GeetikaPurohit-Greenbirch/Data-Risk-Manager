@@ -110,7 +110,7 @@ controlForm!: FormGroup;
     { field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
       cellStyle: {
         color: 'red',
@@ -140,7 +140,7 @@ controlForm!: FormGroup;
     { field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
       cellStyle: {
         color: 'blue',
@@ -170,7 +170,7 @@ controlForm!: FormGroup;
     { field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ["H", "M", "L"],
+        values: ["High", "Medium", "Low"],
       },
       cellStyle: {
         color: 'purple',
