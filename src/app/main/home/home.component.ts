@@ -88,12 +88,15 @@ ngOnInit(): void{
     }
   });
 
-  this.getSystemList();
+  setTimeout(() => {
+    this.getSystemList();
   this.getSourceList();
   this.getControlList();
   this.getTargetList();
   this.getInterfaceList();
   this.getUsecaseList();
+  }, 150);
+  
 }
 searchText:string = '';
 stats = [
