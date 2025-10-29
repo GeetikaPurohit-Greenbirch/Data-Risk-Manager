@@ -4,8 +4,8 @@
     <section class="welcome-banner">
       <h2>
         <div class="back-icon">
-          <button (click)="onBack()">           
-              <lucide-icon name="chevron-left"></lucide-icon>
+          <button (click)="onBack()">
+            <lucide-icon name="chevron-left"></lucide-icon>
           </button>
         </div>
         {{ systemId > 0 ? 'Edit System' : 'Add System' }}
@@ -35,7 +35,7 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>System Name</mat-label>
                 <input matInput formControlName="system_name" />
-                 <mat-error *ngIf="systemForm.get('system_name')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="systemForm.get('system_name')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
@@ -69,7 +69,7 @@
                 <mat-error *ngIf="systemForm.get('version_number')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" >
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
                   <mat-option *ngFor="let status of statusOptions" [value]="status">
@@ -121,11 +121,9 @@
 
             <div class="datafields-table" *ngIf="showInputDataFields">
               <div class="datafields-header">
-                <div style="display: flex;gap: 16px;align-items: center;padding: 6px;">
-                  <button (click)="addRow()"
-                    style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
-                  <label style="font-size: 13px;font-weight: 400;">
-                    <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
+                <div class="checkbox-title">
+                  <button (click)="addRow()">Add Row</button>
+                  <label><input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
                       (change)="toggleInboundGrid($event)" />
                     Set Global Quality Risk
                   </label>
@@ -133,18 +131,33 @@
 
 
                 <!-- Conditional rendering of the AG Grid -->
-                <ag-grid-angular *ngIf="showGlobalQualityRiskGridInbound" class="ag-theme-alpine"
-                  style="width: 100%; height: 180px; margin-top: 10px;" [rowData]="rowDataInboundDQA"
-                  [columnDefs]="columnDefsInboundDQA" [defaultColDef]="defaultColDef"
-                  (gridReady)="onInboundGridReady($event)" rowSelection="single">
-                </ag-grid-angular>
+                <!-- <div class="table-container">
+                  <div class="system-table-container">
+                    <div class="grid-table"> -->
+                <div style="margin: 10px;">
+                  <ag-grid-angular class="ag-theme-alpine responsive-grid" *ngIf="showGlobalQualityRiskGridInbound"
+                    style="width: 100%; height: 400px" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
+                    [defaultColDef]="defaultColDef" (gridReady)="onInboundGridReady($event)" rowSelection="single">
+                  </ag-grid-angular>
+                </div>
+                <!-- </div>
+                  </div>
+                </div> -->
               </div>
 
-              <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataInput"
-                [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-                (cellValueChanged)="inputCellValueChanged($event)" rowSelection="single"
-                (rowClicked)="onRowClick($event)" (gridReady)="onGridReady($event)">
-              </ag-grid-angular>
+              <!-- <div class="table-container">
+                <div class="system-table-container">
+                  <div class="grid-table"> -->
+              <div style="margin: 10px;">
+                <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 400px"
+                  [rowData]="rowDataInput" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+                  (cellValueChanged)="inputCellValueChanged($event)" rowSelection="single"
+                  (rowClicked)="onRowClick($event)" (gridReady)="onGridReady($event)">
+                </ag-grid-angular>
+              </div>
+              <!-- </div>
+                </div>
+              </div> -->
             </div>
 
             <!-- Information Box -->
@@ -152,7 +165,6 @@
               <div class="info-box-table" *ngIf="showInbound">
                 <div class="datafields-header">
                   <button (click)="addInterface()">Add Inbound Interface</button>
-
                 </div>
                 <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataInbound"
                   [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
@@ -161,15 +173,14 @@
               </div>
 
               <div class="datafields-table" *ngIf="showDataFields" style="width: 100%;">
+                <div class="checkbox-title">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound"
+                      (change)="toggleOutboundGrid($event)" />
+                    Set Global Quality Risk
+                  </label>
+                </div>
 
-                <!-- Checkbox to toggle grid visibility -->
-                <label style="margin-left: 16px;">
-                  <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound"
-                    (change)="toggleOutboundGrid($event)" />
-                  Set Global Quality Risk
-                </label>
-
-                <!-- Conditional rendering of the AG Grid -->
                 <ag-grid-angular *ngIf="showGlobalQualityRiskGridOutbound" class="ag-theme-alpine"
                   style="width: 100%; height: 180px; margin-top: 10px;" [rowData]="rowDataoutboundDQA"
                   [columnDefs]="columnDefsOoutboundDQA" [defaultColDef]="defaultColDef"

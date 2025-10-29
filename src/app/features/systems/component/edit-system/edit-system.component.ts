@@ -106,8 +106,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#e8000a',
+            fontWeight: '600'
           },
         },
         {
@@ -137,8 +137,8 @@ export class EditSystemComponent{
           resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -169,7 +169,7 @@ export class EditSystemComponent{
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -200,14 +200,6 @@ export class EditSystemComponent{
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        // saveDataFields.className = 'fa fa-save';
-        // saveDataFields.style.color = 'green';
-        // saveDataFields.style.border = '1px solid lightGrey';
-        // saveDataFields.style.borderRadius = '5px';
-        // saveDataFields.style.lineHeight = '20px';
-        // saveDataFields.style.height = '24px';
-        // saveDataFields.style.cursor = 'pointer';
-        // saveDataFields.title = 'Save';
         saveDataFields.title = 'Save';
         saveDataFields.style.padding = '0px';
         saveDataFields.style.border = 'none';
@@ -215,7 +207,7 @@ export class EditSystemComponent{
         saveDataFields.style.background = 'transparent';
 
         const saveIcon = createElement(icons.Save, {
-          color: '#098236',
+          color: '#008236',
           height: '14px',
           strokeWidth: 2
         });
@@ -257,8 +249,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#e8000a',
+            fontWeight: '600'
           },
         },
         {
@@ -288,8 +280,8 @@ export class EditSystemComponent{
           resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -320,7 +312,7 @@ export class EditSystemComponent{
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -352,14 +344,18 @@ export class EditSystemComponent{
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
     
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -408,8 +404,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#e8000a',
+            fontWeight: '600'
           },
         },
         {
@@ -439,8 +435,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -471,7 +467,7 @@ export class EditSystemComponent{
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -508,14 +504,18 @@ export class EditSystemComponent{
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
            // ✅ Disable if entity_type is 'INTERFACE'
            if (params.data.entity_type === 'INTERFACE') {
@@ -530,14 +530,18 @@ export class EditSystemComponent{
         });
     
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '22px';
-        deleteDataFields.style.height = '32px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
     
          // ✅ Disable if entity_type is 'INTERFACE'
         if (params.data.entity_type === 'INTERFACE') {
@@ -596,8 +600,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#e8000a',
+            fontWeight: '600'
           },
         },
         {
@@ -627,8 +631,8 @@ export class EditSystemComponent{
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -659,7 +663,7 @@ export class EditSystemComponent{
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -697,14 +701,18 @@ export class EditSystemComponent{
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
     
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -712,14 +720,18 @@ export class EditSystemComponent{
         });
     
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
     
          // ✅ Disable if entity_type is 'INTERFACE'
         if (params.data.entity_type === 'INTERFACE') {
@@ -763,30 +775,40 @@ export class EditSystemComponent{
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
     
+        // ==== SAVE ===
         const saveInterface = document.createElement('button');
-        saveInterface.className = 'fa fa-save';
-        saveInterface.style.color = 'green';
-        saveInterface.style.border = '1px solid lightGrey';
-        saveInterface.style.borderRadius = '5px';
-        saveInterface.style.lineHeight = '22px';
-        saveInterface.style.height = '32px';
-        saveInterface.style.cursor = 'pointer';
         saveInterface.title = 'Save';
+        saveInterface.style.border = 'none';
+        saveInterface.style.padding = '0px';
+        saveInterface.style.cursor = 'pointer';
+        saveInterface.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveInterface.appendChild(saveIcon);
     
         // Pass row data or node to save
         saveInterface.addEventListener('click', () => {
           this.saveInboundInterface(params.node, 'INBOUND');
         });
     
+        // ==== DELETE ====
         const deleteInterface = document.createElement('button');
-        deleteInterface.className = 'fa fa-trash';
-        deleteInterface.style.color = 'red';
-        deleteInterface.style.border = '1px solid lightGrey';
-        deleteInterface.style.borderRadius = '5px';
-        deleteInterface.style.lineHeight = '22px';
-        deleteInterface.style.height = '32px';
-        deleteInterface.style.cursor = 'pointer';
         deleteInterface.title = 'Delete';
+        deleteInterface.style.border = 'none';
+        deleteInterface.style.padding = '0px';
+        deleteInterface.style.cursor = 'pointer';
+        deleteInterface.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteInterface.appendChild(deleteIcon);
     
         deleteInterface.addEventListener('click', () => {
           this.deleteInboundInterface(params.node, 'INBOUND');
@@ -822,14 +844,18 @@ export class EditSystemComponent{
         div.className = 'model-cell-renderer';
     
         const saveInterface = document.createElement('button');
-        saveInterface.className = 'fa fa-save';
-        saveInterface.style.color = 'green';
-        saveInterface.style.border = '1px solid lightGrey';
-        saveInterface.style.borderRadius = '5px';
-        saveInterface.style.lineHeight = '22px';
-        saveInterface.style.height = '32px';
-        saveInterface.style.cursor = 'pointer';
         saveInterface.title = 'Save';
+        saveInterface.style.border = 'none';
+        saveInterface.style.padding = '0px';
+        saveInterface.style.cursor = 'pointer';
+        saveInterface.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveInterface.appendChild(saveIcon);
     
         // Pass row data or node to save
         saveInterface.addEventListener('click', () => {
@@ -837,14 +863,18 @@ export class EditSystemComponent{
         });
     
         const deleteInterface = document.createElement('button');
-        deleteInterface.className = 'fa fa-trash';
-        deleteInterface.style.color = 'red';
-        deleteInterface.style.border = '1px solid lightGrey';
-        deleteInterface.style.borderRadius = '5px';
-        deleteInterface.style.lineHeight = '22px';
-        deleteInterface.style.height = '32px';
-        deleteInterface.style.cursor = 'pointer';
         deleteInterface.title = 'Delete';
+        deleteInterface.style.border = 'none';
+        deleteInterface.style.padding = '0px';
+        deleteInterface.style.cursor = 'pointer';
+        deleteInterface.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteInterface.appendChild(deleteIcon);
     
         deleteInterface.addEventListener('click', () => {
           this.deleteInboundInterface(params.node, 'OUTBOUND');
@@ -1637,9 +1667,6 @@ loadDropdownOptions(): void {
                 `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
             );
           }
-  
-
-         
   
           const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
 
