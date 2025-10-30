@@ -1,208 +1,185 @@
-
-<div class="main-container">
-  
-  <main class="dashboard-container">
+<div class="main-container">  
+<main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Edit Source</h2>
+        <h2>
+          <div class="back-icon">
+            <button (click)="onBack()">           
+                <lucide-icon name="chevron-left"></lucide-icon>
+            </button>
+          </div>
+          {{ sourceId > 0 ? 'Edit Source' : 'Add Source' }}
+      </h2>
       </section>
-      <mat-card>
+<mat-card>
+  <div class="overlay-loader" *ngIf="isLoading">
+        <mat-spinner diameter="50"></mat-spinner>
+  </div>
+  <div class="container">
+    <div class="source-container">
+      <!-- Left: Edit Source Form -->
+      <div class="left-panel">
+        <!-- <h2>Source</h2> -->
+        <form [formGroup]="sourceForm">
+          <!-- Your form controls for editing the source -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Source Name</mat-label>
+            <input matInput formControlName="source_name" />
+            <mat-error *ngIf="sourceForm.get('source_name')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-<div class="container">
-    <!-- Left: Edit Source Form -->
-    <div class="left-panel">
-      <!-- <h2>Source</h2> -->
-      <form [formGroup]="sourceForm">
-        <!-- Your form controls for editing the source -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Source Name</mat-label>
-          <input matInput formControlName="source_name" />
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Vendor</mat-label>
+            <input matInput formControlName="vendor" />
+            <mat-error *ngIf="sourceForm.get('vendor')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Vendor</mat-label>
-          <input matInput formControlName="vendor" />
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+            <mat-label>Quality Of Service</mat-label>
+            <mat-select formControlName="quality_of_service">
+              <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+                {{ quality }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sourceForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Quality Of Service</mat-label>
-          <mat-select formControlName="quality_of_service">
-            <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
-              {{ quality }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Quality Of Service</mat-label>
-          <input matInput formControlName="quality_of_service" />
-        </mat-form-field> -->
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Frequency Of Update</mat-label>
-          <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1"/>
-        </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Quality Of Service</mat-label>
+            <input matInput formControlName="quality_of_service" />
+          </mat-form-field> -->
 
-        <!-- <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Schedule Of Update</mat-label>
-          <input matInput formControlName="schedule_of_update" />
-        </mat-form-field> -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Frequency Of Update</mat-label>
+            <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1"/>
+            <mat-error *ngIf="sourceForm.get('frequency_of_update')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Schedule Of Update</mat-label>
-          <mat-select formControlName="schedule_of_update" multiple
-          (selectionChange)="onScheduleSelectionChange($event)">
-            <mat-option *ngFor="let time of timeOptions" [value]="time">
-              {{ time }}
-            </mat-option>
-          </mat-select>
-          <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
-            You can only select {{ frequencyLimit }} time(s)
-          </mat-hint>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Methodology Of Transfer</mat-label>
-          <input matInput formControlName="methodology_of_transfer" />
-        </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Schedule Of Update</mat-label>
+            <input matInput formControlName="schedule_of_update" />
+          </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Source Type</mat-label>
-          <mat-select formControlName="source_type">
-            <mat-option *ngFor="let type of sourceTypeOptions" [value]="type">
-              {{ type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Source Type</mat-label>
-          <input matInput formControlName="source_type" />
-        </mat-form-field>
-   -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Version</mat-label>
-          <input matInput formControlName="source_version_number" />
-        </mat-form-field>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Status</mat-label>
-          <input matInput formControlName="source_status" />
-        </mat-form-field> -->
+          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+            <mat-label>Schedule Of Update</mat-label>
+            <mat-select formControlName="schedule_of_update" multiple
+            (selectionChange)="onScheduleSelectionChange($event)">
+              <mat-option *ngFor="let time of timeOptions" [value]="time">
+                {{ time }}
+              </mat-option>
+            </mat-select>
+            <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+              You can only select {{ frequencyLimit }} time(s)
+            </mat-hint>
+            <mat-error *ngIf="sourceForm.get('schedule_of_update')?.hasError('required')"></mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="source_status">
-            <mat-option *ngFor="let status of statusOptions" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner</mat-label>
-          <input matInput formControlName="source_owner" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner Email</mat-label>
-          <input matInput formControlName="source_owner_email" />
-        </mat-form-field>
-        <!-- Add remaining fields similarly -->
-        <div class="updateBtn">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Methodology Of Transfer</mat-label>
+            <input matInput formControlName="methodology_of_transfer" />
+            <mat-error *ngIf="sourceForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
-        </div>
-<!-- Toggle Button -->
-<div style="display: flex; height: 100%;">
-  <!-- Left Side Buttons -->
-  <div style="width: 100%; padding: 12px;">
-    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-      <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-      [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
-              (click)="addDatafields('datafields')">
-        Add Datafields
-      </button> -->
+          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+            <mat-label>Source Type</mat-label>
+            <mat-select formControlName="source_type">
+              <mat-option *ngFor="let type of sourceTypeOptions" [value]="type">
+                {{ type }}
+              </mat-option>
+            </mat-select>
+             <mat-error *ngIf="sourceForm.get('source_type')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-      <!-- <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-      [ngClass]="{ 'inverse': activeView === 'dqa', 'primary': activeView !== 'dqa' }"
-              (click)="showDQA('dqa')">
-              Data Quality Risk
-      </button> -->
-      </div>
-      </div>
-      </div>
-      </form>
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Source Type</mat-label>
+            <input matInput formControlName="source_type" />
+          </mat-form-field>
+      -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Version</mat-label>
+            <input matInput formControlName="source_version_number" />
+            <mat-error *ngIf="sourceForm.get('source_version_number')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
 
-    </div>
-  
-    <!-- Right: DataFields Table -->
-    <div class="right-panel" *ngIf="showDataFieldsTable">
-              <!-- Information Box -->
-        <div class="info-box-table" *ngIf="showDataQuality">
-            <table>
-              <thead>
-                <tr>
-                  <th>Completeness</th>
-                  <th>Completeness Commentary</th>
-                  <th>Timeliness</th>
-                  <th>Timeliness Commentary</th>
-                  <th>Accuracy</th>
-                  <th>Accuracy Commentary</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let i of [1]">
-                  <td class="low-orange">Low</td>
-                  <td>System Generated</td>
-                  <td class="low-blue">Low</td>
-                  <td>Capacity Managed</td>
-                  <td class="low-pink">Low</td>
-                  <td>System Generated</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <input matInput formControlName="source_status" />
+          </mat-form-field> -->
 
-          <div class="datafields-header" *ngIf="showDataFields">
-            <!-- <h3>DataFields</h3> -->
-            <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
-            <button (click)="addRow()" class="add-btn">Add Row</button>
-            <label style="margin-left: 16px;">
-              <input type="checkbox" [(ngModel)]="showGlobalQualityRisk" />
-              Set Global Quality Risk
-            </label>
-          </div>
+          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="source_status">
+              <mat-option *ngFor="let status of statusOptions" [value]="status">
+                {{ status }}
+              </mat-option>
+            </mat-select>
+             <mat-error *ngIf="sourceForm.get('source_status')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
           
-      <div class="datafields-table" *ngIf="showDataFields">
-            <!-- Conditional rendering of the AG Grid -->
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Owner</mat-label>
+            <input matInput formControlName="source_owner" />
+            <mat-error *ngIf="sourceForm.get('source_owner')?.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Owner Email</mat-label>
+            <input matInput formControlName="source_owner_email" />
+             <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('email')">Invalid email</mat-error>
+          </mat-form-field>         
+        </form>
+         <div class="form-grid">
+              <button (click)="onUpdate()">Save</button>
+         </div>
+      </div>
+      <!-- Right: DataFields Table -->
+      <div class="right-panel" *ngIf="sourceId>0">
+        <!-- Information Box -->  <!-- TABS CONTAINER -->
+        <div class="tab-container">
+          <button [ngClass]="{ 'inverse': activeView === 'interfaces' }">
+            Data Fields
+          </button>
+        </div>   
+        
+        <div class="datafields-table" *ngIf="showDataFields">
+           <div class="datafields-header" *ngIf="showDataFields">
+              <!-- <h3>DataFields</h3> -->
+              <button (click)="addRow()" style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
+              <label style="margin-left: 16px;">
+                <input type="checkbox" [(ngModel)]="showGlobalQualityRisk" />
+                Set Global Quality Risk
+              </label>
+            </div>
+              <!-- Conditional rendering of the AG Grid -->
             <ag-grid-angular
-            *ngIf="showGlobalQualityRisk"
-            class="ag-theme-alpine"
-            style="width: 100%; height: 180px; margin-top: 10px;"
-            [rowData]="rowDataDQA"
-            [columnDefs]="columnDefsDQA"
-            [defaultColDef]="defaultColDef"
-            rowSelection="single"
+              *ngIf="showGlobalQualityRisk"
+              class="ag-theme-alpine"
+              style="width: 100%; height: 180px; margin-top: 10px;"
+              [rowData]="rowDataDQA"
+              [columnDefs]="columnDefsDQA"
+              [defaultColDef]="defaultColDef"
+              rowSelection="single"
+            >
+            </ag-grid-angular>
+
+          <ag-grid-angular
+          class="ag-theme-alpine"
+          style="width: 100%; height: 400px;"
+          [rowData]="rowData"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          (cellValueChanged)="onCellValueChanged($event)"
+          rowSelection="single"
+          [suppressColumnVirtualisation]="true"
+          [domLayout]="'normal'"
           >
           </ag-grid-angular>
-
-        <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 400px;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        (cellValueChanged)="onCellValueChanged($event)"
-        rowSelection="single"
-        [suppressColumnVirtualisation]="true"
-        [domLayout]="'normal'"
-        >
-        </ag-grid-angular>
-      
-    </div>
+        
+      </div>
+      </div>
     </div>
   </div>
-  </mat-card>
-  </main>
-  </div>
+</mat-card>
+</main>
+</div>

@@ -6,7 +6,7 @@ import { EditSourceComponent } from './component/edit-source/edit-source.compone
 
 const routes: Routes = [
   { path: '', component: SourcesComponent },
-  {path:'source-builder', component:SourceBuilderComponent},
+  {path:'source-builder', component:EditSourceComponent},
   {path: 'edit-source/:id', component:EditSourceComponent},
 ];
 

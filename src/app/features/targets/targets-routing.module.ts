@@ -6,7 +6,7 @@ import { EditTargetComponent } from './component/edit-target/edit-target.compone
 
 const routes: Routes = [
   { path: '', component: TargetsComponent },
-  {path:'target-builder', component: TargetBuilderComponent},
+  {path:'target-builder', component: EditTargetComponent},
   {path: 'edit-target/:id', component:EditTargetComponent},
 ];
 

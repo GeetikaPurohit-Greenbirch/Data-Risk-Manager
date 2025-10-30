@@ -1245,57 +1245,57 @@ loadDropdownOptions(): void {
     }
   
   // ✅ Trigger update/save logic
-  onUpdate(): void {
-    console.log('Form data:', this.systemForm.value);
-    if (this.systemForm.valid) {
-      
-      if(this.systemId>0)
-        {
-          let payload = {
-            systemEntity: {  
-              system_id:this.systemId,
-              system_name : this.systemForm.value.system_name,
-              leanix_id : this.systemForm.value.leanix_id,
-              description : this.systemForm.value.description,
-              owner : this.systemForm.value.owner,
-              owner_email : this.systemForm.value.owner_email,
-              version_number : this.systemForm.value.version_number,
-              status : this.systemForm.value.status      
-            }
-          }
-         
-          this.systemService.updateSystem(payload).subscribe(res => {
-          if(res)
-          {          
-            this.toastNotificationService.success("System Updated Successfully. Your System ID is "+ this.systemId);            
-          }
-        })
-    }
-    else{
-      let payload = {
-            systemEntity: {                
-              system_name : this.systemForm.value.system_name,
-              leanix_id : this.systemForm.value.leanix_id,
-              description : this.systemForm.value.description,
-              owner : this.systemForm.value.owner,
-              owner_email : this.systemForm.value.owner_email,
-              version_number : this.systemForm.value.version_number,
-              status : this.systemForm.value.status      
-            }
-          }
-      this.systemService.createSystem(payload).subscribe(res => {
-        if(res)
-        {
-          this.toastNotificationService.success("System Created Successfully. Your System ID is "+ res.systemEntity.system_id);
+ onUpdate(): void {
+  console.log('Form data:', this.systemForm.value);
 
-          this.router.navigate(['/systems/edit-system', res.systemEntity.system_id]);
-        }
-      })
-    }
-    } else {
-      this.systemForm.markAllAsTouched(); // show validation errors
-    }
+  if (!this.systemForm.valid) {
+    this.systemForm.markAllAsTouched();
+    return;
   }
+
+  const formValue = this.systemForm.value;
+
+  // Base payload structure
+  const payload: any = {
+    systemEntity: {
+      system_name: formValue.system_name,
+      leanix_id: formValue.leanix_id,
+      description: formValue.description,
+      owner: formValue.owner,
+      owner_email: formValue.owner_email,
+      version_number: formValue.version_number,
+      status: formValue.status
+    }
+  };
+
+  const isUpdate = this.systemId > 0;
+  if (isUpdate) {
+    payload.systemEntity.system_id = this.systemId;
+  }
+
+  const request$ = isUpdate
+    ? this.systemService.updateSystem(payload)
+    : this.systemService.createSystem(payload);
+
+  request$.subscribe({
+    next: (res) => {
+      if (res) {
+        const systemId = isUpdate ? this.systemId : res.systemEntity.system_id;
+        const action = isUpdate ? 'Updated' : 'Created';
+        this.toastNotificationService.success(`System ${action} Successfully. Your System ID is ${systemId}.`);
+
+        if (!isUpdate) {
+          this.router.navigate(['/systems/edit-system', systemId]);
+        }
+      }
+    },
+    error: (err) => {
+      console.error('Error in system operation:', err);
+      this.toastNotificationService.error('An error occurred while saving the system.');
+    }
+  });
+}
+
 
   onInboundGridReady(params: any) {
     this.gridApiIn = params.api;

@@ -1,272 +1,238 @@
-
 <div class="main-container">
-  
+
   <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>Edit Target</h2>
-      </section>
-      <mat-card>
+      <h2>
+        <div class="back-icon">
+          <button (click)="onBack()">
+            <lucide-icon name="chevron-left"></lucide-icon>
+          </button>
+        </div>
+        {{ targetId > 0 ? 'Edit Target' : 'Add Target' }}
+      </h2>
+    </section>
+    <mat-card>
 
-<div class="container">
-    <!-- Left: Edit Target Form -->
-    <div class="left-panel">
-      <!-- <h2>Target</h2> -->
-      <form [formGroup]="targetForm">
-        <!-- Your form controls for editing the target -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Target Name</mat-label>
-          <input matInput formControlName="target_name" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Quality Of Service</mat-label>
-          <mat-select formControlName="quality_of_service">
-            <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
-              {{ quality }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Frequency Of Update</mat-label>
-          <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1"/>
-        </mat-form-field>
+      <div class="container">
+        <div class="target-container">
+          <!-- Left: Edit Target Form -->
+          <div class="left-panel">
+            <div class="usecaseid-container" *ngIf="targetId>0">
+              <div style="display: flex;gap: 1rem;align-items: center;">
+                <p>Usecase ID : {{useCaseId}}</p>
+                <p>Usecase Name : {{useCaseName}}</p>
+              </div>
 
-        <!-- <mat-form-field appearance="outline" class="full-width">
+              <span class="update-link">
+                <button (click)="selectUseCase('usecase')">
+                  Update Use Case
+                </button>
+              </span>
+            </div>
+            <form [formGroup]="targetForm">
+              <!-- Your form controls for editing the target -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Target Name</mat-label>
+                <input matInput formControlName="target_name" />
+                <mat-error *ngIf="targetForm.get('target_name')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Quality Of Service</mat-label>
+                <mat-select formControlName="quality_of_service">
+                  <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+                    {{ quality }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="targetForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Frequency Of Update</mat-label>
+                <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1" />
+                <mat-error *ngIf="targetForm.get('frequency_of_update')?.hasError('required')">
+                Required
+              </mat-error>
+              </mat-form-field>
+
+              <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Schedule Of Update</mat-label>
           <input matInput formControlName="schedule_of_update" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Schedule Of Update</mat-label>
-          <mat-select formControlName="schedule_of_update" multiple
-          (selectionChange)="onScheduleSelectionChange($event)">
-            <mat-option *ngFor="let time of timeOptions" [value]="time">
-              {{ time }}
-            </mat-option>
-          </mat-select>
-          <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
-            You can only select {{ frequencyLimit }} time(s)
-          </mat-hint>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Methodology Of Transfer</mat-label>
-          <input matInput formControlName="methodology_of_transfer" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Target Type</mat-label>
-          <!-- <input matInput formControlName="target_type" /> -->
-          <mat-select formControlName="target_type">
-            <mat-option *ngFor="let option of targetTypeOptions" [value]="option">{{ option }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Version</mat-label>
-          <input matInput formControlName="target_version_number" />
-        </mat-form-field>
-  
-        <!-- <mat-form-field appearance="outline" class="full-width">
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Schedule Of Update</mat-label>
+                <mat-select formControlName="schedule_of_update" multiple
+                  (selectionChange)="onScheduleSelectionChange($event)">
+                  <mat-option *ngFor="let time of timeOptions" [value]="time">
+                    {{ time }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+                You can only select {{ frequencyLimit }} time(s)
+              </mat-hint>
+              <mat-error *ngIf="targetForm.get('schedule_of_update')?.hasError('required')">
+                Required
+              </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Methodology Of Transfer</mat-label>
+                <input matInput formControlName="methodology_of_transfer" />
+                <mat-error *ngIf="targetForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Target Type</mat-label>
+                <!-- <input matInput formControlName="target_type" /> -->
+                <mat-select formControlName="target_type">
+                  <mat-option *ngFor="let option of targetTypeOptions" [value]="option">{{ option }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="targetForm.get('target_type')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Version</mat-label>
+                <input matInput formControlName="target_version_number" />
+                <mat-error *ngIf="targetForm.get('target_version_number')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <!-- <mat-form-field appearance="outline" class="full-width">
           <mat-label>Status</mat-label>
           <input matInput formControlName="target_status" />
         </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="target_status">
-            <mat-option *ngFor="let status of statusOptions" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner</mat-label>
-          <input matInput formControlName="target_owner" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Owner Email</mat-label>
-          <input matInput formControlName="target_owner_email" />
-        </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="target_status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status">
+                    {{ status }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="targetForm.get('target_status')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Target Entity</mat-label>
-          <input matInput formControlName="target_entity" />
-        </mat-form-field>
 
-        <div style="width: 48%; float:right;    margin-top: 8px;
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Owner</mat-label>
+                <input matInput formControlName="target_owner" />
+                <mat-error *ngIf="targetForm.get('target_owner')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Owner Email</mat-label>
+                <input matInput formControlName="target_owner_email" />
+                <mat-error *ngIf="targetForm.get('target_owner_email')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="targetForm.get('target_owner_email')?.hasError('email')">Invalid email</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Target Entity</mat-label>
+                <input matInput formControlName="target_entity" />
+                <mat-error *ngIf="targetForm.get('target_entity')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <!-- <div style="width: 48%; float:right;    margin-top: 8px;
         font-size: 15px;">
-      Usecase ID : {{useCaseId}}
-      <br>
-      Usecase Name : {{useCaseName}}
-    </div>
+                Usecase ID : {{useCaseId}}
+                <br>
+                Usecase Name : {{useCaseName}}
+              </div> -->
 
-        <!-- Add remaining fields similarly -->
-        <div class="updateBtn">
-          <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
-          </div>
-      
-<!-- Toggle Button -->
-<div style="display: flex; height: 100%;">
-  <!-- Left Side Buttons -->
-  <div style="width: 100%; padding: 12px;">
-    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-      <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-      [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
-              (click)="addDatafields('datafields')">
-        Add Datafields
-      </button>
-      <button mat-raised-button  style="flex: 0 0 calc(50% - 6px);"
-      [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
-              (click)="selectUseCase('usecase')">
-        Update Use Case
-      </button>
+              <!-- Add remaining fields similarly -->
+              <!-- <div class="updateBtn">
+                <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
+              </div> -->
 
-      <!-- <button mat-stroked-button
-              style="flex: 0 0 calc(50% - 6px);"
-              [color]="activeView === 'dqa' ? 'primary' : 'accent'"
-              (click)="showDQA('dqa')">
-              Data Quality Risk
-      </button> -->
-      </div>
-      </div>
-      </div>
-      </form>
-
-    </div>
-  
-    <!-- Right: DataFields Table -->
-    <div class="right-panel" *ngIf="showDataFieldsTable">
-              <!-- Information Box -->
-        <div class="info-box-table" *ngIf="showDataQuality">
-            <table>
-              <thead>
-                <tr>
-                  <th>Completeness</th>
-                  <th>Completeness Commentary</th>
-                  <th>Timeliness</th>
-                  <th>Timeliness Commentary</th>
-                  <th>Accuracy</th>
-                  <th>Accuracy Commentary</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let i of [1]">
-                  <td class="low-orange">Low</td>
-                  <td>System Generated</td>
-                  <td class="low-blue">Low</td>
-                  <td>Capacity Managed</td>
-                  <td class="low-pink">Low</td>
-                  <td>System Generated</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="datafields-header" *ngIf="showDataFields">
-            <!-- <h3>DataFields</h3> -->
-            <!-- <button mat-raised-button color="primary" (click)="addField()">+ Add DataField</button> -->
-            <button (click)="addRow()" class="add-btn">Add Row</button>
-            <button (click)="openReportBuilder()" class="add-btn" style="margin-left: 12px;">
-              Build DQA Report
-            </button>
-          </div>
-          
-      <div class="datafields-table" *ngIf="showDataFields">
-        <div class="content-wrapper">
-
-        <div class="aggrid" [class.shrinked]="showReport">
-        <ag-grid-angular
-        class="ag-theme-alpine"
-        style="width: 100%; height: 720px;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        (gridReady)="onGridReady($event)"
-        [defaultColDef]="defaultColDef"
-        (cellValueChanged)="onCellValueChanged($event)"
-        rowSelection="single"
-        [suppressColumnVirtualisation]="true"
-        [domLayout]="'normal'"
-        >
-        </ag-grid-angular>
-        
-      </div>
-      
-      
-      <div class="report-builder" *ngIf="showReport">
-
-        <!-- Popup -->
-<div *ngIf="reportVisible" class="popup-overlay">
-  <!-- <div class="popup-box row">
-    
-<div class="col-md-5">
-  <form [formGroup]="targetUseCaseForm">
-
-  <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-    <mat-label>Select Use Case</mat-label>
-    <mat-select formControlName="selectedUseCaseId">
-      <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id">
-        {{ uc.use_case_name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  </form>
-   
-    </div>
-<div class="col-md-6">
-  <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;margin-left:6px;">Continue</button>
-    
-  <button mat-raised-button color="primary" (click)="onCloseBuilder()" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button>
-
-  </div>
-  </div> -->
-</div>
-
-        <app-report-builder
-        [visible]="reportVisible"
-        [position]="reportPosition"
-        [gridRows]="rowData"
-        (build)="onBuildReport($event)"
-        (close)="onCloseBuilder()">
-      </app-report-builder>
-      </div>
-    </div>
-
-    </div>
-
-    <ng-template #useCasePopup>
-    
-      <h2 mat-dialog-title>Select Use Case</h2>
-      <mat-dialog-content>
-        <div class="popup-box row">
-      
-          <div class="col-md-7">
-          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-            <mat-label>Select Use Case</mat-label>
-            <mat-select [(ngModel)]="useCaseId">
-              <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
-                {{ uc.use_case_name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Submit</button>
+              <!-- Toggle Button -->
+              <!-- <div style="display: flex; height: 100%;">
               
-            <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
-          
-            <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
-          
+                <div style="width: 100%; padding: 12px;">
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                      [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
+                      (click)="addDatafields('datafields')">
+                      Add Datafields
+                    </button>
+                    <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
+                      [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
+                      (click)="selectUseCase('usecase')">
+                      Update Use Case
+                    </button>               
+                  </div>
+                </div>
+              </div> -->
+            </form>
+            <div class="form-grid">
+              <button (click)="onUpdate()">Save</button>
             </div>
+          </div>
+
+          <!-- Right: DataFields Table -->
+          <div class="right-panel" *ngIf="targetId>0">
+            <!-- TABS CONTAINER -->
+            <div class="tab-container">
+              <button [ngClass]="{ 'inverse': activeView === 'DataFileds' }" (click)="openTab('DataFileds')">
+                Data fields
+              </button>
+
+              <button [ngClass]="{ 'inverse': activeView === 'DQAReport' }" (click)="openTab('DQAReport')">
+                Build DQA Report
+              </button>
             </div>
-          </mat-dialog-content>
-    </ng-template>
-    </div>
-  </div>
-  </mat-card>
+
+            <div class="datafields-table" *ngIf="showDataFields">
+              <div class="datafields-header" *ngIf="showDataFields">
+                <button (click)="addRow()"
+                  style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
+              </div>            
+
+              <div class="aggrid" >
+                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 720px;" [rowData]="rowData"
+                    [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" [defaultColDef]="defaultColDef"
+                    (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
+                    [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
+                  </ag-grid-angular>
+                </div>
+            </div>
+            <div  class="datafields-table" *ngIf="showReport">
+                <div class="report-builder" >
+                  <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"
+                    (build)="onBuildReport($event)" (close)="onCloseBuilder()">
+                  </app-report-builder>
+                </div>
+            </div>          
+
+            <ng-template #useCasePopup>
+
+              <h2 mat-dialog-title>Select Use Case</h2>
+              <mat-dialog-content>
+                <div class="popup-box row">
+                  <div class="col-md-7">
+                    <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                      <mat-label>Select Use Case</mat-label>
+                      <mat-select [(ngModel)]="useCaseModel">
+                        <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                          {{ uc.use_case_name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <button mat-raised-button color="primary" (click)="confirmUseCase()"
+                      style="height: 43px; margin-top: 6px;">Submit</button>
+
+                    <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
+
+                    <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+
+                  </div>
+                </div>
+              </mat-dialog-content>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </mat-card>
   </main>
-  </div>
+</div>

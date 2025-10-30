@@ -122,8 +122,7 @@
             <div class="datafields-table" *ngIf="showInputDataFields">
               <div class="datafields-header">
                 <div style="display: flex;gap: 16px;align-items: center;padding: 6px;">
-                  <button (click)="addRow()"
-                    style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
+                  <button (click)="addRow()" style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
                   <label style="font-size: 13px;font-weight: 400;">
                     <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
                       (change)="toggleInboundGrid($event)" />
