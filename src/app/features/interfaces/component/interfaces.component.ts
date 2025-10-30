@@ -8,6 +8,7 @@ import { InterfaceService } from '../services/interface.service';
 import { Router } from '@angular/router';
 import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
+import { createElement, icons } from 'lucide';
 
 
 
@@ -61,19 +62,24 @@ export class InterfacesComponent {
       sortable: false,
       minWidth: 100, 
       flex:1,
+      pinned:"right",
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
     
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-edit';
-        saveDataFields.style.color = '#098236';
-        // saveDataFields.style.border = '1px solid lightGrey';
-        // saveDataFields.style.borderRadius = '5px';
-        // saveDataFields.style.lineHeight = '20px';
-        // saveDataFields.style.height = '24px';
+        saveDataFields.title = 'Edit';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.border = 'none';
         saveDataFields.style.cursor = 'pointer';
-        saveDataFields.title = 'Save';
+        saveDataFields.style.background = 'transparent';
+
+        const editIcon = createElement(icons.Pencil, {
+          color: '#098236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(editIcon);
     
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -81,35 +87,43 @@ export class InterfacesComponent {
         });
     
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = '#c10007';
-        // deleteDataFields.style.border = '1px solid lightGrey';
-        // deleteDataFields.style.borderRadius = '5px';
-        // deleteDataFields.style.lineHeight = '20px';
-        // deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
-    
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
         deleteDataFields.addEventListener('click', () => {
           this.deleteInterface(params.node);
         });
 
         // 🧬 Clone Button
-    const cloneBtn = document.createElement('button');
-    cloneBtn.className = 'fa fa-clone';
-    cloneBtn.style.color = '#1347e6';
-    // cloneBtn.style.border = '1px solid lightGrey';
-    // cloneBtn.style.borderRadius = '5px';
-    // cloneBtn.style.height = '24px';
-    cloneBtn.style.cursor = 'pointer';
-    cloneBtn.title = 'Clone';
-    cloneBtn.addEventListener('click', () => {
-      this.cloneInterface(params.node.data);
-    });
+        const cloneDataFields = document.createElement('button');
+        cloneDataFields.title = 'Copy';
+        cloneDataFields.style.border = 'none';
+        cloneDataFields.style.padding = '0px';
+        cloneDataFields.style.cursor = 'pointer';
+        cloneDataFields.style.background = 'transparent';
+
+        const cloneBtn = createElement(icons.Copy, {
+          color: '#3e63dd',
+          height: '14px',
+          strokeWidth: 2
+        });
+        cloneDataFields.appendChild(cloneBtn);
+        cloneDataFields.addEventListener('click', () => {
+          this.cloneInterface(params.node.data);
+        });
     
         div.appendChild(saveDataFields);
         div.appendChild(deleteDataFields);
-        div.appendChild(cloneBtn);
+        div.appendChild(cloneDataFields);
 
         return div;
       }

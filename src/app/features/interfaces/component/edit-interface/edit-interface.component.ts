@@ -10,6 +10,7 @@ import { DatafieldsService } from 'src/app/features/shared-services/datafields.s
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { MatSelectChange } from '@angular/material/select';
+import { createElement, icons } from 'lucide';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -168,20 +169,25 @@ export class EditInterfaceComponent implements OnInit {
       filter: false,
       sortable: false,
       minWidth: 100,
+      pinned: 'right',
       flex: 1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -189,14 +195,18 @@ export class EditInterfaceComponent implements OnInit {
         });
 
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
 
         deleteDataFields.addEventListener('click', () => {
           this.deleteDAtaFields(params.node);
@@ -210,11 +220,12 @@ export class EditInterfaceComponent implements OnInit {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
+  defaultColDef: ColDef = {
     resizable: true,
+    sortable: true,
     filter: true,
-    suppressSizeToFit: true
+    suppressSizeToFit: true,
+    editable: false,
   };
 
   rowData: any;
@@ -428,11 +439,11 @@ export class EditInterfaceComponent implements OnInit {
       //   }
       // })
       this.interfaceService.updateInterface(payload).subscribe({
-          next: (res: any) => {
-            this.toastNotificationService.success('Interface Updated Successfully. Your Interface ID is ' + this.interfaceId);            
-          },
-          error: () => this.toastNotificationService.error('Failed to update interface.')
-        });
+        next: (res: any) => {
+          this.toastNotificationService.success('Interface Updated Successfully. Your Interface ID is ' + this.interfaceId);
+        },
+        error: () => this.toastNotificationService.error('Failed to update interface.')
+      });
     }
     else {
       const payload = {
@@ -450,13 +461,13 @@ export class EditInterfaceComponent implements OnInit {
         }
       };
 
-    this.interfaceService.createInterface(payload).subscribe({
-      next: (res: any) => {
-        this.toastNotificationService.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
-        this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
-      },
-      error: () => this.toastNotificationService.error('Failed to create interface.')
-    });
+      this.interfaceService.createInterface(payload).subscribe({
+        next: (res: any) => {
+          this.toastNotificationService.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
+          this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+        },
+        error: () => this.toastNotificationService.error('Failed to create interface.')
+      });
     }
   }
 

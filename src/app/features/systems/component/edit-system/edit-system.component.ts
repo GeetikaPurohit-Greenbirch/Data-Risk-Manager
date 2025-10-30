@@ -1391,17 +1391,11 @@ loadDropdownOptions(): void {
         if (this.gridApiIn && this.showGlobalQualityRiskGridInbound) {
           this.gridApiIn.setRowData(this.rowDataInboundDQA);
         }
-  
         this.cdr.detectChanges(); // trigger Angular change detection
-        
-      
       },
       error: (err: any) => {
         console.error('Failed to load interface:', err);
-        
-      }
-         // Force refresh with setRowData
-    
+      } // Force refresh with setRowData
     });
   }
   }
@@ -1455,7 +1449,6 @@ loadDropdownOptions(): void {
               }, 1000);
           });
         }
-       
   }
 
   saveDatafields(data:any)
@@ -1501,14 +1494,10 @@ loadDropdownOptions(): void {
           }, 1000);
         });
       }
-     
-    
   }
 
-
   deleteDAtaFields(data:any)
-  {
-       
+  {  
     this.datafieldsService.deleteDataFields(data.data.field_id, 'SYSTEM', this.systemId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
       this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
@@ -1517,7 +1506,6 @@ loadDropdownOptions(): void {
 
       }, 1000);
   })
-
   }
 
   addInbound(view: string)
@@ -1554,14 +1542,12 @@ loadDropdownOptions(): void {
 
     this.openLineagePopup();
     this.cdr.detectChanges();
-
-
   }
 
   openLineagePopup() {
     const dialogRef = this.dialog.open(CreateLineageComponent, {
-      width: '80vw',       // adjust width
-      height: '80vh',      // adjust height
+      width: '94vw',       // adjust width
+      height: '84vh',      // adjust height
       data: {
         inboundFields: this.inboundFields,
         outboundFields: this.outboundFields,
@@ -1575,20 +1561,16 @@ loadDropdownOptions(): void {
   });
   }
 
-
   addInterface()
   {
     const newRow = {}; // or prefill with defaults
     this.rowDataInbound = [...this.rowDataInbound, newRow]; // Add new row
   }
 
-
   addOutInterface()
   {
     const newRow = {}; // or prefill with defaults
-
     this.rowDataOutbound = [...this.rowDataOutbound, newRow]; // Add new row
-  
   }
 
   saveInboundInterface(data:any, interface_type:string)
@@ -1630,7 +1612,6 @@ loadDropdownOptions(): void {
     const interfaceId = str.split(" - ")[0]; // Extract "2", "3", etc.
  
     this.getInterfaceDataFields(interfaceId);
-   
       this.interfaceService.deleteInboundInterface(interfaceId, this.systemId, interface_type).subscribe(res => {
         if(res)
         {

@@ -1,23 +1,13 @@
 <div class="lineage-container">
-  <div class="mapping-btn">
-    <button mat-raised-button color="primary" (click)="saveMappings()"  >Save Mappings</button>
-    &nbsp;&nbsp;&nbsp;
-    <button mat-raised-button color="red" (click)="saveMappings()" >Delete Mappings</button>
-  
-  </div>
-    <div class="field-tables">
-      
-      
-        <!-- JointJS Canvas Overlay -->
-    <!-- <div #paperContainer id="paper-container" class="diagram-canvas paper-scroll"></div> -->
-    <!-- <div #paperContainer id="paper-container" class="paper-wrapper" ></div> -->
+  <div class="field-tables">
     <div class="paper-wrapper">
-      <div id="paper-container"></div>
-    </div>
-    
+      <!-- Buttons placed inside wrapper for overlay positioning -->
+      <div class="mapping-btn">
+        <button class="save-btn" (click)="saveMappings()">Save Mappings</button>
+        <button class="delete-btn" (click)="deleteMappings()">Delete Mappings</button>
+      </div>
 
-  
+      <div id="paper-container" class="diagram-canvas"></div>
     </div>
-  
   </div>
-
+</div>

@@ -103,13 +103,15 @@ body {
 
     .back-icon {
       button {
-        // width: 34px;
         border: none;
-        // height: 34px;
+        padding: 0rem;
         color: #ffffff;
         border-radius: 100%;
-        // background-color: #6467f1;
         background-color: transparent;
+
+        & svg {
+          color: currentColor;
+        }
 
         i {
           font-size: 14px;
@@ -504,4 +506,20 @@ body {
 .mat-mdc-select-value,
 .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
   font-size: 14px;
+}
+
+// ==== AG GRID STYLES ====
+.ag-header {
+  :where(.ag-icon):before {
+    content: "";
+    background-color: #333;
+  }
+
+  .ag-header-cell-resize {
+    &::after {
+      width: 1px;
+      content: "";
+      background-color: rgb(232, 232, 232);
+    }
+  }
 }

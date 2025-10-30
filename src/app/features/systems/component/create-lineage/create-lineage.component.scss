@@ -1,126 +1,164 @@
 .lineage-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  // display: flex;
+  // flex-direction: column;
+  position: relative;
 }
 
-/* Wrap the paper with scrollable container */
+// .diagram-canvas {
+//   width: 100%;
+//   height: 80vh;
+//   overflow: scroll;
+//   position: relative;
+//   scrollbar-width: thin;
+//   border: 1px solid #ccc;
+//   scrollbar-color: #999 #f0f0f0;
+
+//   &::-webkit-scrollbar {
+//     width: 10px;
+//     height: 10px;
+//   }
+
+//   &::-webkit-scrollbar-track {
+//     background: #f0f0f0;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     background: #999;
+//     border-radius: 5px;
+//   }
+
+//   &::-webkit-scrollbar-thumb:hover {
+//     background: #666;
+//   }
+// }
+
+// .paper-scroll {
+//   width: 100%;
+//   border: 1px solid #ccc;
+//   height: calc(100vh - 250px);
+// }
+
+.mapping-btn {
+  // margin: 0 auto;
+  // width: 30%;
+}
+
+// .field-tables {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
+// .table-wrapper {
+//   width: 45%;
+// }
+
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.fields-table th,
+.fields-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+.diagram-overlay {
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: auto;
+}
+
+// .paper-wrapper {
+//   width: 100%;
+//   height: 80vh;   // or fixed 600px
+//   // overflow: scroll !important;  // ✅ force scrollbars
+//   border: 1px solid #ccc;
+//   border-radius: 8px;
+//   background: #fafafa;
+// }
+
+
+
+.joint-paper {
+  background-color: transparent !important;
+}
+
+.joint-element rect {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.joint-element rect:hover {
+  stroke-width: 3;
+  stroke: #ff9800 !important;
+}
+
+
+// .paper-container {
+//   width: 100%;
+//   height: calc(100vh - 100px); // Adjust as needed
+//   border: 1px solid #ccc;
+//   // overflow: scroll !important; // ✅ enable scrollbars
+//   position: relative; // required for JointJS paper
+// }
+
+
+// .paper-wrapper {
+//   width: 100%;
+//   height: 780px;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+//   border: 1px solid #ccc;
+// }
+
+.paper-wrapper {
+  width: 100%;
+  height: 600px;
+  position: relative;
+}
+
+#paper-container {
+  width: 2000px;
+  min-height: 100%;
+}
+
 .diagram-canvas {
   width: 100%;
-  height: 80vh;
-  border: 1px solid #ccc;
-  overflow: scroll;          /* enables scrolling */
-  position: relative;
-
-  /* ✅ Force scrollbar visibility */
-  scrollbar-width: thin;   /* Firefox */
-  scrollbar-color: #999 #f0f0f0;
-
-  &::-webkit-scrollbar {   /* Chrome, Edge, Safari */
-    width: 10px;
-    height: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f0f0f0;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #999;
-    border-radius: 5px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #666;
-  }
+  margin: 0px;
+  height: 100%;
+  background-color: #fff;
+  // border: 1px solid #ccc;
 }
 
-.paper-scroll {
-  width: 100%;
-  height: calc(100vh - 250px); // adjust as needed
-  // overflow: auto; // ✅ shows scrollbar
-  border: 1px solid #ccc;
+.mapping-btn {
+  top: 15px;
+  gap: 10px;
+  z-index: 10;
+  right: 20px;
+  display: flex;
+  position: absolute;
 }
 
-.mapping-btn{
-  margin: 0 auto;
-  width: 30%;
-}
-  
-  .field-tables {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .table-wrapper {
-    width: 45%;
-  }
-  
-  .fields-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-  }
-  
-  .fields-table th,
-  .fields-table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .diagram-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: auto; // needed to interact with links
-    z-index: 2;
-  }
-  // .paper-wrapper {
-  //   width: 100%;
-  //   height: 80vh;   // or fixed 600px
-  //   // overflow: scroll !important;  // ✅ force scrollbars
-  //   border: 1px solid #ccc;
-  //   border-radius: 8px;
-  //   background: #fafafa;
-  // }
-  
-  
-  
-  .joint-paper {
-    background-color: transparent !important;
-  }
-  
-  .joint-element rect {
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .joint-element rect:hover {
-    stroke: #ff9800 !important;
-    stroke-width: 3;
-  }
-  
-  
-  // .paper-container {
-  //   width: 100%;
-  //   height: calc(100vh - 100px); // Adjust as needed
-  //   border: 1px solid #ccc;
-  //   // overflow: scroll !important; // ✅ enable scrollbars
-  //   position: relative; // required for JointJS paper
-  // }
-  
+.mapping-btn button {
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #007bff;
 
-  .paper-wrapper {
-    width: 100%;
-    height: 780px;       /* fixed height for viewport */
-    overflow-y: auto;    /* vertical scroll */
-    overflow-x: hidden;  /* disable horizontal scroll unless you want both */
-    border: 1px solid #ccc;
+  &.delete-btn {
+    background-color: #dc3545;
   }
-  
-  #paper-container {
-    width: 2000px;   /* make wide enough for inbound + outbound */
-    min-height: 100%; /* ensures container fills scroll area */
-  }
-  
+}

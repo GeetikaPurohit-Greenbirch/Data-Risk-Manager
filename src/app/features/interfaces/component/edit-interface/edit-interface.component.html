@@ -105,36 +105,39 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner Email</mat-label>
                 <input matInput formControlName="interface_owner_email" />
-              </mat-form-field>            
-             
+              </mat-form-field>
+
             </form>
-             <div class="form-grid">
+            <div class="form-grid">
               <button (click)="onUpdate()">Save</button>
             </div>
-
           </div>
 
           <!-- Right: DataFields Table -->
           <div class="right-panel" *ngIf="interfaceId>0">
-            <!-- Information Box -->          
-              
+            <!-- Information Box -->
+
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'interfaces' }" >
+              <button [ngClass]="{ 'inverse': activeView === 'interfaces'}">
                 Data Fields
               </button>
-            </div>           
+            </div>
 
             <div class="datafields-table" *ngIf="showDataFields">
-               <div class="datafields-header">
-                  <button (click)="addRow()" class="add-btn" style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
+              <div class="datafields-header" style="padding: 6px;">
+                <button (click)="addRow()"
+                  style="font-size: 12px;border: none;background: transparent;color: #3e63dd;font-weight: 600;">Add
+                  Row</button>
               </div>
-              
-              <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
-                [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-                (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
-                [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
-              </ag-grid-angular>
-            
+              <div style="margin: 10px;">
+                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
+                  [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+                  (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
+                  [suppressColumnVirtualisation]="true" [domLayout]="'autoHeight'">
+                </ag-grid-angular>
+              </div>
+
+
             </div>
 
           </div>
