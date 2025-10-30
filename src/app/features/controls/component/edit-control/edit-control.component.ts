@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -24,9 +24,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrl: './edit-control.component.scss'
 })
 export class EditControlComponent {
-controlForm!: FormGroup;
+  controlForm!: FormGroup;
   showDataFields = false;
-  
+
   // ✅ DataFields table data
   dataFields: any[] = [
     { fieldId: 1, fieldName: 'A', dataType: 'Num' },
@@ -50,37 +50,38 @@ controlForm!: FormGroup;
     'READY_FOR_PRODUCTION',
     'IN_PRODUCTION',
     'ARCHIVED'];
-  applicationStatusOptions= ['TARGET', 'PLANNED', 'COMMITTED', 'DELAYED'];
+  applicationStatusOptions = ['TARGET', 'PLANNED', 'COMMITTED', 'DELAYED'];
   filteredAttachToIdOptions: { id: number, name: string }[] = [];
-  attachTo!:string;
-  attachToId!:number;
+  attachTo!: string;
+  attachToId!: number;
   activeView!: string; // default view on load
   formLoaded = false;
-  dataFieldsModel : Datafields = new Datafields();
+  dataFieldsModel: Datafields = new Datafields();
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private controlService: ControlService,
-        private sourceService: SourceService,
-        private systemService: SystemServiceService,
-        private toastNotificationService: ToastnotificationService,
-        private datafieldsService: DatafieldsService,
-        private cdr: ChangeDetectorRef,
-        private interfaceService: InterfaceService,
-  ) {}
+    private sourceService: SourceService,
+    private systemService: SystemServiceService,
+    private toastNotificationService: ToastnotificationService,
+    private datafieldsService: DatafieldsService,
+    private cdr: ChangeDetectorRef,
+    private interfaceService: InterfaceService,
+    private router: Router,
+  ) { }
 
 
-  columnDefs:(ColDef | ColGroupDef)[]= [
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID'},
-    { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name'},
-    { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID'},
+  columnDefs: (ColDef | ColGroupDef)[] = [
+    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
+    { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name' },
+    { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID' },
     // { field: 'interface_name', headerName: 'Entity Name', editable: false, },
     { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type' },
     { field: 'field_length', headerName: 'Field Length', editable: false, headerTooltip: 'Field Length' },
     { field: 'field_description', headerName: 'Field Description', editable: false, headerTooltip: 'Field Description' },
-    
-    
+
+
     // { field: 'data_type', headerName: 'Data Type', editable: true,
     //   cellEditor: 'agSelectCellEditor',
     //   cellEditorParams: {
@@ -107,7 +108,8 @@ controlForm!: FormGroup;
     //   },
     // },
     // { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
-    { field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
+    {
+      field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["High", "Medium", "Low"],
@@ -116,7 +118,7 @@ controlForm!: FormGroup;
         color: 'red',
         fontWeight: 'bold'
       },
-     },
+    },
     // {
     //   headerName: 'Before Control Timeliness',
     //   field: 'dqa_t',
@@ -137,7 +139,8 @@ controlForm!: FormGroup;
     //   }
     // },
     // { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
-    { field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
+    {
+      field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["High", "Medium", "Low"],
@@ -146,7 +149,7 @@ controlForm!: FormGroup;
         color: 'blue',
         fontWeight: 'bold'
       },
-     },
+    },
     // {
     //   headerName: 'After Control Accuracy',
     //   field: 'dqa_a',
@@ -167,7 +170,8 @@ controlForm!: FormGroup;
     //   }
     // },
     // { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
-    { field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
+    {
+      field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
         values: ["High", "Medium", "Low"],
@@ -176,18 +180,18 @@ controlForm!: FormGroup;
         color: 'purple',
         fontWeight: 'bold'
       },
-     },
+    },
     {
       headerName: 'Actions',
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
-      flex:1,
+      minWidth: 100,
+      flex: 1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
-    
+
         const saveDataFields = document.createElement('button');
         saveDataFields.className = 'fa fa-save';
         saveDataFields.style.color = 'green';
@@ -197,12 +201,12 @@ controlForm!: FormGroup;
         saveDataFields.style.height = '24px';
         saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
-    
+
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
           this.saveDatafields(params.node);
         });
-    
+
         const deleteDataFields = document.createElement('button');
         deleteDataFields.className = 'fa fa-trash';
         deleteDataFields.style.color = 'red';
@@ -212,14 +216,14 @@ controlForm!: FormGroup;
         deleteDataFields.style.height = '24px';
         deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
-    
+
         deleteDataFields.addEventListener('click', () => {
           // this.deleteDAtaFields(params.node);
         });
-    
+
         div.appendChild(saveDataFields);
         // div.appendChild(deleteDataFields);
-    
+
         return div;
       }
     },
@@ -228,13 +232,13 @@ controlForm!: FormGroup;
   defaultColDef = {
     flex: 1,
     resizable: true,
-    filter:true,
+    filter: true,
     suppressSizeToFit: true
   };
 
   rowData: any;
 
-  
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -250,28 +254,28 @@ controlForm!: FormGroup;
     console.log('Updated row:', event.data);
   }
 
-  onDeleteRecord()
-  {
+  onDeleteRecord() {
 
   }
 
- 
+
   ngOnInit(): void {
     console.log('Editing control with ID:', this.controlId);
     this.controlForm = this.fb.group({
-        control_name: [''],
-         control_description:[''],
-         attach_to:[''],
-         attach_to_id:[''],
-         control_owner:[''],
-         control_owner_email:[''],
-         version_number: [''],
-         status: [''],
-         application_date: [''],
-         application_date_status: [''],
-         });
+      control_name: ['', Validators.required],
+      control_description: ['', Validators.required],
+      attach_to: ['', Validators.required],
+      attach_to_id: ['', Validators.required],
+      control_owner: ['', Validators.required],
+      control_owner_email: ['', [Validators.required, Validators.email]],
+      version_number: ['', Validators.required],
+      status: ['', Validators.required],
+      application_date: ['', Validators.required],
+      application_date_status: ['', Validators.required],
+    });
     this.controlId = Number(this.route.snapshot.paramMap.get('id'));
 
+    if (this.controlId > 0) {
       // Step 2: Fetch data from API and patch to form
       this.controlService.getControlById(this.controlId).subscribe({
         next: (res: any) => {
@@ -284,7 +288,7 @@ controlForm!: FormGroup;
           this.attachTo = data.attach_to;
           this.attachToId = data.attach_to_id;
           this.onChange(data.attach_to, data.attach_to_id); // Load options & set selected value
-
+          this.getControlsDatafields('datafields');
         },
         error: (err: any) => {
           console.error('Failed to load control:', err);
@@ -294,23 +298,26 @@ controlForm!: FormGroup;
       setTimeout(() => {
         this.cdr.detectChanges(); // ensure UI updates  
       }, 100);
-      
+
       this.formLoaded = true; // triggers re-render
-    
+    }
+    else {
+      this.formLoaded = true; // triggers re-render
+    }
   }
 
 
   onChange(attachTo: string, preselectedId?: string): void {
     this.filteredAttachToIdOptions = []; // Clear previous list
     this.controlForm.get('attach_to_id')?.setValue(null); // Reset selection
-  
+
     if (attachTo === 'SOURCE') {
       this.sourceService.getSources().subscribe(data => {
         this.filteredAttachToIdOptions = data.map(item => ({
           id: item.sourceEntity.source_id,
           name: item.sourceEntity.source_name
         }));
-  
+
         // Set preselected ID if available
         if (preselectedId) {
           this.controlForm.get('attach_to_id')?.setValue(preselectedId);
@@ -322,7 +329,7 @@ controlForm!: FormGroup;
           id: item.systemEntity.system_id,
           name: item.systemEntity.system_name
         }));
-  
+
         // Set preselected ID if available
         if (preselectedId) {
           this.controlForm.get('attach_to_id')?.setValue(preselectedId);
@@ -330,41 +337,39 @@ controlForm!: FormGroup;
       });
     }
   }
-  
+
 
   // Handle changes in cell values
   onCellValueChanged(event: any): void {
     console.log('Cell Value Changed:', event);
   }
 
-  addDatafields(view:string)
-  {
+  addDatafields(view: string) {
     this.activeView = view;
     this.showDataFields = true;
     // alert(this.attachTo +','+ this.attachToId);
-      this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
-        next: (res: any) => {
-          this.rowData = [...res]; // triggers change
-          if (this.gridApi) {
-            this.gridApi.setRowData([]); // Clear first to ensure refresh
-            this.gridApi.setRowData(this.rowData);
-          }
-    
-          this.cdr.detectChanges(); // trigger Angular change detection
-          
-          error: (err: any) => {
-            console.error('Failed to load interface:', err);
-          }
+    this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
+      next: (res: any) => {
+        this.rowData = [...res]; // triggers change
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowData);
         }
-           // Force refresh with setRowData
-      
-      });
+
+        this.cdr.detectChanges(); // trigger Angular change detection
+
+        error: (err: any) => {
+          console.error('Failed to load interface:', err);
+        }
+      }
+      // Force refresh with setRowData
+
+    });
   }
 
   interfaceOptionList: string[] = [];
 
-  getControlsDatafields(view:string)
-  {
+  getControlsDatafields(view: string) {
     this.activeView = view;
     this.showDataFields = true;
 
@@ -375,26 +380,26 @@ controlForm!: FormGroup;
           this.gridApi.setRowData([]); // Clear first to ensure refresh
           this.gridApi.setRowData(this.rowData);
         }
-  
+
         this.cdr.detectChanges(); // trigger Angular change detection
-        
+
         error: (err: any) => {
           console.error('Failed to load Controls:', err);
         }
       }
-         // Force refresh with setRowData
-    
+      // Force refresh with setRowData
+
     });
 
   }
 
-  loadInboundInterfaces(view:string) {
+  loadInboundInterfaces(view: string) {
     this.activeView = view;
 
     this.showDataFields = true;
     const interfaces$ = this.interfaceService.getInterface();
     const interfaceDataFields$ = this.interfaceService.getInboundData(this.attachToId);
-  
+
     forkJoin([interfaces$, interfaceDataFields$]).subscribe({
       next: ([interfaces, interfaceDataFields]: [any[], any[]]) => {
         try {
@@ -405,54 +410,52 @@ controlForm!: FormGroup;
                 `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
             );
           }
-  
+
           // Step 2: Parse and flatten inbound & outboundinterface fields from getInboundData()
           const parsedInboundInterfaces = JSON.parse(interfaceDataFields[0]?.inbound_interfaces || '[]');
-  
+
           const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
 
           // Assuming you have only one object in the array (as per your example)
           const rawData = interfaceDataFields[0]; // replace with your actual variable
-          if(rawData == undefined)
-          {
-            this.rowData = []; 
+          if (rawData == undefined) {
+            this.rowData = [];
           }
-          else
-          {
-          const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
-          const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
-          const systemFields = JSON.parse(rawData.system_fields || '[]');
+          else {
+            const inboundInterfaces = JSON.parse(rawData.inbound_interfaces || '[]');
+            const outboundInterfaces = JSON.parse(rawData.outbound_interfaces || '[]');
+            const systemFields = JSON.parse(rawData.system_fields || '[]');
 
-          let combinedFields: any[] = [];
+            let combinedFields: any[] = [];
 
-          // From system_fields
-          systemFields.forEach((field: any) => {
-            combinedFields.push({
-              ...field,
-              interface_name: rawData.system_name,
-              interface_id: rawData.system_id,
-              source: 'System'
-            });
-          });
-
-          // From inbound_interfaces
-          outboundInterfaces.forEach((intf: any) => {
-            intf.fields.forEach((field: any) => {
+            // From system_fields
+            systemFields.forEach((field: any) => {
               combinedFields.push({
                 ...field,
-                interface_name: intf.interface_name,
-                interface_id: intf.interface_id,
-                source: 'Outbound'
+                interface_name: rawData.system_name,
+                interface_id: rawData.system_id,
+                source: 'System'
               });
             });
-          });
 
-          this.rowData = combinedFields;
-          if (this.gridApi) {
-            this.gridApi.setRowData([]); // Clear first to ensure refresh
-            this.gridApi.setRowData(this.rowData);
+            // From inbound_interfaces
+            outboundInterfaces.forEach((intf: any) => {
+              intf.fields.forEach((field: any) => {
+                combinedFields.push({
+                  ...field,
+                  interface_name: intf.interface_name,
+                  interface_id: intf.interface_id,
+                  source: 'Outbound'
+                });
+              });
+            });
+
+            this.rowData = combinedFields;
+            if (this.gridApi) {
+              this.gridApi.setRowData([]); // Clear first to ensure refresh
+              this.gridApi.setRowData(this.rowData);
+            }
           }
-        }
           this.cdr.detectChanges(); // trigger Angular change detection
         } catch (e) {
           console.error('Error parsing interface data:', e);
@@ -478,63 +481,88 @@ controlForm!: FormGroup;
   }
 
   // ✅ Trigger update/save logic
+  
   onUpdate(): void {
     console.log('Form data:', this.controlForm.value);
-    // Submit or save logic here
-    const payload = {
+
+    if (this.controlForm.invalid) {
+      this.controlForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.controlForm.value;
+
+    // Base payload for both create and update
+    const payload: any = {
       controlEntity: {
-   
-    
-          control_id: this.controlId,
-          control_name:this.controlForm.value.control_name, 
-          control_description:this.controlForm.value.control_description,
-          attach_to:this.controlForm.value.attach_to,
-          attach_to_id:this.controlForm.value.attach_to_id,
-          control_owner:this.controlForm.value.control_owner,
-          control_owner_email:this.controlForm.value.control_owner_email,
-          version_number : this.controlForm.value.version_number,
-          status : this.controlForm.value.status,
-          application_date:this.controlForm.value.application_date,
-          application_date_status:this.controlForm.value.application_date_status,
-            
+        control_name: formValues.control_name,
+        control_description: formValues.control_description,
+        attach_to: formValues.attach_to,
+        attach_to_id: formValues.attach_to_id,
+        control_owner: formValues.control_owner,
+        control_owner_email: formValues.control_owner_email,
+        version_number: formValues.version_number,
+        status: formValues.status,
+        application_date: formValues.application_date,
+        application_date_status: formValues.application_date_status,
+
       }
     }
-    this.controlService.updateControl(payload).subscribe(res => {
-      if(res)
-      {
-        // alert("Control Updated Successfully. Your Control ID is "+ this.targetId);
-        this.toastNotificationService.success("Control Updated Successfully. Your Control ID is "+ this.controlId);
-        // window.location.reload();
+
+
+    const isUpdate = this.controlId > 0;
+    if (isUpdate) {
+      payload.controlEntity.control_id = this.controlId;
+    }
+
+    // Choose appropriate API call
+    const request$ = isUpdate
+      ? this.controlService.updateControl(payload)
+      : this.controlService.createControl(payload);
+
+    request$.subscribe({
+      next: (res: any) => {
+        const controlId = isUpdate ? this.controlId : res.controlEntity.control_id;
+        const action = isUpdate ? 'Updated' : 'Created';
+
+        this.toastNotificationService.success(`Control ${action} Successfully. Your Control ID is ${controlId}`);
+
+        if (!isUpdate) {
+          this.router.navigate(['/controls/edit-control', controlId]);
+        }
+      },
+      error: () => {
+        const action = isUpdate ? 'update' : 'create';
+        this.toastNotificationService.error(`Failed to ${action} control.`);
       }
-    })
+    });
   }
 
 
-  saveDatafields(data:any)
-   {
-     console.log(data, "Control Data Fields");
- 
-   this.dataFieldsModel.id = data.data.id;
-   this.dataFieldsModel.control_id = this.controlId;
-   this.dataFieldsModel.field_id = data.data.field_id;
-   this.dataFieldsModel.post_control_timeliness = data.data.post_control_dqa_t;
-   this.dataFieldsModel.post_control_accuracy = data.data.post_control_dqa_a;
-   this.dataFieldsModel.post_control_completeness = data.data.post_control_dqa_c;
-    
-      this.datafieldsService.updateControlsDatafields(this.dataFieldsModel).subscribe(() => {
+  saveDatafields(data: any) {
+    console.log(data, "Control Data Fields");
 
-        this.toastNotificationService.success("Data field updated Successfully.");
-        setTimeout(() => {
-          this.getControlsDatafields('datafields'); // refresh
-  
-        }, 1000);
-      });
-    
-   
+    this.dataFieldsModel.id = data.data.id;
+    this.dataFieldsModel.control_id = this.controlId;
+    this.dataFieldsModel.field_id = data.data.field_id;
+    this.dataFieldsModel.post_control_timeliness = data.data.post_control_dqa_t;
+    this.dataFieldsModel.post_control_accuracy = data.data.post_control_dqa_a;
+    this.dataFieldsModel.post_control_completeness = data.data.post_control_dqa_c;
+
+    this.datafieldsService.updateControlsDatafields(this.dataFieldsModel).subscribe(() => {
+
+      this.toastNotificationService.success("Data field updated Successfully.");
+      setTimeout(() => {
+        this.getControlsDatafields('datafields'); // refresh
+
+      }, 1000);
+    });
   }
 
-  deleteDAtaFields(data:any, id:number)
-  {
+  deleteDAtaFields(data: any, id: number) {
 
+  }
+  onBack() {
+    this.router.navigate(['/controls']);
   }
 }
