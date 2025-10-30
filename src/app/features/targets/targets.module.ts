@@ -6,6 +6,7 @@ import { TargetsComponent } from '../targets/component/targets.component';
 import { TargetBuilderComponent } from './component/target-builder/target-builder.component';
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditTargetComponent } from './component/edit-target/edit-target.component';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
@@ -17,7 +18,12 @@ import { EditTargetComponent } from './component/edit-target/edit-target.compone
   imports: [
     CommonModule,
     SharedModule,
-    TargetsRoutingModule
+    TargetsRoutingModule,
+     LucideAngularModule.pick({
+                  ChevronLeft: icons.ChevronLeft,
+                  Plus: icons.Plus,
+                  Trash2: icons.Trash2
+                }),
   ]
 })
 export class TargetsModule { }

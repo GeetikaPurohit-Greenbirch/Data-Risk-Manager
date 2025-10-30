@@ -508,6 +508,11 @@ body {
   font-size: 14px;
 }
 
+.responsive-grid {
+  min-height: 200px;
+  overflow-y: auto;
+}
+
 // ==== AG GRID STYLES ====
 .ag-header {
   :where(.ag-icon):before {

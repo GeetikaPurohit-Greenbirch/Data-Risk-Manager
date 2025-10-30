@@ -403,73 +403,61 @@ export class EditInterfaceComponent implements OnInit {
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.interfaceForm.value);
+
     if (this.interfaceForm.invalid) {
       this.interfaceForm.markAllAsTouched();
       return;
     }
-    // Extract form values
+
     const formValues = this.interfaceForm.value;
+    const isStreamingOrAdHoc =
+      formValues.quality_of_service === 'STREAMING' ||
+      formValues.quality_of_service === 'AD_HOC';
 
-    // If QoS is STREAMING or AD_HOC, nullify these fields
-    const isStreamingOrAdHoc = formValues.quality_of_service === 'STREAMING' || formValues.quality_of_service === 'AD_HOC';
-
-    // Submit or save logic here
-    if (this.interfaceId > 0) {
-      const payload = {
-        interfaceEntity: {
-          // this.interfaceModel.interface_id = this.interfaceForm.value.interfaceId;
-          interface_id: this.interfaceId,
-          interface_name: this.interfaceForm.value.interface_name,
-          quality_of_service: this.interfaceForm.value.quality_of_service,
-          frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
-          schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
-          methodology_of_transfer: this.interfaceForm.value.methodology_of_transfer,
-          interface_type: this.interfaceForm.value.interface_type,
-          interface_version_number: this.interfaceForm.value.interface_version_number,
-          interface_status: this.interfaceForm.value.interface_status,
-          interface_owner: this.interfaceForm.value.interface_owner,
-          interface_owner_email: this.interfaceForm.value.interface_owner_email
-        }
+    // Base payload for both create and update
+    const payload: any = {
+      interfaceEntity: {
+        interface_name: formValues.interface_name,
+        quality_of_service: formValues.quality_of_service,
+        frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
+        schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
+        methodology_of_transfer: formValues.methodology_of_transfer,
+        interface_type: formValues.interface_type,
+        interface_version_number: formValues.interface_version_number,
+        interface_status: formValues.interface_status,
+        interface_owner: formValues.interface_owner,
+        interface_owner_email: formValues.interface_owner_email
       }
-      // this.interfaceService.updateInterface(payload).subscribe(res => {
-      //   if (res) {
-      //     // alert("Interface Updated Successfully. Your Interface ID is "+ this.interfaceId);
-      //     this.toastNotificationService.success("Interface Updated Successfully. Your Interface ID is " + this.interfaceId);
-      //     // window.location.reload();
-      //   }
-      // })
-      this.interfaceService.updateInterface(payload).subscribe({
-        next: (res: any) => {
-          this.toastNotificationService.success('Interface Updated Successfully. Your Interface ID is ' + this.interfaceId);
-        },
-        error: () => this.toastNotificationService.error('Failed to update interface.')
-      });
-    }
-    else {
-      const payload = {
-        interfaceEntity: {
-          interface_name: this.interfaceForm.value.interface_name,
-          quality_of_service: this.interfaceForm.value.quality_of_service,
-          frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
-          schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
-          methodology_of_transfer: this.interfaceForm.value.methodology_of_transfer,
-          interface_type: this.interfaceForm.value.interface_type,
-          interface_version_number: this.interfaceForm.value.interface_version_number,
-          interface_status: this.interfaceForm.value.interface_status,
-          interface_owner: this.interfaceForm.value.interface_owner,
-          interface_owner_email: this.interfaceForm.value.interface_owner_email
-        }
-      };
+    };
 
-      this.interfaceService.createInterface(payload).subscribe({
-        next: (res: any) => {
-          this.toastNotificationService.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
-          this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
-        },
-        error: () => this.toastNotificationService.error('Failed to create interface.')
-      });
+    const isUpdate = this.interfaceId > 0;
+    if (isUpdate) {
+      payload.interfaceEntity.interface_id = this.interfaceId;
     }
+
+    // Choose appropriate API call
+    const request$ = isUpdate
+      ? this.interfaceService.updateInterface(payload)
+      : this.interfaceService.createInterface(payload);
+
+    request$.subscribe({
+      next: (res: any) => {
+        const interfaceId = isUpdate ? this.interfaceId : res.interfaceEntity.interface_id;
+        const action = isUpdate ? 'Updated' : 'Created';
+
+        this.toastNotificationService.success(`Interface ${action} Successfully. Your Interface ID is ${interfaceId}`);
+
+        if (!isUpdate) {
+          this.router.navigate(['/interfaces/edit-interface', interfaceId]);
+        }
+      },
+      error: () => {
+        const action = isUpdate ? 'update' : 'create';
+        this.toastNotificationService.error(`Failed to ${action} interface.`);
+      }
+    });
   }
+
 
   saveDatafields(data: any) {
     console.log(data, "Interface Data Fields");

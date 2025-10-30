@@ -56,33 +56,33 @@ export class SourcesComponent {
 
   columnDefs: (ColDef | ColGroupDef)[] = [
     { field: 'source_id', headerName: 'Source ID', editable: false },
-    { field: 'source_name', headerName: 'Name', editable: true },
-    { field: 'vendor', headerName: 'Vendor', editable: true },
+    { field: 'source_name', headerName: 'Name', editable: false },
+    { field: 'vendor', headerName: 'Vendor', editable: false },
     {
       field: 'quality_of_service',
       headerName: 'Quality Of Service',
-      editable: true,
+      editable: false,
     },
     {
       field: 'frequency_of_update',
       headerName: 'Frequency Of Update',
-      editable: true,
+      editable: false,
     },
     {
       field: 'schedule_of_update',
       headerName: 'Schedule Of Update',
-      editable: true,
+      editable: false,
     },
     {
       field: 'methodology_of_transfer',
       headerName: 'Methodology Of Transfer',
-      editable: true,
+      editable: false,
     },
-    { field: 'source_type', headerName: 'Source Type', editable: true },
-    { field: 'source_version_number', headerName: 'Version', editable: true },
-    { field: 'source_status', headerName: 'Status', editable: true },
-    { field: 'source_owner', headerName: 'Owner', editable: true },
-    { field: 'source_owner_email', headerName: 'Owner Email', editable: true },
+    { field: 'source_type', headerName: 'Source Type', editable: false },
+    { field: 'source_version_number', headerName: 'Version', editable: false },
+    { field: 'source_status', headerName: 'Status', editable: false },
+    { field: 'source_owner', headerName: 'Owner', editable: false },
+    { field: 'source_owner_email', headerName: 'Owner Email', editable: false },
     {
       headerName: 'Actions',
       editable: false,
@@ -108,8 +108,7 @@ export class SourcesComponent {
           strokeWidth: 2
         });
         saveDataFields.appendChild(editIcon);
-
-        // Pass row data or node to save
+        
         saveDataFields.addEventListener('click', () => {
           this.editSource(params.node);
         });

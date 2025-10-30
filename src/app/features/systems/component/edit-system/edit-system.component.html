@@ -134,10 +134,11 @@
                 <!-- <div class="table-container">
                   <div class="system-table-container">
                     <div class="grid-table"> -->
-                <div style="margin: 10px;">
+                <div style="margin: 10px">
                   <ag-grid-angular class="ag-theme-alpine responsive-grid" *ngIf="showGlobalQualityRiskGridInbound"
-                    style="width: 100%; height: 400px" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
-                    [defaultColDef]="defaultColDef" (gridReady)="onInboundGridReady($event)" rowSelection="single">
+                    style="width: 100%;height: 100%;" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
+                    [defaultColDef]="defaultColDef" (gridReady)="onInboundGridReady($event)" rowSelection="single"
+                    [domLayout]="'autoHeight'">
                   </ag-grid-angular>
                 </div>
                 <!-- </div>
@@ -187,10 +188,12 @@
                   (gridReady)="onOutboundGridReady($event)" rowSelection="single">
                 </ag-grid-angular>
 
-                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
-                  [columnDefs]="columnDefsOutbound" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="onCellValueChanged($event)" rowSelection="single">
-                </ag-grid-angular>
+                <div style="margin-top: 10px">
+                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
+                    [columnDefs]="columnDefsOutbound" [defaultColDef]="defaultColDef"
+                    (cellValueChanged)="onCellValueChanged($event)" rowSelection="single">
+                  </ag-grid-angular>
+                </div>
               </div>
 
               <div class="info-box-table" *ngIf="showoutbound">
