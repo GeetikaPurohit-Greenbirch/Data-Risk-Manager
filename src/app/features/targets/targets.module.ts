@@ -11,7 +11,7 @@ import { icons, LucideAngularModule } from 'lucide-angular';
 
 @NgModule({
   declarations: [
-    TargetsComponent, 
+    TargetsComponent,
     TargetBuilderComponent,
     EditTargetComponent,
   ],
@@ -19,11 +19,11 @@ import { icons, LucideAngularModule } from 'lucide-angular';
     CommonModule,
     SharedModule,
     TargetsRoutingModule,
-     LucideAngularModule.pick({
-                  ChevronLeft: icons.ChevronLeft,
-                  Plus: icons.Plus,
-                  Trash2: icons.Trash2
-                }),
+    LucideAngularModule.pick({
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2
+    }),
   ]
 })
 export class TargetsModule { }

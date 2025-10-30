@@ -12,7 +12,7 @@ import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
-  declarations: [    
+  declarations: [
     ControlsComponent,
     ControlBuilderComponent,
     EditControlComponent,
@@ -22,10 +22,10 @@ import { icons, LucideAngularModule } from 'lucide-angular';
     ControlsRoutingModule,
     SharedModule,
     LucideAngularModule.pick({
-                      ChevronLeft: icons.ChevronLeft,
-                      Plus: icons.Plus,
-                      Trash2: icons.Trash2
-                    }),
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2
+    }),
   ]
 })
 export class ControlsModule { }

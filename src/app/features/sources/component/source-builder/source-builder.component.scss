@@ -1,35 +1,100 @@
-.main-container {
-  display: flex;
+.mat-mdc-card {
+  margin: 0 auto;
+  box-shadow: none;
+  background: transparent;
+  width: calc(100% - 2rem);
 }
 
-.dashboard-container {
-  flex-grow: 1;
-  padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
-  overflow-y: auto;
-}
-.welcome-banner {
-  h2 {
-    gap: 10px;
-    display: flex;
-    align-items: center;
+// .container {
+//   padding: 1rem;
+// }
 
-    .back-icon {
+.source-container {
+  // gap: 0rem;
+  // width: 100%;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: space-between;
+
+  .left-panel {
+    gap: 0rem;
+    width: 100%;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid rgb(232, 232, 232);
+
+    .usecase-form {
+      padding: 1rem;
+      max-width: 1200px;
+      border-radius: .5rem;
+
+
+      ::ng-deep .mdc-text-field--outlined .mdc-floating-label {
+        top: 22px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .right-panel {
+    width: 100%;
+    padding: 0px;
+    overflow: hidden;
+    min-height: 100px;
+    background-color: #fff;
+    border: 1px solid rgb(232, 232, 232);
+
+    .tab-container {
+      background: rgb(245, 250, 255);
+      border-bottom: 1px solid rgb(232, 232, 232);
+
       button {
-        width: 34px;
         border: none;
-        height: 34px;
-        color: #000000;
-        // color: #ffffff;
-        border-radius: 100%;
-        background-color: #ccdbfa;
-        // background-color: #6467f1;
-
-        i {
-          font-size: 15px;
-        }
+        font-size: 14px;
+        box-shadow: none;
+        padding: .6rem 1rem;
+        background: rgb(245, 250, 255);
       }
     }
   }
 }
+
+
+.form-field-group {
+  gap: 2px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  flex: 1 1 calc(25% - 16px);
+  min-width: 250px;
+  width: 250px;
+}
+
+@media (max-width: 768px) {
+  mat-form-field {
+    flex: 1 1 100%;
+  }
+}
+
+// .form-grid {
+//     margin-top: 4px;
+//     display: inline;
+//     padding: 0rem 6px;
+
+//     button {
+//         border: none;
+//         color: white;
+//         font-size: 12px;
+//         box-shadow: none;
+//         width: fit-content;
+//         border-radius: 4px;
+//         padding: .6rem 1rem;
+//         background-color: rgb(62, 99, 221);
+
+//         &:hover {
+//             background-color: rgb(58, 92, 204);
+//         }
+//     }
+// }

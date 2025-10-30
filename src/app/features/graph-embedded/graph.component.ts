@@ -17,6 +17,7 @@ import { ToastnotificationService } from '../shared-services/toastnotification.s
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AddLineageDialogComponent } from './add-lineage-dialog.component';
 import { ConfirmDialogComponent } from './component/delete-confirmation/deleteConfirmation.component';
+import { createElement, icons } from 'lucide';
 
 type LineageRow = {
   id: string;
@@ -64,7 +65,7 @@ export class UseCasesComponent {
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private usecaseService: UsecaseService
-  ) {}
+  ) { }
 
   columnDefs: (ColDef | ColGroupDef)[] = [
     { field: 'id', headerName: 'Lineage ID', editable: false },
@@ -76,50 +77,66 @@ export class UseCasesComponent {
       filter: false,
       sortable: false,
       minWidth: 100,
+      // maxWidth: 130,
       flex: 1,
+      // pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
+        // ==== EDIT ====
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-edit';
-        saveDataFields.style.color = '#098236';
-        // saveDataFields.style.border = '1px solid lightGrey';
-        // saveDataFields.style.borderRadius = '5px';
-        // saveDataFields.style.lineHeight = '22px';
-        // saveDataFields.style.height = '32px';
+        saveDataFields.title = 'Edit';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.border = 'none';
         saveDataFields.style.cursor = 'pointer';
-        saveDataFields.title = 'Save';
-        // saveDataFields.style.marginRight = '10px';
+        saveDataFields.style.background = 'transparent';
+
+        const editIcon = createElement(icons.Pencil, {
+          color: '#098236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(editIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
           this.openEditLineageFromGrid?.(params.data);
         });
 
+        // ==== EXTERNAL LINK ====
         const openBtn = document.createElement('button');
-        openBtn.className = 'fa fa-external-link'; // or 'fa fa-folder-open'
-        openBtn.style.color = '#1347e6';
-        // openBtn.style.border = '1px solid lightGrey';
-        // openBtn.style.borderRadius = '5px';
-        // openBtn.style.height = '32px';
-        // openBtn.style.width = '36px';
+        openBtn.title = 'Delete';
+        openBtn.style.border = 'none';
+        openBtn.style.padding = '0px';
         openBtn.style.cursor = 'pointer';
-        // openBtn.style.marginRight = '10px';
-        openBtn.title = 'Open';
+        openBtn.style.background = 'transparent';
+
+        const externallinkIcon = createElement(icons.ExternalLink, {
+          color: '#3e63dd',
+          height: '14px',
+          strokeWidth: 2
+        });
+        openBtn.appendChild(externallinkIcon);
+
         openBtn.addEventListener('click', () => {
           this.editLineage(params.data);
         });
 
+        // ==== DELETE ====
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = '#c10007';
-        // deleteDataFields.style.border = '1px solid lightGrey';
-        // deleteDataFields.style.borderRadius = '5px';
-        // deleteDataFields.style.lineHeight = '22px';
-        // deleteDataFields.style.height = '32px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
 
         deleteDataFields.addEventListener('click', () => {
           // this.deleteControl(params.node);
@@ -135,18 +152,18 @@ export class UseCasesComponent {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
-    sortable: true,
+  defaultColDef: ColDef = {
     resizable: true,
+    sortable: true,
     filter: true,
     suppressSizeToFit: true,
+    editable: false,
   };
 
   openAddLineageDialogFromGrid() {
     this.ngZone.run(() => {
-      this.openAddLineageDialog(); // your existing method
-      this.cdr.markForCheck(); // nudge CD just in case
+      this.openAddLineageDialog();
+      this.cdr.markForCheck();
     });
   }
 
@@ -170,7 +187,7 @@ export class UseCasesComponent {
     this.getLineageList();
     this.getUsecaseOptions();
   }
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
   getLineageList() {
     // ✅ Dummy Data for Testing
 
@@ -236,10 +253,10 @@ export class UseCasesComponent {
         this.rowData = this.rowData.map((r: any) =>
           r.lineage_id === result.lineage_id
             ? {
-                ...r,
-                lineage_name: result.lineage_name.trim(),
-                usecase_id: result.usecase_id,
-              }
+              ...r,
+              lineage_name: result.lineage_name.trim(),
+              usecase_id: result.usecase_id,
+            }
             : r
         );
         this.dataSource.data = [...this.rowData] as any;

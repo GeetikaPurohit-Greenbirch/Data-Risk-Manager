@@ -2,43 +2,17 @@
   display: flex;
 }
 
-.dashboard-container {
-  flex-grow: 1;
-  padding: 1rem;
-  background: #f5f7f9;
-  height: 100vh;
-  overflow-y: auto;
-}
+// .dashboard-container {
+//   flex-grow: 1;
+//   padding: 1rem;
+//   background: #f5f7f9;
+//   height: 100vh;
+//   overflow-y: auto;
+// }
 
-.welcome-banner {
-  h2 {
-    gap: 10px;
-    display: flex;
-    align-items: center;
-
-    .back-icon {
-      button {
-        width: 34px;
-        border: none;
-        height: 34px;
-        color: #000000;
-        // color: #ffffff;
-        border-radius: 100%;
-        background-color: #ccdbfa;
-        // background-color: #6467f1;
-
-        i {
-          font-size: 15px;
-        }
-      }
-    }
-  }
-}
 
 .mat-select[disabled] {
+  opacity: 1;
   color: black;
   -webkit-text-fill-color: black;
-  /* For Safari */
-  opacity: 1;
-  /* Remove default opacity */
 }

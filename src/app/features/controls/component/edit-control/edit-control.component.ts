@@ -13,6 +13,7 @@ import { DatafieldsService } from 'src/app/features/shared-services/datafields.s
 import { InterfaceService } from 'src/app/features/interfaces/services/interface.service';
 import { isRawIdxResponse } from '@okta/okta-auth-js/types/lib/idx/types/idx-js';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
+import { createElement, icons } from 'lucide';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -116,7 +117,7 @@ export class EditControlComponent {
       },
       cellStyle: {
         color: 'red',
-        fontWeight: 'bold'
+        fontWeight: '600'
       },
     },
     // {
@@ -147,7 +148,7 @@ export class EditControlComponent {
       },
       cellStyle: {
         color: 'blue',
-        fontWeight: 'bold'
+        fontWeight: '600'
       },
     },
     // {
@@ -178,7 +179,7 @@ export class EditControlComponent {
       },
       cellStyle: {
         color: 'purple',
-        fontWeight: 'bold'
+        fontWeight: '600'
       },
     },
     {
@@ -186,21 +187,27 @@ export class EditControlComponent {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -229,11 +236,18 @@ export class EditControlComponent {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
+  // defaultColDef = {
+  //   flex: 1,
+  //   resizable: true,
+  //   filter: true,
+  //   suppressSizeToFit: true
+  // };
+  defaultColDef: ColDef = {
     resizable: true,
+    sortable: true,
     filter: true,
-    suppressSizeToFit: true
+    suppressSizeToFit: true,
+    editable: false,
   };
 
   rowData: any;
@@ -481,7 +495,7 @@ export class EditControlComponent {
   }
 
   // ✅ Trigger update/save logic
-  
+
   onUpdate(): void {
     console.log('Form data:', this.controlForm.value);
 

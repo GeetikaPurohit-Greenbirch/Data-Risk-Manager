@@ -1,21 +1,21 @@
 <div class="main-container">
-
-
   <main class="dashboard-container">
-    <section class="welcome-banner">
+    <!-- ✅ Welcome Banner -->
+    <section class="welcome-banner create">
       <h2>Lineage List</h2>
-      <button mat-raised-button color="primary" (click)="openAddLineageDialogFromGrid()">
-        + Add Lineage
+      <button class="button" (click)="openAddLineageDialogFromGrid()">
+        <lucide-icon name="plus" size="17"></lucide-icon> Add Lineage
       </button>
     </section>
 
-    <div style="border-radius: 8px; border: 1px solid rgba(24, 29, 29, 0.15); overflow: hidden;">
-      <div class="system-table-container" style="height: calc(100vh - 176px); display: flex; flex-direction: column;">
-
-        <div style="width: 100%; overflow-x: auto;height: 100%;">
-          <ag-grid-angular class="ag-theme-alpine custom-grid" style="min-width: 100%; height: 100%" [rowData]="rowData"
-            [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (cellValueChanged)="onCellValueChanged($event)"
-            rowSelection="single" [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
+    <!-- ✅ Table Section -->
+    <div class="table-container">
+      <div class="system-table-container">
+        <div class="grid-table">
+          <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 100%;" [rowData]="
+            rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+            (cellValueChanged)="onCellValueChanged($event)" rowSelection="single" [suppressColumnVirtualisation]="true"
+            [domLayout]="'autoHeight'">
           </ag-grid-angular>
         </div>
       </div>

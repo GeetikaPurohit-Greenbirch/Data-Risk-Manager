@@ -168,9 +168,10 @@ export class EditInterfaceComponent implements OnInit {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
       pinned: 'right',
-      flex: 1,
+      // flex: 1,
+      minWidth: 80,
+      maxWidth: 100,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';

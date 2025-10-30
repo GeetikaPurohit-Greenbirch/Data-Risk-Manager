@@ -52,7 +52,7 @@ export class TargetsComponent {
     private targetService: TargetService,
     private router: Router,
     private toastNotificationService: ToastnotificationService
-  ) {}
+  ) { }
 
   columnDefs: (ColDef | ColGroupDef)[] = [
     { field: 'target_id', headerName: 'Target ID', editable: false },
@@ -88,15 +88,16 @@ export class TargetsComponent {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
-      pinned:"right",
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: "right",
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-         saveDataFields.title = 'Edit';
+        saveDataFields.title = 'Edit';
         saveDataFields.style.padding = '0px';
         saveDataFields.style.border = 'none';
         saveDataFields.style.cursor = 'pointer';
@@ -114,7 +115,7 @@ export class TargetsComponent {
         });
 
         const deleteDataFields = document.createElement('button');
-         deleteDataFields.title = 'Delete';
+        deleteDataFields.title = 'Delete';
         deleteDataFields.style.border = 'none';
         deleteDataFields.style.padding = '0px';
         deleteDataFields.style.cursor = 'pointer';
@@ -224,7 +225,7 @@ export class TargetsComponent {
       // alert("Target Deleted Successfully. Deleted Target ID is "+ targets.data.target_id);
       this.toastNotificationService.error(
         'Target Deleted Successfully. Deleted Target ID is ' +
-          targets.data.target_id
+        targets.data.target_id
       );
 
       this.getTargetList(); // refresh

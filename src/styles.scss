@@ -68,17 +68,22 @@ body {
 
   // background: linear-gradient(to right, #4f46e5, #6366f1);
   .button {
+    gap: 6px;
     border: none;
+    display: flex;
     color: white;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 12px;
     border-radius: 4px;
+    align-items: center;
     background: #3f51b5;
 
     &:hover {
       background: #0a80ea;
     }
+
+    // lucide-icon {}
   }
 
   h2,
@@ -517,7 +522,9 @@ body {
 .ag-header {
   :where(.ag-icon):before {
     content: "";
-    background-color: #333;
+    width: 14px;
+    margin-top: 4px;
+    background-color: #667085;
   }
 
   .ag-header-cell-resize {

@@ -3,21 +3,33 @@
     box-shadow: none;
     border-radius: 8px;
     width: calc(100% - 2rem);
-    border: 1px solid rgba(24, 29, 29, 0.15);
+    background-color: transparent;
+    // border: 1px solid rgba(24, 29, 29, 0.15);
 }
 
 .control-container {
-    gap: 2rem;
+    gap: 1rem;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     .left-panel {
-        gap: 0px;
         width: 100%;
-        padding: 0px;
-        background-color: transparent;        
+        padding: 0rem;
+        background: #ffffff;
+        border: 1px solid rgb(232, 232, 232);
+
+        .usecase-form {
+            padding: 1rem;
+            max-width: 1200px;
+            border-radius: .5rem;
+
+            ::ng-deep .mdc-text-field--outlined .mdc-floating-label {
+                top: 22px;
+                font-size: 14px;
+            }
+        }
     }
 
     .right-panel {
@@ -61,34 +73,6 @@
 
         &:hover {
             background-color: rgb(58, 92, 204);
-        }
-    }
-}
-
-.info-box-table {
-    flex: 1 1 auto;
-    overflow-x: auto;
-
-    .datafields-header {
-        margin: 0px;
-
-        button {
-            // border: none;
-            color: white;
-            font-size: 12px;
-            box-shadow: none;
-            width: fit-content;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            padding: .4rem .6rem;
-            color: rgb(62, 99, 221);
-            background-color: transparent;
-            border: 1px solid rgb(62, 99, 221);
-
-            &:hover {
-                color: #ffffff;
-                background-color: rgb(58, 92, 204);
-            }
         }
     }
 }

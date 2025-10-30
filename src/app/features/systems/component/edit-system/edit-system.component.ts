@@ -192,9 +192,11 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
+       
       pinned:'right',
-      flex:1,
+      // flex:1,
+      minWidth: 80,
+      maxWidth: 120,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -336,9 +338,10 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
       pinned:'right',
-      flex:1,
+      // flex:1,
+      minWidth: 80,
+      maxWidth: 120,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -368,7 +371,8 @@ export class EditSystemComponent{
         return div;
       }
     },
-  ]
+  ];
+
   columnDefs:(ColDef | ColGroupDef)[]= [
     { field: 'interface_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID',},
     { field: 'interface_name', headerName: 'Entity Name', editable: false, headerTooltip: 'Entity Name',},
@@ -496,9 +500,10 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
       pinned:'right',
-      flex:1,
+      // flex:1,
+      minWidth: 80,
+      maxWidth: 120,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -693,9 +698,10 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
+      minWidth: 80,
+      maxWidth: 120, 
       pinned:'right',
-      flex:1,
+      // flex:1,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -768,9 +774,10 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
       pinned:'right', 
-      flex:1,
+      // flex:1,
+      minWidth: 80,
+      maxWidth: 120,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -836,9 +843,10 @@ export class EditSystemComponent{
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100, 
       pinned:'right',
-      flex:1,
+      // flex:1,
+      minWidth: 80,
+      maxWidth: 120,
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';

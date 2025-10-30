@@ -4,16 +4,6 @@
 
 .dashboard-container {
   flex-grow: 1;
-  padding: 1rem;
-  // height: 100vh;
-  overflow-y: auto;
-  background: #f5f7f9;
-}
-
-.system-table-container {
-  background: white;
-  height: calc(100% - 56px);
-  // height: calc(100% - 220px);
 }
 
 ::ng-deep .mat-mdc-paginator-page-size-label {
@@ -34,8 +24,4 @@
     font-size: 16px;
     background-color: transparent;
   }
-}
-
-:host ::ng-deep .ag-theme-alpine {
-  font-size: 14px;
 }

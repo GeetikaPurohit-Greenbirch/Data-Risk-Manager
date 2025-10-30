@@ -13,6 +13,8 @@ import { LineageComponent } from './component/lineage-mapper/lineage.component';
 import { SplitterModule } from 'primeng/splitter';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
+import { LucideAngularModule } from 'lucide-angular';
+import { icons } from 'lucide';
 
 // import { NodesComponent } from "../nodes/nodes.component";
 // import { DiagramComponent } from "../diagram/diagram.component";
@@ -35,6 +37,11 @@ import { PaginatorModule } from 'primeng/paginator';
     UseCaseRoutingModule,
     TableModule,
     PaginatorModule,
+    LucideAngularModule.pick({
+              ChevronLeft: icons.ChevronLeft,
+              Plus: icons.Plus,
+              Trash2: icons.Trash2
+            }),
   ]
 })
 export class GraphModuleEmbedded { }
