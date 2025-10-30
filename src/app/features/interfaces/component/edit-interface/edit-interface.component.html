@@ -25,6 +25,7 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Interface Name</mat-label>
                 <input matInput formControlName="interface_name" />
+                <mat-error *ngIf="interfaceForm.get('interface_name')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
@@ -34,6 +35,7 @@
                     {{ quality }}
                   </mat-option>
                 </mat-select>
+                 <mat-error *ngIf="interfaceForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
               </mat-form-field>
               <!--         
 
@@ -45,6 +47,9 @@
               <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                 <mat-label>Frequency Of Update</mat-label>
                 <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1" />
+                <mat-error *ngIf="interfaceForm.get('frequency_of_update')?.hasError('required')">
+                Required
+              </mat-error>
               </mat-form-field>
 
               <!-- <mat-form-field appearance="outline" class="full-width">
@@ -63,11 +68,15 @@
                 <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
                   You can only select {{ frequencyLimit }} time(s)
                 </mat-hint>
+                 <mat-error *ngIf="interfaceForm.get('schedule_of_update')?.hasError('required')">
+                Required
+              </mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Methodology Of Transfer</mat-label>
                 <input matInput formControlName="methodology_of_transfer" />
+                <mat-error *ngIf="interfaceForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
@@ -76,11 +85,13 @@
                 <mat-select formControlName="interface_type">
                   <mat-option *ngFor="let option of interfaceTypeOptions" [value]="option">{{ option }}</mat-option>
                 </mat-select>
+                 <mat-error *ngIf="interfaceForm.get('interface_type')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Version</mat-label>
                 <input matInput formControlName="interface_version_number" />
+                 <mat-error *ngIf="interfaceForm.get('interface_version_number')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <!-- <mat-form-field appearance="outline" class="full-width">
@@ -95,16 +106,20 @@
                     {{ status }}
                   </mat-option>
                 </mat-select>
+                 <mat-error *ngIf="interfaceForm.get('interface_status')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner</mat-label>
                 <input matInput formControlName="interface_owner" />
+                 <mat-error *ngIf="interfaceForm.get('interface_owner')?.hasError('required')">Required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner Email</mat-label>
                 <input matInput formControlName="interface_owner_email" />
+                <mat-error *ngIf="interfaceForm.get('interface_owner_email')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="interfaceForm.get('interface_owner_email')?.hasError('email')">Invalid email</mat-error>
               </mat-form-field>            
              
             </form>
@@ -119,7 +134,7 @@
             <!-- Information Box -->          
               
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'interfaces' }" >
+              <button [ngClass]="{ 'inverse': activeView === 'DataFields' }" >
                 Data Fields
               </button>
             </div>           

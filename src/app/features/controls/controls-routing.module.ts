@@ -6,7 +6,7 @@ import { EditControlComponent } from './component/edit-control/edit-control.comp
 
 const routes: Routes = [
   { path: '', component: ControlsComponent },
-  {path:'control-builder', component:ControlBuilderComponent},
+  {path:'control-builder', component:EditControlComponent},
   {path: 'edit-control/:id', component:EditControlComponent},
 ];
 

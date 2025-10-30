@@ -8,6 +8,7 @@ import { SidebarComponent } from 'src/app/layout/sidebar/sidebar.component';
 import { HeaderComponent } from 'src/app/layout/header/header.component';
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditControlComponent } from './component/edit-control/edit-control.component';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
 @NgModule({
@@ -19,7 +20,12 @@ import { EditControlComponent } from './component/edit-control/edit-control.comp
   imports: [
     CommonModule,
     ControlsRoutingModule,
-    SharedModule
+    SharedModule,
+    LucideAngularModule.pick({
+                      ChevronLeft: icons.ChevronLeft,
+                      Plus: icons.Plus,
+                      Trash2: icons.Trash2
+                    }),
   ]
 })
 export class ControlsModule { }

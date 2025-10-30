@@ -26,7 +26,7 @@ import { UsecaseService } from 'src/app/features/use-cases/services/usecase.serv
 })
 export class HomeComponent implements OnInit {
   displayedColumnsUsecase: string[] = ['usecaseid', 'name', 'description', 'owner', 'owner_email', 'version', 'status', 'last_review_date', 'reviewed_by', 'next_review_date', 'reviewer'];
-    displayedColumnsSystems: string[] = ['select', 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'version', 'status'];
+    displayedColumnsSystems: string[] = [ 'systemid', 'name', 'description', 'owner','owner_email' ,'leanixId', 'version', 'status'];
     displayedColumnsSource: string[] = ['sourceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'sourcetype', 'version', 'status', 'owner', 'owner_email'];
     displayedColumnsControls: string[] = ['controlid', 'name', 'controldesc', 'attachto', 'attachtoid', 'owner', 'owneremail', 'version', 'status', 'applicationdate', 'applicationdatestatus'];
     displayedColumnsTargets: string[] = ['targetid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'targettype', 'targetentity' ,'version', 'status', 'owner', 'owner_email'];
