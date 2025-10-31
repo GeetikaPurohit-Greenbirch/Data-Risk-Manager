@@ -95,7 +95,7 @@ ngOnInit(): void{
   this.getTargetList();
   this.getInterfaceList();
   this.getUsecaseList();
-  }, 150);
+  }, 500);
   
 }
 searchText:string = '';

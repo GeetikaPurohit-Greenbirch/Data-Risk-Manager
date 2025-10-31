@@ -187,13 +187,14 @@
                   style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
               </div>            
 
-              <div class="aggrid" >
+              <!-- <div class="aggrid" >
                   <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 720px;" [rowData]="rowData"
                     [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" [defaultColDef]="defaultColDef"
                     (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
                     [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
                   </ag-grid-angular>
-                </div>
+                  
+                </div> -->
             </div>
             <div  class="datafields-table" *ngIf="showReport">
                 <div class="report-builder" >
@@ -219,8 +220,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-md-4">
-                    <button mat-raised-button color="primary" (click)="confirmUseCase()"
-                      style="height: 43px; margin-top: 6px;">Submit</button>
+                    <button mat-raised-button color="primary" (click)="confirmUseCase()" style="height: 43px; margin-top: 6px;">Submit</button>
 
                     <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
 
@@ -230,6 +230,142 @@
                 </div>
               </mat-dialog-content>
             </ng-template>
+
+            
+
+
+            <p-toolbar>
+              <div class="p-toolbar-group-left">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" 
+                  (input)="dt.filterGlobal($event.target, 'contains')"
+                  placeholder="Global Search" />
+                </span>
+              </div>
+            
+              <div class="p-toolbar-group-right">
+                <p-multiSelect 
+                  [options]="cols" 
+                  [(ngModel)]="selectedColumns" 
+                  optionLabel="header"
+                  placeholder="Choose Columns" 
+                  display="chip">
+                </p-multiSelect>
+              </div>
+            </p-toolbar>
+            
+            <p-table
+              #dt
+              [value]="rowData"
+              [paginator]="true"
+              [rows]="10"
+              [resizableColumns]="true"
+              [globalFilterFields]="globalFilterFields"
+              [rowsPerPageOptions]="[10,25,50]"
+              [responsiveLayout]="'scroll'"
+              sortMode="multiple"
+              [showCurrentPageReport]="true"
+              editMode="cell"
+              resizableColumns="true"
+              columnResizeMode="fit"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              styleClass="p-datatable-gridlines p-datatable-sm"
+              class="p-dense"
+            >
+              <!-- Dynamic Column Headers -->
+              <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
+                <ng-container *ngIf="col.field !== 'actions'">
+                  <ng-template pTemplate="header">
+                    {{ col.header }}
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData>
+                    <ng-container *ngIf="!col.editable; else editableCell">
+                      {{ rowData[col.field] }}
+                    </ng-container>
+                    <ng-template #editableCell>
+                      <!-- <ng-container *ngIf="col.dropdownValues?.length; else inputField">
+
+                        <p-dropdown 
+                        [options]="col.dropdownValues"
+                        [(ngModel)]="rowData[col.field]"
+                        [showClear]="false"
+                        appendTo="body"
+                        placeholder="Select"
+                        styleClass="custom-table-dropdown"
+                        >
+                      </p-dropdown>
+                      </ng-container> -->
+                      <!-- <input 
+                        *ngIf="col.dropdownValues?.length; else inputField"
+                        pDropdown
+                        [options]="col.dropdownValues"
+                        [(ngModel)]="rowData[col.field]"
+                      /> -->
+                      <ng-template #inputField>
+                        <input 
+                          type="text" 
+                          pInputText 
+                          [(ngModel)]="rowData[col.field]"
+                          class="custom-table-input"
+                        />
+                      </ng-template>
+                    </ng-template>
+                  </ng-template>
+                </ng-container>
+              </ng-container>
+            
+              <!-- Actions Column -->
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </ng-template>
+            
+              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                <tr>
+                  <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
+                    <!-- Dropdown cell -->
+                      <ng-container *ngIf="col.dropdownValues; else textCell">
+                        <p-cellEditor>
+                          <ng-template pTemplate="input">
+                            <p-dropdown
+                              [options]="col.dropdownValues"
+                              [(ngModel)]="rowData[col.field]"
+                              appendTo="body"
+                              styleClass="custom-dropdown"
+                            ></p-dropdown>
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            {{ rowData[col.field] }}
+                          </ng-template>
+                        </p-cellEditor>
+                      </ng-container>
+
+                      <!-- Textbox cell -->
+                      <ng-template #textCell>
+                        <p-cellEditor>
+                          <ng-template pTemplate="input">
+                            <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" />
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            {{ rowData[col.field] }}
+                          </ng-template>
+                        </p-cellEditor>
+                      </ng-template>
+                  </td>
+                  <td>
+                    
+                    <button pButton icon="pi pi-save" class="p-button-text p-button-success" (click)="saveDatafields(rowData)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteDAtaFields(rowData)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
         </div>
       </div>

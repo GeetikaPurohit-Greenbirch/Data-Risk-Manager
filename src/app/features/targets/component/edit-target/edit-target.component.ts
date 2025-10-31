@@ -174,6 +174,22 @@ export class EditTargetComponent {
   // ];
 
 
+
+
+  cols = [
+    { field: 'field_id', header: 'Field ID', editable: false },
+    { field: 'field_no', header: 'Field No.', editable: true },
+    { field: 'field_name', header: 'Field Name', editable: true },
+    { field: 'field_description', header: 'Field Description', editable: true },
+    { field: 'data_type', header: 'Data Type', editable: true, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+    { field: 'field_length', header: 'Length', editable: true },
+    { field: 'criticality', header: 'Criticality', editable: true, dropdownValues: ['MAJOR', 'MINOR', 'INSIGNIFICANT', 'CRITICAL'] },
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -298,6 +314,11 @@ export class EditTargetComponent {
   }
 
   ngOnInit(): void {
+
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
+
+
     console.log('Editing target with ID:', this.targetId);
     this.targetUseCaseForm = this.fb.group({
       selectedUseCaseId: [''],
@@ -613,22 +634,22 @@ export class EditTargetComponent {
   saveDatafields(data: any) {
     console.log(data, "Target Data Fields");
 
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.user_generated_id = data.data.field_no;
-    this.dataFieldsModel.field_name = data.data.field_name;
-    this.dataFieldsModel.field_description = data.data.field_description;
+    this.dataFieldsModel.field_id = data.field_id;
+    this.dataFieldsModel.user_generated_id = data.field_no;
+    this.dataFieldsModel.field_name = data.field_name;
+    this.dataFieldsModel.field_description = data.field_description;
 
-    this.dataFieldsModel.dqa_c = data.data.dqa_c;
-    this.dataFieldsModel.dqa_t = data.data.dqa_t;
-    this.dataFieldsModel.dqa_a = data.data.dqa_a;
-    this.dataFieldsModel.data_type = data.data.data_type;
-    this.dataFieldsModel.field_length = data.data.field_length;
-    this.dataFieldsModel.criticality = data.data.criticality;
+    this.dataFieldsModel.dqa_c = data.dqa_c;
+    this.dataFieldsModel.dqa_t = data.dqa_t;
+    this.dataFieldsModel.dqa_a = data.dqa_a;
+    this.dataFieldsModel.data_type = data.data_type;
+    this.dataFieldsModel.field_length = data.field_length;
+    this.dataFieldsModel.criticality = data.criticality;
     this.dataFieldsModel.entity_type = 'TARGET';
     this.dataFieldsModel.entity_id = this.targetId;
     this.dataFieldsModel.usecaseid = this.useCaseId;
 
-    if (!data.data.field_id) {
+    if (!data.field_id) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
 
         this.toastNotificationService.success("Data field added Successfully.");
