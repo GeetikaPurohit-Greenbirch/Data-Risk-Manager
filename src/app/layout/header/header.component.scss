@@ -44,3 +44,28 @@ $color: #111c2d;
 .user-name {
   font-weight: 500;
 }
+
+::ng-deep mat-menu {
+  background-color: red;
+}
+
+.rightside-action {
+  gap: 4px;
+  display: flex;
+  align-items: center;
+
+  .small-icon-button {
+    padding: 8px;
+    cursor: pointer;
+
+    lucide-icon {
+      vertical-align: sub;
+
+      svg {
+        width: 22px !important;
+        height: 22px !important;
+      }
+    }
+
+  }
+}

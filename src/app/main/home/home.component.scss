@@ -47,8 +47,9 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 
   .statuses {
+    gap: 4px;
     display: flex;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     margin-top: 1.5rem;
     justify-content: space-between;
 
@@ -114,6 +115,10 @@
 .status-badge.done {
   background-color: #e6ffed;
   color: #4caf50;
+}
+
+::ng-deep .mat-elevation-z2 {
+  box-shadow: none;
 }
 
 ::ng-deep .mat-sort-header-content {

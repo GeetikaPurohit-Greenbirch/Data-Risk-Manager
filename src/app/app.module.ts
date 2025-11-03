@@ -51,6 +51,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -130,9 +131,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     InputTextModule,
     MultiSelectModule,
     TooltipModule,
+    LucideAngularModule.pick({
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2,
+      Bell: icons.Bell,
+      LogOut: icons.LogOut,
+      CircleUser: icons.CircleUser,
+    }),
 
-    
-  ],  
+  ],
   providers: [
     provideAnimationsAsync(),
     {

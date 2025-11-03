@@ -21,8 +21,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
-import { ModuleRegistry } from 'ag-grid-community'; 
-import { ClientSideRowModelModule } from 'ag-grid-community'; 
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -43,9 +43,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 import { SplitterModule } from 'primeng/splitter';
+import { icons, LucideAngularModule } from 'lucide-angular';
 
 
-ModuleRegistry.registerModules([ ClientSideRowModelModule ]); 
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
   declarations: [
@@ -89,7 +90,12 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     InputTextModule,
     MultiSelectModule,
     TooltipModule,
-    SplitterModule
+    SplitterModule,
+    LucideAngularModule.pick({
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2
+    }),
   ],
   exports: [
     HeaderComponent,
@@ -132,6 +138,6 @@ ModuleRegistry.registerModules([ ClientSideRowModelModule ]);
     SplitterModule
   ],
   providers: [PdfService],
-  
+
 })
-export class SharedModule {}
+export class SharedModule { }

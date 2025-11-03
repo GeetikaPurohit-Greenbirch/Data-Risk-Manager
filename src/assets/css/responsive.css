@@ -1,21 +1,45 @@
-/* Images */
-img { max-width: 100%; height: auto; }
+img {
+  height: auto;
+  max-width: 100%;
+}
 
-/* Tables */
-table { width: 100%; border-collapse: collapse; }
-table, th, td { word-wrap: break-word; }
-.table-container { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  word-wrap: break-word;
+}
+
+.table-container {
+  overflow-x: auto;
+}
 
 /* Grids */
-.row { display: flex; flex-wrap: wrap; }
-.col { flex: 1 1 100%; padding: 10px; }
-@media (min-width: 768px) {
-  .col-md-6 { flex: 1 1 50%; }
-}
-@media (min-width: 992px) {
-  .col-lg-4 { flex: 1 1 33.33%; }
+.row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.col {
+  flex: 1 1 100%;
+  padding: 10px;
+}
+
+@media (min-width: 768px) {
+  .col-md-6 {
+    flex: 1 1 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-lg-4 {
+    flex: 1 1 33.33%;
+  }
+}
 
 /* Sidebar base */
 .sidebar {
@@ -42,65 +66,56 @@ table, th, td { word-wrap: break-word; }
 .sidebar.collapsed {
   transform: translateX(-100%);
 }
+
 .content.expanded {
   margin-left: 0;
 }
 
-/* Toggle button */
 .sidebar-toggle {
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #333;
   margin: 10px;
+  border: none;
+  color: #333;
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
 }
 
-/* Responsive: auto-collapse on small screens */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
   }
+
   .content {
     margin-left: 0;
   }
-  
 }
-
-
 
 /* Responsive ness of all components */
-/* Main container */
-/* Container + Panel */
-.container, 
+.container,
 .left-panel {
-  display: flex;
-  flex-wrap: wrap;
   gap: 16px;
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-/* Form fields */
 mat-form-field {
-  flex: 1 1 100%;   /* Default full width */
-  min-width: 250px; /* Prevents too small on mobile */
+  flex: 1 1 100%;
+  min-width: 250px;
 }
 
-/* Special case: half-width fields (dates) */
 mat-form-field.half-width {
   flex: 1 1 calc(50% - 30px);
   width: 42%;
 }
 
-/* Button container */
 .form-grid {
-  display: flex;
-  justify-content: center;
   width: 100%;
+  display: flex;
   margin-top: 20px;
+  justify-content: center;
 }
 
-/* Button itself */
 .create-btn {
   width: 40%;
   max-width: 250px;
@@ -109,57 +124,62 @@ mat-form-field.half-width {
 /* 🔹 Mobile tweak */
 @media (max-width: 768px) {
   mat-form-field.half-width {
-    flex: 1 1 100%; /* Stack on mobile */
     width: 52%;
+    flex: 1 1 100%;
   }
-  .container, 
-.left-panel {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  width: 100% !important;
-}
-.right-panel {
-  /* display: flex; */
-  flex-wrap: wrap;
-  gap: 16px;
-  width: 100% !important;
-}
-.datafields-table{
-  width: 100%;
-}
-.info-box-table{
-  width:100% !important;
-}
-.aggrid{
-  width: 100% !important;
-}
-.report-builder{
-  width: 100% !important;
+
+  .container,
+  .left-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100% !important;
+  }
+
+  .right-panel {
+    /* display: flex; */
+    gap: 16px;
+    flex-wrap: wrap;
+    width: 100% !important;
+  }
+
+  .datafields-table {
+    width: 100%;
+  }
+
+  .info-box-table {
+    width: 100% !important;
+  }
+
+  .aggrid {
+    width: 100% !important;
+  }
+
+  .report-builder {
+    width: 100% !important;
     margin: 14px 0 0 0 !important;
-}
+  }
 
   .create-btn {
     width: 100% !important;
     max-width: none;
   }
 
-  .lineage-wrapper{
+  .lineage-wrapper {
     width: 100% !important;
   }
-  .mapping-btn{
+
+  .mapping-btn {
     margin: 0 auto;
     width: 40% !important;
   }
+
   .paper-scroll {
     width: 100%;
-    height: calc(100vh - 100px);
-    overflow: scroll !important; 
     border: 1px solid #ccc;
-      /* ✅ Force scrollbar visibility */
-  scrollbar-width: thin !important;   /* Firefox */
-  scrollbar-color: #999 #f0f0f0 !important;
+    height: calc(100vh - 100px);
+    overflow: scroll !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #999 #f0f0f0 !important;
   }
 }
-
-
