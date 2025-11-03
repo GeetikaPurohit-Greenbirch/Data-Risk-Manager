@@ -331,6 +331,8 @@
                 <tr>
                   <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
                     <!-- Dropdown cell -->
+                    <ng-container *ngIf="col.editable; else readOnlyCell">
+
                       <ng-container *ngIf="col.dropdownValues; else textCell">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
@@ -346,7 +348,12 @@
                           </ng-template>
                         </p-cellEditor>
                       </ng-container>
+                    </ng-container>
 
+                    <!-- Read-only cell -->
+                    <ng-template #readOnlyCell>
+                      {{ rowData[col.field] }}
+                    </ng-template>
                       <!-- Textbox cell -->
                       <ng-template #textCell>
                         <p-cellEditor>

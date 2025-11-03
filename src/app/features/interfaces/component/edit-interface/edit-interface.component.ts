@@ -237,6 +237,21 @@ export class EditInterfaceComponent implements OnInit {
   // ];
 
 
+  
+
+  cols = [
+    { field: 'field_id', header: 'Field ID', editable: false },
+    { field: 'user_generated_id', header: 'Field No.', editable: true },
+    { field: 'field_name', header: 'Field Name', editable: true },
+    { field: 'field_description', header: 'Field Description', editable: true },
+    { field: 'data_type', header: 'Data Type', editable: true, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+    { field: 'field_length', header: 'Length', editable: true },
+    { field: 'criticality', header: 'Criticality', editable: true, dropdownValues: ['MAJOR', 'MINOR', 'INSIGNIFICANT', 'CRITICAL'] },
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -254,6 +269,8 @@ export class EditInterfaceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     console.log('Editing interface with ID:', this.interfaceId);
     this.interfaceForm = this.fb.group({
       interface_name: ['', Validators.required],
@@ -462,10 +479,10 @@ export class EditInterfaceComponent implements OnInit {
   saveDatafields(data: any) {
     console.log(data, "Interface Data Fields");
 
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
-    this.dataFieldsModel.field_name = data.data.field_name;
-    this.dataFieldsModel.field_description = data.data.field_description;
+    this.dataFieldsModel.field_id = data.field_id;
+    this.dataFieldsModel.user_generated_id = data.user_generated_id;
+    this.dataFieldsModel.field_name = data.field_name;
+    this.dataFieldsModel.field_description = data.field_description;
 
     // this.dataFieldsModel.dqa_c = "L";
     // this.dataFieldsModel.dqa_t = "L";
@@ -473,13 +490,13 @@ export class EditInterfaceComponent implements OnInit {
     // this.dataFieldsModel.commentary_a = data.data.commentary_a;
     // this.dataFieldsModel.commentary_t = data.data.commentary_t;
     // this.dataFieldsModel.commentary_c = data.data.commentary_c;
-    this.dataFieldsModel.data_type = data.data.data_type;
-    this.dataFieldsModel.field_length = data.data.field_length;
-    this.dataFieldsModel.criticality = data.data.criticality;
+    this.dataFieldsModel.data_type = data.data_type;
+    this.dataFieldsModel.field_length = data.field_length;
+    this.dataFieldsModel.criticality = data.criticality;
     this.dataFieldsModel.entity_type = 'INTERFACE';
     this.dataFieldsModel.entity_id = this.interfaceId;
 
-    if (!data.data.field_id) {
+    if (!data.field_id) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
 
         this.toastNotificationService.success("Data field added Successfully.");
@@ -504,9 +521,9 @@ export class EditInterfaceComponent implements OnInit {
 
 
   deleteDAtaFields(data: any) {
-    this.datafieldsService.deleteDataFields(data.data.field_id, 'INTERFACE', this.interfaceId).subscribe(() => {
+    this.datafieldsService.deleteDataFields(data.field_id, 'INTERFACE', this.interfaceId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 

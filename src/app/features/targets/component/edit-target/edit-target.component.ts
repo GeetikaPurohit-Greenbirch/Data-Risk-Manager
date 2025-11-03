@@ -673,9 +673,9 @@ export class EditTargetComponent {
   }
 
   deleteDAtaFields(data: any) {
-    this.datafieldsService.deleteDataFields(data.data.field_id, 'TARGET', this.targetId).subscribe(() => {
+    this.datafieldsService.deleteDataFields(data.field_id, 'TARGET', this.targetId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 
