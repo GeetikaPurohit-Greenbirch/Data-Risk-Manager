@@ -20,10 +20,10 @@ import { icons, LucideAngularModule } from 'lucide-angular';
     SharedModule,
     SourcesRoutingModule,
     LucideAngularModule.pick({
-                  ChevronLeft: icons.ChevronLeft,
-                  Plus: icons.Plus,
-                  Trash2: icons.Trash2
-                }),
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2
+    }),
   ]
 })
 export class SourcesModule { }

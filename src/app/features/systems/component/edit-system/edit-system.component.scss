@@ -2,7 +2,9 @@
     margin: 0 auto;
     box-shadow: none;
     border-radius: 8px;
+    margin-bottom: 1rem;
     width: calc(100% - 2rem);
+    min-height: calc(100% - 100px);
     border: 1px solid rgba(24, 29, 29, 0.15);
 }
 
@@ -82,6 +84,9 @@
             .inverse {
                 color: rgb(62, 99, 221) !important;
             }
+        }
+        ::ng-deep .ag-root-wrapper {
+            border: none;
         }
     }
 }

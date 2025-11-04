@@ -1,185 +1,180 @@
-<div class="main-container">  
-<main class="dashboard-container">
+<div class="main-container">
+  <main class="dashboard-container">
     <section class="welcome-banner">
-        <h2>
-          <div class="back-icon">
-            <button (click)="onBack()">           
-                <lucide-icon name="chevron-left"></lucide-icon>
-            </button>
-          </div>
-          {{ sourceId > 0 ? 'Edit Source' : 'Add Source' }}
+      <h2>
+        <div class="back-icon">
+          <button (click)="onBack()">
+            <lucide-icon name="chevron-left"></lucide-icon>
+          </button>
+        </div>
+        {{ sourceId > 0 ? 'Edit Source' : 'Add Source' }}
       </h2>
-      </section>
-<mat-card>
-  <div class="overlay-loader" *ngIf="isLoading">
+    </section>
+    <mat-card>
+      <div class="overlay-loader" *ngIf="isLoading">
         <mat-spinner diameter="50"></mat-spinner>
-  </div>
-  <div class="container">
-    <div class="source-container">
-      <!-- Left: Edit Source Form -->
-      <div class="left-panel">
-        <!-- <h2>Source</h2> -->
-        <form [formGroup]="sourceForm">
-          <!-- Your form controls for editing the source -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Source Name</mat-label>
-            <input matInput formControlName="source_name" />
-            <mat-error *ngIf="sourceForm.get('source_name')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+      </div>
+      <div class="container">
+        <div class="source-container">
+          <!-- Left: Edit Source Form -->
+          <div class="left-panel">
+            <!-- <h2>Source</h2> -->
+            <form [formGroup]="sourceForm">
+              <!-- Your form controls for editing the source -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Source Name</mat-label>
+                <input matInput formControlName="source_name" />
+                <mat-error *ngIf="sourceForm.get('source_name')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Vendor</mat-label>
-            <input matInput formControlName="vendor" />
-            <mat-error *ngIf="sourceForm.get('vendor')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Vendor</mat-label>
+                <input matInput formControlName="vendor" />
+                <mat-error *ngIf="sourceForm.get('vendor')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-            <mat-label>Quality Of Service</mat-label>
-            <mat-select formControlName="quality_of_service">
-              <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
-                {{ quality }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="sourceForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Quality Of Service</mat-label>
+                <mat-select formControlName="quality_of_service">
+                  <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+                    {{ quality }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="sourceForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="full-width">
+              <!-- <mat-form-field appearance="outline" class="full-width">
             <mat-label>Quality Of Service</mat-label>
             <input matInput formControlName="quality_of_service" />
           </mat-form-field> -->
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Frequency Of Update</mat-label>
-            <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1"/>
-            <mat-error *ngIf="sourceForm.get('frequency_of_update')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Frequency Of Update</mat-label>
+                <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1" />
+                <mat-error *ngIf="sourceForm.get('frequency_of_update')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="full-width">
+              <!-- <mat-form-field appearance="outline" class="full-width">
             <mat-label>Schedule Of Update</mat-label>
             <input matInput formControlName="schedule_of_update" />
           </mat-form-field> -->
 
-          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-            <mat-label>Schedule Of Update</mat-label>
-            <mat-select formControlName="schedule_of_update" multiple
-            (selectionChange)="onScheduleSelectionChange($event)">
-              <mat-option *ngFor="let time of timeOptions" [value]="time">
-                {{ time }}
-              </mat-option>
-            </mat-select>
-            <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
-              You can only select {{ frequencyLimit }} time(s)
-            </mat-hint>
-            <mat-error *ngIf="sourceForm.get('schedule_of_update')?.hasError('required')"></mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Schedule Of Update</mat-label>
+                <mat-select formControlName="schedule_of_update" multiple
+                  (selectionChange)="onScheduleSelectionChange($event)">
+                  <mat-option *ngFor="let time of timeOptions" [value]="time">
+                    {{ time }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+                  You can only select {{ frequencyLimit }} time(s)
+                </mat-hint>
+                <mat-error *ngIf="sourceForm.get('schedule_of_update')?.hasError('required')"></mat-error>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Methodology Of Transfer</mat-label>
-            <input matInput formControlName="methodology_of_transfer" />
-            <mat-error *ngIf="sourceForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Methodology Of Transfer</mat-label>
+                <input matInput formControlName="methodology_of_transfer" />
+                <mat-error *ngIf="sourceForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-            <mat-label>Source Type</mat-label>
-            <mat-select formControlName="source_type">
-              <mat-option *ngFor="let type of sourceTypeOptions" [value]="type">
-                {{ type }}
-              </mat-option>
-            </mat-select>
-             <mat-error *ngIf="sourceForm.get('source_type')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Source Type</mat-label>
+                <mat-select formControlName="source_type">
+                  <mat-option *ngFor="let type of sourceTypeOptions" [value]="type">
+                    {{ type }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="sourceForm.get('source_type')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="full-width">
+              <!-- <mat-form-field appearance="outline" class="full-width">
             <mat-label>Source Type</mat-label>
             <input matInput formControlName="source_type" />
           </mat-form-field>
       -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Version</mat-label>
-            <input matInput formControlName="source_version_number" />
-            <mat-error *ngIf="sourceForm.get('source_version_number')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Version</mat-label>
+                <input matInput formControlName="source_version_number" />
+                <mat-error *ngIf="sourceForm.get('source_version_number')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="full-width">
+              <!-- <mat-form-field appearance="outline" class="full-width">
             <mat-label>Status</mat-label>
             <input matInput formControlName="source_status" />
           </mat-form-field> -->
 
-          <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="source_status">
-              <mat-option *ngFor="let status of statusOptions" [value]="status">
-                {{ status }}
-              </mat-option>
-            </mat-select>
-             <mat-error *ngIf="sourceForm.get('source_status')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
-          
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="source_status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status">
+                    {{ status }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="sourceForm.get('source_status')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Owner</mat-label>
-            <input matInput formControlName="source_owner" />
-            <mat-error *ngIf="sourceForm.get('source_owner')?.hasError('required')">Required</mat-error>
-          </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Owner Email</mat-label>
-            <input matInput formControlName="source_owner_email" />
-             <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('required')">Required</mat-error>
-            <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('email')">Invalid email</mat-error>
-          </mat-form-field>         
-        </form>
-         <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Owner</mat-label>
+                <input matInput formControlName="source_owner" />
+                <mat-error *ngIf="sourceForm.get('source_owner')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Owner Email</mat-label>
+                <input matInput formControlName="source_owner_email" />
+                <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('email')">Invalid email</mat-error>
+              </mat-form-field>
+            </form>
+            <div class="form-grid">
               <button (click)="onUpdate()">Save</button>
-         </div>
-      </div>
-      <!-- Right: DataFields Table -->
-      <div class="right-panel" *ngIf="sourceId>0">
-        <!-- Information Box -->  <!-- TABS CONTAINER -->
-        <div class="tab-container">
-          <button [ngClass]="{ 'inverse': activeView === 'interfaces' }">
-            Data Fields
-          </button>
-        </div>   
-        
-        <div class="datafields-table" *ngIf="showDataFields">
-           <div class="datafields-header" *ngIf="showDataFields">
-              <!-- <h3>DataFields</h3> -->
-              <button (click)="addRow()" style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
-              <label style="margin-left: 16px;">
-                <input type="checkbox" [(ngModel)]="showGlobalQualityRisk" />
-                Set Global Quality Risk
-              </label>
             </div>
-              <!-- Conditional rendering of the AG Grid -->
-            <ag-grid-angular
-              *ngIf="showGlobalQualityRisk"
-              class="ag-theme-alpine"
-              style="width: 100%; height: 180px; margin-top: 10px;"
-              [rowData]="rowDataDQA"
-              [columnDefs]="columnDefsDQA"
-              [defaultColDef]="defaultColDef"
-              rowSelection="single"
-            >
-            </ag-grid-angular>
+          </div>
+          <!-- Right: DataFields Table -->
 
-          <ag-grid-angular
-          class="ag-theme-alpine"
-          style="width: 100%; height: 400px;"
-          [rowData]="rowData"
-          [columnDefs]="columnDefs"
-          [defaultColDef]="defaultColDef"
-          (cellValueChanged)="onCellValueChanged($event)"
-          rowSelection="single"
-          [suppressColumnVirtualisation]="true"
-          [domLayout]="'normal'"
-          >
-          </ag-grid-angular>
-        
+          <div class="right-panel" *ngIf="sourceId>0" style="margin: 10px 0px 1rem 0px;">
+            <!-- Information Box --> <!-- TABS CONTAINER -->
+            <div class="tab-container">
+              <button [ngClass]="{ 'inverse': activeView === 'interfaces' }">
+                Data Fields
+              </button>
+            </div>
+
+            <div class="datafields-table" *ngIf="showDataFields">
+              <div class="datafields-header" *ngIf="showDataFields" style="padding: 6px 10px;">
+                <!-- <h3>DataFields</h3> -->
+                <button (click)="addRow()"
+                  style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
+                <label style="margin-left: 16px;font-size: 13px;">
+                  <input type="checkbox" [(ngModel)]="showGlobalQualityRisk"
+                    style="vertical-align: sub;margin-right: 4px;" />
+                  Set Global Quality Risk
+                </label>
+              </div>
+              <!-- Conditional rendering of the AG Grid -->
+              <div style="margin: 10px">
+                <ag-grid-angular *ngIf="showGlobalQualityRisk" class="ag-theme-alpine"
+                  style="width: 100%; min-height: 200px; max-height: 200px; overflow-y: auto;" [rowData]="rowDataDQA"
+                  [columnDefs]="columnDefsDQA" [defaultColDef]="defaultColDef" rowSelection="single"
+                  [domLayout]="'autoHeight'">
+                </ag-grid-angular>
+
+                <div style="margin-top: 10px;">
+                  <ag-grid-angular class="ag-theme-alpine"
+                    style="width: 100%; min-height: 300px; max-height: 300px; overflow-y: auto;" [rowData]="rowData"
+                    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+                    (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
+                    [suppressColumnVirtualisation]="true" [domLayout]="'autoHeight'">
+                  </ag-grid-angular>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
-  </div>
-</mat-card>
-</main>
+    </mat-card>
+  </main>
 </div>

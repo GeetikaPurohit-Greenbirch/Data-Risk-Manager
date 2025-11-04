@@ -14,6 +14,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { HttpClient } from '@angular/common/http';
 import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { createElement, icons } from 'lucide';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -113,22 +114,28 @@ export class EditTargetComponent {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
       headerTooltip: 'Actions',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -136,14 +143,18 @@ export class EditTargetComponent {
         });
 
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
 
         deleteDataFields.addEventListener('click', () => {
           this.deleteDAtaFields(params.node);
@@ -157,12 +168,20 @@ export class EditTargetComponent {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
+  // defaultColDef = {
+  //   flex: 1,
+  //   resizable: true,
+  //   sortable: true,
+  //   filter: true,
+  //   suppressSizeToFit: true
+  // };
+
+  defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
     filter: true,
-    suppressSizeToFit: true
+    suppressSizeToFit: true,
+    editable: false,
   };
 
   rowData: any;
@@ -303,17 +322,17 @@ export class EditTargetComponent {
       selectedUseCaseId: [''],
     });
     this.targetForm = this.fb.group({
-      target_name:['', Validators.required],
+      target_name: ['', Validators.required],
       quality_of_service: ['', Validators.required],
       frequency_of_update: [1, Validators.required],
       schedule_of_update: [[], Validators.required],
       methodology_of_transfer: ['', Validators.required],
-      target_type:['', Validators.required],
-      target_version_number:['', Validators.required],
+      target_type: ['', Validators.required],
+      target_version_number: ['', Validators.required],
       target_status: ['', Validators.required],
-      target_owner:['', Validators.required],
-      target_owner_email:['', [Validators.required, Validators.email]],
-      target_entity:['', Validators.required],
+      target_owner: ['', Validators.required],
+      target_owner_email: ['', [Validators.required, Validators.email]],
+      target_entity: ['', Validators.required],
       // add other form controls as needed
     });
     this.targetId = Number(this.route.snapshot.paramMap.get('id'));
@@ -363,11 +382,10 @@ export class EditTargetComponent {
       }
       this.openTab('DataFileds');
     }
-    else
-    {
-       this.formLoaded = true; // triggers re-render
-        this.generateTimeOptions();
-           // Watch for changes in serviceQuality
+    else {
+      this.formLoaded = true; // triggers re-render
+      this.generateTimeOptions();
+      // Watch for changes in serviceQuality
       this.targetForm.get('serviceQuality')?.valueChanges.subscribe(value => {
         if (value === 'STREAMING' || value === 'AD_HOC') {
           this.targetForm.get('frequencyUpdate')?.disable({ emitEvent: false });
@@ -380,7 +398,7 @@ export class EditTargetComponent {
     }
   }
 
-   generateTimeOptions(): void {
+  generateTimeOptions(): void {
     this.timeOptions = [];
     for (let hour = 0; hour < 24; hour++) {
       const time = hour.toString().padStart(2, '0') + ':00';
@@ -551,7 +569,7 @@ export class EditTargetComponent {
 
   // ✅ Trigger update/save logic 
 
-    onUpdate(): void {
+  onUpdate(): void {
     console.log('Form data:', this.targetForm.value);
 
     if (!this.targetForm.valid) {
@@ -564,9 +582,9 @@ export class EditTargetComponent {
 
 
     // Base payload structure
-    const payload :any= {
+    const payload: any = {
       targetEntity: {
-      
+
         target_name: this.targetForm.value.target_name,
         quality_of_service: this.targetForm.value.quality_of_service,
         frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
@@ -599,7 +617,7 @@ export class EditTargetComponent {
 
           if (!isUpdate) {
             this.router.navigate(['/targets/edit-target', targetId]);
-          }         
+          }
         }
       },
       error: (err) => {

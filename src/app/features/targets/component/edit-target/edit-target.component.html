@@ -185,19 +185,20 @@
             </div>
 
             <div class="datafields-table" *ngIf="showDataFields">
-              <div class="datafields-header" *ngIf="showDataFields">
+              <div class="datafields-header" *ngIf="showDataFields" style="padding: 0px 10px;">
                 <button (click)="addRow()"
                   style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
               </div>
 
               <div class="aggrid">
-                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 720px;" [rowData]="rowData"
-                  [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
-                  [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
+                <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 400px"
+                  [rowData]="rowData" [columnDefs]="columnDefs" (gridReady)="onGridReady($event)"
+                  [defaultColDef]="defaultColDef" (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
+                  [suppressColumnVirtualisation]="true" [domLayout]="'autoHeight'">
                 </ag-grid-angular>
               </div>
             </div>
+
             <div class="datafields-table" *ngIf="showReport">
               <div class="report-builder">
                 <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"

@@ -1,12 +1,17 @@
 .mat-mdc-card {
     margin: 0 auto;
     box-shadow: none;
+    // margin-bottom: 1rem;
     background: transparent;
     width: calc(100% - 2rem);
+    // min-height: calc(100% - 100px);
 }
+
 .container {
-    margin: -1rem;
+    // margin: -1rem;
+    padding: 0px;
 }
+
 .source-container {
     // gap: 0rem;
     // width: 100%;

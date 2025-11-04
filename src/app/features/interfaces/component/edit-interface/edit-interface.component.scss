@@ -2,7 +2,9 @@
     margin: 0 auto;
     box-shadow: none;
     border-radius: 8px;
+    margin-bottom: 1rem;
     width: calc(100% - 2rem);
+    min-height: calc(100% - 100px);
     border: 1px solid rgba(24, 29, 29, 0.15);
 }
 
@@ -17,7 +19,7 @@
         gap: 0px;
         width: 100%;
         padding: 0px;
-        background-color: transparent;        
+        background-color: transparent;
     }
 
     .right-panel {
@@ -39,6 +41,10 @@
                 padding: .6rem 1rem;
                 background: rgb(245, 250, 255);
             }
+        }
+
+        ::ng-deep .ag-root-wrapper {
+            border: none;
         }
     }
 }

@@ -160,9 +160,10 @@ export class SystemsComponent implements OnInit {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
-      pinned:'right',
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
@@ -227,7 +228,7 @@ export class SystemsComponent implements OnInit {
     sortable: true,
     filter: true,
     suppressSizeToFit: true,
-    editable:false
+    editable: false
   };
 
   // rowData = [

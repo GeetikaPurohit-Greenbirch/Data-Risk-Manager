@@ -10,6 +10,7 @@ import { DatafieldsService } from 'src/app/features/shared-services/datafields.s
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { MatSelectChange } from '@angular/material/select';
+import { createElement, icons } from 'lucide';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -82,8 +83,8 @@ export class EditSourceComponent implements OnInit {
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#c10007',
+            fontWeight: '600'
           },
         },
         {
@@ -113,8 +114,8 @@ export class EditSourceComponent implements OnInit {
           resizable: false,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -145,7 +146,7 @@ export class EditSourceComponent implements OnInit {
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -158,46 +159,46 @@ export class EditSourceComponent implements OnInit {
           // maxWidth: 100,
           resizable: true,
           suppressSizeToFit: true,
-
         },
       ],
-
-
     },
+
     {
       headerName: 'Actions',
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
-        saveDataFields.style.cursor = 'pointer';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
           this.saveDatafieldsDQA(params.node, 'OUTBOUND');
         });
-
-
         div.appendChild(saveDataFields);
-
         return div;
       }
     },
   ]
-
 
   columnDefs: (ColDef | ColGroupDef)[] = [
     { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID', },
@@ -233,8 +234,8 @@ export class EditSourceComponent implements OnInit {
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'red',
-            fontWeight: 'bold'
+            color: '#c10007',
+            fontWeight: '600'
           },
         },
         {
@@ -266,8 +267,8 @@ export class EditSourceComponent implements OnInit {
           resizable: true,
           suppressSizeToFit: true,
           cellStyle: {
-            color: 'blue',
-            fontWeight: 'bold'
+            color: '#3e63dd',
+            fontWeight: '600'
           }
         },
         {
@@ -299,7 +300,7 @@ export class EditSourceComponent implements OnInit {
           suppressSizeToFit: true,
           cellStyle: {
             color: 'purple',
-            fontWeight: 'bold'
+            fontWeight: '600'
           }
         },
         {
@@ -330,20 +331,27 @@ export class EditSourceComponent implements OnInit {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
       cellRenderer: (params: any) => {
         const div = document.createElement('div');
         div.className = 'model-cell-renderer';
 
         const saveDataFields = document.createElement('button');
-        saveDataFields.className = 'fa fa-save';
-        saveDataFields.style.color = 'green';
-        saveDataFields.style.border = '1px solid lightGrey';
-        saveDataFields.style.borderRadius = '5px';
-        saveDataFields.style.lineHeight = '20px';
-        saveDataFields.style.height = '24px';
         saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
 
         // Pass row data or node to save
         saveDataFields.addEventListener('click', () => {
@@ -351,13 +359,18 @@ export class EditSourceComponent implements OnInit {
         });
 
         const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
         deleteDataFields.title = 'Delete';
+        deleteDataFields.style.border = 'none';
+        deleteDataFields.style.padding = '0px';
+        deleteDataFields.style.cursor = 'pointer';
+        deleteDataFields.style.background = 'transparent';
+
+        const deleteIcon = createElement(icons.Trash2, {
+          color: '#c10007',
+          height: '14px',
+          strokeWidth: 2
+        });
+        deleteDataFields.appendChild(deleteIcon);
 
         deleteDataFields.addEventListener('click', () => {
           this.deleteDAtaFields(params.node);
@@ -371,11 +384,19 @@ export class EditSourceComponent implements OnInit {
     },
   ];
 
-  defaultColDef = {
-    flex: 1,
+  // defaultColDef = {
+  //   flex: 1,
+  //   resizable: true,
+  //   filter: true,
+  //   suppressSizeToFit: true
+  // };
+
+  defaultColDef: ColDef = {
     resizable: true,
+    sortable: true,
     filter: true,
-    suppressSizeToFit: true
+    suppressSizeToFit: true,
+    editable: false,
   };
 
   rowData: any;
@@ -609,7 +630,7 @@ export class EditSourceComponent implements OnInit {
 
 
     // Base payload structure
-    const payload : any= {
+    const payload: any = {
       sourceEntity: {
         source_name: this.sourceForm.value.source_name,
         vendor: this.sourceForm.value.vendor,

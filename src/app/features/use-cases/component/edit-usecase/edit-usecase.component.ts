@@ -73,8 +73,10 @@ export class EditUsecaseComponent {
       editable: false,
       filter: false,
       sortable: false,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 80,
+      maxWidth: 120,
+      // flex: 1,
+      pinned:'right',
       cellRenderer: (params: any) => {
         const value = params.value || '';
 

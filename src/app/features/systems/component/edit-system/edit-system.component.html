@@ -93,7 +93,7 @@
             <div class="tab-container">
               <button [ngClass]="{ 'inverse': activeView === 'interfaces' }" (click)="addInbound('interfaces')">
                 Interfaces
-              </button>            
+              </button>
 
               <button [ngClass]="{ 'inverse': activeView === 'input' }" (click)="addInputDatafields('input')">
                 Input DataFields
@@ -128,7 +128,7 @@
                 <!-- <div class="table-container">
                   <div class="system-table-container">
                     <div class="grid-table"> -->
-                <div style="margin: 10px">
+                <div>
                   <ag-grid-angular class="ag-theme-alpine responsive-grid" *ngIf="showGlobalQualityRiskGridInbound"
                     style="width: 100%;height: 100%;" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
                     [defaultColDef]="defaultColDef" (gridReady)="onInboundGridReady($event)" rowSelection="single"
@@ -143,7 +143,7 @@
               <!-- <div class="table-container">
                 <div class="system-table-container">
                   <div class="grid-table"> -->
-              <div style="margin: 10px;">
+              <div>
                 <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 400px"
                   [rowData]="rowDataInput" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
                   (cellValueChanged)="inputCellValueChanged($event)" rowSelection="single"
@@ -156,15 +156,17 @@
             </div>
 
             <!-- Information Box -->
-            <div style="height: 100%;display: flex;gap: 1rem;padding: 10px;">
+            <div style="height: 100%; display: flex; gap: 1rem; padding: 0px;">
               <div class="info-box-table" *ngIf="showInbound">
                 <div class="datafields-header">
                   <button (click)="addInterface()">Add Inbound Interface</button>
                 </div>
-                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataInbound"
-                  [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="inboundOnCellValueChanged($event)" rowSelection="single">
-                </ag-grid-angular>
+                <div class="padding:10px">
+                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
+                    [rowData]="rowDataInbound" [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
+                    (cellValueChanged)="inboundOnCellValueChanged($event)" rowSelection="single">
+                  </ag-grid-angular>
+                </div>
               </div>
 
               <div class="datafields-table" *ngIf="showDataFields" style="width: 100%;">
@@ -196,21 +198,24 @@
                   &nbsp;&nbsp;&nbsp;
                   <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
                 </div>
-                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowDataOutbound"
-                  [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
-                </ag-grid-angular>
+                <div class="padding:10px">
+                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
+                    [rowData]="rowDataOutbound" [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
+                    (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
+                  </ag-grid-angular>
+                </div>
                 <!-- <ag-grid-angular
-      class="ag-theme-alpine"
-      style="width: 100%; height: 200px;"
-      [rowData]="rowDataOutboundTarget"
-      [columnDefs]="outBoundTargetColumnDefs"
-      [defaultColDef]="defaultColDef"
-      (cellValueChanged)="outboundTaregtOnCellValueChanged($event)"
-      rowSelection="single"
-      >
-      </ag-grid-angular> -->
+                  class="ag-theme-alpine"
+                  style="width: 100%; height: 200px;"
+                  [rowData]="rowDataOutboundTarget"
+                  [columnDefs]="outBoundTargetColumnDefs"
+                  [defaultColDef]="defaultColDef"
+                  (cellValueChanged)="outboundTaregtOnCellValueChanged($event)"
+                  rowSelection="single"
+                  >
+                  </ag-grid-angular> -->
               </div>
+
               <div class="lineage-wrapper" *ngIf="showsystemMapping">
                 <div class="tables-wrapper">
                   <app-create-lineage [inboundFields]="inboundFields" [outboundFields]="outboundFields"
@@ -242,9 +247,7 @@
                   <div class="col-md-12">
                     <button mat-raised-button color="primary" (click)="confirmUseCase()"
                       style="height: 43px; margin-top: 6px;">Submit</button>
-
                     <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
-
                     <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
 
                   </div>
@@ -252,10 +255,8 @@
               </mat-dialog-content>
             </ng-template>
             <!-- <div class="datafields-header">
-     
-      <button (click)="addRow()" class="add-btn">Add Row</button>
-
-    </div> -->
+                 <button (click)="addRow()" class="add-btn">Add Row</button>
+            </div> -->
           </div>
         </div>
       </div>
