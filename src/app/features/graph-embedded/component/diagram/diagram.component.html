@@ -1,24 +1,21 @@
 <div class="dd-container">
-<div class="toolbar">
-  <div class="back-icon" (click)="goBack()">
-     <i class="fa fa-arrow-left" ></i>
-  </div>
-  <div class="toolbar-title">{{ lineages?.name }}</div>
-  
-  <div class="block-item" (click)="saveGraph()">Save</div>
-</div>
+  <section class="welcome-banner create">
+    <h2>
+      <div class="back-icon">
+        <button (click)="goBack()">
+          <lucide-icon name="chevron-left"></lucide-icon>
+        </button>
+      </div>{{ lineages?.name }}
+    </h2>
+    <button class="button" (click)="saveGraph()">Save</button>
+  </section>
 
-
-
-<div class="graph-box" >
-       <!-- Collapse toggle -->
-    
-    <div class="graph-row" >
-             
-        <div class="graph-col-3">
-          <div class="panel-header">
-            <h3 class="panel-title">Entity</h3>
-           <!-- <button
+  <div class="graph-box">
+    <div class="graph-row">
+      <div class="graph-col-3">
+        <div class="panel-header">
+          <h3 class="panel-title">Entity</h3>
+          <!-- <button
               class="collapse-btn"
               type="button"
               (click)="toggleNodes()"
@@ -28,17 +25,17 @@
               <i *ngIf="nodesCollapsed" class="fa fa-chevron-right"></i>
               <i *ngIf="!nodesCollapsed" class="fa fa-chevron-left"></i>
             </button> -->
-          </div>
-
-          <app-nodes></app-nodes>
         </div>
 
-        <div class="graph-col-9">
+        <app-nodes></app-nodes>
+      </div>
+
+      <div class="graph-col-9">
 
         <div #canvas class="paper-container"></div>
 
       </div>
     </div>
-    </div>
-    
   </div>
+
+</div>

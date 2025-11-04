@@ -329,9 +329,9 @@ export class DiagramComponent implements AfterViewInit {
 
     this.paper = new dia.Paper({
       model: this.graph,
-      background: {
-        color: '#F8F9FA',
-      },
+      // background: {
+      //   color: '#F8F9FA',
+      // },
       height,
       width,
       // frozen: true, // Keep frozen until initial setup is done

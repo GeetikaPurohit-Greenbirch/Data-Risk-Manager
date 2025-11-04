@@ -38,10 +38,11 @@ import { icons } from 'lucide';
     TableModule,
     PaginatorModule,
     LucideAngularModule.pick({
-              ChevronLeft: icons.ChevronLeft,
-              Plus: icons.Plus,
-              Trash2: icons.Trash2
-            }),
+      ChevronLeft: icons.ChevronLeft,
+      Plus: icons.Plus,
+      Trash2: icons.Trash2,
+      Close: icons.X,
+    }),
   ]
 })
 export class GraphModuleEmbedded { }
