@@ -8,7 +8,57 @@
 //     box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 //     z-index: 1500;
 //   }
-  .section { margin-bottom: 12px; }
-  .section-title { font-weight: 700; margin-bottom: 8px; }
-  .actions { display:flex; gap: 10px; justify-content: flex-end; }
-  button { padding: 6px 10px; }
+.section {
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+
+  .button {
+    gap: 6px;
+    border: none;
+    display: flex;
+    font-size: 12px;
+    box-shadow: none;
+    width: fit-content;
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border: 1px solid transparent;
+
+    &.primary {
+      color: white;
+      background-color: rgb(62, 99, 221);
+
+      &:hover {
+        background: rgb(58, 92, 204);
+      }
+    }
+
+    &.secondary {
+      color: #000;
+      background: transparent;
+      border: 1px solid #333;
+
+      &:hover {
+        color: white;
+        background: rgb(58, 92, 204);
+      }
+    }
+
+
+
+    // lucide-icon {}
+  }
+}
+
+button {
+  padding: 6px 10px;
+}

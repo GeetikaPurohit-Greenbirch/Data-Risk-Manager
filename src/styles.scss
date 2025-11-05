@@ -447,11 +447,6 @@ body {
   position: relative;
 }
 
-.filter-input {
-  width: 300px;
-  margin-bottom: 16px;
-}
-
 .paginator-container {
   gap: 10px;
   width: 100%;
@@ -467,7 +462,7 @@ body {
 
 .primary {
   color: white !important;
-  background-color: #1976d2 !important;
+  // background-color: #1976d2 !important;
 }
 
 .inverse {
