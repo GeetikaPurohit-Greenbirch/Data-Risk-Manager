@@ -394,7 +394,7 @@ export class EditSourceComponent implements OnInit {
     { field: 'field_id', header: 'Field ID', editable: false },
     { field: 'field_name', header: 'Field Name', editable: true },
     { field: 'entity_type', header: 'Entity Type', editable: true },
-    { field: 'field_id', header: 'Field ID', editable: false, },
+    // { field: 'field_id', header: 'Field ID', editable: false, },
     { field: 'user_generated_id', header: 'Field No.', editable: true },
     { field: 'field_name', header: 'Field Name', editable: true, },
     { field: 'data_type', header: 'Data Type', editable: true, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
