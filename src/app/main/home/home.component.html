@@ -2,35 +2,62 @@
 
   <main class="dashboard-container">
     <section class="welcome-banner">
-      <h2>Dashboard</h2>
-      <p>Welcome to London Stock Exchange Data Quality</p>
+      <h2>GreenBirch Data Risk Manager</h2>
+      <p>Welcome {{userName}}</p>
     </section>
 
-    <div class="card-grid">
-      <mat-card *ngFor="let item of stats" class="status-card">
-        <div class="icon">
-          <span [ngStyle]="{ 'background-color': item.bgColor }" [innerHTML]="item.icon">
-            <!-- {{item.icon}} -->
-          </span>
-          <div style="display: flex;flex-direction: column;">
-            <h1>{{ item.total }}</h1>
-            <h3>{{ item.title }}</h3>
+    <div class="home-container">
+      <!-- Configurable Panels -->
+      <div class="configurable-panels">
+        <!-- Left Panel -->
+        <div class="left-panel">
+          <h2>Welcome to GreenBirch Data Risk Manager</h2>
+          <p>
+            This is a platform where you can map out your Data Flows and manage Data Quality risk from a single platform.
+          </p>
+        </div>
+    
+        <!-- Right Panel (News) -->
+        <div class="right-panel">
+          <h3>News</h3>
+          <div class="news-container">
+            <ul class="news-list">
+              <li>GreenBirch Data Risk Manager release 1.3.001 is now available for general availability.</li>
+              <li>New dashboard analytics feature coming soon.</li>
+              <li>Maintenance window scheduled for this weekend.</li>
+              <li>Performance improvements in latest patch update.</li>
+            </ul>
           </div>
         </div>
-
-
-        <div class="statuses">
-          <span class="not-started">
-            <label for="">{{ item.notStarted }}</label>
-            Not Started</span>
-          <span class="expired">
-            <label for="">{{ item.expired }}</label>
-            Expired</span>
-          <span class="complete">
-            <label for="">{{ item.complete }}</label>
-            Complete</span>
-        </div>
-      </mat-card>
+      </div>
+    
+      <!-- Existing card grid -->
+      <div class="card-grid">
+        <mat-card *ngFor="let item of stats" class="status-card">
+          <div class="icon">
+            <span [ngStyle]="{ 'background-color': item.bgColor }" [innerHTML]="item.icon"></span>
+            <div style="display: flex; flex-direction: column;">
+              <h1>{{ item.total }}</h1>
+              <h3>{{ item.title }}</h3>
+            </div>
+          </div>
+    
+          <div class="statuses">
+            <span class="not-started">
+              <label>{{ item.notStarted }}</label>
+              Not Started
+            </span>
+            <span class="expired">
+              <label>{{ item.expired }}</label>
+              Expired
+            </span>
+            <span class="complete">
+              <label>{{ item.complete }}</label>
+              Complete
+            </span>
+          </div>
+        </mat-card>
+      </div>
     </div>
 
     <div class="tabs-container">

@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
   isLoading = true; // 👈 flag for loading
   userRole: string | null = null;
   navItems: NavItem[] = [
-    { label: 'Dashboard', route: '/home', icon: 'fa-tachometer', feature: 'sb_dashboard' },
+    { label: 'Home', route: '/home', icon: 'fa-home', feature: 'sb_dashboard' },
     { label: 'Use Cases', route: '/use-cases', icon: 'fa-clipboard', feature: 'sb_use_cases' },
     { label: 'Systems', route: '/systems', icon: 'fa-cogs', feature: 'sb_systems' },
     { label: 'Interfaces', route: '/interfaces', icon: 'fa-random', feature: 'sb_interfaces' },
@@ -36,7 +36,7 @@ export class SidebarComponent implements OnInit {
     // { label: 'Target Builder', route: '/targets/target-builder', icon: 'fa-bullseye', subIcon: 'fa-plus', feature: 'sb_target_builder' },
     // { label: 'Control Builder', route: '/controls/control-builder', icon: 'fa-sliders', subIcon: 'fa-plus', feature: 'sb_control_builder' },
     // { label: 'Create User', route: '/create-user', icon: 'fa-user', feature: 'create_user' },
-    { label: 'Uses', route: '/user-list', icon: 'fa-users', feature: 'sb_user_list' }
+    { label: 'Users', route: '/user-list', icon: 'fa-users', feature: 'sb_user_list' }
   ];
 
   constructor(private auth: AuthService, private router: Router,

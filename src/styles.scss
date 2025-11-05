@@ -15,7 +15,6 @@ body {
 body {
   margin: 0;
   overflow: hidden;
-  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   // font-family: Roboto, "Helvetica Neue", sans-serif;
 }
@@ -27,16 +26,18 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+
+//////////// System builder design //////////////////////
 .main-container {
   display: flex;
 }
 
-// .dashboard-container {
-//   flex-grow: 1;
-//   padding: 0rem;
-//   overflow-y: auto;
-//   background: #f5f7f9;
-// }
+.dashboard-container {
+  flex-grow: 1;
+  padding: 0rem;
+  overflow-y: auto;
+  background: #f5f7f9;
+}
 
 
 .form-grid {
@@ -54,20 +55,11 @@ body {
   height: calc(100vh - 48px);
 }
 
-// .welcome-banner {
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-// }
-
 .welcome-banner {
-  display: flex;
   color: white;
-  align-items: center;
   padding: .8rem 1rem;
   margin-bottom: 1rem;
   border-radius: 0rem;
-  justify-content: space-between;
   background-color: rgb(62, 99, 221);
 
   &.create {
@@ -76,22 +68,17 @@ body {
 
   // background: linear-gradient(to right, #4f46e5, #6366f1);
   .button {
-    gap: 6px;
     border: none;
-    display: flex;
     color: white;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 12px;
     border-radius: 4px;
-    align-items: center;
     background: #3f51b5;
 
     &:hover {
       background: #0a80ea;
     }
-
-    // lucide-icon {}
   }
 
   h2,
@@ -102,6 +89,7 @@ body {
   p {
     font-size: 13px;
     font-weight: 400;
+    ;
   }
 
   h2 {
@@ -110,6 +98,8 @@ body {
     font-size: 15px;
     font-weight: 500;
     align-items: center;
+
+
 
     .back-icon {
       button {
@@ -128,6 +118,31 @@ body {
         }
       }
     }
+  }
+}
+
+
+.welcome-banner {
+  display: flex;
+  // padding: .6rem 2rem;
+  align-items: center;
+  // background-color: #f9f9f9;
+  justify-content: space-between;
+  // background-color: #f2f2f2;
+  // border-bottom: 1px solid #ddd;
+
+  .welcome-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+  }
+
+  .add-lineage-btn {
+    font-weight: 500;
+    padding: 0 16px;
+    height: 36px;
+    line-height: 36px;
   }
 }
 
@@ -210,45 +225,45 @@ body {
   }
 }
 
-// .create-btn {
-//   width: 30%;
-//   margin: 0 auto;
-// }
+.create-btn {
+  width: 30%;
+  margin: 0 auto;
+}
 
-// .editable-sub-table {
-//   margin-top: 12px;
-// }
+.editable-sub-table {
+  margin-top: 12px;
+}
 
-// .form-cell {
-//   width: 100%;
-//   min-width: 120px;
-//   padding: 0 4px;
-// }
+.form-cell {
+  width: 100%;
+  min-width: 120px;
+  padding: 0 4px;
+}
 
-// .action-bar {
-//   display: flex;
-//   gap: 16px;
-//   margin-top: 12px;
-//   justify-content: flex-end;
-// }
+.action-bar {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
 
-// .editable-sub-table tr td {
-//   padding: 2px !important;
-//   width: 192px !important;
-// }
+.editable-sub-table tr td {
+  padding: 2px !important;
+  width: 192px !important;
+}
 
 //// Edit Interface /////
 
-// .left-column {
-//   flex: 1;
-//   border-right: 1px solid #ddd;
-//   padding-right: 20px;
-// }
+.left-column {
+  flex: 1;
+  border-right: 1px solid #ddd;
+  padding-right: 20px;
+}
 
-// .right-column {
-//   flex: 1;
-//   padding-left: 20px;
-// }
+.right-column {
+  flex: 1;
+  padding-left: 20px;
+}
 
 .row {
   display: flex;
@@ -262,20 +277,21 @@ body {
 }
 
 .container {
-  gap: 20px;
-  padding: 20px;
   display: flex;
+  flex-direction: row;
+  gap: 20px;
+  // background-color: #3366cc;
+  padding: 20px;
   color: white;
   max-width: 100%;
-  flex-direction: row;
 }
 
 .left-panel {
   width: 27.5%;
-  padding: 11px;
-  color: black;
-  border-radius: 8px;
   background-color: #eeeeee;
+  padding: 11px;
+  border-radius: 8px;
+  color: black;
 
   h2 {
     margin-bottom: 15px;
@@ -283,8 +299,8 @@ body {
 
   .form-field {
     display: flex;
-    margin-bottom: 10px;
     flex-direction: column;
+    margin-bottom: 10px;
 
     label {
       font-weight: bold;
@@ -298,25 +314,25 @@ body {
   }
 
   .button-group {
-    gap: 10px;
-    display: flex;
     margin-top: 15px;
+    display: flex;
     flex-direction: column;
+    gap: 10px;
   }
 }
 
 .right-panel {
   width: 69%;
-  padding: 12px;
-  color: black;
-  border-radius: 8px;
   background-color: #dddddd;
+  padding: 12px;
+  border-radius: 8px;
+  color: black;
 
   .datafields-header {
     display: content;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    justify-content: space-between;
   }
 }
 
@@ -369,37 +385,40 @@ body {
 
 .low-orange {
   color: #d97904;
+  /* Orange */
   font-weight: bold;
 }
 
 .low-blue {
   color: #207dc0;
+  /* Blue */
   font-weight: bold;
 }
 
 .low-pink {
   color: #db42c0;
+  /* Pink */
   font-weight: bold;
 }
 
 //// ag grid /// 
 
 .ag-theme-alpine {
-  overflow: hidden !important;
   --ag-foreground-color: #333;
   --ag-background-color: #fff;
   --ag-header-background-color: #f0f0f0;
+  overflow: hidden !important;
 
 }
 
 .add-btn {
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 4px;
   margin-bottom: 10px;
   background: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .ag-header-cell[col-id="dqaC"],
@@ -451,6 +470,7 @@ body {
   gap: 10px;
   width: 100%;
   display: flex;
+  // margin-top: 10px;
   align-items: center;
   justify-content: flex-end;
   background-color: white;
@@ -474,36 +494,36 @@ body {
 
 .ag-header-group-cell.custom-parent-header {
   display: flex;
-  text-align: center;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .overlay-loader {
+  position: absolute;
   top: 50%;
   left: 50%;
   z-index: 10;
-  padding: 20px;
-  position: absolute;
-  border-radius: 8px;
   transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  padding: 20px;
 }
 
-// ==== TOASTER NOTIFICATION ==== 
+////// Toaster Notification ///////
 .mdc-snackbar.custom-snackbar-overlay {
+  position: fixed !important;
   // top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   z-index: 1200;
+  background: rgba(0, 0, 0, 0.85);
   color: white;
-  max-width: 20%;
   font-size: 16px;
   border-radius: 8px;
   padding: 20px 30px;
+  max-width: 20%;
   text-align: center;
-  left: 50% !important;
-  position: fixed !important;
-  background: rgba(0, 0, 0, 0.85);
-  transform: translate(-50%, -50%) !important;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -550,9 +570,7 @@ body {
 .ag-header {
   :where(.ag-icon):before {
     content: "";
-    width: 14px;
-    margin-top: 4px;
-    background-color: #667085;
+    background-color: #333;
   }
 
   .ag-header-cell-resize {
@@ -562,4 +580,57 @@ body {
       background-color: rgb(232, 232, 232);
     }
   }
+}
+
+/* Ensures dropdown fills the table cell and looks aligned */
+::ng-deep .custom-table-dropdown .p-dropdown {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 4px !important;
+  border: 1px solid #ced4da !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+}
+
+/* Align label text vertically */
+::ng-deep .custom-table-dropdown .p-dropdown-label {
+  display: flex;
+  align-items: center;
+  height: 30px !important;
+  padding: 2px 8px !important;
+}
+
+/* Style dropdown items */
+::ng-deep .p-dropdown-items .p-dropdown-item {
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+}
+
+/* Ensure dropdown fits neatly inside table */
+::ng-deep .p-dropdown-panel {
+  min-width: unset !important;
+  width: auto !important;
+}
+
+/* Input fields alignment */
+.custom-table-input {
+  width: 100%;
+  height: 32px;
+  font-size: 13px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+.custom-parent-header {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f1f1f1;
+  border-bottom: 2px solid #ccc;
+  border: 1px solid;
+}
+.p-r-10
+{
+  padding-right: 10px;
 }

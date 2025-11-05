@@ -248,7 +248,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 remove_icon: {
                     ref: 'body',
                     refX: '100%',
-                    refY: -25,                  
+                    refY: -25,
                     width: 14,
                     height: 14,
                     cursor: 'pointer',
@@ -359,6 +359,16 @@ export class Concat extends shapes.standard.HeaderedRecord {
         this.attr('headerAction1/xlink:href', icon1, opt);
         // this.attr('headerAction2/xlink:href', icon2, opt);
     }
+
+    setName2WithTooltip(names: string[], opt?: object) {
+        const visibleText = names.length > 1 ? `${names[0]} (+${names.length - 1})` : names[0] || '';
+        const tooltipText = names.join('\n');
+
+        this.attr(['headerLabel2', 'textWrap', 'text'], visibleText, opt);
+        this.attr(['headerLabel2', 'title'], tooltipText, opt); // store tooltip text for Paper to read
+        return this;
+    }
+
 
 
     setCaretIcon() {

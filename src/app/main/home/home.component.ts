@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
   dataSource_4!: MatTableDataSource<Interface>;
   dataSource_5!: MatTableDataSource<UsecaseService>;
   user:any;
+  userName:any;
   userRole: string ='';
   systems: SystemsModel[] = []; // ✅ correct
   sources: Sources[] = [];
@@ -75,8 +76,9 @@ ngOnInit(): void{
       if (user && user.email) {
         console.log('Authenticated user', user);
         this.user = user.email;
+        this.userName = user.nickname;
         localStorage.setItem('userID', this.user);
-
+        localStorage.setItem('userName', this.userName);
         this.fetchUserRoleAndPrivileges(this.user);
       } else {
         this.router.navigate(['/login']);
@@ -95,7 +97,7 @@ ngOnInit(): void{
   this.getTargetList();
   this.getInterfaceList();
   this.getUsecaseList();
-  }, 150);
+  }, 500);
   
 }
 searchText:string = '';

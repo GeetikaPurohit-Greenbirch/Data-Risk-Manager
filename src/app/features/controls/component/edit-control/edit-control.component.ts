@@ -252,6 +252,44 @@ export class EditControlComponent {
 
   rowData: any;
 
+  cols = [
+    { field: 'field_id', header: 'Field ID', editable: false },
+    { field: 'field_name', header: 'Field Name', editable: true },
+    { field: 'entity_id', header: 'Entity ID', editable: true },
+    { field: 'entity_type', header: 'Entity Type', editable: true },
+    { field: 'field_length', header: 'Field Length', editable: true, },
+    { field: 'field_description', header: 'Field Description', editable: true, },
+    {
+      field: 'post_control_dqa_c',
+      header: 'After Control Completeness',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'C',
+      style: { color: '#e8000a', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    {
+      field: 'post_control_dqa_t',
+      header: 'After Control Timeliness',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'T',
+      style: { color: '#3e63dd', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    {
+      field: 'post_control_dqa_a',
+      header: 'After Control Accuracy',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'A',
+      style: { color: 'purple', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
 
   onGridReady(params: any) {
     this.gridApi = params.api;
@@ -274,6 +312,8 @@ export class EditControlComponent {
 
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     console.log('Editing control with ID:', this.controlId);
     this.controlForm = this.fb.group({
       control_name: ['', Validators.required],
