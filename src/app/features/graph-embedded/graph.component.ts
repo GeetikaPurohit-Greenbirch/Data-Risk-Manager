@@ -276,18 +276,15 @@ export class UseCasesComponent {
     return 'L' + String(next).padStart(3, '0');
   }
   editLineage(lineages: any) {
-    console.log(
-      'Edit Usecase ID: ',
-      lineages.use_case_id,
-      ' Lineage ID: ',
-      lineages.id
-    );
-
-    this.router.navigate([
+   
+    const path=[
       '/graph-embedded/edit-lineage',
       lineages.use_case_id,
       lineages.id,
-    ]);
+    ]
+    sessionStorage.removeItem('BackTolineagePath');
+    sessionStorage.setItem('BackTolineagePath',JSON.stringify(path));
+    this.router.navigate(path);
   }
 
   deleteLineage(lineage: any) {

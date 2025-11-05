@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', component: SourcesComponent },
   {path:'source-builder', component:EditSourceComponent},
   {path: 'edit-source/:id', component:EditSourceComponent},
+  {path: 'edit-source/:id/:isBacktolineage', component:EditSourceComponent},
 ];
 
 @NgModule({

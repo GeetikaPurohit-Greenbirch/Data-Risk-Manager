@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', component: TargetsComponent },
   {path:'target-builder', component: EditTargetComponent},
   {path: 'edit-target/:id', component:EditTargetComponent},
+  {path: 'edit-target/:id/:isBacktolineage', component:EditTargetComponent},
 ];
 
 @NgModule({

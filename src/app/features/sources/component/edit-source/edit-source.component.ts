@@ -33,6 +33,8 @@ export class EditSourceComponent implements OnInit {
   scheduleLimitReached = false;
   formLoaded = false;
   isLoading = false;
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -467,7 +469,11 @@ export class EditSourceComponent implements OnInit {
       // add other form controls as needed
     });
     this.sourceId = Number(this.route.snapshot.paramMap.get('id'));
-
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
     if (this.sourceId > 0) {
       // Step 2: Fetch data from API and patch to form
       this.sourceService.getSourceById(this.sourceId).subscribe({
@@ -820,5 +826,9 @@ export class EditSourceComponent implements OnInit {
   }
   onBack() {
     this.router.navigate(['/sources']);
+  }
+  onBackToLineage()
+  {
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 }

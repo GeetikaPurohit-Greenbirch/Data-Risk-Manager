@@ -521,16 +521,16 @@ export class DiagramComponent implements AfterViewInit {
         const parts = nodeId.split("-");
         const type = parts[0]; // "SYS"
         const id = parts[1]; // "21"
-
+        const isBacktolineage=true;
         if (type == "S") {
-          this.router.navigate(['sources/edit-source/', id]);
+          this.router.navigate(['sources/edit-source/', id,isBacktolineage]);
         }
         else if (type == "SYS") {
           
-          this.router.navigate(['systems/edit-system/', id]);
+          this.router.navigate(['systems/edit-system/', id,isBacktolineage]);
         }
         else if (type == "TGT") {
-          this.router.navigate(['targets/edit-target/', id]);
+          this.router.navigate(['targets/edit-target/', id,isBacktolineage]);
         }
       }
     });

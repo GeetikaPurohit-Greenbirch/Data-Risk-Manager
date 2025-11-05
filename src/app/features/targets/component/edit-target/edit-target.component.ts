@@ -51,6 +51,8 @@ export class EditTargetComponent {
   formGroup!: FormGroup;
   currentRow: any = null;
   useCases: any[] = [];
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
 
   // ✅ DataFields table data
   // dataFields: any[] = [
@@ -307,6 +309,13 @@ export class EditTargetComponent {
       // add other form controls as needed
     });
     this.targetId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
+
     if (this.targetId > 0) {
       // Step 2: Fetch data from API and patch to form
       this.targetService.getTargetById(this.targetId).subscribe({
@@ -595,6 +604,11 @@ export class EditTargetComponent {
   }
   onBack() {
     this.router.navigate(['/targets']);
+  }
+
+  onBackToLineage()
+  {
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 
   createForm() {

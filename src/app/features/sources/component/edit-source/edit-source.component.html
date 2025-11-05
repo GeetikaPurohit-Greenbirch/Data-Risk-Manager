@@ -8,6 +8,9 @@
             </button>
           </div>
           {{ sourceId > 0 ? 'Edit Source' : 'Add Source' }}
+          <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
+           Back to lineage
+          </button>
       </h2>
       </section>
 <mat-card>

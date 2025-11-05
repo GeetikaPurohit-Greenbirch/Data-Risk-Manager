@@ -9,6 +9,9 @@
           </button>
         </div>
         {{ targetId > 0 ? 'Edit Target' : 'Add Target' }}
+        <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
+           Back to lineage
+          </button>
       </h2>
     </section>
     <mat-card>

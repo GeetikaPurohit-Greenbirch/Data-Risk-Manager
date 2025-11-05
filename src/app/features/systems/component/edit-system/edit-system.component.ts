@@ -63,6 +63,8 @@ export class EditSystemComponent{
   formLoaded = false;
 
   // ✅ Table column names
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
   systemId!: any;
   gridApi: any;
   gridApiIn: any;
@@ -1067,6 +1069,12 @@ defaultColDef: ColDef = {
       // add other form controls as needed
     });
     this.systemId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
+
     if(this.systemId>0)
     {
       this.addInbound('interfaces')
@@ -2099,7 +2107,7 @@ loadDropdownOptions(): void {
   }
   onBackToLineage()
   {
-     //this.router.navigate(['/graph-embedded/edit-lineage/'+ this.usecaseId+'/'+ this.lineageId]);
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 }
 

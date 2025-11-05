@@ -9,7 +9,7 @@
           </button>
         </div>
         {{ systemId > 0 ? 'Edit System' : 'Add System' }}
-        <button (click)="onBackToLineage()" class="p-r-10">
+        <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
            Back to lineage
           </button>
       </h2>
