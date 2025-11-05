@@ -386,7 +386,8 @@ export class EditSystemComponent{
         values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
       },
     },
-    { field: 'field_length', headerName: 'Length', editable: this.isEditable, headerTooltip: 'Length', },
+    { field: 'field_length', headerName: 'Length',
+       editable: this.isEditable, headerTooltip: 'Length', },
     {
       headerName: 'DQA',
       headerClass: 'custom-parent-header',
@@ -919,6 +920,51 @@ defaultColDef: ColDef = {
   rowDataOutboundTarget: any;
   rowDataCombined:any;
 
+
+  cols = [
+    { field: 'interface_id', header: 'Interface ID', editable: false },
+    { field: 'interface_name', header: 'Interface Name', editable: false },
+    { field: 'entity_type', header: 'Entity Type', editable: false },
+    { field: 'field_id', header: 'Field ID', editable: false, },
+    { field: 'user_generated_id', header: 'Field No.', editable: true },
+    { field: 'field_name', header: 'Field Name', editable: this.isEditable, },
+    { field: 'data_type', header: 'Data Type', editable: this.isEditable, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+    { field: 'field_length', header: 'Field Length', editable: this.isEditable, },
+    {
+      field: 'dqa_c',
+      header: 'C',
+      editable: this.isEditable,
+      type: 'dropdown',
+      tooltip: 'C',
+      style: { color: '#e8000a', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_c', header: 'C Commentary', editable: this.isEditable },
+    {
+      field: 'dqa_t',
+      header: 'T',
+      editable: this.isEditable,
+      type: 'dropdown',
+      tooltip: 'T',
+      style: { color: '#3e63dd', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_t', header: 'T Commentary', editable: this.isEditable },
+    {
+      field: 'dqa_a',
+      header: 'A',
+      editable: this.isEditable,
+      type: 'dropdown',
+      tooltip: 'A',
+      style: { color: 'purple', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_a', header: 'A Commentary', editable: this.isEditable }
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
   
   onGridReady(params: any) {
     this.gridApi = params.api;
@@ -966,9 +1012,32 @@ defaultColDef: ColDef = {
     // this.gridApi.setRowData(this.rowDataInput);
   }
 
+  isCellEditable(col: any, row: any): boolean {
+    if (row.entity_type !== 'SYSTEM') {
+      return false;
+    }
   
+    return col.editable;
+  }
+
+  isCellEditableOutputDD(col: any, row: any):boolean {
+    if (col.field == 'data_type' && row.entity_type !== 'SYSTEM') {
+      return false;
+    }
+    return col.editable;
+
+  }
+
+  isCellEditableOutputInput(col: any, row: any):boolean {
+    if (col.field == 'user_generated_id' || col.field == 'field_name' || col.field == 'field_length' && row.entity_type !== 'SYSTEM') {
+      return false;
+    }
+    return col.editable;
+
+  }
+
   isEditable(params: any): boolean {
-    return params.data.entity_type === 'SYSTEM';
+    return params.entity_type === 'SYSTEM';
   }
 
   onRowValueChanged(event: any) {
@@ -981,6 +1050,10 @@ defaultColDef: ColDef = {
   }
 
   ngOnInit(): void {
+
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
+
     console.log('Editing system with ID:', this.systemId);
     this.systemForm = this.fb.group({
       system_name:['', Validators.required],
@@ -1185,7 +1258,7 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
     this.getDataFields();
     this.loadInboundInterfaces();
 
@@ -1200,7 +1273,7 @@ loadDropdownOptions(): void {
     this.showInbound = false;
     this.showoutbound = false;
     this.showsystemMapping = false;
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
     this.getDataFields();
     this.loadInboundInterfaces();
 
@@ -1463,24 +1536,24 @@ loadDropdownOptions(): void {
   {
     console.log(data, "Interface Data Fields");
   this.dataFieldsModel.entity_id = this.systemId;
-  this.dataFieldsModel.field_id = data.data.field_id;
-  this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
-  this.dataFieldsModel.field_name = data.data.field_name;
-  this.dataFieldsModel.dqa_c = data.data.dqa_c;
-  this.dataFieldsModel.dqa_t = data.data.dqa_t;
-  this.dataFieldsModel.dqa_a = data.data.dqa_a;
-  this.dataFieldsModel.commentary_a = data.data.commentary_a;
-  this.dataFieldsModel.commentary_t = data.data.commentary_t;
-  this.dataFieldsModel.commentary_c = data.data.commentary_c;
-  this.dataFieldsModel.data_type = data.data.data_type;
-  this.dataFieldsModel.field_length = data.data.field_length;
-  this.dataFieldsModel.criticality = data.data.criticality;
-  this.dataFieldsModel.entity_type = data.data.entity_type;
+  this.dataFieldsModel.field_id = data.field_id;
+  this.dataFieldsModel.user_generated_id = data.user_generated_id;
+  this.dataFieldsModel.field_name = data.field_name;
+  this.dataFieldsModel.dqa_c = data.dqa_c;
+  this.dataFieldsModel.dqa_t = data.dqa_t;
+  this.dataFieldsModel.dqa_a = data.dqa_a;
+  this.dataFieldsModel.commentary_a = data.commentary_a;
+  this.dataFieldsModel.commentary_t = data.commentary_t;
+  this.dataFieldsModel.commentary_c = data.commentary_c;
+  this.dataFieldsModel.data_type = data.data_type;
+  this.dataFieldsModel.field_length = data.field_length;
+  this.dataFieldsModel.criticality = data.criticality;
+  this.dataFieldsModel.entity_type = data.entity_type;
   this.dataFieldsModel.usecaseid = this.useCaseId;
-  this.dataFieldsModel.entity_id = data.data.entity_id;
+  this.dataFieldsModel.entity_id = data.entity_id;
  
       // alert("Data field added Successfully.");
-      if(!data.data.field_id)
+      if(!data.field_id)
       {
         this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
 
@@ -1506,9 +1579,9 @@ loadDropdownOptions(): void {
 
   deleteDAtaFields(data:any)
   {  
-    this.datafieldsService.deleteDataFields(data.data.field_id, 'SYSTEM', this.systemId).subscribe(() => {
+    this.datafieldsService.deleteDataFields(data.field_id, 'SYSTEM', this.systemId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 
@@ -1804,7 +1877,7 @@ loadDropdownOptions(): void {
           // Refresh grid
           if (this.gridApi) {
             // this.gridApi.setRowData([]);
-            // this.gridApi.setRowData(this.rowDataInput);
+            this.gridApi.setRowData(this.rowDataInput);
             // this.gridApi.setRowData(this.rowDataInbound);
             // this.gridApi.setRowData(this.rowDataOutbound);
           }
