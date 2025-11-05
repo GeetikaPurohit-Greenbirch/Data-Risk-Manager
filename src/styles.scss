@@ -510,3 +510,49 @@ body {
     }
   }
 }
+
+/* Ensures dropdown fills the table cell and looks aligned */
+::ng-deep .custom-table-dropdown .p-dropdown {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 4px !important;
+  border: 1px solid #ced4da !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+}
+
+/* Align label text vertically */
+::ng-deep .custom-table-dropdown .p-dropdown-label {
+  display: flex;
+  align-items: center;
+  height: 30px !important;
+  padding: 2px 8px !important;
+}
+
+/* Style dropdown items */
+::ng-deep .p-dropdown-items .p-dropdown-item {
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+}
+
+/* Ensure dropdown fits neatly inside table */
+::ng-deep .p-dropdown-panel {
+  min-width: unset !important;
+  width: auto !important;
+}
+
+/* Input fields alignment */
+.custom-table-input {
+  width: 100%;
+  height: 32px;
+  font-size: 13px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+.p-r-10
+{
+  padding-right: 10px;
+}

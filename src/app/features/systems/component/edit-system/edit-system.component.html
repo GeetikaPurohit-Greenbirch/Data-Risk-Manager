@@ -9,7 +9,11 @@
           </button>
         </div>
         {{ systemId > 0 ? 'Edit System' : 'Add System' }}
+        <button (click)="onBackToLineage()" class="p-r-10">
+           Back to lineage
+          </button>
       </h2>
+        
     </section>
     <mat-card>
       <div class="overlay-loader" *ngIf="isLoading">

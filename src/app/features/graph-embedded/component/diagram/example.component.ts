@@ -329,14 +329,14 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                 targetData = result.in[0].items
 
             }
-            console.log(targetData, "targetData")
+            //console.log(targetData, "targetData")
             const dataToPass = selectedItemDetails?.type === "target" ? [targetData] : [result.in, result.out]
-            console.log(dataToPass, "dataToPass")
-            let controlName="";
-            if(selectedItemDetails?.controls?.length>0)
-            {
-                 controlName = selectedItemDetails?.controls[0].name;
+            //console.log(dataToPass, "dataToPass")
+            let controlNames: string[] = [];
+            if (selectedItemDetails?.controls?.length > 0) {
+                controlNames = selectedItemDetails.controls.map((c: any) => c.name);
             }
+            const controlNamesText = controlNames.join('\n');
             // if (result.ports.length === 0) {
             newCell = new Concat({
                 position: { x: dropX, y: dropY },
@@ -357,7 +357,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                     }                 
                 },
             }).setName(selectedValue || blockDefinition.typeName)
-            .setName2(controlName)              
+            .setName2WithTooltip(controlNames)              
             .addPorts(result.noType)
 
             newCell.attr('forksGroups/stroke', 'lightgray');
@@ -377,16 +377,14 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
-            if (blockDefinition?.cicon && controlName!="") {
+            if (blockDefinition?.cicon && controlNamesText!="") {
                 (newCell as Concat).setIcon2(blockDefinition.cicon);
+                
             }
             if(blockDefinition?.reportIcon && blockDefinition?.detailIcon){
                 (newCell as Concat).setHeaderActions(blockDefinition?.reportIcon,blockDefinition?.detailIcon);
                 // (newCell as Concat).setHeaderActions2(blockDefinition?.detailIcon);        
             }
-           
-
-
             break;
 
         case 'GetDate':

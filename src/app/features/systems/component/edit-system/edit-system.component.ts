@@ -68,7 +68,7 @@ export class EditSystemComponent{
   gridApiIn: any;
   gridApiout: any;
   gridColumnApi: any;
-   dataFieldsModel : Datafields = new Datafields();
+  dataFieldsModel : Datafields = new Datafields();
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -2021,8 +2021,12 @@ loadDropdownOptions(): void {
     });
   }
   
-onBack() {
+  onBack() {
     this.router.navigate(['/systems']);
+  }
+  onBackToLineage()
+  {
+     //this.router.navigate(['/graph-embedded/edit-lineage/'+ this.usecaseId+'/'+ this.lineageId]);
   }
 }
 

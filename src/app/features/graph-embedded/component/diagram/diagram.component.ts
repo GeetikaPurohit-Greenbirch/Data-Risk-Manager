@@ -55,7 +55,7 @@ export type LineageRecord = {
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class DiagramComponent implements AfterViewInit {
 
@@ -314,10 +314,10 @@ export class DiagramComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
 
-  (shapes as any).mapping = (shapes as any).mapping || {};
-(shapes as any).mapping.Concat = Concat;
+    (shapes as any).mapping = (shapes as any).mapping || {};
+    (shapes as any).mapping.Concat = Concat;
     const container = this.canvas.nativeElement;
-     const width = container.clientWidth || 1000;
+    const width = container.clientWidth || 1000;
     const height = container.clientHeight || 700;
 
     container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
@@ -422,12 +422,55 @@ export class DiagramComponent implements AfterViewInit {
       cursor: 'grab'
     });
 
+    // Create tooltip element once
+    const tooltipEl = document.createElement('div');
+    tooltipEl.id = 'jointjs-tooltip';
+    tooltipEl.style.position = 'fixed';
+    tooltipEl.style.background = '#333';
+    tooltipEl.style.color = '#fff';
+    tooltipEl.style.padding = '6px 10px';
+    tooltipEl.style.borderRadius = '6px';
+    tooltipEl.style.fontSize = '12px';
+    tooltipEl.style.whiteSpace = 'pre'; // preserve line breaks
+    tooltipEl.style.pointerEvents = 'none';
+    tooltipEl.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+    tooltipEl.style.zIndex = '9999';
+    tooltipEl.style.display = 'none';
+    document.body.appendChild(tooltipEl);
+
+    // Tooltip events
+    this.paper.on('cell:mouseenter',  (cellView, evt) => {
+      const target = evt.target as SVGElement;
+      const selector = target.getAttribute('joint-selector');
+
+      if (selector === 'headerLabel2') {
+        const tooltipText = cellView.model.attr('headerLabel2/title');
+        if (tooltipText) {
+          tooltipEl.textContent = tooltipText;
+          tooltipEl.style.display = 'block';
+        }
+      }
+    });
+
+    this.paper.on('cell:mousemove', (cellView, evt) => {
+      const target = evt.target as SVGElement;
+      const selector = target.getAttribute('joint-selector');
+
+      if (selector === 'headerLabel2') {
+        tooltipEl.style.left = evt.clientX + 10 + 'px';
+        tooltipEl.style.top = evt.clientY + 10 + 'px';
+      }
+    });
+
+    this.paper.on('cell:mouseleave', () => {
+      tooltipEl.style.display = 'none';
+    });
 
     // Helper to attach FreeTransform to a clicked element
     const attachFreeTransform = (elementView: dia.ElementView) => {
       // Remove an existing FT first
       this.freeTransform?.remove();
-    
+
       // Create a new FT for the selected element
       this.freeTransform = new ui.FreeTransform({
         cellView: elementView,
@@ -443,11 +486,11 @@ export class DiagramComponent implements AfterViewInit {
         rotateAngleGrid: 15,              // snap rotation to 15°
         scaleGrid: 10                     // snap resize in 10px increments
       });
-    
+
       // Render and add to the paper DOM so it tracks the element position
       this.freeTransform.render();
       this.paper.el.appendChild(this.freeTransform.el);
-    
+
       // (Optional) listen when user finishes actions
       this.freeTransform.on('action:stop', () => {
         const element = elementView.model as dia.Element;
@@ -457,7 +500,7 @@ export class DiagramComponent implements AfterViewInit {
         // console.log('Resized to', size, 'angle', angle);
       });
     };
-    
+
     // Attach FT on click
     this.paper.on('element:pointerclick', (elementView: dia.ElementView) => {
       //attachFreeTransform(elementView);
@@ -468,7 +511,7 @@ export class DiagramComponent implements AfterViewInit {
       const cell = elementView.model;
       cell.remove(); // removes from graph
     });
-    
+
     this.paper.on('element:pointerdblclick', (elementView, evt) => {
       evt.stopPropagation();
       const node = elementView.model;
@@ -478,19 +521,20 @@ export class DiagramComponent implements AfterViewInit {
         const parts = nodeId.split("-");
         const type = parts[0]; // "SYS"
         const id = parts[1]; // "21"
-       
+
         if (type == "S") {
           this.router.navigate(['sources/edit-source/', id]);
         }
         else if (type == "SYS") {
+          
           this.router.navigate(['systems/edit-system/', id]);
-        }        
+        }
         else if (type == "TGT") {
           this.router.navigate(['targets/edit-target/', id]);
         }
       }
     });
- 
+
 
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
@@ -623,32 +667,32 @@ export class DiagramComponent implements AfterViewInit {
       this.clearHighlights()
       this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
 
-      
-///below should be uncommentd
+
+      ///below should be uncommentd
 
 
 
-    // const path = this.router.url.split('?')[0].split('#')[0];
-    // const segments = path.split('/').filter(Boolean);
-    // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
-    // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+      // const path = this.router.url.split('?')[0].split('#')[0];
+      // const segments = path.split('/').filter(Boolean);
+      // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+      // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
 
-    // console.log(itemId,model,"modelmodelmodel")
-    //  const selectedField = itemId ? itemId.split('_').pop() : '';
+      // console.log(itemId,model,"modelmodelmodel")
+      //  const selectedField = itemId ? itemId.split('_').pop() : '';
 
-    //    this.router.navigate([
-    //   '/graph-embedded/lineage-mapping/',
-    //   useCaseId,
-    //   layoutId
-    // ],
-    //   {
-    //     queryParams: {
-    //         selectedItem:selectedField,
-    //         targetId: model?.get('id')
+      //    this.router.navigate([
+      //   '/graph-embedded/lineage-mapping/',
+      //   useCaseId,
+      //   layoutId
+      // ],
+      //   {
+      //     queryParams: {
+      //         selectedItem:selectedField,
+      //         targetId: model?.get('id')
 
-    //     }
-    //   }
-    // );
+      //     }
+      //   }
+      // );
 
     });
 
@@ -802,7 +846,7 @@ export class DiagramComponent implements AfterViewInit {
     this.lineageService.saveLineageById(this.lineages as any, jsonString).subscribe({
       next: (response) => {
         console.log("Lineage saved successfully:", response);
-        if(fromNavigation) return; // Skip notification if from navigation
+        if (fromNavigation) return; // Skip notification if from navigation
         this.toastNotificationService.success('Lineage Saved successfully');
       },
       error: (err) => {
@@ -838,8 +882,7 @@ export class DiagramComponent implements AfterViewInit {
 
   loadGraphFromJSON(json: any) {
     console.log('Loading graph from JSON:', json);
-    if(json!=undefined && json!="{}")
-    {
+    if (json != undefined && json != "{}") {
       this.graph.fromJSON(JSON.parse(json));
       this.scroller.centerContent();
       this.hasGraph = true;

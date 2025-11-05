@@ -12,7 +12,6 @@
       </h2>
     </section>
     <mat-card>
-
       <div class="container">
         <div class="target-container">
           <!-- Left: Edit Target Form -->
@@ -57,11 +56,6 @@
                   </mat-error>
                 </mat-form-field>
 
-                <!-- <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Schedule Of Update</mat-label>
-          <input matInput formControlName="schedule_of_update" />
-        </mat-form-field> -->
-
                 <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                   <mat-label>Schedule Of Update</mat-label>
                   <mat-select formControlName="schedule_of_update" multiple
@@ -100,11 +94,6 @@
                   <mat-error *ngIf="targetForm.get('target_version_number')?.hasError('required')">Required</mat-error>
                 </mat-form-field>
 
-                <!-- <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Status</mat-label>
-                <input matInput formControlName="target_status" />
-              </mat-form-field> -->
-
                 <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                   <mat-label>Status</mat-label>
                   <mat-select formControlName="target_status">
@@ -134,36 +123,7 @@
                   <mat-error *ngIf="targetForm.get('target_entity')?.hasError('required')">Required</mat-error>
                 </mat-form-field>
 
-                <!-- <div style="width: 48%; float:right;    margin-top: 8px;
-                font-size: 15px;">
-                Usecase ID : {{useCaseId}}
-                <br>
-                Usecase Name : {{useCaseName}}
-              </div> -->
 
-                <!-- Add remaining fields similarly -->
-                <!-- <div class="updateBtn">
-                <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
-              </div> -->
-
-                <!-- Toggle Button -->
-                <!-- <div style="display: flex; height: 100%;">
-              
-                <div style="width: 100%; padding: 12px;">
-                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                    <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
-                      [ngClass]="{ 'inverse': activeView === 'datafields', 'primary': activeView !== 'datafields' }"
-                      (click)="addDatafields('datafields')">
-                      Add Datafields
-                    </button>
-                    <button mat-raised-button style="flex: 0 0 calc(50% - 6px);"
-                      [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
-                      (click)="selectUseCase('usecase')">
-                      Update Use Case
-                    </button>               
-                  </div>
-                </div>
-              </div> -->
               </div>
               <div class="form-grid">
                 <button (click)="onUpdate()">Save</button>
@@ -175,44 +135,168 @@
           <div class="right-panel" *ngIf="targetId>0">
             <!-- TABS CONTAINER -->
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'DataFileds' }" (click)="openTab('DataFileds')">
+              <button [ngClass]="{ 'inverse': activeView == 'DataFields' }" (click)="openTab('DataFields')">
                 Data fields
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView === 'DQAReport' }" (click)="openTab('DQAReport')">
+              <button [ngClass]="{ 'inverse': activeView == 'DQAReport' }" (click)="openTab('DQAReport')">
                 Build DQA Report
               </button>
             </div>
 
-            <div class="datafields-table" *ngIf="showDataFields">
-              <div class="datafields-header" *ngIf="showDataFields">
-                <button (click)="addRow()"
-                  style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
-              </div>
+            <div class="datafields-table">
+              <div class="datafields-header" [hidden]="!showDataFields">
+                <p-toolbar>
+                  <div class="p-toolbar-group-left">                   
+                    <div class="p-r-10">
+                      <button pButton label="Add New Record" icon="pi pi-plus" (click)="openAddDialog()"></button>
+                    </div>
+                    <span class="p-input-icon-left">
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" #globalFilter
+                        (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                    </span>
+                  </div>
 
-              <div class="aggrid">
-                <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 720px;" [rowData]="rowData"
-                  [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
-                  [suppressColumnVirtualisation]="true" [domLayout]="'normal'">
-                </ag-grid-angular>
+                  <div class="p-toolbar-group-right">
+                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                      placeholder="Choose Columns" display="chip">
+                    </p-multiSelect>
+                  </div>
+                </p-toolbar>
+
+                <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                  [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
+                  [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                  styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
+                  <!-- Header -->
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">
+                        {{ col.header }}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                      </th>
+                      <th>Actions</th>
+                    </tr>
+                  </ng-template>
+
+                  <!-- Body -->
+                  <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                      <td *ngFor="let col of selectedColumns">
+                        {{ rowData[col.field] }}
+                      </td>
+                      <td>
+                        <button pButton icon="pi pi-pencil" class="p-button-text"
+                          (click)="openEditDialog(rowData)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                          (click)="confirmDelete(rowData)"></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+
+                <!-- Dialog Form -->
+                <p-dialog header="{{ isEditMode ? 'Edit Field' : 'Add New Field' }}" [(visible)]="showDialog"
+                  [modal]="true" [closable]="true" [style]="{ width: '500px' }">
+                  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                    <div class="p-fluid">
+                      <!-- <div class="p-field">
+                        <label>Field ID<span class="required">*</span></label>
+                        <input type="text" pInputText formControlName="field_id" />
+                      </div> -->
+
+                      <div class="p-field">
+                        <label>Field No.<span class="required">*</span></label>
+                        <input type="text" pInputText formControlName="field_no" />
+                        <small class="p-error"
+                          *ngIf="formGroup.get('field_no')?.invalid && formGroup.get('field_no')?.touched">
+                          Field No. is required and must be numeric
+                        </small>
+                      </div>
+
+                      <div class="p-field">
+                        <label>Field Name<span class="required">*</span></label>
+                        <input type="text" pInputText formControlName="field_name" />
+                        <small class="p-error"
+                          *ngIf="formGroup.get('field_name')?.invalid && formGroup.get('field_name')?.touched">
+                          Field Name is required
+                        </small>
+                      </div>
+
+                      <div class="p-field">
+                        <label>Description<span class="required">*</span></label>
+                        <input type="text" pInputText formControlName="field_description" />
+                        <small class="p-error"
+                          *ngIf="formGroup.get('field_description')?.invalid && formGroup.get('field_description')?.touched">
+                          Description is required
+                        </small>
+                      </div>
+
+                      <div class="p-field">
+                        <label>Length<span class="required">*</span></label>
+                        <input type="text" pInputText formControlName="field_length" />
+                        <small class="p-error"
+                          *ngIf="formGroup.get('field_length')?.invalid && formGroup.get('field_length')?.touched">
+                          Field No. is required and must be numeric
+                        </small>
+                      </div>
+
+                      <div class="p-field">
+                        <label>Data Type<span class="required">*</span></label>
+                        <p-dropdown [options]="dataTypes" optionLabel="label" optionValue="value"
+                          formControlName="data_type" placeholder="Select Data Type"></p-dropdown>
+                        <small class="p-error"
+                          *ngIf="formGroup.get('data_type')?.invalid && formGroup.get('data_type')?.touched">
+                          Data Type is required
+                        </small>
+                      </div>
+
+                      <div class="p-field">
+                        <label>Criticality<span class="required">*</span></label>
+                        <p-dropdown [options]="criticalityOptions" optionLabel="label" optionValue="value"
+                          formControlName="criticality" placeholder="Select Criticality"></p-dropdown>
+                        <small class="p-error"
+                          *ngIf="formGroup.get('criticality')?.invalid && formGroup.get('criticality')?.touched">
+                          Criticality is required
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="p-dialog-footer p-mt-3">
+                      <button pButton type="button" label="Cancel" (click)="showDialog = false"></button>
+                      <button pButton type="submit" label="{{ isEditMode ? 'Update' : 'Save' }}"
+                        class="p-button-success" [disabled]="formGroup.invalid"></button>
+                    </div>
+                  </form>
+                </p-dialog>
+                <!-- delete confirmation dialog -->
+                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                  <p-footer>
+                    <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
+                    <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+                    
+                  </p-footer>
+                </p-dialog>
+              </div>
+              <div [hidden]="!showReport">
+                <div class="report-builder">
+                  <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"
+                    (build)="onBuildReport($event)" (close)="onCloseBuilder()">
+                  </app-report-builder>
+                </div>
               </div>
             </div>
-            <div class="datafields-table" *ngIf="showReport">
-              <div class="report-builder">
-                <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"
-                  (build)="onBuildReport($event)" (close)="onCloseBuilder()">
-                </app-report-builder>
-              </div>
-            </div>
+          </div>
 
-            <ng-template #useCasePopup>
-
+          <ng-template #useCasePopup>
               <h2 mat-dialog-title>Select Use Case</h2>
               <mat-dialog-content>
                 <div class="popup-box row">
-                  <div class="col-md-7">
-                    <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                  <div class="col-md-12">
+                    <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
                       <mat-label>Select Use Case</mat-label>
                       <mat-select [(ngModel)]="useCaseModel">
                         <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
@@ -221,19 +305,13 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-12">
                     <button mat-raised-button color="primary" (click)="confirmUseCase()"
                       style="height: 43px; margin-top: 6px;">Submit</button>
-
-                    <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
-
-                    <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
-
-                  </div>
+                    </div>
                 </div>
               </mat-dialog-content>
             </ng-template>
-          </div>
         </div>
       </div>
     </mat-card>
