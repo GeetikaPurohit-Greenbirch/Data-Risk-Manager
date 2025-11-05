@@ -17,6 +17,13 @@
     <mat-card>
       <div class="container">
         <div class="target-container">
+           <div *ngIf="loader" class="overlay-loader">
+              <mat-progress-spinner
+                color="primary"
+                mode="indeterminate"
+                diameter="50">
+              </mat-progress-spinner>
+            </div>
           <!-- Left: Edit Target Form -->
           <div class="left-panel">
             <div class="usecaseid-container" *ngIf="targetId>0">
