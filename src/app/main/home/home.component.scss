@@ -187,3 +187,79 @@ i.fa {
 .mat-mdc-row {
   height: 30px;
 }
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.configurable-panels {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.left-panel,
+.right-panel {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Panel Styling */
+.left-panel h2 {
+  margin-top: 0;
+  color: #004d40;
+}
+
+.left-panel p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Right Panel Styling (News) */
+.right-panel h3 {
+  margin-top: 0;
+  color: #004d40;
+}
+
+.news-container {
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+  animation: scrollUp 12s linear infinite;
+}
+
+.news-list li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Vertical scrolling animation */
+@keyframes scrollUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .configurable-panels {
+    flex-direction: column;
+  }
+}

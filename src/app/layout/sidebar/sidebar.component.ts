@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
   isLoading = true; // 👈 flag for loading
   userRole: string | null = null;
   navItems: NavItem[] = [
-    { label: 'Dashboard', route: '/home', icon: 'fa-tachometer', feature: 'sb_dashboard' },
+    { label: 'Home', route: '/home', icon: 'fa-home', feature: 'sb_dashboard' },
     { label: 'Use Cases', route: '/use-cases', icon: 'fa-clipboard', feature: 'sb_use_cases' },
     { label: 'Systems', route: '/systems', icon: 'fa-cogs', feature: 'sb_systems' },
     { label: 'Interfaces', route: '/interfaces', icon: 'fa-random', feature: 'sb_interfaces' },
