@@ -7,6 +7,12 @@ import { TargetBuilderComponent } from './component/target-builder/target-builde
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditTargetComponent } from './component/edit-target/edit-target.component';
 import { icons, LucideAngularModule } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -19,6 +25,12 @@ import { icons, LucideAngularModule } from 'lucide-angular';
     CommonModule,
     SharedModule,
     TargetsRoutingModule,
+    FormsModule,
+     DialogModule,           // 👈 required for <p-dialog>
+    TableModule,            // for <p-table>
+    ButtonModule,           // for <button pButton>
+    InputTextModule,        // for pInputText
+    DropdownModule,         // for pDropdown
     LucideAngularModule.pick({
       ChevronLeft: icons.ChevronLeft,
       Plus: icons.Plus,

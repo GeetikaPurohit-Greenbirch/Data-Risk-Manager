@@ -29,8 +29,9 @@ export class EditTargetComponent {
   targetForm!: FormGroup;
   targetUseCaseForm!: FormGroup;
   showDataFields = true;
-  showDataQuality = false;
-  showDataFieldsTable = true;
+  loader=false;
+  //showDataQuality = false;
+  //showDataFieldsTable = true;
   targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER']
   statusOptions: string[] = ['NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   timeOptions: string[] = ["00:00:00", "02:00:00", "04:00:00", "06:00:00", "08:00:00", "10:00:00", "12:00:00", "14:00:00", "16:00:00", "18:00:00", "20:00:00", "22:00:00"];
@@ -45,16 +46,24 @@ export class EditTargetComponent {
   public rowindex = 0;
   public savedUseCase: string | null = null;
   useCaseModel!: number;
-
+  @ViewChild('useCasePopup') useCasePopup!: TemplateRef<any>;
+  dialogRef!: MatDialogRef<any>;
+  showDialog = false;
+  isEditMode = false;
+  formGroup!: FormGroup;
+  currentRow: any = null;
+  useCases: any[] = [];
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
 
   // ✅ DataFields table data
-  dataFields: any[] = [
-    { fieldId: 1, fieldName: 'A', dataType: 'Num' },
-    { fieldId: 2, fieldName: 'B', dataType: 'Alpha' }
-  ];
+  // dataFields: any[] = [
+  //   { fieldId: 1, fieldName: 'A', dataType: 'Num' },
+  //   { fieldId: 2, fieldName: 'B', dataType: 'Alpha' }
+  // ];
 
   // ✅ Table column names
-  displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
+  //displayedColumns: string[] = ['fieldId', 'fieldName', 'dataType', 'fieldLength', 'riskLevel', 'criticality', 'actions'];
   targetId!: any;
   gridApi: any;
   gridColumnApi: any;
@@ -65,6 +74,37 @@ export class EditTargetComponent {
   reportVisible = false;
   reportPosition = { x: 200, y: 120 };
   options: any;
+
+  rowData: any;
+
+  cols = [
+    // { field: 'field_id', header: 'Field ID', editable: false },
+    { field: 'field_no', header: 'Field No.', editable: false },
+    { field: 'field_name', header: 'Field Name', editable: false },
+    { field: 'field_description', header: 'Field Description', editable: false },
+    { field: 'field_length', header: 'Length', editable: false },
+    { field: 'data_type', header: 'Data Type', editable: false },
+    { field: 'criticality', header: 'Criticality', editable: false }
+
+  ];
+  // Dropdown options
+  dataTypes = [
+    { label: 'Select', value: '' },
+    { label: 'NUMERIC', value: 'NUMERIC' },
+    { label: 'ALPHANUMERIC', value: 'ALPHANUMERIC' },
+    { label: 'DATE TIME', value: 'DATE_TIME' },
+  ];
+
+  criticalityOptions = [
+    { label: 'Select', value: '' },
+    { label: 'MAJOR', value: 'MAJOR' },
+    { label: 'MINOR', value: 'MINOR' },
+    { label: 'INSIGNIFICANT', value: 'INSIGNIFICANT' },
+    { label: 'CRITICAL', value: 'CRITICAL' },
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -78,95 +118,86 @@ export class EditTargetComponent {
     private http: HttpClient,
     private usecaseService: UsecaseService,
     private router: Router,
+
   ) { }
 
 
-  columnDefs: (ColDef | ColGroupDef)[] = [
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
-    { field: 'field_no', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
-    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
-    { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
-    {
-      field: 'data_type', headerName: 'Data Type', editable: true,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: { values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
-      headerTooltip: 'Data Type'
-    },
-    { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length' },
-    // {
-    //   headerName: 'DQA',
-    //   field: 'dqa',
-    //   resizable: true,
-    //   headerTooltip: 'DQA',
-    //   children: [
-    //     { headerName: 'Completeness', field: 'dqa_c', editable: false, headerTooltip: 'Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-    //     { headerName: 'Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-    //     { headerName: 'Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
-    //   ]
-    // },
-    {
-      field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality', cellEditor: 'agSelectCellEditor',
-      cellEditorParams: { values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"] }
-    },
+  // columnDefs: (ColDef | ColGroupDef)[] = [
+  //   { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
+  //   { field: 'field_no', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
+  //   { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
+  //   { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
+  //   {
+  //     field: 'data_type', headerName: 'Data Type', editable: true,
+  //     cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: { values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+  //     headerTooltip: 'Data Type'
+  //   },
+  //   { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length' },
+  //   // {
+  //   //   headerName: 'DQA',
+  //   //   field: 'dqa',
+  //   //   resizable: true,
+  //   //   headerTooltip: 'DQA',
+  //   //   children: [
+  //   //     { headerName: 'Completeness', field: 'dqa_c', editable: false, headerTooltip: 'Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+  //   //     { headerName: 'Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
+  //   //     { headerName: 'Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
+  //   //   ]
+  //   // },
+  //   {
+  //     field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality', cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: { values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"] }
+  //   },
 
-    {
-      headerName: 'Actions',
-      editable: false,
-      filter: false,
-      sortable: false,
-      minWidth: 80,
-      maxWidth: 100,
-      // flex: 1,
-      pinned: 'right',
-      headerTooltip: 'Actions',
-      cellRenderer: (params: any) => {
-        const div = document.createElement('div');
-        div.className = 'model-cell-renderer';
+  //   {
+  //     headerName: 'Actions',
+  //     editable: false,
+  //     filter: false,
+  //     sortable: false,
+  //     minWidth: 100,
+  //     flex: 1,
+  //     headerTooltip: 'Actions',
+  //     cellRenderer: (params: any) => {
+  //       const div = document.createElement('div');
+  //       div.className = 'model-cell-renderer';
 
-        const saveDataFields = document.createElement('button');
-        saveDataFields.title = 'Save';
-        saveDataFields.style.border = 'none';
-        saveDataFields.style.padding = '0px';
-        saveDataFields.style.cursor = 'pointer';
-        saveDataFields.style.background = 'transparent';
+  //       const saveDataFields = document.createElement('button');
+  //       saveDataFields.className = 'fa fa-save';
+  //       saveDataFields.style.color = 'green';
+  //       saveDataFields.style.border = '1px solid lightGrey';
+  //       saveDataFields.style.borderRadius = '5px';
+  //       saveDataFields.style.lineHeight = '20px';
+  //       saveDataFields.style.height = '24px';
+  //       saveDataFields.style.cursor = 'pointer';
+  //       saveDataFields.title = 'Save';
 
-        const saveIcon = createElement(icons.Save, {
-          color: '#008236',
-          height: '14px',
-          strokeWidth: 2
-        });
-        saveDataFields.appendChild(saveIcon);
+  //       // Pass row data or node to save
+  //       saveDataFields.addEventListener('click', () => {
+  //         this.saveDatafields(params.node);
+  //       });
 
-        // Pass row data or node to save
-        saveDataFields.addEventListener('click', () => {
-          this.saveDatafields(params.node);
-        });
+  //       const deleteDataFields = document.createElement('button');
+  //       deleteDataFields.className = 'fa fa-trash';
+  //       deleteDataFields.style.color = 'red';
+  //       deleteDataFields.style.border = '1px solid lightGrey';
+  //       deleteDataFields.style.borderRadius = '5px';
+  //       deleteDataFields.style.lineHeight = '20px';
+  //       deleteDataFields.style.height = '24px';
+  //       deleteDataFields.style.cursor = 'pointer';
+  //       deleteDataFields.title = 'Delete';
 
-        const deleteDataFields = document.createElement('button');
-        deleteDataFields.title = 'Delete';
-        deleteDataFields.style.border = 'none';
-        deleteDataFields.style.padding = '0px';
-        deleteDataFields.style.cursor = 'pointer';
-        deleteDataFields.style.background = 'transparent';
+  //       deleteDataFields.addEventListener('click', () => {
+  //         this.deleteDAtaFields(params.node);
+  //       });
 
-        const deleteIcon = createElement(icons.Trash2, {
-          color: '#c10007',
-          height: '14px',
-          strokeWidth: 2
-        });
-        deleteDataFields.appendChild(deleteIcon);
+  //       div.appendChild(saveDataFields);
+  //       div.appendChild(deleteDataFields);
 
-        deleteDataFields.addEventListener('click', () => {
-          this.deleteDAtaFields(params.node);
-        });
-
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
-
-        return div;
-      }
-    },
-  ];
+  //       return div;
+  //     }
+  //   },
+  // ];
 
   // defaultColDef = {
   //   flex: 1,
@@ -176,53 +207,43 @@ export class EditTargetComponent {
   //   suppressSizeToFit: true
   // };
 
-  defaultColDef: ColDef = {
-    resizable: true,
-    sortable: true,
-    filter: true,
-    suppressSizeToFit: true,
-    editable: false,
-  };
-
-  rowData: any;
-
-  // rowData = [
-  //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
-  //     dqaT: 'L',
-  //     dqaA: 'L', criticality: 'HIGH' },
-  // ];
 
 
-  onGridReady(params: any) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    this.gridApi.sizeColumnsToFit();
-    this.getDataFields();
-  }
+
+  // onGridReady(params: any) {
+  //   this.gridApi = params.api;
+  //   this.gridColumnApi = params.columnApi;
+  //   this.gridApi.sizeColumnsToFit();
+  //   this.getDataFields();
+  // }
 
 
-  onHeaderCellClicked(event: any) {
-    // event.column.getColDef().headerName gives the header text
-    const clickedHeader = event?.column?.getColDef()?.headerName;
-    if (clickedHeader === 'DQA') {
-      // position the floating panel near mouse
-      const mouseEvent = event.event as MouseEvent;
-      const offsetX = 10; // small offset so it doesn't cover cursor
-      const offsetY = 10;
-      this.reportPosition = { x: mouseEvent.clientX + offsetX, y: mouseEvent.clientY + offsetY };
-      this.reportVisible = true;
-    }
-  }
-  useCases: any[] = [];
+  // onHeaderCellClicked(event: any) {
+  //   // event.column.getColDef().headerName gives the header text
+  //   const clickedHeader = event?.column?.getColDef()?.headerName;
+  //   if (clickedHeader === 'DQA') {
+  //     // position the floating panel near mouse
+  //     const mouseEvent = event.event as MouseEvent;
+  //     const offsetX = 10; // small offset so it doesn't cover cursor
+  //     const offsetY = 10;
+  //     this.reportPosition = { x: mouseEvent.clientX + offsetX, y: mouseEvent.clientY + offsetY };
+  //     this.reportVisible = true;
+  //   }
+  // }
+
   // selectedUseCaseId: string | null = null;
 
   openTab(tab: string) {
-    if (tab == 'DataFileds') {
+    if (tab == 'DataFields') {
+      this.activeView = tab;
       this.showDataFields = true;
       this.showReport = false;
-      this.addDatafields('datafields');
+      this.selectedColumns = [...this.cols]; // Initially show all columns
+      this.globalFilterFields = this.cols.map(c => c.field);
+      this.getDataFields();
     }
     else if (tab == 'DQAReport') {
+      this.activeView = tab;
       this.showDataFields = false;
       this.showReport = true;
       this.reportVisible = true;
@@ -235,56 +256,6 @@ export class EditTargetComponent {
     this.reportVisible = false;
     this.showReport = false;
   }
-
-  // confirmUseCase() {
-  //   if (!this.targetUseCaseForm.value.selectedUseCaseId) {
-  //     alert('Please select a use case first.');
-  //     return;
-  //   }
-
-  //   // Pass selected useCaseId to report builder options
-  //   this.options = {
-  //     ...this.options,
-  //     contents: {
-  //       ...this.options.contents,
-  //       useCaseId: this.targetUseCaseForm.value.selectedUseCaseId
-  //     }
-  //   };
-
-  //   // Now the popup closes and ReportBuilder gets the use case
-  //   this.reportVisible = true; // keep report visible
-  // }
-
-  // onBuildReport(options: any) {
-  //   if (!this.gridApi) {
-  //     console.error('Grid API not ready');
-  //     return;
-  //   }
-  //   // pass grid rows as sample data to generate in PDF
-  //   const allRows: any[] = [];
-  //   this.gridApi.forEachNode((node: any) => allRows.push(node.data));
-  //   this.pdfService.generatePdf(options, allRows);
-  //   this.reportVisible = false;
-  // }
-
-  // onBuildReport(payload: any) {
-  //   console.log('Report payload:', payload);
-
-  //   this.http.post(
-  //     `https://api.dev.datariskmanager.net/lineage/reports/sample/${this.useCaseId}?disposition=inline`,
-  //     payload,
-  //     { responseType: 'blob' } // handle PDF/Excel
-  //   ).subscribe({
-  //     next: (response: BlobPart) => {
-  //       const blob = new Blob([response], { type: 'application/pdf' });
-  //       const url = window.URL.createObjectURL(blob);
-  //       window.open(url, '_blank');
-  //     },
-  //     error: (err) => {
-  //       console.error('Report generation failed', err);
-  //     }
-  //   });
-  // }
 
   onBuildReport(payload: any) {
     console.log('Report payload:', payload);
@@ -307,16 +278,20 @@ export class EditTargetComponent {
     this.openTab('DataFileds');
   }
 
-  addRow() {
-    const newItem = { fieldId: '', fieldNo: '', fieldName: '', description: '', dataType: '', fieldLength: '', criticality: '' };
-    this.rowData = [...this.rowData, newItem];
-  }
+  // addRow() {
+  //   const newItem = { fieldId: '', fieldNo: '', fieldName: '', description: '', dataType: '', fieldLength: '', criticality: '' };
+  //   this.rowData = [...this.rowData, newItem];
+  // }
 
-  onRowValueChanged(event: any) {
-    console.log('Updated row:', event.data);
-  }
+  // onRowValueChanged(event: any) {
+  //   console.log('Updated row:', event.data);
+  // }
 
   ngOnInit(): void {
+
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
+
     console.log('Editing target with ID:', this.targetId);
     this.targetUseCaseForm = this.fb.group({
       selectedUseCaseId: [''],
@@ -336,24 +311,34 @@ export class EditTargetComponent {
       // add other form controls as needed
     });
     this.targetId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
+
     if (this.targetId > 0) {
+      this.loader=true;
       // Step 2: Fetch data from API and patch to form
       this.targetService.getTargetById(this.targetId).subscribe({
         next: (res: any) => {
           const data = res.targetEntity;
           this.targetForm.patchValue(data);
           this.toggleFieldsBasedOnQoS(data.quality_of_service);
-
+          this.loader=false;
         },
         error: (err: any) => {
           console.error('Failed to load target:', err);
+           this.loader=false;
         }
+       
       });
       // this.generateTimeOptions();
 
-      setTimeout(() => {
-        this.cdr.detectChanges(); // ensure UI updates  
-      }, 100);
+      // setTimeout(() => {
+      //   this.cdr.detectChanges(); // ensure UI updates  
+      // }, 100);
 
       this.formLoaded = true; // triggers re-render
 
@@ -363,13 +348,14 @@ export class EditTargetComponent {
         this.toggleFieldsBasedOnQoS(value);
       });
       //  this.getDataFields();
-      this.getUsecaseList();
+     
 
       // Check if use case already selected and saved
 
       this.savedUseCase = localStorage.getItem('selectedUseCaseTarget');
 
       if (!this.savedUseCase) {
+         this.getUsecaseList();
         // Open popup only if no use case saved
         setTimeout(() => {
           this.openUsecasePopup();
@@ -380,7 +366,8 @@ export class EditTargetComponent {
         this.useCaseId = useCaseId;
         this.useCaseName = useCaseName;
       }
-      this.openTab('DataFileds');
+      this.openTab('DataFields');
+      this.createForm();
     }
     else {
       this.formLoaded = true; // triggers re-render
@@ -406,14 +393,13 @@ export class EditTargetComponent {
     }
   }
   selectUseCase(view: string) {
-    this.activeView = view;
+    //this.activeView = view;
     this.getUsecaseList();
     setTimeout(() => {
       this.openUsecasePopup();
     }, 100);
   }
-  @ViewChild('useCasePopup') useCasePopup!: TemplateRef<any>;
-  dialogRef!: MatDialogRef<any>;
+
 
 
 
@@ -515,18 +501,13 @@ export class EditTargetComponent {
 
   getDataFields() {
     this.datafieldsService.getDataFieldsByIdWithUsecase(this.targetId, 'TARGET', this.useCaseId).subscribe({
-      next: (res: any) => {
-        this.rowData = [...res]; // triggers change
-        if (!res) {
-          //  this.gridApi.setRowData([]); // Clear first to ensure refresh
-          //  this.gridApi.setRowData(this.rowData);
-        }
-
-        this.cdr.detectChanges(); // trigger Angular change detection
+      next: (res: any) => {        
+        if (res!=null && res.length>0) {
+          this.rowData = [...res]; // triggers change
+        }      
       },
       error: (err: any) => {
         this.rowData = [];
-
         console.error('Failed to load target:', err);
       }
     });
@@ -535,37 +516,37 @@ export class EditTargetComponent {
 
 
 
-  addDatafields(view: string) {
-    this.activeView = view;
-    this.showDataFieldsTable = true;
-    this.showDataFields = true;
-    this.showDataQuality = false;
-    this.getDataFields();
-  }
+  // addDatafields(view: string) {
+  //   this.activeView = view;
+  //   this.showDataFieldsTable = true;
+  //   this.showDataFields = true;
+  //   this.showReport = false;
+  //   this.getDataFields();
+  // }
 
-  showDQA(view: string) {
-    this.activeView = view;
-    this.showDataFieldsTable = true;
-    this.showDataFields = false;
-    this.showDataQuality = true;
-  }
+  // showDQA(view: string) {
+  //   this.activeView = view;
+  //   this.showDataFieldsTable = true;
+  //   this.showDataFields = false;
+  //   this.showReport = true;
+  // }
 
   // Handle changes in cell values
-  onCellValueChanged(event: any): void {
-    console.log('Cell Value Changed:', event);
-  }
+  // onCellValueChanged(event: any): void {
+  //   console.log('Cell Value Changed:', event);
+  // }
 
 
   // ✅ Add a new DataField row
-  addField(): void {
-    const newId = this.dataFields.length + 1;
-    const newField = {
-      fieldId: newId,
-      fieldName: '',
-      dataType: ''
-    };
-    this.dataFields = [...this.dataFields, newField]; // Reassign array
-  }
+  // addField(): void {
+  //   const newId = this.dataFields.length + 1;
+  //   const newField = {
+  //     fieldId: newId,
+  //     fieldName: '',
+  //     dataType: ''
+  //   };
+  //   this.dataFields = [...this.dataFields, newField]; // Reassign array
+  // }
 
   // ✅ Trigger update/save logic 
 
@@ -626,60 +607,106 @@ export class EditTargetComponent {
       }
     });
   }
+  onBack() {
+    this.router.navigate(['/targets']);
+  }
 
+  onBackToLineage()
+  {
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
+  }
 
+  createForm() {
+    this.formGroup = this.fb.group({
+      field_id: [''],
+      field_no: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      field_name: ['', Validators.required],
+      field_description: ['', Validators.required],
+      field_length: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      data_type: ['', Validators.required],
+      criticality: ['', Validators.required],
+    });
+  }
+
+  openAddDialog() {
+    this.isEditMode = false;
+    //this.formGroup.reset();
+    this.showDialog = true;
+  }
+
+  openEditDialog(rowData: any) {
+    this.isEditMode = true;
+    this.currentRow = rowData;
+    this.formGroup.patchValue(rowData);
+    this.showDialog = true;
+  }
+
+  onSubmit() {
+    if (this.formGroup.invalid) {
+      this.formGroup.markAllAsTouched();
+      return;
+    }
+    this.saveDatafields(this.formGroup.value);
+  }
   saveDatafields(data: any) {
     console.log(data, "Target Data Fields");
 
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.user_generated_id = data.data.field_no;
-    this.dataFieldsModel.field_name = data.data.field_name;
-    this.dataFieldsModel.field_description = data.data.field_description;
+    this.dataFieldsModel.field_id = data.field_id;
+    this.dataFieldsModel.user_generated_id = data.field_no;
+    this.dataFieldsModel.field_name = data.field_name;
+    this.dataFieldsModel.field_description = data.field_description;
 
-    this.dataFieldsModel.dqa_c = data.data.dqa_c;
-    this.dataFieldsModel.dqa_t = data.data.dqa_t;
-    this.dataFieldsModel.dqa_a = data.data.dqa_a;
-    this.dataFieldsModel.data_type = data.data.data_type;
-    this.dataFieldsModel.field_length = data.data.field_length;
-    this.dataFieldsModel.criticality = data.data.criticality;
+    // this.dataFieldsModel.dqa_c = data.dqa_c;
+    // this.dataFieldsModel.dqa_t = data.dqa_t;
+    // this.dataFieldsModel.dqa_a = data.dqa_a;
+    this.dataFieldsModel.data_type = data.data_type;
+    this.dataFieldsModel.field_length = data.field_length;
+    this.dataFieldsModel.criticality = data.criticality;
     this.dataFieldsModel.entity_type = 'TARGET';
     this.dataFieldsModel.entity_id = this.targetId;
     this.dataFieldsModel.usecaseid = this.useCaseId;
 
-    if (!data.data.field_id) {
-      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
+    //  if (this.isEditMode && this.currentRow) {
+    //   Object.assign(this.currentRow, data);
+    // } else {
+    //   this.rowData.push(data);
+    // }
 
-        this.toastNotificationService.success("Data field added Successfully.");
-        setTimeout(() => {
-          this.getDataFields(); // refresh
+    if (!data.field_id && !this.isEditMode && !this.currentRow) {
+      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
+        if (!res) {
+          this.rowData.push(data);
+          this.toastNotificationService.success("Data field added Successfully.");         
+          this.showDialog = false;
+        }
+        else {
 
-        }, 1000);
+        }
       });
     }
     else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
-
-        this.toastNotificationService.success("Data field updated Successfully.");
-        setTimeout(() => {
-          this.getDataFields(); // refresh
-
-        }, 1000);
+        Object.assign(this.currentRow, this.formGroup.value);
+        this.toastNotificationService.success("Data field updated Successfully.");       
+        this.showDialog = false;
       });
     }
-
   }
 
-  deleteDAtaFields(data: any) {
-    this.datafieldsService.deleteDataFields(data.data.field_id, 'TARGET', this.targetId).subscribe(() => {
-      // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.data.field_id);
-      setTimeout(() => {
-        this.getDataFields(); // refresh
+  showDeleteDialog = false;
+  selectedRow: any;
 
-      }, 500);
+  confirmDelete(row: any) {
+    this.selectedRow = row;
+    this.showDeleteDialog = true;
+  }
+
+  deleteRow() {    
+    this.datafieldsService.deleteDataFields(this.selectedRow.field_id, 'TARGET', this.targetId).subscribe(() => {      
+      this.toastNotificationService.error("Data fields Deleted Successfully.");    
+      this.rowData = this.rowData.filter((r:any) => r.field_id !== this.selectedRow.field_id); 
+        this.showDeleteDialog = false; 
     })
   }
-  onBack() {
-    this.router.navigate(['/targets']);
-  }
+  
 }

@@ -9,8 +9,13 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  constructor(public auth: AuthService) {}
+userName:any;
 
+  constructor(public auth: AuthService) {
+    this.userName = localStorage.getItem('userName')
+  }
+
+  
   logout() {
     // this.auth.logout({ logoutParams: { returnTo: window.location.origin } });
     sessionStorage.clear();

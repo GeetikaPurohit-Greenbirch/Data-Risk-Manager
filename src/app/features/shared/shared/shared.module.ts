@@ -43,7 +43,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 import { SplitterModule } from 'primeng/splitter';
+
 import { icons, LucideAngularModule } from 'lucide-angular';
+
+import { ToolbarModule } from 'primeng/toolbar';
+
 
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
@@ -91,11 +95,15 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     MultiSelectModule,
     TooltipModule,
     SplitterModule,
+
     LucideAngularModule.pick({
       ChevronLeft: icons.ChevronLeft,
       Plus: icons.Plus,
       Trash2: icons.Trash2
     }),
+
+    ToolbarModule
+
   ],
   exports: [
     HeaderComponent,
@@ -135,7 +143,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     InputTextModule,
     MultiSelectModule,
     TooltipModule,
-    SplitterModule
+    SplitterModule,
+    ToolbarModule
   ],
   providers: [PdfService],
 

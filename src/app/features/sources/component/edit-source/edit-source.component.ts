@@ -34,6 +34,8 @@ export class EditSourceComponent implements OnInit {
   scheduleLimitReached = false;
   formLoaded = false;
   isLoading = false;
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -409,6 +411,50 @@ export class EditSourceComponent implements OnInit {
   // ];
 
 
+  cols = [
+    { field: 'field_id', header: 'Field ID', editable: false },
+    { field: 'field_name', header: 'Field Name', editable: true },
+    { field: 'entity_type', header: 'Entity Type', editable: true },
+    // { field: 'field_id', header: 'Field ID', editable: false, },
+    { field: 'user_generated_id', header: 'Field No.', editable: true },
+    { field: 'field_name', header: 'Field Name', editable: true, },
+    { field: 'data_type', header: 'Data Type', editable: true, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+    { field: 'field_length', header: 'Field Length', editable: true, },
+    {
+      field: 'dqa_c',
+      header: 'C',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'C',
+      style: { color: '#e8000a', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_c', header: 'C Commentary', editable: true },
+    {
+      field: 'dqa_t',
+      header: 'T',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'T',
+      style: { color: '#3e63dd', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_t', header: 'T Commentary', editable: true },
+    {
+      field: 'dqa_a',
+      header: 'A',
+      editable: true,
+      type: 'dropdown',
+      tooltip: 'A',
+      style: { color: 'purple', fontWeight: 600 },
+      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+    },
+    { field: 'commentary_a', header: 'A Commentary', editable: true }
+  ];
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -426,6 +472,8 @@ export class EditSourceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     console.log('Editing source with ID:', this.sourceId);
     this.sourceForm = this.fb.group({
       source_name: ['', Validators.required],
@@ -442,7 +490,11 @@ export class EditSourceComponent implements OnInit {
       // add other form controls as needed
     });
     this.sourceId = Number(this.route.snapshot.paramMap.get('id'));
-
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
     if (this.sourceId > 0) {
       // Step 2: Fetch data from API and patch to form
       this.sourceService.getSourceById(this.sourceId).subscribe({
@@ -742,24 +794,24 @@ export class EditSourceComponent implements OnInit {
   saveDatafields(data: any) {
     console.log(data, "Interface Data Fields");
 
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.user_generated_id = data.data.user_generated_id;
-    this.dataFieldsModel.field_name = data.data.field_name;
-    this.dataFieldsModel.field_description = data.data.field_description;
-    this.dataFieldsModel.dqa_c = data.data.dqa_c;
-    this.dataFieldsModel.dqa_t = data.data.dqa_t;
-    this.dataFieldsModel.dqa_a = data.data.dqa_a;
-    this.dataFieldsModel.commentary_a = data.data.commentary_a;
-    this.dataFieldsModel.commentary_t = data.data.commentary_t;
-    this.dataFieldsModel.commentary_c = data.data.commentary_c;
-    this.dataFieldsModel.data_type = data.data.data_type;
-    this.dataFieldsModel.field_length = data.data.field_length;
-    this.dataFieldsModel.criticality = data.data.criticality;
+    this.dataFieldsModel.field_id = data.field_id;
+    this.dataFieldsModel.user_generated_id = data.user_generated_id;
+    this.dataFieldsModel.field_name = data.field_name;
+    this.dataFieldsModel.field_description = data.field_description;
+    this.dataFieldsModel.dqa_c = data.dqa_c;
+    this.dataFieldsModel.dqa_t = data.dqa_t;
+    this.dataFieldsModel.dqa_a = data.dqa_a;
+    this.dataFieldsModel.commentary_a = data.commentary_a;
+    this.dataFieldsModel.commentary_t = data.commentary_t;
+    this.dataFieldsModel.commentary_c = data.commentary_c;
+    this.dataFieldsModel.data_type = data.data_type;
+    this.dataFieldsModel.field_length = data.field_length;
+    this.dataFieldsModel.criticality = data.criticality;
     this.dataFieldsModel.entity_type = 'SOURCE';
     this.dataFieldsModel.entity_id = this.sourceId;
 
     // alert("Data field added Successfully.");
-    if (!data.data.field_id) {
+    if (!data.field_id) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
 
         this.toastNotificationService.success("Data field added Successfully.");
@@ -784,9 +836,9 @@ export class EditSourceComponent implements OnInit {
   }
 
   deleteDAtaFields(data: any) {
-    this.datafieldsService.deleteDataFields(data.data.field_id, 'SOURCE', this.sourceId).subscribe(() => {
+    this.datafieldsService.deleteDataFields(data.field_id, 'SOURCE', this.sourceId).subscribe(() => {
       // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.data.field_id);
+      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
       setTimeout(() => {
         this.getDataFields(); // refresh
 
@@ -795,5 +847,9 @@ export class EditSourceComponent implements OnInit {
   }
   onBack() {
     this.router.navigate(['/sources']);
+  }
+  onBackToLineage()
+  {
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 }

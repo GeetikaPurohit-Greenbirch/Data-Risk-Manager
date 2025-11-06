@@ -8,102 +8,102 @@
             <lucide-icon name="chevron-left"></lucide-icon>
           </button>
         </div>
-        {{ controlId > 0 ? 'Edit Control' : 'Add Control' }}
+        {{ controlId > 0 ? 'Edit Control' : 'Add Control' }}      
       </h2>
     </section>
     <mat-card>
 
-      <div class="container11">
+      <div class="container">
         <div class="control-container">
-
+          <!-- Left: Edit Control Form -->
           <div class="left-panel">
-            <form class="usecase-form" [formGroup]="controlForm">
-              <div class="form-field-group">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Control Name</mat-label>
-                  <input matInput formControlName="control_name" />
-                  <mat-error *ngIf="controlForm.get('control_name')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+            <!-- <h2>Control</h2> -->
+            <form [formGroup]="controlForm">
+              <!-- Your form controls for editing the control -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Control Name</mat-label>
+                <input matInput formControlName="control_name" />
+                <mat-error *ngIf="controlForm.get('control_name')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Control Description</mat-label>
-                  <input matInput formControlName="control_description" />
-                  <mat-error *ngIf="controlForm.get('control_description')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Control Description</mat-label>
+                <input matInput formControlName="control_description" />
+                 <mat-error *ngIf="controlForm.get('control_description')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-                  <mat-label>Attach To</mat-label>
-                  <!-- <input matInput formControlName="attach_to" /> -->
-                  <mat-select formControlName="attach_to" (selectionChange)="onChange($event.value)">
-                    <mat-option *ngFor="let data of attachToOptions" [value]="data">
-                      {{ data }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="controlForm.get('attach_to')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Attach To</mat-label>
+                <!-- <input matInput formControlName="attach_to" /> -->
+                <mat-select formControlName="attach_to" (selectionChange)="onChange($event.value)">
+                  <mat-option *ngFor="let data of attachToOptions" [value]="data">
+                    {{ data }}
+                  </mat-option>
+                </mat-select>
+                 <mat-error *ngIf="controlForm.get('attach_to')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-                  <mat-label>Attach To ID</mat-label>
-                  <!-- <input matInput formControlName="attach_to_id" /> -->
-                  <mat-select formControlName="attach_to_id">
-                    <mat-option *ngFor="let item of filteredAttachToIdOptions" [value]="item.id">
-                      {{ item.id }} - {{ item.name }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="controlForm.get('attach_to_id')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Attach To ID</mat-label>
+                <!-- <input matInput formControlName="attach_to_id" /> -->
+                <mat-select formControlName="attach_to_id">
+                  <mat-option *ngFor="let item of filteredAttachToIdOptions" [value]="item.id">
+                    {{ item.id }} - {{ item.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="controlForm.get('attach_to_id')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Control Owner</mat-label>
-                  <input matInput formControlName="control_owner" />
-                  <mat-error *ngIf="controlForm.get('control_owner')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Control Owner</mat-label>
+                <input matInput formControlName="control_owner" />
+                <mat-error *ngIf="controlForm.get('control_owner')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Owner Email</mat-label>
-                  <input matInput formControlName="control_owner_email" />
-                  <mat-error *ngIf="controlForm.get('control_owner_email')?.hasError('required')">Required</mat-error>
-                  <mat-error *ngIf="controlForm.get('control_owner_email')?.hasError('email')">Invalid email</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Owner Email</mat-label>
+                <input matInput formControlName="control_owner_email" />
+                <mat-error *ngIf="controlForm.get('control_owner_email')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="controlForm.get('control_owner_email')?.hasError('email')">Invalid email</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Version</mat-label>
-                  <input matInput formControlName="version_number" />
-                  <mat-error *ngIf="controlForm.get('version_number')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Version</mat-label>
+                <input matInput formControlName="version_number" />
+                <mat-error *ngIf="controlForm.get('version_number')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-                  <mat-label>Status</mat-label>
-                  <mat-select formControlName="status">
-                    <mat-option *ngFor="let status of statusOptions" [value]="status">
-                      {{ status }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="controlForm.get('status')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
-
-
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-                  <mat-label>Application Date</mat-label>
-                  <input matInput [matDatepicker]="picker" formControlName="application_date"
-                    placeholder="Choose a date" />
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                  <mat-error *ngIf="controlForm.get('application_date')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status">
+                    {{ status }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="controlForm.get('status')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
 
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
-                  <mat-label>Application Date Status</mat-label>
-                  <mat-select formControlName="application_date_status">
-                    <mat-option *ngFor="let status of applicationStatusOptions" [value]="status">
-                      {{ status }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error
-                    *ngIf="controlForm.get('application_date_status')?.hasError('required')">Required</mat-error>
-                </mat-form-field>
-              </div>
+              <mat-form-field appearance="outline" class="full-width"  *ngIf="formLoaded">
+                <mat-label>Application Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="application_date"
+                  placeholder="Choose a date" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="controlForm.get('application_date')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-label>Application Date Status</mat-label>
+                <mat-select formControlName="application_date_status">
+                  <mat-option *ngFor="let status of applicationStatusOptions" [value]="status">
+                    {{ status }}
+                  </mat-option>
+                </mat-select>
+                 <mat-error *ngIf="controlForm.get('application_date_status')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
               <!-- Add remaining fields similarly -->
               <!-- <div class="updateBtn">
                 <button mat-raised-button color="primary" (click)="onUpdate()" style="margin-right: 12px;">Save</button>
@@ -124,27 +124,160 @@
                   </div>
                 </div>
               </div> -->
-              <div class="form-grid">
-                <button (click)="onUpdate()">Save</button>
-              </div>
             </form>
-
+             <div class="form-grid">
+              <button (click)="onUpdate()">Save</button>
+            </div>
           </div>
 
           <!-- Right: DataFields Table -->
           <div class="right-panel" *ngIf="controlId>0">
-            <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'DataFields' }">
+           <div class="tab-container">
+              <button [ngClass]="{ 'inverse': activeView === 'DataFields' }" >
                 Data Fields
               </button>
-            </div>
+            </div>    
 
-            <div class="datafields-table" style="margin: 10px">
-              <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 300px;" [rowData]="rowData"
+            <div class="datafields-table">             
+              <!-- <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
                 [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
                 (cellValueChanged)="onCellValueChanged($event)" rowSelection="single">
-              </ag-grid-angular>
+              </ag-grid-angular> -->
 
+              <p-toolbar>
+                <div class="p-toolbar-group-left">
+                  <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" 
+                    #globalFilter
+                    (input)="dt.filterGlobal(globalFilter.value, 'contains')"
+                    placeholder="Global Search" />
+                  </span>
+                </div>
+              
+                <div class="p-toolbar-group-right">
+                  <p-multiSelect 
+                    [options]="cols" 
+                    [(ngModel)]="selectedColumns" 
+                    optionLabel="header"
+                    placeholder="Choose Columns" 
+                    display="chip">
+                  </p-multiSelect>
+                </div>
+              </p-toolbar>
+              
+              <p-table
+                #dt
+                [value]="rowData"
+                [paginator]="true"
+                [rows]="10"
+                [resizableColumns]="true"
+                [globalFilterFields]="globalFilterFields"
+                [rowsPerPageOptions]="[10,25,50]"
+                [responsiveLayout]="'scroll'"
+                sortMode="multiple"
+                [showCurrentPageReport]="true"
+                editMode="cell"
+                resizableColumns="true"
+                columnResizeMode="fit"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                styleClass="p-datatable-gridlines p-datatable-sm"
+                class="p-dense"
+              >
+    
+    
+                <!-- Dynamic Column Headers -->
+                <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
+                  <ng-container *ngIf="col.field !== 'actions'">
+                    <ng-template pTemplate="header">
+                      {{ col.header }}
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData>
+                      <ng-container *ngIf="!col.editable; else editableCell">
+                        {{ rowData[col.field] }}
+                      </ng-container>
+                      <ng-template #editableCell>
+                    
+                        <ng-template #inputField>
+                          <input 
+                            type="text" 
+                            pInputText 
+                            [(ngModel)]="rowData[col.field]"
+                            class="custom-table-input"
+                          />
+                        </ng-template>
+                      </ng-template>
+                    </ng-template>
+                  </ng-container>
+                </ng-container>
+              
+                <!-- Actions Column -->
+                <ng-template pTemplate="header" let-columns>
+    
+                  <tr>
+                    <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
+                      {{ col.header }}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                    <th>Actions</th>
+                  </tr>
+                </ng-template>
+              
+                <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                  <tr>
+                    <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
+                      <!-- Dropdown cell -->
+                      <ng-container *ngIf="col.editable; else readOnlyCell">
+    
+                        <ng-container *ngIf="col.dropdownValues; else textCell">
+                          <p-cellEditor>
+                            <ng-template pTemplate="input">
+                              <p-dropdown
+                                [options]="col.dropdownValues"
+                                [(ngModel)]="rowData[col.field]"
+                                appendTo="body"
+    
+                                styleClass="custom-dropdown"
+                              ></p-dropdown>
+                              <!-- <ng-template #readonly>
+                                <span>{{ rowData[col.field] }}</span>
+                              </ng-template> -->
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                              {{ rowData[col.field] }}
+                            </ng-template>
+                          </p-cellEditor>
+                        </ng-container>
+                      </ng-container>
+    
+                      <!-- Read-only cell -->
+                      <ng-template #readOnlyCell>
+                        {{ rowData[col.field] }}
+                      </ng-template>
+                        <!-- Textbox cell -->
+                        <ng-template #textCell>
+                          <p-cellEditor>
+                            <ng-template pTemplate="input">
+                              <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" 
+                              />
+                              <!-- <ng-template #readonly>
+                                <span>{{ rowData[col.field] }}</span>
+                              </ng-template> -->
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                              {{ rowData[col.field] }}
+                            </ng-template>
+                          </p-cellEditor>
+                        </ng-template>
+                    </td>
+                    <td>
+                      
+                      <button pButton icon="pi pi-save" class="p-button-text p-button-success" (click)="saveDatafields(rowData)"></button>
+                      <!-- <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteDAtaFields(rowData)"></button> -->
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </div>
           </div>
         </div>

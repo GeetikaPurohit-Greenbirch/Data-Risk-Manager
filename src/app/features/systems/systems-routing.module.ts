@@ -9,7 +9,8 @@ const routes: Routes = [
   { path: '', component: SystemsComponent },
   {path: 'system-builder', component:EditSystemComponent},
   {path:'edit-system-dialog', component:EditSystemDialogComponent},
-    {path: 'edit-system/:id', component:EditSystemComponent},
+   {path: 'edit-system/:id', component:EditSystemComponent},
+    {path: 'edit-system/:id/:isBacktolineage', component:EditSystemComponent},
 ];
 
 @NgModule({
