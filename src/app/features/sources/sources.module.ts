@@ -7,6 +7,12 @@ import { SourceBuilderComponent } from './component/source-builder/source-builde
 import { SharedModule } from '../shared/shared/shared.module';
 import { EditSourceComponent } from './component/edit-source/edit-source.component';
 import { icons, LucideAngularModule } from 'lucide-angular';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -24,6 +30,12 @@ import { icons, LucideAngularModule } from 'lucide-angular';
       Plus: icons.Plus,
       Trash2: icons.Trash2
     }),
+    MatProgressSpinnerModule,
+       DialogModule,           //  required for <p-dialog>
+        TableModule,            // for <p-table>
+        ButtonModule,           // for <button pButton>
+        InputTextModule,        // for pInputText
+        DropdownModule,         // for pDropdown
   ]
 })
 export class SourcesModule { }

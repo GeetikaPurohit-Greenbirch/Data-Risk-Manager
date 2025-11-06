@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { DialogModule } from 'primeng/dialog';
     SharedModule,
     TargetsRoutingModule,
     FormsModule,
-     DialogModule,           // 👈 required for <p-dialog>
+     DialogModule,           //  required for <p-dialog>
     TableModule,            // for <p-table>
     ButtonModule,           // for <button pButton>
     InputTextModule,        // for pInputText
@@ -36,6 +37,7 @@ import { DialogModule } from 'primeng/dialog';
       Plus: icons.Plus,
       Trash2: icons.Trash2
     }),
+    MatProgressSpinnerModule
   ]
 })
 export class TargetsModule { }
