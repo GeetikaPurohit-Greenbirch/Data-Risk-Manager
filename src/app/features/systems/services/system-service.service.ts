@@ -29,6 +29,12 @@ export class SystemServiceService {
     return this.http.post<SystemDataFields[]>(url, systemDataModel);
   }
 
+  public getEntityCount(): Observable<any[]> {
+    const url: string = this.apiUrl;
+    return this.http.get<any[]>(url);
+  }
+
+
   public getSystems(): Observable<SystemsModel[]> {
     const url: string = this.apiUrl + 'systems';
     return this.http.get<SystemsModel[]>(url);
