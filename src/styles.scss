@@ -6,6 +6,8 @@
 @import "~primeng/resources/primeng.min.css";
 @import "~font-awesome/css/font-awesome.css";
 
+@import "scss/main.scss";
+
 
 html,
 body {
@@ -139,42 +141,46 @@ body {
   border: 1px solid rgba(24, 29, 29, 0.15);
 
   // === NEW TABLE STYLE ===
-  .p-datatable .p-datatable-header {
-    padding: 0.5rem 0.75rem;
+  .p-datatable {
+    .p-datatable-header {
+      padding: 0.5rem 0.75rem;
 
-    .pi {
-      color: #333;
-      font-size: .8rem;
-    }
+      .pi {
+        color: #333;
+        font-size: .8rem;
+      }
 
-    .p-inputtext {
-      font-size: 12px;
-      border: 1px solid #ccc;
-      padding: 0.4rem 0.5rem 0.4rem 2rem;
+      .p-inputtext {
+        font-size: 12px;
+        border: 1px solid #ccc;
+        padding: 0.4rem 0.5rem 0.4rem 2rem;
 
-      &::placeholder {
-        color: #ccc;
+        &::placeholder {
+          color: #ccc;
+        }
       }
     }
-  }
 
-  .p-datatable .p-datatable-thead>tr>th {
-    font-size: 13px;
-    color: #333333;
-    padding: 0.5rem 0.75rem;
+    .p-datatable-wrapper {
+      .p-datatable-thead>tr>th {
+        font-size: 13px;
+        color: #333333;
+        padding: 0.5rem 0.75rem;
 
-    & svg {
-      width: 11px;
-      color: currentColor;
+        & svg {
+          width: 11px;
+          color: currentColor;
+        }
+      }
+
+      .p-datatable-tbody>tr>td {
+        color: #333;
+        font-size: 14px;
+        font-weight: 300;
+        padding: 0.063rem 0.75rem;
+        border-bottom: 1px solid #f1f5f9;
+      }
     }
-  }
-
-  .p-datatable .p-datatable-tbody>tr>td {
-    color: #333;
-    font-size: 14px;
-    font-weight: 300;
-    padding: 0.063rem 0.75rem;
-    border-bottom: 1px solid #f1f5f9;
   }
 
   .p-paginator {

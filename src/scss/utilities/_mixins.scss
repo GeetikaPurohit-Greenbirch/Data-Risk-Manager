@@ -1,0 +1,35 @@
+@mixin generate-radius-classes($map) {
+    @each $key, $value in $map {
+        .rounded-#{$key} {
+            border-radius: $value;
+        }
+    }
+}
+
+@mixin button-base {
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    display: inline-block;
+    //padding: 0.5rem 1rem;
+    font-weight: $font-weight;
+    border-radius: $border-radius;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    @each $key, $value in $radius-scale {
+        &.rounded-#{$key} {
+            border-radius: $value;
+        }
+    }
+}
+
+@mixin button-variant($bg, $color, $hover-bg) {
+    color: $color;
+    background-color: $bg;
+
+    &:hover {
+        background-color: $hover-bg;
+    }
+}

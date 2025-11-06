@@ -1,0 +1,31 @@
+// Colors
+$primary-color: #3f51b5;
+$secondary-color: #6c757d;
+$tertiary-color: transparent;
+$text-color: #fff;
+
+// Common
+$font-weight: 500;
+
+// == BORDER RADIUS SCALE ==
+$radius-none: 0;
+$radius-sm: 2px;
+$radius-md: 4px;
+$radius-lg: 8px;
+$radius-xl: 12px;
+$radius-2xl: 16px;
+$radius-3xl: 24px;
+$radius-full: 50%;
+
+$border-radius: $radius-md;
+
+$radius-scale: (
+    sm: $radius-sm,
+    md: $radius-md,
+    lg: $radius-lg,
+    xl: $radius-xl,
+    2xl: $radius-2xl,
+    3xl: $radius-3xl,
+    full: $radius-full,
+    none: $radius-none,
+);
