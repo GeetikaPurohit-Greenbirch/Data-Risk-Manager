@@ -90,6 +90,7 @@
             <div class="form-grid">
               <button (click)="onUpdate()">Save</button>
             </div>
+            <p class="riskIndicator" *ngIf="is_modified_risk_level">* Data Risk has been adjusted or overriden. (Globally or Individually)</p>
           </div>
 
           <div class="right-panel" *ngIf="systemId>0">
