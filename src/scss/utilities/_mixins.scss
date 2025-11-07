@@ -6,7 +6,24 @@
     }
 }
 
+@mixin generate-button-sizes($map) {
+    @each $key, $props in $map {
+        &.btn-#{$key} {
+            font-size: map-get($props, font-size);
+            padding: map-get($props, padding);
+
+            svg {
+                width: map-get($props, svg-size);
+                height: map-get($props, svg-size);
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+
 @mixin button-base {
+    gap: 6px;
     border: none;
     cursor: pointer;
     font-size: 12px;
@@ -23,6 +40,8 @@
             border-radius: $value;
         }
     }
+
+    @include generate-button-sizes($button-sizes);
 }
 
 @mixin button-variant($bg, $color, $hover-bg) {

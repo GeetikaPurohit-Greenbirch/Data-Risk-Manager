@@ -6,14 +6,24 @@
 
   &--primary {
     @include button-variant($primary-color, $text-color, darken($primary-color, 10%));
+    &:hover {
+      color: #fff
+    }
   }
 
   &--secondary {
+    color: #2e2e2e !important;
+    border: 1px solid #e6e6e6;
     @include button-variant($secondary-color, $text-color, darken($secondary-color, 10%));
   }
 
   &--tertiary {
+    color: #000 !important;
     @include button-variant($tertiary-color, $text-color, darken($tertiary-color, 10%));
+    &:hover {
+      color: #3e63dd !important;
+      background-color: #f1f5f9;
+    }
   }
 }
 

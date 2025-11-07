@@ -629,6 +629,7 @@ body {
   padding: 4px 8px;
   box-sizing: border-box;
 }
+
 .custom-parent-header {
   text-align: center;
   font-weight: bold;
@@ -636,7 +637,158 @@ body {
   border-bottom: 2px solid #ccc;
   border: 1px solid;
 }
-.p-r-10
-{
+
+.p-r-10 {
   padding-right: 10px;
+}
+
+// ==== NGPRIME TABLE STYLES ====
+.ngprime-table {
+  padding: 0rem;
+
+  .header {
+    .p-toolbar {
+      border: none;
+      background: white;
+      padding: .3rem .5rem;
+
+      .p-input-icon-left {
+        .pi {
+          top: 60%;
+          font-size: .75rem;
+        }
+
+        .p-inputtext {
+          font-size: 12px;
+          padding: 0.4rem 0.5rem;
+          padding-left: 1.7rem;
+          border: 1px solid #e8e6e4;
+        }
+      }
+    }
+
+    .p-multiselect {
+      border: 1px solid #e8e6e4;
+
+      .p-icon {
+        width: .86rem;
+        // color: #777;
+      }
+
+      .p-multiselect-label {
+        padding: 0.25rem 0.5rem;
+      }
+
+      .p-multiselect-token {
+        font-size: 12px;
+        background: #f1f5f9;
+
+        .p-multiselect-token-icon {
+          margin-left: 0.25rem;
+        }
+
+        .p-icon {
+          width: .85rem;
+        }
+      }
+    }
+  }
+
+  .p-datatable {
+
+    .p-paginator-bottom {
+      &.p-paginator {
+        font-size: 13px;
+        justify-content: inherit;
+
+        & .p-paginator-pages .p-paginator-page {
+          height: 2rem;
+          min-width: 2rem;
+          // border: 1px solid #444;
+        }
+
+        .p-dropdown {
+          height: 2rem;
+          border: 1px solid #ccc;
+
+          .p-dropdown-trigger {
+            width: 2rem;
+          }
+
+          .p-icon {
+            width: 0.8rem;
+          }
+
+          .p-dropdown-label {
+            color: #666;
+            font-size: 16px;
+            padding: 3px 4px 3px 10px;
+          }
+        }
+
+        .p-overlay {
+          .p-dropdown-items {
+            padding: 0px;
+
+            .p-dropdown-item {
+              font-size: 13px;
+              padding: 0.5rem 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==== FORM DIALOG STYLES ====
+.form-dialog-container {
+  padding: 1rem;
+
+  .p-dialog {
+    width: 100%;
+    max-width: 440px;
+    background-color: #fff;
+
+    .p-dialog-header {
+      background: transparent;
+      padding: 1.6rem 1.6rem .6rem 1.6rem;
+
+      .p-dialog-title {
+        font-weight: 500;
+        font-size: 1.2rem;
+      }
+    }
+
+    .p-dialog-content {
+      background: transparent;
+      padding: .6rem 1.6rem 1.6rem 1.6rem;
+
+      .p-field {
+        margin-bottom: 10px;
+
+        label {
+          font-size: 14px;
+          margin-bottom: 4px;
+        }
+
+        small {
+          font-size: 10px;
+          color: #ff0000
+        }
+
+        .p-inputtext {
+          padding: 0.28rem 0.5rem;
+        }
+      }
+    }
+
+    .p-dialog-footer {
+      gap: 14px;
+      padding: 0rem;
+      display: flex;
+      margin-top: 1.6rem;
+      justify-content: end;
+    }
+  }
 }

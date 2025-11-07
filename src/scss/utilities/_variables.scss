@@ -1,8 +1,10 @@
 // Colors
-$primary-color: #3f51b5;
-$secondary-color: #6c757d;
+$primary-color: #3e63dd;
+// $secondary-color: #6c757d;
 $tertiary-color: transparent;
 $text-color: #fff;
+
+$secondary-color: #fff;
 
 // Common
 $font-weight: 500;
@@ -28,4 +30,12 @@ $radius-scale: (
     3xl: $radius-3xl,
     full: $radius-full,
     none: $radius-none,
+);
+
+
+$button-sizes: (
+  sm: (font-size: 12px, padding: 6px 10px, svg-size: 12px),
+  md: (font-size: 14px, padding: 8px 14px, svg-size: 14px),
+  lg: (font-size: 16px, padding: 10px 18px, svg-size: 16px),
+  xl: (font-size: 18px, padding: 12px 22px, svg-size: 18px)
 );
