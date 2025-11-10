@@ -170,7 +170,7 @@
 
                 <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
                   [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
-                  [showCurrentPageReport]="true"
+                  [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                   styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
                   <!-- Header -->
