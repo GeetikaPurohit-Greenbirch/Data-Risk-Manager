@@ -142,8 +142,10 @@
             <div class="datafields-table" *ngIf="showDataFields">             
               <div class="ngprime-table">
                 <p-toolbar>
-                  <div class="p-toolbar-group-left">
-                    <button pButton label="Add New Field" icon="pi pi-plus" class="p-r-10" (click)="openNew()"></button>
+                  <div class="p-toolbar-group-left">    
+                    <button class="btn btn--tertiary btn-sm" (click)="openNew()">
+                          <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                          Add New Field</button>
                     <span class="p-input-icon-left">
                       <i class="pi pi-search"></i>
                       <input pInputText type="text" #globalFilter
