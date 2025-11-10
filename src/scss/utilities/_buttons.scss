@@ -5,30 +5,31 @@
   @include button-base;
 
   &--primary {
-    @include button-variant($primary-color, $text-color, darken($primary-color, 10%));
+    @include button-variant($btn-primary-bg, $btn-primary-color, darken($btn-primary-bg, 10%));
     &:hover {
-      color: #fff
+      color: #fff;
     }
   }
 
   &--secondary {
     color: #2e2e2e !important;
     border: 1px solid #e6e6e6;
-    @include button-variant($secondary-color, $text-color, darken($secondary-color, 10%));
+    @include button-variant($btn-secondary-bg, $btn-secondary-color, darken($btn-secondary-bg, 10%));
+    &:hover {
+      background-color: #f1f5f9;
+      border: 1px solid #f1f5f9;
+    }
   }
 
   &--tertiary {
     color: #000 !important;
-    @include button-variant($tertiary-color, $text-color, darken($tertiary-color, 10%));
+    @include button-variant($btn-tertiary-bg, $text-color, darken($btn-tertiary-bg, 10%));
     &:hover {
       color: #3e63dd !important;
       background-color: #f1f5f9;
     }
   }
 }
-
-
-
 
 // ===== IN HTML FILES ====
 // <button class="btn btn--primary">Primary</button>

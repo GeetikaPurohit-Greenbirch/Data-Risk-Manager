@@ -17,6 +17,7 @@ body {
 body {
   margin: 0;
   overflow: hidden;
+  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   // font-family: Roboto, "Helvetica Neue", sans-serif;
 }
@@ -320,25 +321,25 @@ body {
   }
 
   .button-group {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
     gap: 10px;
+    display: flex;
+    margin-top: 14px;
+    flex-direction: column;
   }
 }
 
 .right-panel {
   width: 69%;
-  background-color: #dddddd;
   padding: 12px;
-  border-radius: 8px;
   color: black;
+  border-radius: 8px;
+  background-color: #dddddd;
 
   .datafields-header {
-    display: content;
-    justify-content: space-between;
+    display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
+    justify-content: space-between;
   }
 }
 
@@ -391,30 +392,25 @@ body {
 
 .low-orange {
   color: #d97904;
-  /* Orange */
   font-weight: bold;
 }
 
 .low-blue {
   color: #207dc0;
-  /* Blue */
   font-weight: bold;
 }
 
 .low-pink {
   color: #db42c0;
-  /* Pink */
   font-weight: bold;
 }
 
 //// ag grid /// 
-
 .ag-theme-alpine {
+  overflow: hidden !important;
   --ag-foreground-color: #333;
   --ag-background-color: #fff;
   --ag-header-background-color: #f0f0f0;
-  overflow: hidden !important;
-
 }
 
 .add-btn {
@@ -564,7 +560,7 @@ body {
 
 .mat-mdc-select-value,
 .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .responsive-grid {
