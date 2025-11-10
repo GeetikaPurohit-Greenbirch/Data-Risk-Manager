@@ -138,14 +138,13 @@
               <button class="inverse"> Data Fields </button>
             </div>
 
-
-            <div class="datafields-table" *ngIf="showDataFields">             
-              <div class="ngprime-table">
+            <div class="ngprime-table" *ngIf="showDataFields">
+              <div class="header">
                 <p-toolbar>
-                  <div class="p-toolbar-group-left">    
+                  <div class="p-toolbar-group-left">
                     <button class="btn btn--tertiary btn-sm" (click)="openNew()">
-                          <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
-                          Add New Field</button>
+                      <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                      Add New Field</button>
                     <span class="p-input-icon-left">
                       <i class="pi pi-search"></i>
                       <input pInputText type="text" #globalFilter
@@ -159,14 +158,14 @@
                     </p-multiSelect>
                   </div>
                 </p-toolbar>
-
-                <!-- Data Table -->
-                  <div class="man" style="margin-top: 4px;">
+              </div>
+              <!-- Data Table -->
+              <div class="man">
                 <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
                   [showCurrentPageReport]="true" responsiveLayout="scroll" [globalFilterFields]="globalFilterFields"
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                   styleClass="p-datatable-gridlines p-datatable-sm p-mt-2">
-                  <ng-template pTemplate="header"  >
+                  <ng-template pTemplate="header">
                     <tr>
                       <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">{{ col.header }}</th>
                       <th>Actions</th>
@@ -185,98 +184,94 @@
                     </tr>
                   </ng-template>
                 </p-table>
-                </div>
+              </div>
 
-                <!-- Add/Edit Dialog -->
-                <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog" [modal]="true"
-                  [style]="{ width: '500px' }" [closable]="true">
-                  <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
-                    <div class="p-fluid">
-                      <div class="p-field p-mb-3">
-                        <label for="user_generated_id">Field No.</label>
-                        <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
-                          [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
-                       <small class="p-error"
-                          *ngIf="fieldForm.get('user_generated_id')?.invalid && fieldForm.get('user_generated_id')?.touched">
-                          Field No. is required and must be numeric
-                        </small>
-                      </div>
-
-                      <div class="p-field p-mb-3">
-                        <label for="field_name">Field Name</label>
-                        <input id="field_name" type="text" pInputText formControlName="field_name" />
-                         <small class="p-error"
-                          *ngIf="fieldForm.get('field_name')?.invalid && fieldForm.get('field_name')?.touched">
-                          Field Name is required
-                        </small>
-                      </div>
-
-                      <div class="p-field p-mb-3">
-                        <label for="field_description">Description</label>
-                        <input id="field_description" pInputText formControlName="field_description" />
-                        <small class="p-error"
-                          *ngIf="fieldForm.get('field_description')?.invalid && fieldForm.get('field_description')?.touched">
-                          Description is required
-                        </small>
-                      </div>
-
-                      <div class="p-field p-mb-3">
-                        <label for="data_type">Data Type</label>
-                        <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
-                          placeholder="Select Data Type"></p-dropdown>
-                       <small class="p-error"
-                          *ngIf="fieldForm.get('data_type')?.invalid && fieldForm.get('data_type')?.touched">
-                          Data Type is required
-                        </small>
-                      </div>
-
-                      <div class="p-field p-mb-3">
-                        <label for="field_length">Length</label>
-                        <input id="field_length" type="number" pInputText formControlName="field_length" />
-                         <small class="p-error"
-                          *ngIf="fieldForm.get('field_length')?.invalid && fieldForm.get('field_length')?.touched">
-                          Length is required and must be numeric
-                        </small>
-                      </div>
-
-                      <div class="p-field p-mb-3">
-                        <label for="criticality">Criticality</label>
-                        <p-dropdown id="criticality" [options]="criticalityOptions" formControlName="criticality"
-                          placeholder="Select Criticality"></p-dropdown>
-                          <small class="p-error"
-                          *ngIf="fieldForm.get('criticality')?.invalid && fieldForm.get('criticality')?.touched">
-                          Criticality is required                          
-                        </small>
-                      </div>
+              <!-- Add/Edit Dialog -->
+               <div class="form-dialog-container">
+              <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog" [modal]="true"
+                [style]="{ width: '500px' }" [closable]="true">
+                <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
+                  <div class="p-fluid">
+                    <div class="p-field p-mb-3">
+                      <label for="user_generated_id">Field No.</label>
+                      <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
+                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('user_generated_id')?.invalid && fieldForm.get('user_generated_id')?.touched">
+                        Field No. is required and must be numeric
+                      </small>
                     </div>
 
-                    <div class="p-dialog-footer">
-                      <button pButton type="button" label="Cancel" class="p-button-text"
-                        (click)="hideDialog()"></button>
-                      <button pButton type="submit" label="Save" ></button>
+                    <div class="p-field p-mb-3">
+                      <label for="field_name">Field Name</label>
+                      <input id="field_name" type="text" pInputText formControlName="field_name" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_name')?.invalid && fieldForm.get('field_name')?.touched">
+                        Field Name is required
+                      </small>
                     </div>
-                  </form>
-                </p-dialog>
 
+                    <div class="p-field p-mb-3">
+                      <label for="field_description">Description</label>
+                      <input id="field_description" pInputText formControlName="field_description" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_description')?.invalid && fieldForm.get('field_description')?.touched">
+                        Description is required
+                      </small>
+                    </div>
 
-                <!-- delete confirmation dialog -->
-                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
-                  <p-footer>
-                    <button pButton label="No" class="p-button-danger p-r-10"
-                      (click)="showDeleteDialog = false"></button>
-                    <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+                    <div class="p-field p-mb-3">
+                      <label for="data_type">Data Type</label>
+                      <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
+                        placeholder="Select Data Type"></p-dropdown>
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('data_type')?.invalid && fieldForm.get('data_type')?.touched">
+                        Data Type is required
+                      </small>
+                    </div>
 
-                  </p-footer>
-                </p-dialog>
+                    <div class="p-field p-mb-3">
+                      <label for="field_length">Length</label>
+                      <input id="field_length" type="number" pInputText formControlName="field_length" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_length')?.invalid && fieldForm.get('field_length')?.touched">
+                        Length is required and must be numeric
+                      </small>
+                    </div>
 
-           
+                    <div class="p-field p-mb-3">
+                      <label for="criticality">Criticality</label>
+                      <p-dropdown id="criticality" [options]="criticalityOptions" formControlName="criticality"
+                        placeholder="Select Criticality"></p-dropdown>
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('criticality')?.invalid && fieldForm.get('criticality')?.touched">
+                        Criticality is required
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="p-dialog-footer">
+                    <button pButton type="button" label="Cancel" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton type="submit" label="Save"></button>
+                  </div>
+                </form>
+              </p-dialog>
+              </div>
+
+              <!-- delete confirmation dialog -->
+              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                <p-footer>
+                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
+                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+
+                </p-footer>
+              </p-dialog>
+            </div>
 
           </div>
         </div>
       </div>
-       </div>
-       </div>
     </mat-card>
   </main>
 </div>
