@@ -12,64 +12,76 @@
     <!-- Panel 2 -->
     <ng-template pTemplate="panel" [collapsed]="diagramCollapsed" [collapsible]="false">
       <div class="splitter-table">
-        <div class="card" *ngIf="diagramCollapsed">
+        <div class="ngprime-table" *ngIf="diagramCollapsed">
           <div class="header">
-            <div class="title">
-              <h2>Field Metadata</h2>
-              <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" display="chip"
-                placeholder="Choose columns"></p-multiSelect>
-            </div>
-            <span class="close-icon" (click)="onCloseDetailTable()">
-              <!-- <lucide-icon name="X"></lucide-icon> -->
-               Close
-            </span>
+            <p-toolbar>
+              <div class="title" style="display: flex;align-items: center;gap: 1rem;">
+                <h2 style="margin: 0px; font-size: 16px;">Field Metadata</h2>
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" display="chip"
+                  placeholder="Choose columns"></p-multiSelect>
+              </div>
+
+              <div style="display: flex;gap:20px">
+                <div class="p-toolbar-group-left">
+                  <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" #globalFilter
+                      (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                  </span>
+                </div>
+                <button class="btn btn--secondary btn-sm" (click)="onCloseDetailTable()">Close</button>
+              </div>
+
+            </p-toolbar>
           </div>
 
           <!-- PrimeNG Table -->
-          <div class="table-container">
-            <p-table #dt [value]="fields" [columns]="selectedColumns" [paginator]="true" [rows]="10"
-              [resizableColumns]="true" columnResizeMode="expand"
-              [globalFilterFields]="['fieldName','dataType','sourceName','criticality']" [showCurrentPageReport]="true"
-              [rowsPerPageOptions]="[10, 15, 20]"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
-              <!-- Global Filter -->
-              <ng-template pTemplate="caption">
-                <div class="flex justify-between">
-                  <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="onGlobalFilter($event, dt)" placeholder="Global Search" />
-                  </span>
-                </div>
-              </ng-template>
+          <div class="">
+            <div class="man" style="margin-top: 4px;">
+              <p-table #dt [value]="fields" [columns]="selectedColumns" [paginator]="true" [rows]="10"
+                [resizableColumns]="true" columnResizeMode="expand"
+                [globalFilterFields]="['fieldName','dataType','sourceName','criticality']"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 15, 20]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                <!-- Global Filter -->
+                <!-- <ng-template pTemplate="caption">
+                  <div class="flex justify-between">
+                    <span class="p-input-icon-left">
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" (input)="onGlobalFilter($event, dt)" placeholder="Global Search" />
+                    </span>
+                  </div>
+                </ng-template> -->
 
-              <!-- Headers -->
-              <ng-template pTemplate="header" let-columns>
-                <tr>
-                  <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                    {{ col.header }}
-                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                  </th>
-                </tr>
-              </ng-template>
+                <!-- Headers -->
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                      {{ col.header }}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
 
-              <!-- Table Body -->
-              <ng-template pTemplate="body" let-row let-columns="columns">
-                <tr>
-                  <td *ngFor="let col of columns">
-                    <ng-container [ngSwitch]="col.field">
-                      <span *ngSwitchCase="'actions'">
-                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
-                          (click)="editRow(row)" pTooltip="Edit"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text"
-                          (click)="deleteRow(row)" pTooltip="Delete"></button>
-                      </span>
-                      <span *ngSwitchDefault>{{ row[col.field] }}</span>
-                    </ng-container>
-                  </td>
-                </tr>
-              </ng-template>
+                <!-- Table Body -->
+                <ng-template pTemplate="body" let-row let-columns="columns">
+                  <tr>
+                    <td *ngFor="let col of columns">
+                      <ng-container [ngSwitch]="col.field">
+                        <span *ngSwitchCase="'actions'">
+                          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
+                            (click)="editRow(row)" pTooltip="Edit"></button>
+                          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text"
+                            (click)="deleteRow(row)" pTooltip="Delete"></button>
+                        </span>
+                        <span *ngSwitchDefault>{{ row[col.field] }}</span>
+                      </ng-container>
+                    </td>
+                  </tr>
+                </ng-template>
 
-            </p-table>
+              </p-table>
+            </div>
           </div>
         </div>
       </div>
