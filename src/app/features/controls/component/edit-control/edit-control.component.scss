@@ -55,24 +55,44 @@
     }
 }
 
-// === BUTTON STYLE ====
-.form-grid {
-    margin-top: 4px;
-    display: inline;
-    padding: 0rem 6px;
+// ==== TABLE GRID STYLE ====
+.man {
+    ::ng-deep .p-datatable .p-datatable-thead>tr>th {
+        font-size: 13px;
+        font-weight: 500;
+        color: #323130;
+        padding: 6px 8px !important;
+        border-top: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f1f5f9;
 
-    button {
-        border: none;
-        color: white;
-        font-size: 12px;
-        box-shadow: none;
-        width: fit-content;
-        border-radius: 4px;
-        padding: .6rem 1rem;
-        background-color: rgb(62, 99, 221);
+        .p-icon {
+            width: 0.66rem;
+        }
+    }
 
-        &:hover {
-            background-color: rgb(58, 92, 204);
+    ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+        padding: 0px 8px !important;
+        line-height: normal;
+        color: #333;
+        font-size: 13px;
+        border-bottom: 1px solid #f1f5f9;
+
+        .p-button-text {
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 100%;
+
+            .pi {
+                font-size: 12px;
+
+                &.pi-pencil {
+                    color: #3c3c43;
+                }
+
+                &.pi-trash {
+                    color: #ff0000;
+                }
+            }
         }
     }
 }

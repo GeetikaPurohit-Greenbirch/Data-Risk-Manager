@@ -1,0 +1,54 @@
+@mixin generate-radius-classes($map) {
+    @each $key, $value in $map {
+        .rounded-#{$key} {
+            border-radius: $value;
+        }
+    }
+}
+
+@mixin generate-button-sizes($map) {
+    @each $key, $props in $map {
+        &.btn-#{$key} {
+            font-size: map-get($props, font-size);
+            padding: map-get($props, padding);
+
+            svg {
+                width: map-get($props, svg-size);
+                height: map-get($props, svg-size);
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+
+@mixin button-base {
+    gap: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    display: inline-block;
+    //padding: 0.5rem 1rem;
+    font-weight: $font-weight;
+    border-radius: $border-radius;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    @each $key, $value in $radius-scale {
+        &.rounded-#{$key} {
+            border-radius: $value;
+        }
+    }
+
+    @include generate-button-sizes($button-sizes);
+}
+
+@mixin button-variant($bg, $color, $hover-bg) {
+    color: $color;
+    background-color: $bg;
+
+    &:hover {
+        background-color: $hover-bg;
+    }
+}

@@ -25,38 +25,17 @@
             gap: 2rem;
             width: 100%;
             display: flex;
-            padding: .6rem;
+            padding: .1rem;
             border-radius: 2px;
-            margin-bottom: 1.6rem;
-            border: 1px solid #e9f2fc;
+            margin-bottom: 1.3rem;
+            // border: 1px solid #e9f2fc;
             justify-content: space-between;
-            background: rgb(245, 250, 255);
+            // background: rgb(245, 250, 255);
 
             p {
                 margin: 0px;
                 font-size: 14px;
                 font-weight: 500;
-            }
-
-            .update-link {
-                display: inline-block;
-
-                button {
-                    cursor: pointer;
-                    font-size: 13px;
-                    padding: 4px 8px;
-                    color: #3e63dd;
-                    font-weight: 500;
-                    border-radius: 4px;
-                    text-decoration: none;
-                    border: 1px solid #3e63dd;
-                    background-color: transparent;
-
-                    &:hover {
-                        color: #ffffff;
-                        background-color: #3e63dd;
-                    }
-                }
             }
         }
     }
@@ -87,28 +66,6 @@
         }
         ::ng-deep .ag-root-wrapper {
             border: none;
-        }
-    }
-}
-
-// === BUTTON STYLE ====
-.form-grid {
-    margin-top: 4px;
-    display: inline;
-    padding: 0rem 6px;
-
-    button {
-        border: none;
-        color: white;
-        font-size: 12px;
-        box-shadow: none;
-        width: fit-content;
-        border-radius: 4px;
-        padding: .6rem 1rem;
-        background-color: rgb(62, 99, 221);
-
-        &:hover {
-            background-color: rgb(58, 92, 204);
         }
     }
 }
@@ -162,5 +119,49 @@
                 // background-color: rgb(58, 92, 204);
             }
         }
+    }
+}
+
+
+// ==== TABLE GRID STYLE ====
+.man {
+    ::ng-deep .p-datatable .p-datatable-thead>tr>th {
+        font-size: 13px;
+        font-weight: 500;
+        color: #323130;
+        padding: 6px 8px !important;
+        border-top: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f1f5f9;
+
+        .p-icon {
+            width: 0.66rem;
+        }
+    }
+
+    ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+        padding: 0px 8px !important;
+        line-height: normal;
+        color: #333;
+        font-size: 13px;
+        border-bottom: 1px solid #f1f5f9;
+
+        .p-button-text {
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 100%;
+
+            .pi {
+                font-size: 12px;
+
+                &.pi-pencil {
+                    color: #3c3c43;
+                }
+
+                &.pi-trash {
+                    color: #ff0000;
+                }
+            }
+        }
+
     }
 }

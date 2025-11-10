@@ -19,10 +19,9 @@
         <div class="interface-container">
           <div class="left-panel">
             <!-- <h2>Interface</h2> -->
-
             <form [formGroup]="interfaceForm">
               <!-- Your form controls for editing the interface -->
-              <mat-form-field appearance="outline" class="full-width">
+              <mat-form-field appearance="outline" class="full-width" class="small-form-field">
                 <mat-label>Interface Name</mat-label>
                 <input matInput formControlName="interface_name" />
                 <mat-error *ngIf="interfaceForm.get('interface_name')?.hasError('required')">Required</mat-error>
@@ -126,8 +125,8 @@
               </mat-form-field>
 
             </form>
-            <div class="form-grid">
-              <button (click)="onUpdate()">Save</button>
+            <div class="form-grid11">
+              <button class="btn btn--primary btn-md" (click)="onUpdate()">Save</button>
             </div>
           </div>
 
@@ -139,8 +138,9 @@
               <button class="inverse"> Data Fields </button>
             </div>
 
+
             <div class="datafields-table" *ngIf="showDataFields">             
-              <div>
+              <div class="ngprime-table">
                 <p-toolbar>
                   <div class="p-toolbar-group-left">
                     <button pButton label="Add New Field" icon="pi pi-plus" class="p-r-10" (click)="openNew()"></button>
@@ -159,6 +159,7 @@
                 </p-toolbar>
 
                 <!-- Data Table -->
+                  <div class="man" style="margin-top: 4px;">
                 <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
                   [showCurrentPageReport]="true" responsiveLayout="scroll" [globalFilterFields]="globalFilterFields"
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -182,6 +183,7 @@
                     </tr>
                   </ng-template>
                 </p-table>
+                </div>
 
                 <!-- Add/Edit Dialog -->
                 <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog" [modal]="true"
@@ -265,14 +267,14 @@
 
                   </p-footer>
                 </p-dialog>
-              </div>
 
-
-            </div>
+           
 
           </div>
         </div>
       </div>
+       </div>
+       </div>
     </mat-card>
   </main>
 </div>

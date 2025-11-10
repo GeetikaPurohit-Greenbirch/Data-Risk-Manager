@@ -29,6 +29,7 @@ export class EditTargetComponent {
   targetForm!: FormGroup;
   targetUseCaseForm!: FormGroup;
   showDataFields = true;
+  loader=false;
   //showDataQuality = false;
   //showDataFieldsTable = true;
   targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER']
@@ -318,23 +319,26 @@ export class EditTargetComponent {
     }
 
     if (this.targetId > 0) {
+      this.loader=true;
       // Step 2: Fetch data from API and patch to form
       this.targetService.getTargetById(this.targetId).subscribe({
         next: (res: any) => {
           const data = res.targetEntity;
           this.targetForm.patchValue(data);
           this.toggleFieldsBasedOnQoS(data.quality_of_service);
-
+          this.loader=false;
         },
         error: (err: any) => {
           console.error('Failed to load target:', err);
+           this.loader=false;
         }
+       
       });
       // this.generateTimeOptions();
 
-      setTimeout(() => {
-        this.cdr.detectChanges(); // ensure UI updates  
-      }, 100);
+      // setTimeout(() => {
+      //   this.cdr.detectChanges(); // ensure UI updates  
+      // }, 100);
 
       this.formLoaded = true; // triggers re-render
 
@@ -645,7 +649,7 @@ export class EditTargetComponent {
     this.saveDatafields(this.formGroup.value);
   }
   saveDatafields(data: any) {
-    console.log(data, "Target Data Fields");
+    //console.log(data, "Target Data Fields");
 
     this.dataFieldsModel.field_id = data.field_id;
     this.dataFieldsModel.user_generated_id = data.field_no;
@@ -663,7 +667,7 @@ export class EditTargetComponent {
 
     if (!data.field_id && !this.isEditMode && !this.currentRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
-        if (!res) {
+        if (res!=null) {
           data.field_id=res.field_id;
           this.rowData.push(data);
           this.toastNotificationService.success("Data field added Successfully.");         

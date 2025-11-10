@@ -200,17 +200,19 @@ i.fa {
 }
 
 .configurable-panels {
+  gap: 2rem;
   display: flex;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: calc(100% - 2rem);
   justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 20px;
 }
 
 .left-panel,
 .right-panel {
   flex: 1;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 0.4rem;
   background-color: #f8f9fa;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -218,13 +220,15 @@ i.fa {
 /* Left Panel Styling */
 .left-panel h2 {
   margin-top: 0;
+  font-size: 22px;
   color: #004d40;
+  margin-bottom: 14px;
 }
 
 .left-panel p {
-  font-size: 15px;
-  line-height: 1.5;
   color: #333;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* Right Panel Styling (News) */
@@ -257,6 +261,7 @@ i.fa {
   0% {
     transform: translateY(100%);
   }
+
   100% {
     transform: translateY(-100%);
   }

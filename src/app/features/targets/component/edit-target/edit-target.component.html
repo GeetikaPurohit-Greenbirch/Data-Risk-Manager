@@ -10,13 +10,17 @@
         </div>
         {{ targetId > 0 ? 'Edit Target' : 'Add Target' }}
         <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
-           Back to lineage
-          </button>
+          Back to lineage
+        </button>
       </h2>
     </section>
     <mat-card>
       <div class="container">
         <div class="target-container">
+          <div *ngIf="loader" class="overlay-loader">
+            <mat-progress-spinner color="primary" mode="indeterminate" diameter="50">
+            </mat-progress-spinner>
+          </div>
           <!-- Left: Edit Target Form -->
           <div class="left-panel">
             <div class="usecaseid-container" *ngIf="targetId>0">
@@ -147,69 +151,75 @@
               </button>
             </div>
 
-            <div class="datafields-table">
-              <div class="datafields-header" [hidden]="!showDataFields">
-                <p-toolbar>
-                  <div class="p-toolbar-group-left">                   
-                    <div class="p-r-10">
-                      <button pButton label="Add New Record" icon="pi pi-plus" (click)="openAddDialog()"></button>
+            <div class="ngprime-table">
+              <!-- <div class="datafields-table"> -->
+              <div class="" [hidden]="!showDataFields">
+                <div class="header">
+                  <p-toolbar>
+                    <div class="p-toolbar-group-left">
+                      <div class="p-r-10">
+                        <button class="btn btn--tertiary btn-sm" (click)="openAddDialog()">
+                          <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                          Add New Record</button>
+                      </div>
+                      <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" #globalFilter
+                          (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                      </span>
                     </div>
-                    <span class="p-input-icon-left">
-                      <i class="pi pi-search"></i>
-                      <input pInputText type="text" #globalFilter
-                        (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
-                    </span>
-                  </div>
 
-                  <div class="p-toolbar-group-right">
-                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                      placeholder="Choose Columns" display="chip">
-                    </p-multiSelect>
-                  </div>
-                </p-toolbar>
+                    <div class="p-toolbar-group-right">
+                      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                        placeholder="Choose Columns" display="chip">
+                      </p-multiSelect>
+                    </div>
+                  </p-toolbar>
+                </div>
 
-                <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
-                  [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
-                  [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                  styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
-                  <!-- Header -->
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">
-                        {{ col.header }}
-                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                      </th>
-                      <th>Actions</th>
-                    </tr>
-                  </ng-template>
+                <div class="man" >
+                  <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                    [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
+                    [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
+                    <!-- Header -->
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                        <th>Actions</th>
+                      </tr>
+                    </ng-template>
 
-                  <!-- Body -->
-                  <ng-template pTemplate="body" let-rowData>
-                    <tr>
-                      <td *ngFor="let col of selectedColumns">
-                        {{ rowData[col.field] }}
-                      </td>
-                      <td>
-                        <button pButton icon="pi pi-pencil" class="p-button-text"
-                          (click)="openEditDialog(rowData)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                          (click)="confirmDelete(rowData)"></button>
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                    <!-- Body -->
+                    <ng-template pTemplate="body" let-rowData>
+                      <tr>
+                        <td *ngFor="let col of selectedColumns">
+                          {{ rowData[col.field] }}
+                        </td>
+                        <td>
+                          <button pButton icon="pi pi-pencil" class="p-button-text"
+                            (click)="openEditDialog(rowData)"></button>
+                          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                            (click)="confirmDelete(rowData)"></button>
+                        </td>
+                      </tr>
+                    </ng-template>
 
+                  </p-table>
+                </div>
+              </div>
+
+              <!-- ==== MODAL AND POPOVER SECTION ==== -->
+              <div class="form-dialog-container">
                 <!-- Dialog Form -->
                 <p-dialog header="{{ isEditMode ? 'Edit Field' : 'Add New Field' }}" [(visible)]="showDialog"
-                  [modal]="true" [closable]="true" [style]="{ width: '500px' }">
+                  [modal]="true" [closable]="true">
                   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
                     <div class="p-fluid">
-                      <!-- <div class="p-field">
-                        <label>Field ID<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_id" />
-                      </div> -->
-
                       <div class="p-field">
                         <label>Field No.<span class="required">*</span></label>
                         <input type="text" pInputText formControlName="field_no" />
@@ -268,22 +278,25 @@
                     </div>
 
                     <div class="p-dialog-footer p-mt-3">
-                      <button pButton type="button" label="Cancel" (click)="showDialog = false"></button>
-                      <button pButton type="submit" label="{{ isEditMode ? 'Update' : 'Save' }}"
-                        class="p-button-success" [disabled]="formGroup.invalid"></button>
+                      <button type="button" class="btn btn--secondary" label=""
+                        (click)="showDialog = false">Cancel</button>
+                      <button type="submit" class="btn btn--primary" label="" [disabled]="formGroup.invalid">{{
+                        isEditMode ? 'Update' : 'Save' }}</button>
                     </div>
                   </form>
                 </p-dialog>
-                <!-- delete confirmation dialog -->
-                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
-                  <p-footer>
-                    <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
-                    <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
-                    
-                  </p-footer>
-                </p-dialog>
               </div>
+
+              <!-- delete confirmation dialog -->
+              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                <p-footer>
+                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
+                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+
+                </p-footer>
+              </p-dialog>
+
               <div [hidden]="!showReport">
                 <div class="report-builder">
                   <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"
@@ -291,30 +304,31 @@
                   </app-report-builder>
                 </div>
               </div>
+             
             </div>
           </div>
 
           <ng-template #useCasePopup>
-              <h2 mat-dialog-title>Select Use Case</h2>
-              <mat-dialog-content>
-                <div class="popup-box row">
-                  <div class="col-md-12">
-                    <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
-                      <mat-label>Select Use Case</mat-label>
-                      <mat-select [(ngModel)]="useCaseModel">
-                        <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
-                          {{ uc.use_case_name }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-12">
-                    <button mat-raised-button color="primary" (click)="confirmUseCase()"
-                      style="height: 43px; margin-top: 6px;">Submit</button>
-                    </div>
+            <h2 mat-dialog-title>Select Use Case</h2>
+            <mat-dialog-content>
+              <div class="popup-box row">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
+                    <mat-label>Select Use Case</mat-label>
+                    <mat-select [(ngModel)]="useCaseModel">
+                      <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                        {{ uc.use_case_name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
-              </mat-dialog-content>
-            </ng-template>
+                <div class="col-md-12">
+                  <button mat-raised-button color="primary" (click)="confirmUseCase()"
+                    style="height: 43px; margin-top: 6px;">Submit</button>
+                </div>
+              </div>
+            </mat-dialog-content>
+          </ng-template>
         </div>
       </div>
     </mat-card>
