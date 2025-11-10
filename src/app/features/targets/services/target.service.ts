@@ -20,6 +20,13 @@ private apiLineageBaseUrl = environment.apiLineageBaseUrl
     return this.http.post<any>(url, payload);
   }
 
+    public cloneTargetDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
+    const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
+    console.log(payload)
+
+    return this.http.post<any>(url, payload);
+  }
+
   public getTarget(): Observable<Target[]> {
         const url: string = this.apiUrl + 'targets';
         return this.http.get<Target[]>(url);

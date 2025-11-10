@@ -21,6 +21,14 @@ export class SystemServiceService {
     return this.http.post<any>(url, payload);
   }
 
+
+  public cloneSystemDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
+    const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
+    console.log(payload)
+
+    return this.http.post<any>(url, payload);
+  }
+
 ///////// save system data fields /////////
   public createSystemDataFields(systemDataModel: SystemDataFields): Observable<any> {
     const url: string = this.apiUrl + 'fields';

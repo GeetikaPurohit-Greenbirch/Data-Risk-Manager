@@ -5,7 +5,7 @@ import { InterfaceService } from '../../services/interface.service';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter, forkJoin } from 'rxjs';
+import { filter, forkJoin, Observable } from 'rxjs';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
@@ -254,13 +254,13 @@ export class EditInterfaceComponent implements OnInit {
       this.generateTimeOptions();
 
       // Disable freq/schedule for certain service qualities
-      this.interfaceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+      this.interfaceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
         if (value === 'STREAMING' || value === 'AD_HOC') {
-          this.interfaceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
-          this.interfaceForm.get('updateSchedule')?.disable({ emitEvent: false });
+          this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+          this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
         } else {
-          this.interfaceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
-          this.interfaceForm.get('updateSchedule')?.enable({ emitEvent: false });
+          this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+          this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
         }
       });
     }
@@ -338,15 +338,17 @@ export class EditInterfaceComponent implements OnInit {
     }
   }
 
-  private toggleFieldsBasedOnQoS(value: string): void {
-    if (value === 'STREAMING' || value === 'AD_HOC') {
-      this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
-      this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
-    } else {
-      this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
-      this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+   toggleFieldsBasedOnQoS(event: MatSelectChange): void {
+      const value = event.value;
+      if (value === 'STREAMING' || value === 'AD_HOC') {
+        this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+        this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
+      } else {
+        this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+        this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+      }
     }
-  }
+
 
   getDataFields() {
     this.datafieldsService.getDataFieldsById(this.interfaceId, 'INTERFACE').subscribe({
@@ -443,36 +445,67 @@ export class EditInterfaceComponent implements OnInit {
     }
 
     // Choose appropriate API call
-    const request$ = isUpdate
-      ? this.interfaceService.updateInterface(payload)
-      : this.interfaceService.createInterface(payload);
+    let request$: Observable<any>;
+           
+              if (this.isClone) {
+                // 🔁 Clone case
+                request$ = this.interfaceService.cloneInterfaceDatafields(
+                  payload,
+                  'interfaces',
+                  this.paentInterfaceId
+                );
+              } else if (isUpdate) {
+                // ✏️ Update case
+                request$ = this.interfaceService.updateInterface(payload);
+              } else {
+                // 🆕 Create case
+                request$ = this.interfaceService.createInterface(payload);
+              }
 
-      const clone$ = this.interfaceService.cloneInterfaceDatafields(payload, 'interfaces', this.paentInterfaceId);
-
-
-    request$.subscribe({
-      next: (res: any) => {
-        const interfaceId = isUpdate ? this.interfaceId : res.interfaceEntity.interface_id;
-        const action = isUpdate ? 'Updated' : 'Created';
-
-        this.toastNotificationService.success(`Interface ${action} Successfully. Your Interface ID is ${interfaceId}`);
-
-        if (!isUpdate) {
-           forkJoin([clone$]).subscribe({
-                next: ([cloneRes]) => {
-                  this.toastNotificationService.success('Interface Created Successfully. Your Interface ID is ' + cloneRes.interfaceEntity.interface_id);
-                  this.toastNotificationService.success('Datafields cloned successfully.');
-                  this.router.navigate(['/interfaces/edit-interface', cloneRes.interfaceEntity.interface_id]);
+              
+              request$.subscribe({
+                next: (res: any) => {
+                  if (this.isClone) {
+                    // Handle Clone Success
+                    this.toastNotificationService.success(
+                      `Interface cloned successfully. Your Interface ID is ${res.interfaceEntity.interface_id}`
+                    );
+                    this.toastNotificationService.success('Datafields cloned successfully.');
+                    this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+                    return;
+                  }
+              
+                  // Handle Create/Update Success
+                  const interfaceID = isUpdate ? this.interfaceId : res.interfaceEntity.interface_id;
+                  const action = isUpdate ? 'Updated' : 'Created';
+                  this.toastNotificationService.success(
+                    `Interface ${action} successfully. Your Interface ID is ${interfaceID}`
+                  );
+              
+                  // 🔁 If you only need to clone *after* creating, handle it separately:
+                  // if (!isUpdate && !this.isClone) {
+                  //   this.interfaceService
+                  //     .cloneInterfaceDatafields(payload, 'interfaces', this.paentInterfaceId)
+                  //     .subscribe({
+                  //       next: (cloneRes) => {
+                  //         this.toastNotificationService.success('Datafields cloned successfully.');
+                  //         this.router.navigate(['/interfaces/edit-interface', cloneRes.interfaceEntity.interface_id]);
+                  //       },
+                  //       error: () =>
+                  //         this.toastNotificationService.error('Failed to clone datafields.')
+                  //     });
+                  // }
                 },
-                error: () => this.toastNotificationService.error('Failed to complete both API calls.')
+                error: (err) => {
+                  const action = isUpdate
+                    ? 'update'
+                    : this.isClone
+                    ? 'clone'
+                    : 'create';
+                  this.toastNotificationService.error(`Failed to ${action} interface.`);
+                  console.error('❌ API Error:', err);
+                }
               });
-        }
-      },
-      error: () => {
-        const action = isUpdate ? 'update' : 'create';
-        this.toastNotificationService.error(`Failed to ${action} interface.`);
-      }
-    });
   }
 
 

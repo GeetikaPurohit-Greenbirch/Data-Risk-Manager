@@ -31,7 +31,9 @@ export class TargetsComponent {
     'owner_email',
     'actions',
   ];
-  public rowData: any;
+  // public rowData: any;
+  rowData: any[] = [];
+
   dataSource = new MatTableDataSource<Target>();
 
   // target : SystemsModel = new SystemsModel();
@@ -132,10 +134,29 @@ export class TargetsComponent {
           this.deleteTarget(params.node);
         });
 
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
-
-        return div;
+         // 🧬 Clone Button
+         const cloneDataFields = document.createElement('button');
+         cloneDataFields.title = 'Copy';
+         cloneDataFields.style.border = 'none';
+         cloneDataFields.style.padding = '0px';
+         cloneDataFields.style.cursor = 'pointer';
+         cloneDataFields.style.background = 'transparent';
+ 
+         const cloneBtn = createElement(icons.Copy, {
+           color: '#3e63dd',
+           height: '14px',
+           strokeWidth: 2
+         });
+         cloneDataFields.appendChild(cloneBtn);
+         cloneDataFields.addEventListener('click', () => {
+           this.cloneTarget(params.node.data);
+         });
+     
+         div.appendChild(saveDataFields);
+         div.appendChild(deleteDataFields);
+         div.appendChild(cloneDataFields);
+ 
+         return div;
       },
     },
   ];
@@ -239,4 +260,17 @@ export class TargetsComponent {
   editTarget(targets: any) {
     this.router.navigate(['/targets/edit-target', targets.data.target_id]);
   }
+
+  cloneTarget(targetData: Target) {
+        // Remove unique IDs (if any) and flag it as cloned
+        const clonedData = { ...targetData };
+      
+        // Optional: mark this as a clone for validation later
+        clonedData.isClone = true;
+      
+        // Navigate to Interface Builder with prefilled data
+        this.router.navigate(['/targets/target-builder'], {
+          state: { clonedTarget: clonedData }
+        });
+      }
 }
