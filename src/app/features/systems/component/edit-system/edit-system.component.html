@@ -10,10 +10,10 @@
         </div>
         {{ systemId > 0 ? 'Edit System' : 'Add System' }}
         <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
-           Back to lineage
-          </button>
+          Back to lineage
+        </button>
       </h2>
-        
+
     </section>
     <mat-card>
       <div class="overlay-loader" *ngIf="isLoading">
@@ -90,7 +90,8 @@
             <div class="form-grid">
               <button (click)="onUpdate()">Save</button>
             </div>
-            <p class="riskIndicator" *ngIf="is_modified_risk_level">* Data Risk has been adjusted or overriden. (Globally or Individually)</p>
+            <p class="riskIndicator" *ngIf="is_modified_risk_level">* Data Risk has been adjusted or overriden.
+              (Globally or Individually)</p>
           </div>
 
           <div class="right-panel" *ngIf="systemId>0">
@@ -108,31 +109,48 @@
                 Output DataFields
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView === 'mapping' }" (click)="sysMapping('mapping')">
+              <button [ngClass]="{ 'inverse': activeView === 'mapping' }" (click)="sysMapping('')">
                 System Mapping
               </button>
-
-              <!-- <button [ngClass]="{ 'inverse': activeView === 'usecase', 'primary': activeView !== 'usecase' }"
-                (click)="selectUseCase('usecase')">
-                Update Use Case
-              </button> -->
             </div>
-
-            <div class="datafields-table" *ngIf="showInputDataFields">
-              <div class="datafields-header">
-                <div class="checkbox-title">
-                  <button (click)="addRow()">Add Row</button>
-                  <label><input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
-                      (change)="toggleInboundGrid($event)" />
-                    Set Global Quality Risk
-                  </label>
+            <!-- Information Box -->
+            <div style="height: 100%; display: flex; gap: 1rem; padding: 0px;">
+              <div *ngIf="activeView=='interfaces'" class="row" style="width: 100%">
+                <div class="info-box-table" class="col-sm-5">
+                  <div class="datafields-header">
+                    <button (click)="addInterface()">Add Inbound Interface</button>
+                  </div>
+                  <div class="padding:10px">
+                    <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
+                      [rowData]="rowDataInbound" [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
+                      (cellValueChanged)="inboundOnCellValueChanged($event)" rowSelection="single">
+                    </ag-grid-angular>
+                  </div>
+                </div>
+                <div class="info-box-table" class="col-sm-5">
+                  <div class="datafields-header">
+                    <button (click)="addOutInterface()">Add Outbound Interface</button>
+                  </div>
+                  <div class="padding:10px">
+                    <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
+                      [rowData]="rowDataOutbound" [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
+                      (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
+                    </ag-grid-angular>
+                  </div>
+                </div>
+              </div>
+              <div class="datafields-table" *ngIf="activeView=='input'">
+                <div class="datafields-header">
+                  <div class="checkbox-title">
+                    <!-- <button (click)="addRow()">Add Row</button> -->
+                    
+                    <label><input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
+                        (change)="toggleInboundGrid($event)" />
+                      Set Global Quality Risk
+                    </label>
+                  </div>
                 </div>
 
-
-                <!-- Conditional rendering of the AG Grid -->
-                <!-- <div class="table-container">
-                  <div class="system-table-container">
-                    <div class="grid-table"> -->
                 <div>
                   <ag-grid-angular class="ag-theme-alpine responsive-grid" *ngIf="showGlobalQualityRiskGridInbound"
                     style="width: 100%;height: 100%;" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
@@ -140,202 +158,87 @@
                     [domLayout]="'autoHeight'">
                   </ag-grid-angular>
                 </div>
-                <!-- </div>
-                  </div>
-                </div> -->
-              </div>
 
-              <!-- <div class="table-container">
-                <div class="system-table-container">
-                  <div class="grid-table"> -->
-              <div style="margin: 10px;">
-                <!-- <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 400px"
-                  [rowData]="rowDataInput" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="inputCellValueChanged($event)" rowSelection="single"
-                  (rowClicked)="onRowClick($event)" (gridReady)="onGridReady($event)">
-                </ag-grid-angular> -->
-                
+                <div style="margin: 10px;">
 
-                
-            <p-toolbar>
-              <div class="p-toolbar-group-left">
-                <span class="p-input-icon-left">
-                  <i class="pi pi-search"></i>
-                  <input pInputText type="text" 
-                  #globalFilter
-                  (input)="dt.filterGlobal(globalFilter.value, 'contains')"
-                  placeholder="Global Search" />
-                </span>
-              </div>
-            
-              <div class="p-toolbar-group-right">
-                <p-multiSelect 
-                  [options]="cols" 
-                  [(ngModel)]="selectedColumns" 
-                  optionLabel="header"
-                  placeholder="Choose Columns" 
-                  display="chip">
-                </p-multiSelect>
-              </div>
-            </p-toolbar>
-            
-            <p-table
-              #dt
-              [value]="rowDataInput"
-              [paginator]="true"
-              [rows]="10"
-              [resizableColumns]="true"
-              [globalFilterFields]="globalFilterFields"
-              [rowsPerPageOptions]="[10,25,50]"
-              [responsiveLayout]="'scroll'"
-              sortMode="multiple"
-              [showCurrentPageReport]="true"
-              editMode="cell"
-              resizableColumns="true"
-              columnResizeMode="fit"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-              styleClass="p-datatable-gridlines p-datatable-sm"
-              class="p-dense"
-            >
+                  <p-toolbar>
+                    <div class="p-toolbar-group-left">
+                       <button pButton label="Add New Field" icon="pi pi-plus" (click)="openDialog()"></button>
+                      <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" #globalFilter
+                          (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                      </span>
+                    </div>
 
-             <!-- Header Section -->
-  <ng-template pTemplate="header">
-    <!-- Parent Header -->
-    <tr>
-      <th [attr.colspan]="cols.length" class="custom-parent-header" pTooltip="DQA">
-        DQA
-      </th>
-    </tr>
+                    <div class="p-toolbar-group-right">
+                      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                        placeholder="Choose Columns" display="chip">
+                      </p-multiSelect>
+                    </div>
+                  </p-toolbar>
 
-    <!-- Child Headers -->
-    <tr>
-      <th *ngFor="let col of cols" pTooltip="{{ col.tooltip || col.header }}">
-        {{ col.header }}
-      </th>
-    </tr>
-  </ng-template>
+                  <p-table #dt [value]="rowDataInput" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                    columnResizeMode="expand" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable" class="p-dense">
+                    <!-- ========== HEADER SECTION ========== -->
+                    <ng-template pTemplate="header">
+                      <!-- Parent Header -->
+                      <tr>
+                        <th colspan="7" class="custom-parent-header">Interface Details</th>
+                        <th colspan="6" class="custom-parent-header">DQA</th>
+                        <th class="custom-parent-header">Actions</th>
+                      </tr>
 
-              <!-- Dynamic Column Headers -->
-              <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
-                <ng-container *ngIf="col.field !== 'actions'">
-                  <ng-template pTemplate="header">
-                    {{ col.header }}
-                  </ng-template>
-                  <ng-template pTemplate="body" let-rowData>
-                    <ng-container *ngIf="!col.editable; else editableCell">
-                      {{ rowData[col.field] }}
-                    </ng-container>
-                    <ng-template #editableCell>
-                  
-                      <ng-template #inputField>
-                        <input 
-                          type="text" 
-                          pInputText 
-                          [(ngModel)]="rowData[col.field]"
-                          class="custom-table-input"
-                        />
-                      </ng-template>
+                      <!-- Child Headers -->
+                      <tr>
+                        <!-- Interface Section -->
+                        <th *ngFor="let col of cols.slice(0, 7)" pResizableColumn pSortableColumn="{{col.field}}">
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+
+                        <!-- DQA Section -->
+                        <th *ngFor="let col of cols.slice(7)" pResizableColumn pSortableColumn="{{col.field}}">
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                      </tr>
                     </ng-template>
-                  </ng-template>
-                </ng-container>
-              </ng-container>
-            
-              <!-- Actions Column -->
-              <ng-template pTemplate="header" let-columns>
 
-                 <tr>
-                  <th [attr.colspan]="8" class="custom-parent-header" pTooltip="DQA">
-                    
-                  </th>
-                  <th [attr.colspan]="6" class="custom-parent-header" pTooltip="DQA">
-                    DQA
-                  </th>
-                  <th [attr.colspan]="" class="custom-parent-header" pTooltip="DQA">
-                    
-                  </th>
-                </tr>
-                <tr>
-                  <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
-                    {{ col.header }}
-                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </ng-template>
-            
-              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr>
-                  <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
-                    <!-- Dropdown cell -->
-                      <ng-container *ngIf="col.dropdownValues; else textCell">
-                        <p-cellEditor>
-                          <ng-template pTemplate="input">
-                            <p-dropdown
-                              [options]="col.dropdownValues"
-                              [(ngModel)]="rowData[col.field]"
-                              appendTo="body"
-                              *ngIf="isCellEditable(col, rowData); else readonly"
+                    <!-- ========== BODY SECTION ========== -->
+                    <ng-template pTemplate="body" let-rowData>
+                      <tr>
+                        <!-- Interface Details -->
+                        <td *ngFor="let col of cols.slice(0, 7)">
+                          {{ rowData[col.field] }}
+                        </td>
 
-                              styleClass="custom-dropdown"
-                            ></p-dropdown>
-                            <ng-template #readonly>
-                              <span>{{ rowData[col.field] }}</span>
-                            </ng-template>
-                          </ng-template>
-                          <ng-template pTemplate="output">
-                            {{ rowData[col.field] }}
-                          </ng-template>
-                        </p-cellEditor>
-                      </ng-container>
+                        <!-- DQA Fields -->
+                        <td *ngFor="let col of cols.slice(7)">
+                          <span>{{ rowData[col.field] }}</span>
+                        </td>
 
-                      <!-- Textbox cell -->
-                      <ng-template #textCell>
-                        <p-cellEditor>
-                          <ng-template pTemplate="input">
-                            <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" 
-                            *ngIf="isCellEditable(col, rowData); else readonly"
-                            />
-                            <ng-template #readonly>
-                              <span>{{ rowData[col.field] }}</span>
-                            </ng-template>
-                          </ng-template>
-                          <ng-template pTemplate="output">
-                            {{ rowData[col.field] }}
-                          </ng-template>
-                        </p-cellEditor>
-                      </ng-template>
-                  </td>
-                  <td>
-                    
-                    <button pButton icon="pi pi-save" class="p-button-text p-button-success" (click)="saveDatafields(rowData)"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteDAtaFields(rowData)"></button>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-              </div>
-              <!-- </div>
-                </div>
-              </div> -->
-            </div>
+                        <!-- Actions -->
+                        <td>
+                          <button pButton icon="pi pi-pencil" class="p-button-text p-button-success"
+                            (click)="openDialog(rowData)"></button>
+                          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                            (click)="confirmDelete(rowData)"></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
 
-            <!-- Information Box -->
-            <div style="height: 100%; display: flex; gap: 1rem; padding: 0px;">
-              <div class="info-box-table" *ngIf="showInbound">
-                <div class="datafields-header">
-                  <button (click)="addInterface()">Add Inbound Interface</button>
-                </div>
-                <div class="padding:10px">
-                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
-                    [rowData]="rowDataInbound" [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef"
-                    (cellValueChanged)="inboundOnCellValueChanged($event)" rowSelection="single">
-                  </ag-grid-angular>
                 </div>
               </div>
 
-              <div class="datafields-table" *ngIf="showDataFields" style="width: 100%;">
+              <div class="datafields-table" *ngIf="activeView=='output'">
                 <div class="checkbox-title">
                   <label>
+                     
                     <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound"
                       (change)="toggleOutboundGrid($event)" />
                     Set Global Quality Risk
@@ -349,241 +252,247 @@
                 </ag-grid-angular>
 
                 <div style="margin-top: 10px">
-                  <!-- <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
-                    [columnDefs]="columnDefsOutbound" [defaultColDef]="defaultColDef"
-                    (cellValueChanged)="onCellValueChanged($event)" rowSelection="single">
-                  </ag-grid-angular> -->
 
+                  <p-toolbar>
+                    <div class="p-toolbar-group-left">
+                       <button pButton label="Add New Field" icon="pi pi-plus" (click)="openDialog()"></button>
+                      <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" #globalFilter
+                          (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                      </span>
+                    </div>
 
+                    <div class="p-toolbar-group-right">
+                      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                        placeholder="Choose Columns" display="chip">
+                      </p-multiSelect>
+                    </div>
+                  </p-toolbar>
 
-                        
-            <p-toolbar>
-              <div class="p-toolbar-group-left">
-                <span class="p-input-icon-left">
-                  <i class="pi pi-search"></i>
-                  <input pInputText type="text" 
-                  #globalFilter
-                  (input)="dt.filterGlobal(globalFilter.value, 'contains')"
-                  placeholder="Global Search" />
-                </span>
-              </div>
-            
-              <div class="p-toolbar-group-right">
-                <p-multiSelect 
-                  [options]="cols" 
-                  [(ngModel)]="selectedColumns" 
-                  optionLabel="header"
-                  placeholder="Choose Columns" 
-                  display="chip">
-                </p-multiSelect>
-              </div>
-            </p-toolbar>
-            
-            <p-table
-              #dt
-              [value]="rowData"
-              [paginator]="true"
-              [rows]="10"
-              [resizableColumns]="true"
-              [globalFilterFields]="globalFilterFields"
-              [rowsPerPageOptions]="[10,25,50]"
-              [responsiveLayout]="'scroll'"
-              sortMode="multiple"
-              [showCurrentPageReport]="true"
-              editMode="cell"
-              resizableColumns="true"
-              columnResizeMode="fit"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-              styleClass="p-datatable-gridlines p-datatable-sm"
-              class="p-dense"
-            >
+                  <p-table #dt [value]="rowDataOutput" [paginator]="true" [rows]="10" [resizableColumns]="true"
+                    columnResizeMode="expand" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable" class="p-dense">
+                    <!-- ========== HEADER SECTION ========== -->
+                    <ng-template pTemplate="header">
+                      <!-- Parent Header -->
+                      <tr>
+                        <th colspan="7" class="custom-parent-header">Interface Details</th>
+                        <th colspan="6" class="custom-parent-header">DQA</th>
+                        <th class="custom-parent-header">Actions</th>
+                      </tr>
 
-             <!-- Header Section -->
-  <ng-template pTemplate="header">
-    <!-- Parent Header -->
-    <tr>
-      <th [attr.colspan]="cols.length" class="custom-parent-header" pTooltip="DQA">
-        DQA
-      </th>
-    </tr>
+                      <!-- Child Headers -->
+                      <tr>
+                        <!-- Interface Section -->
+                        <th *ngFor="let col of cols.slice(0, 7)" pResizableColumn pSortableColumn="{{col.field}}">
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
 
-    <!-- Child Headers -->
-    <tr>
-      <th *ngFor="let col of cols" pTooltip="{{ col.tooltip || col.header }}">
-        {{ col.header }}
-      </th>
-    </tr>
-  </ng-template>
-
-              <!-- Dynamic Column Headers -->
-              <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
-                <ng-container *ngIf="col.field !== 'actions'">
-                  <ng-template pTemplate="header">
-                    {{ col.header }}
-                  </ng-template>
-                  <ng-template pTemplate="body" let-rowData>
-                    <ng-container *ngIf="!col.editable; else editableCell">
-                      {{ rowData[col.field] }}
-                    </ng-container>
-                    <ng-template #editableCell>
-                  
-                      <ng-template #inputField>
-                        <input 
-                          type="text" 
-                          pInputText 
-                          [(ngModel)]="rowData[col.field]"
-                          class="custom-table-input"
-                        />
-                      </ng-template>
+                        <!-- DQA Section -->
+                        <th *ngFor="let col of cols.slice(7)" pResizableColumn pSortableColumn="{{col.field}}">
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                      </tr>
                     </ng-template>
-                  </ng-template>
-                </ng-container>
-              </ng-container>
-            
-              <!-- Actions Column -->
-              <ng-template pTemplate="header" let-columns>
 
-                 <tr>
-                  <th [attr.colspan]="8" class="custom-parent-header" pTooltip="DQA">
-                    
-                  </th>
-                  <th [attr.colspan]="6" class="custom-parent-header" pTooltip="DQA">
-                    DQA
-                  </th>
-                  <th [attr.colspan]="" class="custom-parent-header" pTooltip="DQA">
-                    
-                  </th>
-                </tr>
-                <tr>
-                  <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
-                    {{ col.header }}
-                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </ng-template>
-            
-              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr>
-                  <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
-                    <!-- Dropdown cell -->
-                      <ng-container *ngIf="col.dropdownValues; else textCell">
-                        <p-cellEditor>
-                          <ng-template pTemplate="input">
-                            <p-dropdown
-                              [options]="col.dropdownValues"
-                              [(ngModel)]="rowData[col.field]"
-                              appendTo="body"
-                              *ngIf="isCellEditableOutputDD(col, rowData); else readonly"
+                    <!-- ========== BODY SECTION ========== -->
+                    <ng-template pTemplate="body" let-rowData>
+                      <tr>
+                        <!-- Interface Details -->
+                        <td *ngFor="let col of cols.slice(0, 7)">
+                          {{ rowData[col.field] }}
+                        </td>
 
-                              styleClass="custom-dropdown"
-                            ></p-dropdown>
-                            <ng-template #readonly>
-                              <span>{{ rowData[col.field] }}</span>
-                            </ng-template>
-                          </ng-template>
-                          <ng-template pTemplate="output">
-                            {{ rowData[col.field] }}
-                          </ng-template>
-                        </p-cellEditor>
-                      </ng-container>
+                        <!-- DQA Fields -->
+                        <td *ngFor="let col of cols.slice(7)">
+                          <span>{{ rowData[col.field] }}</span>
+                        </td>
 
-                      <!-- Textbox cell -->
-                      <ng-template #textCell>
-                        <p-cellEditor>
-                          <ng-template pTemplate="input">
-                            <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" 
-                            *ngIf="isCellEditableOutputInput(col, rowData); else readonly"
-                            />
-                            <ng-template #readonly>
-                              <span>{{ rowData[col.field] }}</span>
-                            </ng-template>
-                          </ng-template>
-                          <ng-template pTemplate="output">
-                            {{ rowData[col.field] }}
-                          </ng-template>
-                        </p-cellEditor>
-                      </ng-template>
-                  </td>
-                  <td>
-                    
-                    <button pButton icon="pi pi-save" class="p-button-text p-button-success" (click)="saveDatafields(rowData)"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteDAtaFields(rowData)"></button>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
+                        <!-- Actions -->
+                        <td>
+                          <button pButton icon="pi pi-pencil" class="p-button-text p-button-success"
+                            (click)="openDialog(rowData)"></button>
+                          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                            (click)="confirmDelete(rowData)"></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+
+
                 </div>
               </div>
 
-              <div class="info-box-table" *ngIf="showoutbound">
-                <div class="datafields-header">
-                  <button (click)="addOutInterface()">Add Outbound Interface</button>
-                  &nbsp;&nbsp;&nbsp;
-                  <!-- <button (click)="addOutTarget()" class="add-btn">Add Target</button> -->
-                </div>
-                <div class="padding:10px">
-                  <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
-                    [rowData]="rowDataOutbound" [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
-                    (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
-                  </ag-grid-angular>
-                </div>
-                <!-- <ag-grid-angular
-                  class="ag-theme-alpine"
-                  style="width: 100%; height: 200px;"
-                  [rowData]="rowDataOutboundTarget"
-                  [columnDefs]="outBoundTargetColumnDefs"
-                  [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="outboundTaregtOnCellValueChanged($event)"
-                  rowSelection="single"
-                  >
-                  </ag-grid-angular> -->
-              </div>
-
-              <div class="lineage-wrapper" *ngIf="showsystemMapping">
+              <div class="lineage-wrapper" *ngIf="activeView=='mapping'">
                 <div class="tables-wrapper">
                   <app-create-lineage [inboundFields]="inboundFields" [outboundFields]="outboundFields"
                     [systemId]="systemId"></app-create-lineage>
-                  <!-- <app-create-lineage-new
-                  [inboundFields]="inboundFields"
-                [outboundFields]="outboundFields"
-                [systemId]="systemId"
-                ></app-create-lineage-new> -->
                 </div>
               </div>
             </div>
-
-            <ng-template #useCasePopup>
-              <h2 mat-dialog-title>Select Use Case</h2>
-              <mat-dialog-content>
-                <div class="popup-box row">
-
-                  <div class="col-md-12">
-                    <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
-                      <mat-label>Select Use Case</mat-label>
-                      <mat-select [(ngModel)]="useCaseModel">
-                        <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
-                          {{ uc.use_case_name }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-12">
-                    <button mat-raised-button color="primary" (click)="confirmUseCase()"
-                      style="height: 43px; margin-top: 6px;">Submit</button>
-                    <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
-                    <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
-
-                  </div>
-                </div>
-              </mat-dialog-content>
-            </ng-template>
-            <!-- <div class="datafields-header">
-                 <button (click)="addRow()" class="add-btn">Add Row</button>
-            </div> -->
           </div>
         </div>
       </div>
+      <ng-template #useCasePopup>
+        <h2 mat-dialog-title>Select Use Case</h2>
+        <mat-dialog-content>
+          <div class="popup-box row">
+
+            <div class="col-md-12">
+              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
+                <mat-label>Select Use Case</mat-label>
+                <mat-select [(ngModel)]="useCaseModel">
+                  <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                    {{ uc.use_case_name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <button mat-raised-button color="primary" (click)="confirmUseCase()"
+                style="height: 43px; margin-top: 6px;">Submit</button>
+              <!-- <button mat-raised-button color="primary" style="height: 43px; margin-top: 6px;margin-left: 6px;">Cancel</button> -->
+              <!-- <button (click)="onCloseBuilder()">Cancel</button> -->
+
+            </div>
+          </div>
+        </mat-dialog-content>
+      </ng-template>
+
+       <!-- data field form dialog -->
+      <p-dialog header="{{ isEdit ? 'Edit Data Field' : 'Add Data Field' }}" [(visible)]="displayDialog" [modal]="true"
+        [closable]="true" [style]="{ width: '600px' }" [draggable]="false" [resizable]="false">
+        <form [formGroup]="dataFieldForm" (ngSubmit)="onSubmit()" class="p-fluid">
+
+          <!-- Interface ID -->
+          <div class="p-field p-mt-3">
+            <label for="interface_id">Interface ID</label>
+            <input pInputText id="interface_id" formControlName="interface_id" />
+            <small *ngIf="isInvalid('interface_id')" class="p-error">Required</small>
+          </div>
+
+          <!-- Interface Name -->
+          <div class="p-field p-mt-3">
+            <label for="interface_name">Interface Name</label>
+            <input pInputText id="interface_name" formControlName="interface_name" />
+            <small *ngIf="isInvalid('interface_name')" class="p-error">Required</small>
+          </div>
+
+          <!-- Entity Type -->
+          <div class="p-field p-mt-3">
+            <label for="entity_type">Entity Type</label>
+            <input pInputText id="entity_type" formControlName="entity_type" />
+            <small *ngIf="isInvalid('entity_type')" class="p-error">Required</small>
+          </div>
+
+          <!-- Field ID -->
+          <div class="p-field p-mt-3">
+            <label for="field_id">Field ID</label>
+            <input pInputText id="field_id" formControlName="field_id" />
+            <small *ngIf="isInvalid('field_id')" class="p-error">Required</small>
+          </div>
+
+          <!-- Field No. -->
+          <div class="p-field p-mt-3">
+            <label for="user_generated_id">Field No.</label>
+            <input pInputText id="user_generated_id" type="number" formControlName="user_generated_id" />
+            <small *ngIf="isInvalid('user_generated_id')" class="p-error">Required</small>
+          </div>
+
+          <!-- Field Name -->
+          <div class="p-field p-mt-3">
+            <label for="field_name">Field Name</label>
+            <input pInputText id="field_name" formControlName="field_name" />
+            <small *ngIf="isInvalid('field_name')" class="p-error">Required</small>
+          </div>
+
+          <!-- Data Type (Dropdown) -->
+          <div class="p-field p-mt-3">
+            <label for="data_type">Data Type</label>
+            <p-dropdown id="data_type" [options]="dataTypes" formControlName="data_type"
+              placeholder="Select Data Type"></p-dropdown>
+            <small *ngIf="isInvalid('data_type')" class="p-error">Required</small>
+          </div>
+
+          <!-- Field Length -->
+          <div class="p-field p-mt-3">
+            <label for="field_length">Field Length</label>
+            <input pInputText id="field_length" type="number" formControlName="field_length" />
+            <small *ngIf="isInvalid('field_length')" class="p-error">Required</small>
+          </div>
+
+          <!-- DQA C -->
+          <div class="p-field p-mt-3">
+            <label for="dqa_c">DQA - C</label>
+            <p-dropdown id="dqa_c" [options]="dqaLevels" formControlName="dqa_c"
+              placeholder="Select C Level"></p-dropdown>
+            <small *ngIf="isInvalid('dqa_c')" class="p-error">Required</small>
+          </div>
+
+          <!-- Commentary C -->
+          <div class="p-field p-mt-3">
+            <label for="commentary_c">C Commentary</label>
+            <input pInputText pInputTextarea id="commentary_c" formControlName="commentary_c"/>
+            <small *ngIf="isInvalid('commentary_c')" class="p-error">Required</small>
+          </div>
+
+          <!-- DQA T -->
+          <div class="p-field p-mt-3">
+            <label for="dqa_t">DQA - T</label>
+            <p-dropdown id="dqa_t" [options]="dqaLevels" formControlName="dqa_t"
+              placeholder="Select T Level"></p-dropdown>
+            <small *ngIf="isInvalid('dqa_t')" class="p-error">Required</small>
+          </div>
+
+          <!-- Commentary T -->
+          <div class="p-field p-mt-3">
+            <label for="commentary_t">T Commentary</label>
+            <input pInputText pInputTextarea id="commentary_t" formControlName="commentary_t" />
+            <small *ngIf="isInvalid('commentary_t')" class="p-error">Required</small>
+          </div>
+
+          <!-- DQA A -->
+          <div class="p-field p-mt-3">
+            <label for="dqa_a">DQA - A</label>
+            <p-dropdown id="dqa_a" [options]="dqaLevels" formControlName="dqa_a"
+              placeholder="Select A Level"></p-dropdown>
+            <small *ngIf="isInvalid('dqa_a')" class="p-error">Required</small>
+          </div>
+
+          <!-- Commentary A -->
+          <div class="p-field p-mt-3">
+            <label for="commentary_a">A Commentary</label>
+            <input pInputText pInputTextarea id="commentary_a" formControlName="commentary_a" />
+            <small *ngIf="isInvalid('commentary_a')" class="p-error">Required</small>
+          </div>
+
+          <!-- Buttons -->
+          <!-- <div class="p-d-flex p-jc-end p-mt-4">
+            <button pButton type="button" label="Cancel" class="p-button-text" (click)="closeDialog()"></button>
+            <button pButton type="button" label="Save"  click="onSubmit()"></button>
+          </div> -->
+          <div class="p-dialog-footer p-mt-3">
+                      <button pButton type="button" label="Cancel" (click)="closeDialog()"></button>
+                      <button pButton type="submit" label="{{ isEdit ? 'Update' : 'Save' }}"
+                        class="p-button-success" ></button>
+                    </div>
+        </form>
+      </p-dialog>
+
+       <!-- delete confirmation dialog -->
+      <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+        <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+        <p-footer>
+          <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
+          <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+          
+        </p-footer>
+      </p-dialog>
     </mat-card>
   </main>
 </div>

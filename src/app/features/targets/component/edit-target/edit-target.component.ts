@@ -616,6 +616,8 @@ export class EditTargetComponent {
      this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 
+  showDeleteDialog = false;
+  selectedRow: any;
   createForm() {
     this.formGroup = this.fb.group({
       field_id: [''],
@@ -692,9 +694,6 @@ export class EditTargetComponent {
       });
     }
   }
-
-  showDeleteDialog = false;
-  selectedRow: any;
 
   confirmDelete(row: any) {
     this.selectedRow = row;

@@ -32,11 +32,11 @@ export class EditSystemComponent{
  systemForm!: FormGroup;
   systemModel : SystemsModel = new SystemsModel();
   // showDataFieldsTable = false;
-  public showDataFields = false;
-  public showInputDataFields = false;
-  public showInbound = false;
-  public showoutbound = false;
-  public showsystemMapping = false;
+  // public showDataFields = false;
+  // public showInputDataFields = false;
+  // public showInbound = false;
+  // public showoutbound = false;
+  // public showsystemMapping = false;
   activeView!: string; // default view on load
   isLoading: boolean = false;
   useCaseId!:number;
@@ -914,7 +914,7 @@ defaultColDef: ColDef = {
     suppressSizeToFit: true,
   };
 
-  rowData: any;
+  rowDataOutput: any;
   rowDataInboundDQA: any;
   rowDataoutboundDQA: any;
   rowDataInput: any;
@@ -924,51 +924,140 @@ defaultColDef: ColDef = {
   rowDataCombined:any;
 
 
-  cols = [
-    { field: 'interface_id', header: 'Interface ID', editable: false },
-    { field: 'interface_name', header: 'Interface Name', editable: false },
-    { field: 'entity_type', header: 'Entity Type', editable: false },
-    { field: 'field_id', header: 'Field ID', editable: false, },
-    { field: 'user_generated_id', header: 'Field No.', editable: true },
-    { field: 'field_name', header: 'Field Name', editable: this.isEditable, },
-    { field: 'data_type', header: 'Data Type', editable: this.isEditable, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
-    { field: 'field_length', header: 'Field Length', editable: this.isEditable, },
-    {
-      field: 'dqa_c',
-      header: 'C',
-      editable: this.isEditable,
-      type: 'dropdown',
-      tooltip: 'C',
-      style: { color: '#e8000a', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
-    },
-    { field: 'commentary_c', header: 'C Commentary', editable: this.isEditable },
-    {
-      field: 'dqa_t',
-      header: 'T',
-      editable: this.isEditable,
-      type: 'dropdown',
-      tooltip: 'T',
-      style: { color: '#3e63dd', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
-    },
-    { field: 'commentary_t', header: 'T Commentary', editable: this.isEditable },
-    {
-      field: 'dqa_a',
-      header: 'A',
-      editable: this.isEditable,
-      type: 'dropdown',
-      tooltip: 'A',
-      style: { color: 'purple', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
-    },
-    { field: 'commentary_a', header: 'A Commentary', editable: this.isEditable }
-  ];
+  // cols = [
+  //   { field: 'interface_id', header: 'Interface ID', editable: false },
+  //   { field: 'interface_name', header: 'Interface Name', editable: false },
+  //   { field: 'entity_type', header: 'Entity Type', editable: false },
+  //   { field: 'field_id', header: 'Field ID', editable: false, },
+  //   { field: 'user_generated_id', header: 'Field No.', editable: true },
+  //   { field: 'field_name', header: 'Field Name', editable: this.isEditable, },
+  //   { field: 'data_type', header: 'Data Type', editable: this.isEditable, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
+  //   { field: 'field_length', header: 'Field Length', editable: this.isEditable, },
+  //   {
+  //     field: 'dqa_c',
+  //     header: 'C',
+  //     editable: this.isEditable,
+  //     type: 'dropdown',
+  //     tooltip: 'C',
+  //     style: { color: '#e8000a', fontWeight: 600 },
+  //     dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+  //   },
+  //   { field: 'commentary_c', header: 'C Commentary', editable: this.isEditable },
+  //   {
+  //     field: 'dqa_t',
+  //     header: 'T',
+  //     editable: this.isEditable,
+  //     type: 'dropdown',
+  //     tooltip: 'T',
+  //     style: { color: '#3e63dd', fontWeight: 600 },
+  //     dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+  //   },
+  //   { field: 'commentary_t', header: 'T Commentary', editable: this.isEditable },
+  //   {
+  //     field: 'dqa_a',
+  //     header: 'A',
+  //     editable: this.isEditable,
+  //     type: 'dropdown',
+  //     tooltip: 'A',
+  //     style: { color: 'purple', fontWeight: 600 },
+  //     dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+  //   },
+  //   { field: 'commentary_a', header: 'A Commentary', editable: this.isEditable }
+  // ];
 
   selectedColumns: any[] = [];
   globalFilterFields: string[] = [];
 
+
+
+cols = [
+  { field: 'interface_id', header: 'Interface ID', width: 100 },
+  { field: 'interface_name', header: 'Interface Name', width: 120 },
+  { field: 'entity_type', header: 'Entity Type', width: 100 },
+  { field: 'field_id', header: 'Field ID', width: 100 },
+  { field: 'user_generated_id', header: 'Field No.', width: 100 },
+  { field: 'field_name', header: 'Field Name', width: 100 },
+  { field: 'data_type', header: 'Data Type', width: 80 },
+  { field: 'dqa_c', header: 'C', width: 80 },
+  { field: 'commentary_c', header: 'C Commentary', width: 100 },
+  { field: 'dqa_t', header: 'T', width: 80 },
+  { field: 'commentary_t', header: 'T Commentary', width: 100 },
+  { field: 'dqa_a', header: 'A', width: 80 },
+  { field: 'commentary_a', header: 'A Commentary', width: 100 },
+];
+
+  displayDialog = false;
+  isEdit = false;
+  showDeleteDialog = false;
+  selectedRow: any;
+
+  dataFieldForm!: FormGroup;
+
+  dataTypes = ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'];
+  dqaLevels = ['HIGH', 'MEDIUM', 'LOW'];
+
+  buildForm() {
+    this.dataFieldForm = this.fb.group({
+      // field_id: ['', Validators.required],
+      field_name: ['', Validators.required],
+      entity_type: ['', Validators.required],
+      user_generated_id: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      data_type: ['', Validators.required],
+      field_length: ['', Validators.required],
+      dqa_c: ['', Validators.required],
+      commentary_c: ['', Validators.required],
+      dqa_t: ['', Validators.required],
+      commentary_t: ['', Validators.required],
+      dqa_a: ['', Validators.required],
+      commentary_a: ['', Validators.required],
+    });
+  }
+
+   openDialog(rowData?: any) {
+    this.displayDialog = true;
+    this.isEdit = !!rowData;
+    if (rowData) this.dataFieldForm.patchValue(rowData);
+  }
+
+  closeDialog() {
+    this.displayDialog = false;
+    this.dataFieldForm.reset();
+  }
+
+  onSubmit() {
+    if (this.dataFieldForm.invalid) return;
+
+    const formData = this.dataFieldForm.value;
+    if (this.isEdit) {
+      console.log('Updating record:', formData);
+      // call update API here
+    } else {
+      console.log('Adding new record:', formData);
+      // call add API here
+    }
+    this.closeDialog();
+  }
+
+  isInvalid(control: string): boolean {
+    // const c = this.dataFieldForm.get(control);
+    // return !!c && c.invalid && (c.dirty || c.touched);
+    return true;
+  }
+
+   confirmDelete(row: any) {
+      this.selectedRow = row;
+      this.showDeleteDialog = true;
+    }
   
+    deleteRow() {    
+      // this.datafieldsService.deleteDataFields(this.selectedRow.field_id, 'TARGET', this.targetId).subscribe(() => {      
+      //   this.toastNotificationService.error("Data fields Deleted Successfully.");    
+      //   this.rowData = this.rowData.filter((r:any) => r.field_id !== this.selectedRow.field_id); 
+      //     this.showDeleteDialog = false; 
+      // })
+    }
+    
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -1091,9 +1180,9 @@ defaultColDef: ColDef = {
         }
       });
 
-      setTimeout(() => {
-        this.cdr.detectChanges(); // ensure UI updates  
-      }, 100);
+      // setTimeout(() => {
+      //   this.cdr.detectChanges(); // ensure UI updates  
+      // }, 100);
       
       this.formLoaded = true; // triggers re-render
 
@@ -1105,7 +1194,7 @@ defaultColDef: ColDef = {
       this.rowDataInboundDQA = [{}];
       this.rowDataoutboundDQA = [{}];
       this.rowDataOutbound = [{}]; // Initialize with one blank row
-      this.getOutboundTarget();
+      //this.getOutboundTarget();
       this.rowDataOutboundTarget = [{}];
       this.loadDropdownOptions();
       this.rowDataCombined = [{}];
@@ -1161,18 +1250,18 @@ defaultColDef: ColDef = {
 
     this.datafieldsService.getDataFieldsById(this.systemId, 'SYSTEM').subscribe({
       next: (res: any) => {
-        this.rowData = [...res]; // triggers change
+        this.rowDataOutput = [...res]; // triggers change
 
         // if (this.gridApi) {
         //   this.gridApi.setRowData([]); // Clear first to ensure refresh
         //   this.gridApi.setRowData(this.rowData);
         // }
   
-        this.cdr.detectChanges(); // trigger Angular change detection
+        //this.cdr.detectChanges(); // trigger Angular change detection
        
       },
       error: (err: any) => {
-        this.rowData=[];
+        this.rowDataOutput=[];
         console.error('Failed to load data fields:', err);
       },
       complete: () => {
@@ -1187,51 +1276,51 @@ defaultColDef: ColDef = {
 
   interfaceOptionList: string[] = [];
 
-getInboundInterface() {
-  this.interfaceService.getInterface().subscribe({
-    next: (res: any) => {
-      if (res?.length > 0) {
-        this.interfaceOptionList = res.map(
-          (item: { interfaceEntity: { interface_id: any; interface_name: any; } }) =>
-            `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
-        );
-      }
+// getInboundInterface() {
+//   this.interfaceService.getInterface().subscribe({
+//     next: (res: any) => {
+//       if (res?.length > 0) {
+//         this.interfaceOptionList = res.map(
+//           (item: { interfaceEntity: { interface_id: any; interface_name: any; } }) =>
+//             `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
+//         );
+//       }
 
-      // Show only one row in the grid initially
-      this.rowDataInbound = [{}];
-      this.rowDataOutbound = [{}];
-      this.rowDataInput = [{}];
+//       // Show only one row in the grid initially
+//       this.rowDataInbound = [{}];
+//       this.rowDataOutbound = [{}];
+//       this.rowDataInput = [{}];
 
-      this.cdr.detectChanges();
-    },
-    error: (err: any) => {
-      console.error('Failed to load interface:', err);
-    }
-  });
-}
+//       //this.cdr.detectChanges();
+//     },
+//     error: (err: any) => {
+//       console.error('Failed to load interface:', err);
+//     }
+//   });
+// }
 
-targetOptionList: string[] = [];
+// targetOptionList: string[] = [];
 
-getOutboundTarget() {
-  this.targetService.getTarget().subscribe({
-    next: (res: any) => {
-      if (res?.length > 0) {
-        this.targetOptionList = res.map(
-          (item: { targetEntity: { target_id: any; target_name: any; } }) =>
-            `${item.targetEntity.target_id} - ${item.targetEntity.target_name}`
-        );
-      }
+// getOutboundTarget() {
+//   this.targetService.getTarget().subscribe({
+//     next: (res: any) => {
+//       if (res?.length > 0) {
+//         this.targetOptionList = res.map(
+//           (item: { targetEntity: { target_id: any; target_name: any; } }) =>
+//             `${item.targetEntity.target_id} - ${item.targetEntity.target_name}`
+//         );
+//       }
 
-      // Show only one row in the grid initially
-      this.rowDataOutboundTarget = [{}];
+//       // Show only one row in the grid initially
+//       this.rowDataOutboundTarget = [{}];
 
-      this.cdr.detectChanges();
-    },
-    error: (err: any) => {
-      console.error('Failed to load interface:', err);
-    }
-  });
-}
+//       //this.cdr.detectChanges();
+//     },
+//     error: (err: any) => {
+//       console.error('Failed to load interface:', err);
+//     }
+//   });
+// }
 
 
 combinedOptions: string[] = [];
@@ -1254,7 +1343,7 @@ loadDropdownOptions(): void {
     this.combinedOptions = [...interfaceOptions, ...targetOptions];
     console.log(this.combinedOptions, "Combined options")
     this.rowDataCombined = [{}]; // show one empty row in grid
-    this.cdr.detectChanges();
+    //this.cdr.detectChanges();
   });
 }
 
@@ -1262,14 +1351,14 @@ loadDropdownOptions(): void {
   {
     this.activeView = view;
     // this.showDataFieldsTable = true;
-    this.showInputDataFields = false;
-    this.showDataFields = true;
-    this.showInbound = false;
-    this.showoutbound = false;
-    this.showsystemMapping = false;
+    // this.showInputDataFields = false;
+    // this.showDataFields = true;
+    // this.showInbound = false;
+    // this.showoutbound = false;
+    // this.showsystemMapping = false;
     // this.cdr.detectChanges();
     this.getDataFields();
-    this.loadInboundInterfaces();
+    //this.loadInboundInterfaces();
 
     this.getDatafieldsDQA('OUTBOUND');
   }
@@ -1277,14 +1366,16 @@ loadDropdownOptions(): void {
   addInputDatafields(view:string)
   {
     this.activeView = view;
-    this.showInputDataFields = true;
-    this.showDataFields = false;
-    this.showInbound = false;
-    this.showoutbound = false;
-    this.showsystemMapping = false;
+    // this.showInputDataFields = true;
+    // this.showDataFields = false;
+    // this.showInbound = false;
+    // this.showoutbound = false;
+    // this.showsystemMapping = false;
     // this.cdr.detectChanges();
-    this.getDataFields();
-    this.loadInboundInterfaces();
+    this.buildForm();
+    //this.getDataFields();
+   
+    //this.loadInboundInterfaces();
 
     this.getDatafieldsDQA('INBOUND')
   }
@@ -1602,11 +1693,11 @@ loadDropdownOptions(): void {
   {
     this.activeView = view;
     // this.showDataFieldsTable = true;
-    this.showInputDataFields = false;
-    this.showDataFields = false;
-    this.showInbound = true;
-    this.showoutbound = true;
-    this.showsystemMapping = false;
+    // this.showInputDataFields = false;
+    // this.showDataFields = false;
+    // this.showInbound = true;
+    // this.showoutbound = true;
+    // this.showsystemMapping = false;
     this.loadInboundInterfaces();
   }
 
@@ -1623,15 +1714,15 @@ loadDropdownOptions(): void {
   sysMapping(view:string)
   {
     this.activeView = view;
-    // this.showDataFieldsTable = true;
-    this.showInputDataFields = false;
-    this.showDataFields = false;
-    this.showInbound = false;
-    this.showoutbound = false;
-    this.showsystemMapping = true;
+    //this.showDataFieldsTable = true;
+    // this.showInputDataFields = false;
+    // this.showDataFields = false;
+    // this.showInbound = false;
+    // this.showoutbound = false;
+    // this.showsystemMapping = true;
 
     this.openLineagePopup();
-    this.cdr.detectChanges();
+    //this.cdr.detectChanges();
   }
 
   openLineagePopup() {
@@ -1875,7 +1966,7 @@ loadDropdownOptions(): void {
           });
 
           // this.rowData = combinedFields;
-          this.rowData =[].concat(
+          this.rowDataOutput =[].concat(
               ...outboundInterfaces.map((i: any) =>
                 i.fields.map((field: any) => ({
                   ...field,
@@ -1940,7 +2031,7 @@ loadDropdownOptions(): void {
 
         // this.renderFields();
   
-          this.cdr.detectChanges(); // trigger Angular change detection
+          //this.cdr.detectChanges(); // trigger Angular change detection
         } catch (e) {
           console.error('Error parsing interface data:', e);
         }
@@ -2090,11 +2181,11 @@ loadDropdownOptions(): void {
   
     forkJoin([interfaceFields$, systemFields$]).subscribe({
       next: ([interfaceFields, systemFields]: [any[], any[]]) => {
-        this.rowData = [...interfaceFields, ...systemFields];
+        this.rowDataOutput = [...interfaceFields, ...systemFields];
   
         if (this.gridApi) {
           this.gridApi.setRowData([]); // Clear existing data
-          this.gridApi.setRowData(this.rowData); // Set merged data
+          this.gridApi.setRowData(this.rowDataOutput); // Set merged data
         }
   
         this.cdr.detectChanges(); // Trigger change detection
