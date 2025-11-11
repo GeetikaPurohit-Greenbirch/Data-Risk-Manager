@@ -150,6 +150,7 @@
             <div class="datafields-table" *ngIf="showDataFields">
               <div class="datafields-header" *ngIf="showDataFields" style="padding: 6px 10px;">
                 <!-- <h3>DataFields</h3> -->
+                <div class="checkbox-title">
                 <button (click)="addRow()"
                   style="font-size: 13px;border: none;background: transparent;color: #3e63dd;">Add Row</button>
                 <label style="margin-left: 16px;font-size: 13px;">
@@ -157,6 +158,7 @@
                     style="vertical-align: sub;margin-right: 4px;" />
                   Set Global Quality Risk
                 </label>
+              </div>
               </div>
               <!-- Conditional rendering of the AG Grid -->
 

@@ -42,6 +42,9 @@ export class SourcesComponent {
   useThreeColumn: boolean = true; // Toggle for layout
   gridApi: any;
   gridColumnApi: any;
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -175,6 +178,53 @@ export class SourcesComponent {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'source_id', header: 'Source ID', editable: false },
+    { field: 'source_name', header: 'Name', editable: false },
+    { field: 'vendor', header: 'Vendor', editable: false },
+    {
+      field: 'quality_of_service',
+      header: 'Quality Of Service',
+      editable: false,
+    },
+    {
+      field: 'frequency_of_update',
+      header: 'Frequency Of Update',
+      editable: false,
+    },
+    {
+      field: 'schedule_of_update',
+      header: 'Schedule Of Update',
+      editable: false,
+    },
+    {
+      field: 'methodology_of_transfer',
+      headerName: 'Methodology Of Transfer',
+      editable: false,
+    },
+    { field: 'source_type', header: 'Source Type', editable: false },
+    { field: 'source_version_number', header: 'Version', editable: false },
+    { field: 'source_status', header: 'Status', editable: false },
+    { field: 'source_owner', header: 'Owner', editable: false },
+    { field: 'source_owner_email', header: 'Owner Email', editable: false },
+  ];
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
+  }
+  
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -187,6 +237,8 @@ export class SourcesComponent {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getSourceList();
   }
 
@@ -257,11 +309,11 @@ export class SourcesComponent {
   }
 
   deleteSource(sources: any) {
-    this.sourceService.deleteSource(sources.data.source_id).subscribe(() => {
+    this.sourceService.deleteSource(sources.source_id).subscribe(() => {
       // alert("Source Deleted Successfully. Deleted Source ID is "+ sources.data.source_id);
       this.toastNotificationService.error(
         'Source Deleted Successfully. Deleted Source ID is ' +
-        sources.data.source_id
+        sources.source_id
       );
 
       this.getSourceList(); // refresh
@@ -273,7 +325,7 @@ export class SourcesComponent {
   }
 
   editSource(sources: any) {
-    this.router.navigate(['/sources/edit-source', sources.data.source_id]);
+    this.router.navigate(['/sources/edit-source', sources.source_id]);
   }
 
   cloneSource(sourceData: Sources) {
