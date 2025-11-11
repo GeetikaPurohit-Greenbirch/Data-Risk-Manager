@@ -271,8 +271,8 @@
               <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
                 <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
                 <p-footer>
-                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
-                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+                  <button label="No" class="btn btn--secondary btn-md" style="margin-right: 16px;" (click)="showDeleteDialog = false">No</button>
+                  <button label="Yes" class="btn btn--primary btn-md" (click)="deleteRow()">Yes</button>
 
                 </p-footer>
               </p-dialog>
