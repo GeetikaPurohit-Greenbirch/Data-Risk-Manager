@@ -24,7 +24,7 @@
     <mat-card>
       <div class="container">
         <div class="left-panel">
-          <form class="usecase-form" [formGroup]="usecaseForm" (ngSubmit)="onSubmit()">
+          <form class="usecase-form" [formGroup]="usecaseForm" >
             <div class="form-field-group">
               <mat-form-field appearance="outline" class="small-input">
                 <mat-label>Use Case Name</mat-label>
@@ -101,7 +101,7 @@
             </div>
 
             <div class="form-grid">
-              <button title="Save" type="submit" matTooltipPosition="Save"> Save </button>
+              <button title="Save" matTooltipPosition="Save" (click)="onSubmit()"> Save </button>
               <button class="m-2" *ngIf="usecaseId>0" (click)="existingLineage('existing')"> Existing Lineage </button>
               <button *ngIf="usecaseId>0" (click)="newLineage('new')"> Create New Lineage </button>
             </div>
