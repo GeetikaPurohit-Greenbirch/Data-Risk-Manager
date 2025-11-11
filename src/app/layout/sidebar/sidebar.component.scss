@@ -29,6 +29,7 @@ mat-nav-list {
 
   .mdc-list-item__primary-text {
     color: #344054;
+    font-size: 15px;
 
     // svg {
     //   width: 18px;
@@ -39,7 +40,7 @@ mat-nav-list {
     // }
 
     .nav-icon {
-      margin-right: 12px;
+      margin-right: 10px;
       color: currentColor;
     }
   }
