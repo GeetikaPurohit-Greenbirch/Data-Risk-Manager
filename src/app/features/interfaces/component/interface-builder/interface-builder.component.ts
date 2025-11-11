@@ -6,6 +6,7 @@ import { InterfaceService } from '../../services/interface.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { filter } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-interface-builder',
@@ -33,22 +34,11 @@ export class InterfaceBuilderComponent {
     private toast: ToastnotificationService
   ) {
     // // ✅ Check navigation state for cloned interface
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const nav = this.router.getCurrentNavigation();
-        const state = nav?.extras?.state as { clonedInterface?: any };
-        if (state?.clonedInterface) {
-          this.interfaceData = state.clonedInterface;
-          this.isClone = true;
-          this.originalVersion = this.interfaceData.interface_version_number;
-          this.paentInterfaceId = this.interfaceData.interface_id;
-          this.resetFormForClone();
-        }
-      });
   }
 
   ngOnInit(): void {
+  
+
     this.interfaceForm = this.fb.group({
       interfaceName: ['', Validators.required],
       serviceQuality: ['', Validators.required],
@@ -182,12 +172,24 @@ export class InterfaceBuilderComponent {
       return;
     }
 
-    this.interfaceService.createInterface(payload).subscribe({
-      next: (res: any) => {       
-        this.toast.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
-        this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+    // this.interfaceService.createInterface(payload).subscribe({
+    //   next: (res: any) => {       
+    //     this.toast.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
+    //     this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+    //   },
+    //   error: () => this.toast.error('Failed to create interface.')
+    // });
+
+    const create$ = this.interfaceService.createInterface(payload);
+    const clone$ = this.interfaceService.cloneInterfaceDatafields(payload, 'INTERFACE', this.paentInterfaceId);
+  
+    forkJoin([create$, clone$]).subscribe({
+      next: ([createRes, cloneRes]) => {
+        this.toast.success('Interface Created Successfully. Your Interface ID is ' + createRes.interfaceEntity.interface_id);
+        this.toast.success('Datafields cloned successfully.');
+        this.router.navigate(['/interfaces/edit-interface', createRes.interfaceEntity.interface_id]);
       },
-      error: () => this.toast.error('Failed to create interface.')
+      error: () => this.toast.error('Failed to complete both API calls.')
     });
   }
    onBack()

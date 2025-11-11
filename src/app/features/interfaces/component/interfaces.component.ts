@@ -19,7 +19,8 @@ import { createElement, icons } from 'lucide';
 })
 export class InterfacesComponent {
  displayedColumns: string[] = ['interfaceid', 'name', 'servicequality', 'frequencyupdate', 'scheduleupdate', 'transfermethodology', 'interfacetype', 'version', 'status', 'owner', 'owner_email', 'actions'];
-  public rowData: any;
+  // public rowData: any;
+  rowData: any[] = [];
   dataSource = new MatTableDataSource<Interface>();
 
 

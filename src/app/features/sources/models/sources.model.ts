@@ -27,5 +27,6 @@ export class SourceEntity {
     source_owner!:string;
     source_owner_email!:string;
   source_id!:number;
+  isClone!:boolean;
   }
   

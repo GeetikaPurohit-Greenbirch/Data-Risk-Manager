@@ -20,6 +20,13 @@ export class SourceService {
     return this.http.post<any>(url, payload);
   }
 
+  public cloneSourceDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
+    const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
+    console.log(payload)
+
+    return this.http.post<any>(url, payload);
+  }
+
    public getSources(): Observable<Sources[]> {
         const url: string = this.apiUrl + 'sources';
         return this.http.get<Sources[]>(url);

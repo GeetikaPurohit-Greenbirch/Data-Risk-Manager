@@ -207,10 +207,29 @@ export class SystemsComponent implements OnInit {
           this.deleteSystem(params.node);
         });
 
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
-
-        return div;
+         // 🧬 Clone Button
+                        const cloneDataFields = document.createElement('button');
+                        cloneDataFields.title = 'Copy';
+                        cloneDataFields.style.border = 'none';
+                        cloneDataFields.style.padding = '0px';
+                        cloneDataFields.style.cursor = 'pointer';
+                        cloneDataFields.style.background = 'transparent';
+                
+                        const cloneBtn = createElement(icons.Copy, {
+                          color: '#3e63dd',
+                          height: '14px',
+                          strokeWidth: 2
+                        });
+                        cloneDataFields.appendChild(cloneBtn);
+                        cloneDataFields.addEventListener('click', () => {
+                          this.cloneSystem(params.node.data);
+                        });
+                    
+                        div.appendChild(saveDataFields);
+                        div.appendChild(deleteDataFields);
+                        div.appendChild(cloneDataFields);
+                
+                        return div;
       },
     },
   ];
@@ -384,4 +403,17 @@ export class SystemsComponent implements OnInit {
   editSystem(systems: any) {
     this.router.navigate(['/systems/edit-system', systems.data.system_id]);
   }
+
+  cloneSystem(systemData: SystemsModel) {
+        // Remove unique IDs (if any) and flag it as cloned
+        const clonedData = { ...systemData };
+      
+        // Optional: mark this as a clone for validation later
+        clonedData.isClone = true;
+      
+        // Navigate to Interface Builder with prefilled data
+        this.router.navigate(['/systems/system-builder'], {
+          state: { clonedSystem: clonedData }
+        });
+      }
 }

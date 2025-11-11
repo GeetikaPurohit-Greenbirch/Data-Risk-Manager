@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter } from 'rxjs';
+import { filter, forkJoin, Observable } from 'rxjs';
 import { SourceService } from '../../services/source.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
@@ -37,6 +37,12 @@ export class EditSourceComponent implements OnInit {
   isBacktolineage=false;
   BacktolineagePath: any ="";
 
+  sourceData: any;
+
+  isClone = false;
+  originalVersion = '';
+  paentInterfaceId:any;
+
   // ✅ DataFields table data
   dataFields: any[] = [
     { fieldId: 1, fieldName: 'A', dataType: 'Num' },
@@ -61,7 +67,23 @@ export class EditSourceComponent implements OnInit {
     private datafieldsService: DatafieldsService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-  ) { }
+  ) { 
+
+    this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe(() => {
+          const nav = this.router.getCurrentNavigation();
+          const state = nav?.extras?.state as { clonedSource?: any };
+          if (state?.clonedSource) {
+            this.sourceData = state.clonedSource;
+            this.isClone = true;
+            this.originalVersion = this.sourceData.source_version_number;
+            this.paentInterfaceId = this.sourceData.source_id;
+            this.resetFormForClone();
+          }
+        });
+        
+  }
 
   columnDefsDQA: (ColDef | ColGroupDef)[] = [
     {
@@ -528,17 +550,62 @@ export class EditSourceComponent implements OnInit {
     else {
       this.formLoaded = true; // triggers re-render
       this.generateTimeOptions();
-      this.sourceForm.get('serviceQuality')?.valueChanges.subscribe(value => {
+      // Disable freq/schedule for certain service qualities
+      this.sourceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
         if (value === 'STREAMING' || value === 'AD_HOC') {
-          this.sourceForm.get('frequencyUpdate')?.disable({ emitEvent: false });
-          this.sourceForm.get('updateSchedule')?.disable({ emitEvent: false });
+          this.sourceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+          this.sourceForm.get('schedule_of_update')?.disable({ emitEvent: false });
         } else {
-          this.sourceForm.get('frequencyUpdate')?.enable({ emitEvent: false });
-          this.sourceForm.get('updateSchedule')?.enable({ emitEvent: false });
+          this.sourceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+          this.sourceForm.get('schedule_of_update')?.enable({ emitEvent: false });
         }
       });
     }
 
+  }
+
+  ngAfterViewInit(): void {
+    // 🔹 Patch only after view is fully initialized
+    if (this.sourceData) {
+      this.isClone = true;
+      this.originalVersion = this.sourceData.source_version_number;
+      this.prefillForm(this.sourceData);
+    }
+  }
+
+  resetFormForClone(): void {
+    this.sourceForm.reset();
+    this.prefillForm(this.sourceData);
+    this.sourceForm.enable();
+  }
+
+
+  prefillForm(data: any): void {
+    this.sourceForm.patchValue({
+      source_name: data.source_name,
+      vendor: data.vendor,
+      quality_of_service: data.quality_of_service,
+      frequency_of_update: data.frequency_of_update,
+      schedule_of_update: data.schedule_of_update,
+      methodology_of_transfer: data.methodology_of_transfer,
+      source_type: data.source_type,
+      source_version_number: data.source_version_number, // ✅ correct field name
+      source_status: data.source_status,
+      source_owner: data.source_owner,
+      source_owner_email: data.source_owner_email,
+    });
+
+   
+  }
+
+  checkVersionChange(currentVersion: string): void {
+    if (this.isClone) {
+      if (!currentVersion || currentVersion === this.originalVersion) {
+        this.sourceForm.get('source_version_number')?.setErrors({ versionUnchanged: true });
+      } else {
+        this.sourceForm.get('source_version_number')?.setErrors(null);
+      }
+    }
   }
   generateTimeOptions(): void {
     this.timeOptions = [];
@@ -569,7 +636,8 @@ export class EditSourceComponent implements OnInit {
     }
   }
 
-  private toggleFieldsBasedOnQoS(value: string): void {
+  toggleFieldsBasedOnQoS(event: MatSelectChange): void {
+    const value = event.value;
     if (value === 'STREAMING' || value === 'AD_HOC') {
       this.sourceForm.get('frequency_of_update')?.disable({ emitEvent: false });
       this.sourceForm.get('schedule_of_update')?.disable({ emitEvent: false });
@@ -702,28 +770,99 @@ export class EditSourceComponent implements OnInit {
     if (isUpdate) {
       payload.sourceEntity.source_id = this.sourceId;
     }
-
-    const request$ = isUpdate
-      ? this.sourceService.updateSource(payload)
-      : this.sourceService.createSource(payload);
-
-    request$.subscribe({
-      next: (res) => {
-        if (res) {
-          const sourceId = isUpdate ? this.sourceId : res.sourceEntity.source_id;
-          const action = isUpdate ? 'Updated' : 'Created';
-          this.toastNotificationService.success(`Source ${action} Successfully. Your Source ID is ${sourceId}.`);
-
-          if (!isUpdate) {
-            this.router.navigate(['/sources/edit-source', sourceId]);
-          }
-        }
-      },
-      error: (err) => {
-        console.error('Error in source operation:', err);
-        this.toastNotificationService.error('An error occurred while saving the source.');
+    else
+    {
+      if (this.isClone && this.sourceForm.value.source_version_number === this.originalVersion) {
+        this.toastNotificationService.error('Please change the version number before saving the cloned source.');
+       
+        return;
       }
-    });
+    }
+
+    // const request$ = isUpdate
+    //   ? this.sourceService.updateSource(payload)
+    //   : this.sourceService.createSource(payload);
+
+    // request$.subscribe({
+    //   next: (res) => {
+    //     if (res) {
+    //       const sourceId = isUpdate ? this.sourceId : res.sourceEntity.source_id;
+    //       const action = isUpdate ? 'Updated' : 'Created';
+    //       this.toastNotificationService.success(`Source ${action} Successfully. Your Source ID is ${sourceId}.`);
+
+    //       if (!isUpdate) {
+    //         this.router.navigate(['/sources/edit-source', sourceId]);
+    //       }
+    //     }
+    //   },
+    //   error: (err) => {
+    //     console.error('Error in source operation:', err);
+    //     this.toastNotificationService.error('An error occurred while saving the source.');
+    //   }
+    // });
+
+    // Choose appropriate API call
+          let request$: Observable<any>;
+        
+           if (this.isClone) {
+             // 🔁 Clone case
+             request$ = this.sourceService.cloneSourceDatafields(
+               payload,
+               'sources',
+               this.paentInterfaceId
+             );
+           } else if (isUpdate) {
+             // ✏️ Update case
+             request$ = this.sourceService.updateSource(payload);
+           } else {
+             // 🆕 Create case
+             request$ = this.sourceService.createSource(payload);
+           }
+           
+     // ✅ Subscribe only once
+request$.subscribe({
+  next: (res: any) => {
+    if (this.isClone) {
+      // Handle Clone Success
+      this.toastNotificationService.success(
+        `Source cloned successfully. Your Source ID is ${res.sourceEntity.source_id}`
+      );
+      this.toastNotificationService.success('Datafields cloned successfully.');
+      this.router.navigate(['/sources/edit-source', res.sourceEntity.source_id]);
+      return;
+    }
+
+    // Handle Create/Update Success
+    const sourceID = isUpdate ? this.sourceId : res.sourceEntity.source_id;
+    const action = isUpdate ? 'Updated' : 'Created';
+    this.toastNotificationService.success(
+      `Source ${action} successfully. Your Source ID is ${sourceID}`
+    );
+
+    // 🔁 If you only need to clone *after* creating, handle it separately:
+    // if (!isUpdate && !this.isClone) {
+    //   this.sourceService
+    //     .cloneSourceDatafields(payload, 'sources', this.paentInterfaceId)
+    //     .subscribe({
+    //       next: (cloneRes) => {
+    //         this.toastNotificationService.success('Datafields cloned successfully.');
+    //         this.router.navigate(['/sources/edit-source', cloneRes.sourceEntity.source_id]);
+    //       },
+    //       error: () =>
+    //         this.toastNotificationService.error('Failed to clone datafields.')
+    //     });
+    // }
+  },
+  error: (err) => {
+    const action = isUpdate
+      ? 'update'
+      : this.isClone
+      ? 'clone'
+      : 'create';
+    this.toastNotificationService.error(`Failed to ${action} source.`);
+    console.error('❌ API Error:', err);
+  }
+});
   }
 
 
