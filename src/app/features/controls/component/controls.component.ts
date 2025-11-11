@@ -47,6 +47,9 @@ export class ControlsComponent {
   pageSizeOptions: number[] = [];
   gridApi: any;
   gridColumnApi: any;
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   constructor(
     private controlService: ControlService,
@@ -157,6 +160,49 @@ export class ControlsComponent {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'control_id', header: 'Target ID', editable: false },
+    { field: 'control_name', header: 'Name', editable: true },
+    {
+      field: 'control_description',
+      header: 'Control Description',
+      editable: true,
+    },
+    { field: 'attach_to', header: 'Attach To', editable: true },
+    { field: 'attach_to_id', header: 'Attach To ID', editable: true },
+    { field: 'control_owner', header: 'Control Owner', editable: true },
+    { field: 'control_owner_email', header: 'Owner Email', editable: true },
+    { field: 'version_number', header: 'Version', editable: true },
+    { field: 'status', header: 'Status', editable: true },
+    {
+      field: 'application_date',
+      header: 'Application Date',
+      editable: true,
+    },
+    {
+      field: 'application_date_status',
+      header: 'Application Date Status',
+      editable: true,
+    },
+  ];
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
+  }
+
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -169,6 +215,8 @@ export class ControlsComponent {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getControlList();
   }
 
@@ -218,12 +266,12 @@ export class ControlsComponent {
 
   deleteControl(controls: any) {
     this.controlService
-      .deleteControl(controls.data.control_id)
+      .deleteControl(controls.control_id)
       .subscribe(() => {
         // alert("Control Deleted Successfully. Deleted Control ID is "+ controls.data.control_id);
         this.toastNotificationService.error(
           'Control Deleted Successfully. Deleted Control ID is ' +
-            controls.data.control_id
+            controls.control_id
         );
         this.getControlList(); // refresh
       });
@@ -234,6 +282,6 @@ export class ControlsComponent {
   }
 
   editControl(controls: any) {
-    this.router.navigate(['/controls/edit-control', controls.data.control_id]);
+    this.router.navigate(['/controls/edit-control', controls.control_id]);
   }
 }

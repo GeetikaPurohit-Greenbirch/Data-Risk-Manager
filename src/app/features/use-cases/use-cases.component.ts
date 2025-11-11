@@ -48,6 +48,9 @@ export class UseCasesComponent {
   dataSource = new MatTableDataSource<Usecase>();
   gridApi: any;
   gridColumnApi: any;
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   // usecase : SystemsModel = new SystemsModel();
   usecase: Usecase[] = []; // ✅ correct
@@ -215,6 +218,25 @@ export class UseCasesComponent {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'use_case_id', header: 'Use Case ID', editable: false, },
+    { field: 'use_case_name', header: 'Name', editable: false, },
+    { field: 'use_case_description', header: 'Description', editable: false, },
+    { field: 'use_case_owner', header: 'Owner', editable: false, },
+    { field: 'use_case_owner_email', header: 'Owner Email', editable: false, },
+    { field: 'version', header: 'Version', editable: false, },
+    { field: 'status', header: 'Status', editable: false, },
+    { field: 'last_review_date', header: 'Last Review Date', editable: false, },
+    { field: 'reviewed_by', header: 'Reviewed By', editable: false, },
+    { field: 'next_review_date', header: 'Next Review Date', editable: false, },
+    { field: 'reviewer', header: 'Reviewer', editable: false, },
+    { field: 'permission', header: 'Permission', editable: false, },
+  ];
+  
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -227,7 +249,22 @@ export class UseCasesComponent {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getUsecaseList();
+  }
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
   }
 
   ngAfterViewInit() {
@@ -296,12 +333,12 @@ export class UseCasesComponent {
 
   deleteUseCase(usecases: any) {
     this.usecaseService
-      .deleteUsecase(usecases.data.use_case_id)
+      .deleteUsecase(usecases.use_case_id)
       .subscribe(() => {
         // alert("Usecase Deleted Successfully. Deleted Usecase ID is "+ usecases.usecase_id);
         this.toastNotificationService.error(
           'Usecase Deleted Successfully. Deleted Usecase ID is ' +
-          usecases.data.use_case_id
+          usecases.use_case_id
         );
         setTimeout(() => {
           this.getUsecaseList(); // refresh
@@ -316,7 +353,7 @@ export class UseCasesComponent {
   editUseCase(usecases: any) {
     this.router.navigate([
       '/use-cases/edit-usecase',
-      usecases.data.use_case_id,
+      usecases.use_case_id,
     ]);
   }
 
@@ -342,11 +379,11 @@ export class UseCasesComponent {
   // }
 
   openShareComponent(row: any) {
-    this.router.navigate(['/use-cases/share-usecase', row.data.use_case_id]);
+    this.router.navigate(['/use-cases/share-usecase', row.use_case_id]);
   }
 
   openLineageComponent(row: any) {
-    const useCaseId = row.data.use_case_id;
+    const useCaseId = row.use_case_id;
 
     this.usecaseService.navigateToLineage(useCaseId).subscribe({
       next: (response) => {

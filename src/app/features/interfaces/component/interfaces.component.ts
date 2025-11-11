@@ -22,7 +22,9 @@ export class InterfacesComponent {
   // public rowData: any;
   rowData: any[] = [];
   dataSource = new MatTableDataSource<Interface>();
-
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   // interface : SystemsModel = new SystemsModel();
   interface: Interface[] = []; // ✅ correct
@@ -138,6 +140,23 @@ export class InterfacesComponent {
     filter: true,
     suppressSizeToFit: true
   }; 
+
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'interface_id', header: 'Interface ID' },
+    { field: 'interface_name', header: 'Interface Name' },
+    { field: 'quality_of_service', header: 'Field Name' },
+    { field: 'frequency_of_update', header: 'Field Description' },
+    { field: 'schedule_of_update', header: 'Data Type' },
+    { field: 'methodology_of_transfer', header: 'Length' },
+    { field: 'interface_type', header: 'Criticality' },
+    { field: 'interface_version_number', header: 'Version' },
+    { field: 'interface_status', header: 'Status' },
+    { field: 'interface_owner', header: 'Owner'},
+    { field: 'interface_owner_email', header: 'Owner Email', },
+  ];
   
   onGridReady(params: any) {
     this.gridApi = params.api;
@@ -152,7 +171,8 @@ export class InterfacesComponent {
   }
 
   ngOnInit(): void {
-    
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getInterfaceList();
   }
 
@@ -201,9 +221,9 @@ export class InterfacesComponent {
   
 
   deleteInterface(interfaces:any) {
-    this.interfaceService.deleteInterface(interfaces.data.interface_id).subscribe(() => {
+    this.interfaceService.deleteInterface(interfaces.interface_id).subscribe(() => {
         // alert("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
-        this.toastNotificationService.error("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.data.interface_id);
+        this.toastNotificationService.error("Interface Deleted Successfully. Deleted Interface ID is "+ interfaces.interface_id);
         setTimeout(() => {
           this.getInterfaceList(); // refresh
         }, 1000);
@@ -217,7 +237,7 @@ export class InterfacesComponent {
   }
 
   editInterface(interfaces:any) {
-    this.router.navigate(['/interfaces/edit-interface', interfaces.data.interface_id]);
+    this.router.navigate(['/interfaces/edit-interface', interfaces.interface_id]);
 
   }
 
@@ -234,4 +254,16 @@ export class InterfacesComponent {
     });
   }
   
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
+  }
 }

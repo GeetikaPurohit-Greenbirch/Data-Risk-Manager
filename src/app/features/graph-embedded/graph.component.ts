@@ -50,6 +50,9 @@ export class UseCasesComponent {
   gridColumnApi: any;
   pageSize = 20;
   data: any[] = []; // example
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   usecaseOptions = [
     { id: 'Usecase001', name: 'Fraud Detection' },
@@ -160,6 +163,29 @@ export class UseCasesComponent {
     editable: false,
   };
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'id', header: 'Lineage ID', editable: false },
+    { field: 'lineage_name', header: 'Name', editable: true },
+    { field: 'use_case_name', header: 'Usecase Name', editable: false },
+  ];
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
+  }
+
+
   openAddLineageDialogFromGrid() {
     this.ngZone.run(() => {
       this.openAddLineageDialog();
@@ -184,6 +210,8 @@ export class UseCasesComponent {
     console.log('Updated row:', event.data);
   }
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getLineageList();
     this.getUsecaseOptions();
   }

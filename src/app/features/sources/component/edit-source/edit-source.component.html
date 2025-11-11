@@ -141,7 +141,7 @@
           <div class="right-panel" *ngIf="sourceId>0" style="margin: 10px 0px 1rem 0px;">
             <!-- Information Box --> <!-- TABS CONTAINER -->
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'interfaces' }">
+              <button class="inverse">
                 Data Fields
               </button>
             </div>
@@ -149,11 +149,13 @@
             <div class="datafields-table" *ngIf="showDataFields">
               <div class="datafields-header" *ngIf="showDataFields" style="padding: 6px 10px;">
                 <!-- <h3>DataFields</h3> -->
-                <label style="margin-left: 16px;font-size: 13px;">
-                  <input type="checkbox" [(ngModel)]="showGlobalQualityRisk"
-                    style="vertical-align: sub;margin-right: 4px;" />
-                  Set Global Quality Risk
-                </label>
+                <div class="checkbox-title">
+                  <label style="margin-left: 16px;font-size: 13px;">
+                    <input type="checkbox" [(ngModel)]="showGlobalQualityRisk"
+                      style="vertical-align: sub;margin-right: 4px;" />
+                    Set Global Quality Risk
+                  </label>
+              </div>
               </div>
               <!-- Conditional rendering of the AG Grid -->
 
@@ -266,57 +268,8 @@
                               (click)="confirmDelete(rowData)"></button>
                           </td>
                         </tr>
-                      </ng-template>
-
-                      <!-- <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                        <tr>
-                          <td  *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]"
-                            pResizableColumn>
-                          
-                            <ng-container *ngIf="col.editable; else readOnlyCell">
-
-                              <ng-container *ngIf="col.dropdownValues; else textCell">
-                                <p-cellEditor>
-                                  <ng-template pTemplate="input">
-                                    <p-dropdown [options]="col.dropdownValues" [(ngModel)]="rowData[col.field]"
-                                      appendTo="body" styleClass="custom-dropdown"></p-dropdown>
-                                    
-                                  </ng-template>
-                                  <ng-template pTemplate="output">
-                                    {{ rowData[col.field] }}
-                                  </ng-template>
-                                </p-cellEditor>
-                              </ng-container>
-                            </ng-container>
-
-                          
-                            <ng-template #readOnlyCell>
-                              {{ rowData[col.field] }}
-                            </ng-template>
-                          
-                            <ng-template #textCell>
-                              <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                  <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" />
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                  {{ rowData[col.field] }}
-                                </ng-template>
-                              </p-cellEditor>
-                            </ng-template>
-                          </td>
-                          <td></td>
-                          <td>
-                            <button pButton icon="pi pi-save" class="p-button-text p-button-success"
-                              (click)="saveDatafields(rowData)"></button>
-                            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                              (click)="deleteDAtaFields(rowData)"></button>
-                          </td>
-                        </tr>
-                      </ng-template> -->
+                      </ng-template>                      
                     </p-table>
-
-
                   </div>
                   <!-- Add/Edit Dialog -->
                   <div class="form-dialog-container">
