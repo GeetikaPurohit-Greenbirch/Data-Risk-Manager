@@ -10,20 +10,39 @@ mat-nav-list {
   // box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.nav-icon {
-  color: #667085;
-  margin-right: 12px;
-}
+// .nav-icon {
+//   color: #667085;
+//   margin-right: 12px;
+// }
 
-.nav-label {
-  color: #344054;
-  font-size: 15px;
-  font-weight: 400;
-}
+// .nav-label {
+//   color: #344054;
+//   font-size: 15px;
+//   font-weight: 400;
+// }
 
 ::ng-deep .mdc-list-item {
   margin: 0 auto;
   margin-top: 4px;
   width: 94% !important;
   height: 42px !important;
+
+  .mdc-list-item__primary-text {
+    color: #344054;
+
+    // svg {
+    //   width: 18px;
+    //   height: 18px;
+    //   margin-right: 10px;
+    //   vertical-align: sub;
+    //   color: currentColor;
+    // }
+
+    .nav-icon {
+      margin-right: 12px;
+      color: currentColor;
+    }
+  }
+
+
 }

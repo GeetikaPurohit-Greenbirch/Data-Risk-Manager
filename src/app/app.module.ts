@@ -51,7 +51,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
-import { icons, LucideAngularModule } from 'lucide-angular';
+import { House, icons, LucideAngularModule } from 'lucide-angular';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -137,6 +137,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       Trash2: icons.Trash2,
       Bell: icons.Bell,
       LogOut: icons.LogOut,
+      House: icons.House,
       CircleUser: icons.CircleUser,
     }),
 

@@ -6,13 +6,17 @@
   </a>
 </mat-nav-list> -->
 <div>
-<mat-nav-list *ngIf="!isLoading">
-  <ng-container *ngFor="let item of navItems">
-    <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" *ngIf="canAccess(item.feature)">
+  <mat-nav-list *ngIf="!isLoading">
+    <ng-container *ngFor="let item of navItems">
+      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" *ngIf="canAccess(item.feature)">
         <i class="fa nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
-        <i class="fa nav-icon" *ngIf="item.subIcon" [ngClass]="item.subIcon" aria-hidden="true" style="color: #667085;"></i>
+        <i class="fa nav-icon" *ngIf="item.subIcon" [ngClass]="item.subIcon" aria-hidden="true"></i>
         <span class="nav-label">{{ item.label }}</span>
+
+        <!-- <lucide-icon [name]="item.icon" class="icon"></lucide-icon>
+        <span>{{ item.label }}</span>
+        <lucide-icon *ngIf="item.subIcon" [name]="item.subIcon" class="sub-icon"></lucide-icon> -->
       </a>
-  </ng-container>
-</mat-nav-list>
+    </ng-container>
+  </mat-nav-list>
 </div>

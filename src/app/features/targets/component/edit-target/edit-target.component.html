@@ -177,7 +177,7 @@
                   </p-toolbar>
                 </div>
 
-                <div class="man" >
+                <div class="man">
                   <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
                     [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
                     [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
@@ -259,7 +259,8 @@
                       <div class="p-field">
                         <label>Data Type<span class="required">*</span></label>
                         <p-dropdown [options]="dataTypes" optionLabel="label" optionValue="value"
-                          formControlName="data_type" placeholder="Select Data Type"></p-dropdown>
+                          formControlName="data_type" placeholder="Select Data Type" appendTo="body" [autoZIndex]="true"
+                          [baseZIndex]="1000"></p-dropdown>
                         <small class="p-error"
                           *ngIf="formGroup.get('data_type')?.invalid && formGroup.get('data_type')?.touched">
                           Data Type is required
@@ -269,7 +270,8 @@
                       <div class="p-field">
                         <label>Criticality<span class="required">*</span></label>
                         <p-dropdown [options]="criticalityOptions" optionLabel="label" optionValue="value"
-                          formControlName="criticality" placeholder="Select Criticality"></p-dropdown>
+                          formControlName="criticality" placeholder="Select Criticality" appendTo="body"
+                          [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
                         <small class="p-error"
                           *ngIf="formGroup.get('criticality')?.invalid && formGroup.get('criticality')?.touched">
                           Criticality is required
@@ -304,7 +306,7 @@
                   </app-report-builder>
                 </div>
               </div>
-             
+
             </div>
           </div>
 
