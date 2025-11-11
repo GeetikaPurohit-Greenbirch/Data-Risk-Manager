@@ -155,7 +155,7 @@
                       style="vertical-align: sub;margin-right: 4px;" />
                     Set Global Quality Risk
                   </label>
-              </div>
+                </div>
               </div>
               <!-- Conditional rendering of the AG Grid -->
 
@@ -165,12 +165,12 @@
                   [columnDefs]="columnDefsDQA" [defaultColDef]="defaultColDef" rowSelection="single"
                   [domLayout]="'autoHeight'">
                 </ag-grid-angular>
-              
+
                 <div class="ngprime-table">
                   <div class="header">
                     <p-toolbar>
                       <div class="p-toolbar-group-left">
-                        <button class="btn btn--tertiary btn-sm" (click)="openNew()">
+                        <button class="btn btn--tertiary btn-sm" (click)="openNew()" style="margin-right: 16px;">
                           <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
                           Add New Field</button>
                         <span class="p-input-icon-left">
@@ -268,83 +268,97 @@
                               (click)="confirmDelete(rowData)"></button>
                           </td>
                         </tr>
-                      </ng-template>                      
+                      </ng-template>
                     </p-table>
                   </div>
                   <!-- Add/Edit Dialog -->
                   <div class="form-dialog-container">
                     <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog"
-                      [modal]="true" [closable]="true">
+                      [modal]="true" [style]="{width: '600px' }" [closable]="true">
                       <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
-                        <div class="p-fluid">                        
-                            <div class="p-field p-mb-3">
-                            <label for="user_generated_id">Field No.</label>
-                            <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
-                              [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
-                            
+                        <div class="p-fluid">
+                          <div style="display: flex;gap: 16px;">
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="user_generated_id">Field No.</label>
+                              <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
+                                [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
+                            </div>
+
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="field_name">Field Name</label>
+                              <input id="field_name" type="text" pInputText formControlName="field_name" />
+                              <small class="p-error"
+                                *ngIf="fieldForm.get('field_name')?.invalid && fieldForm.get('field_name')?.touched">
+                                Field Name is required
+                              </small>
+                            </div>
                           </div>
 
-                          <div class="p-field p-mb-3">
-                            <label for="field_name">Field Name</label>
-                            <input id="field_name" type="text" pInputText formControlName="field_name" />
-                            <small class="p-error"
-                              *ngIf="fieldForm.get('field_name')?.invalid && fieldForm.get('field_name')?.touched">
-                              Field Name is required
-                            </small>
-                          </div>                          
-                          
-                          <div class="p-field p-mb-3">
-                            <label for="data_type">Data Type</label>
-                            <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
-                              placeholder="Select Data Type"></p-dropdown>
-                            <small class="p-error"
-                              *ngIf="fieldForm.get('data_type')?.invalid && fieldForm.get('data_type')?.touched">
-                              Data Type is required
-                            </small>
+                          <div style="display: flex;gap: 16px;">
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="data_type">Data Type</label>
+                              <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
+                                placeholder="Select Data Type"></p-dropdown>
+                              <small class="p-error"
+                                *ngIf="fieldForm.get('data_type')?.invalid && fieldForm.get('data_type')?.touched">
+                                Data Type is required
+                              </small>
+                            </div>
+
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="field_length">Length</label>
+                              <input id="field_length" type="number" pInputText formControlName="field_length" />
+                              <small class="p-error"
+                                *ngIf="fieldForm.get('field_length')?.invalid && fieldForm.get('field_length')?.touched">
+                                Length is required and must be numeric
+                              </small>
+                            </div>
                           </div>
 
-                          <div class="p-field p-mb-3">
-                            <label for="field_length">Length</label>
-                            <input id="field_length" type="number" pInputText formControlName="field_length" />
-                            <small class="p-error"
-                              *ngIf="fieldForm.get('field_length')?.invalid && fieldForm.get('field_length')?.touched">
-                              Length is required and must be numeric
-                            </small>
+                          <div style="display: flex;gap: 16px;">
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="Completeness">Completeness</label>
+                              <p-dropdown id="Completeness" [options]="RiskTypeOptions" formControlName="dqa_c"
+                                placeholder="Select Completeness"></p-dropdown>
+                            </div>
+
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="commentary_c">C Commentary</label>
+                              <input id="commentary_c" type="text" pInputText formControlName="commentary_c" />
+                            </div>
                           </div>
 
-                          <div class="p-field p-mb-3">
-                            <label for="Completeness">Completeness</label>
-                            <p-dropdown id="Completeness" [options]="RiskTypeOptions" formControlName="dqa_c"
-                              placeholder="Select Completeness"></p-dropdown>
+                          <div style="display: flex;gap: 16px;">
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="Completeness">Timeliness</label>
+                              <p-dropdown id="Timeliness" [options]="RiskTypeOptions" formControlName="dqa_t"
+                                placeholder="Select Timeliness"></p-dropdown>
+                            </div>
+
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="commentary_t">T Commentary</label>
+                              <input id="commentary_t" type="text" pInputText formControlName="commentary_t" />
+                            </div>
                           </div>
-                          <div class="p-field p-mb-3">
-                            <label for="commentary_c">C Commentary</label>
-                            <input id="commentary_c" type="text" pInputText formControlName="commentary_c" />
-                          </div>
-                          <div class="p-field p-mb-3">
-                            <label for="Completeness">Timeliness</label>
-                            <p-dropdown id="Timeliness" [options]="RiskTypeOptions" formControlName="dqa_t"
-                              placeholder="Select Timeliness"></p-dropdown>
-                          </div>
-                          <div class="p-field p-mb-3">
-                            <label for="commentary_t">T Commentary</label>
-                            <input id="commentary_t" type="text" pInputText formControlName="commentary_t" />
-                          </div>
-                          <div class="p-field p-mb-3">
-                            <label for="Accuracy">Accuracy</label>
-                            <p-dropdown id="Accuracy" [options]="RiskTypeOptions" formControlName="dqa_a"
-                              placeholder="Select Accuracy"></p-dropdown>
-                          </div>
-                          <div class="p-field p-mb-3">
-                            <label for="commentary_a">A Commentary</label>
-                            <input id="commentary_a" type="text" pInputText formControlName="commentary_a" />
+
+                          <div style="display: flex;gap: 16px;">
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="Accuracy">Accuracy</label>
+                              <p-dropdown id="Accuracy" [options]="RiskTypeOptions" formControlName="dqa_a"
+                                placeholder="Select Accuracy"></p-dropdown>
+                            </div>
+
+                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                              <label for="commentary_a">A Commentary</label>
+                              <input id="commentary_a" type="text" pInputText formControlName="commentary_a" />
+                            </div>
                           </div>
                         </div>
 
                         <div class="p-dialog-footer">
-                          <button pButton type="button" label="Cancel" class="p-button-text"
-                            (click)="hideDialog()"></button>
-                          <button pButton type="submit" label="Save"></button>
+                          <button class="btn btn--secondary btn-md" type="button" label="Cancel"
+                            (click)="hideDialog()">Cancel</button>
+                          <button class="btn btn--primary btn-md" type="submit" label="Save">Save</button>
                         </div>
                       </form>
                     </p-dialog>
