@@ -58,6 +58,9 @@ export class SystemsComponent implements OnInit {
 
   gridApi: any;
   gridColumnApi: any;
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   isExpansionDetailRow = (index: number, row: any) =>
     row.hasOwnProperty('childGridData');
@@ -207,10 +210,29 @@ export class SystemsComponent implements OnInit {
           this.deleteSystem(params.node);
         });
 
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
-
-        return div;
+         // 🧬 Clone Button
+                        const cloneDataFields = document.createElement('button');
+                        cloneDataFields.title = 'Copy';
+                        cloneDataFields.style.border = 'none';
+                        cloneDataFields.style.padding = '0px';
+                        cloneDataFields.style.cursor = 'pointer';
+                        cloneDataFields.style.background = 'transparent';
+                
+                        const cloneBtn = createElement(icons.Copy, {
+                          color: '#3e63dd',
+                          height: '14px',
+                          strokeWidth: 2
+                        });
+                        cloneDataFields.appendChild(cloneBtn);
+                        cloneDataFields.addEventListener('click', () => {
+                          this.cloneSystem(params.node.data);
+                        });
+                    
+                        div.appendChild(saveDataFields);
+                        div.appendChild(deleteDataFields);
+                        div.appendChild(cloneDataFields);
+                
+                        return div;
       },
     },
   ];
@@ -231,6 +253,68 @@ export class SystemsComponent implements OnInit {
     editable: false
   };
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    {
+      field: 'system_id',
+      header: 'System ID',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'system_name',
+      header: 'Name',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'description',
+      header: 'Description',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'owner',
+      header: 'Owner',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'owner_email',
+      header: 'Owner Email',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'leanix_id',
+      header: 'LeanIX ID',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'version_number',
+      header: 'Version',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+    {
+      field: 'status',
+      header: 'Status',
+      editable: false,
+      sortable: true,
+      // sort: 'asc',
+    },
+  ];
+
   // rowData = [
   //   { fieldId: '1', fieldName: 'Name', dataType: 'String', fieldLength: '50',  dqaC: 'L',
   //     dqaT: 'L',
@@ -250,8 +334,23 @@ export class SystemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getSystemList();
     this.getChildGriddata();
+  }
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
   }
 
   ngAfterViewInit() {
@@ -366,11 +465,11 @@ export class SystemsComponent implements OnInit {
   }
 
   deleteSystem(system: any) {
-    this.systemService.deleteSystem(system.data.system_id).subscribe((res) => {
+    this.systemService.deleteSystem(system.system_id).subscribe((res) => {
       // alert("System Deleted Successfully. Deleted System ID is "+ system.data.system_id);
       this.toastNotificationService.error(
         'System Deleted Successfully. Deleted System ID is ' +
-        system.data.system_id
+        system.system_id
       );
 
       this.getSystemList(); // refresh
@@ -382,6 +481,19 @@ export class SystemsComponent implements OnInit {
   }
 
   editSystem(systems: any) {
-    this.router.navigate(['/systems/edit-system', systems.data.system_id]);
+    this.router.navigate(['/systems/edit-system', systems.system_id]);
   }
+
+  cloneSystem(systemData: SystemsModel) {
+        // Remove unique IDs (if any) and flag it as cloned
+        const clonedData = { ...systemData };
+      
+        // Optional: mark this as a clone for validation later
+        clonedData.isClone = true;
+      
+        // Navigate to Interface Builder with prefilled data
+        this.router.navigate(['/systems/system-builder'], {
+          state: { clonedSystem: clonedData }
+        });
+      }
 }

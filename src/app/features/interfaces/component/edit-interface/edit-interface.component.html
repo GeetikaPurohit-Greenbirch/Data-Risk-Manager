@@ -29,7 +29,7 @@
 
               <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                 <mat-label>Quality Of Service</mat-label>
-                <mat-select formControlName="quality_of_service">
+                <mat-select formControlName="quality_of_service" (selectionChange)="toggleFieldsBasedOnQoS($event)">
                   <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
                     {{ quality }}
                   </mat-option>

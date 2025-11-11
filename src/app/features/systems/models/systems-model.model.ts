@@ -19,6 +19,7 @@ export class SystemEntity {
     owner_email!: string;
     version_number!: string;
     status!: string;
-    
+    isClone!:boolean;
+
   }
   

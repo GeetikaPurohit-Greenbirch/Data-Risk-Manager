@@ -22,8 +22,8 @@ private lineageUrl = environment.apiLineageBaseUrl
   }
 
 
-  public cloneInterfaceDatafields(payload:any, parentId:any): Observable<any> {
-    const url: string = this.apiUrl + 'clone/'+parentId;
+  public cloneInterfaceDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
+    const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
     console.log(payload)
 
     return this.http.post<any>(url, payload);

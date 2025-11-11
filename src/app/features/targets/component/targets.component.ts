@@ -31,7 +31,9 @@ export class TargetsComponent {
     'owner_email',
     'actions',
   ];
-  public rowData: any;
+  // public rowData: any;
+  rowData: any[] = [];
+
   dataSource = new MatTableDataSource<Target>();
 
   // target : SystemsModel = new SystemsModel();
@@ -47,6 +49,9 @@ export class TargetsComponent {
   data: any[] = []; // example
   // pageSizeOptions = [this.systems.length, 5, 10, 50]; // 'All' will be replaced visually
   pageSizeOptions: number[] = [];
+  showDataFields = true;
+  showDataQuality = false;
+  showDataFieldsTable = true;
 
   constructor(
     private targetService: TargetService,
@@ -132,10 +137,29 @@ export class TargetsComponent {
           this.deleteTarget(params.node);
         });
 
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
-
-        return div;
+         // 🧬 Clone Button
+         const cloneDataFields = document.createElement('button');
+         cloneDataFields.title = 'Copy';
+         cloneDataFields.style.border = 'none';
+         cloneDataFields.style.padding = '0px';
+         cloneDataFields.style.cursor = 'pointer';
+         cloneDataFields.style.background = 'transparent';
+ 
+         const cloneBtn = createElement(icons.Copy, {
+           color: '#3e63dd',
+           height: '14px',
+           strokeWidth: 2
+         });
+         cloneDataFields.appendChild(cloneBtn);
+         cloneDataFields.addEventListener('click', () => {
+           this.cloneTarget(params.node.data);
+         });
+     
+         div.appendChild(saveDataFields);
+         div.appendChild(deleteDataFields);
+         div.appendChild(cloneDataFields);
+ 
+         return div;
       },
     },
   ];
@@ -161,6 +185,53 @@ export class TargetsComponent {
   //     dqaA: 'L', criticality: 'HIGH' },
   // ];
 
+  selectedColumns: any[] = [];
+  globalFilterFields: string[] = [];
+
+  cols = [
+    { field: 'target_id', header: 'Target ID', editable: false },
+    { field: 'target_name', header: 'Name', editable: false },
+    { field: 'vendor', header: 'Vendor', editable: false },
+    {
+      field: 'quality_of_service',
+      header: 'Quality Of Service',
+      editable: false,
+    },
+    {
+      field: 'frequency_of_update',
+      header: 'Frequency Of Update',
+      editable: false,
+    },
+    {
+      field: 'schedule_of_update',
+      header: 'Schedule Of Update',
+      editable: false,
+    },
+    {
+      field: 'methodology_of_transfer',
+      headerName: 'Methodology Of Transfer',
+      editable: false,
+    },
+    { field: 'target_type', header: 'Target Type', editable: false },
+    { field: 'target_version_number', header: 'Version', editable: false },
+    { field: 'target_status', header: 'Status', editable: false },
+    { field: 'target_owner', header: 'Owner', editable: false },
+    { field: 'target_owner_email', header: 'Owner Email', editable: false },
+  ];
+
+  onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
+  }
+
+  // called from input (so we don't rely on template dt variable usage)
+  onGlobalFilter(value: string, dt: any) {
+    // sanitize input and call table API
+    const q = (value || '').trim();
+    dt.filterGlobal(q, 'contains');
+  }
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -173,6 +244,8 @@ export class TargetsComponent {
   }
 
   ngOnInit(): void {
+    this.selectedColumns = [...this.cols]; // Initially show all columns
+    this.globalFilterFields = this.cols.map(c => c.field);
     this.getTargetList();
   }
 
@@ -221,11 +294,11 @@ export class TargetsComponent {
   }
 
   deleteTarget(targets: any) {
-    this.targetService.deleteTarget(targets.data.target_id).subscribe(() => {
+    this.targetService.deleteTarget(targets.target_id).subscribe(() => {
       // alert("Target Deleted Successfully. Deleted Target ID is "+ targets.data.target_id);
       this.toastNotificationService.error(
         'Target Deleted Successfully. Deleted Target ID is ' +
-        targets.data.target_id
+        targets.target_id
       );
 
       this.getTargetList(); // refresh
@@ -237,6 +310,19 @@ export class TargetsComponent {
   }
 
   editTarget(targets: any) {
-    this.router.navigate(['/targets/edit-target', targets.data.target_id]);
+    this.router.navigate(['/targets/edit-target', targets.target_id]);
   }
+
+  cloneTarget(targetData: Target) {
+        // Remove unique IDs (if any) and flag it as cloned
+        const clonedData = { ...targetData };
+      
+        // Optional: mark this as a clone for validation later
+        clonedData.isClone = true;
+      
+        // Navigate to Interface Builder with prefilled data
+        this.router.navigate(['/targets/target-builder'], {
+          state: { clonedTarget: clonedData }
+        });
+      }
 }

@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { CellFocusedEvent, ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter, forkJoin } from 'rxjs';
+import { filter, forkJoin, Observable } from 'rxjs';
 import { SystemServiceService } from '../../services/system-service.service';
 import { SystemsModel } from '../../models/systems-model.model';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
@@ -72,6 +72,12 @@ export class EditSystemComponent{
   gridApiout: any;
   gridColumnApi: any;
   dataFieldsModel : Datafields = new Datafields();
+  systemData: any;
+
+  isClone = false;
+  originalVersion = '';
+  paentInterfaceId:any;
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -85,7 +91,21 @@ export class EditSystemComponent{
          private usecaseService: UsecaseService,
          private router: Router,
 
-  ) {}
+  ) {
+    this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe(() => {
+              const nav = this.router.getCurrentNavigation();
+              const state = nav?.extras?.state as { clonedSystem?: any };
+              if (state?.clonedSystem) {
+                this.systemData = state.clonedSystem;
+                this.isClone = true;
+                this.originalVersion = this.systemData.version_number;
+                this.paentInterfaceId = this.systemData.system_id;
+                this.resetFormForClone();
+              }
+            });
+  }
 
   columnDefsInboundDQA:(ColDef | ColGroupDef)[]= [
     {
@@ -940,7 +960,7 @@ defaultColDef: ColDef = {
       type: 'dropdown',
       tooltip: 'C',
       style: { color: '#e8000a', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
     { field: 'commentary_c', header: 'C Commentary', editable: this.isEditable },
     {
@@ -950,7 +970,7 @@ defaultColDef: ColDef = {
       type: 'dropdown',
       tooltip: 'T',
       style: { color: '#3e63dd', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
     { field: 'commentary_t', header: 'T Commentary', editable: this.isEditable },
     {
@@ -960,7 +980,7 @@ defaultColDef: ColDef = {
       type: 'dropdown',
       tooltip: 'A',
       style: { color: 'purple', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
     { field: 'commentary_a', header: 'A Commentary', editable: this.isEditable }
   ];
@@ -984,36 +1004,36 @@ defaultColDef: ColDef = {
  
   }
 
-  // addRow() {
-  //   this.cdr.detectChanges();
-  //   const newItem = {entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
-  //   this.rowDataInput = [...this.rowDataInput, newItem];
-  // }
-
   addRow() {
-    const selectedNode = this.gridApi.getSelectedNodes()[0]; // get selected row node
-    const newItem = {
-      entity_type: 'SYSTEM',
-      fieldName: '',
-      dataType: '',
-      value: '',
-      description: ''
-    };
-  
-    if (selectedNode) {
-      // Insert after selected row
-      const selectedIndex = selectedNode.rowIndex;
-      const updatedData = [...this.rowDataInput];
-      updatedData.splice(selectedIndex + 1, 0, newItem); // insert new row after selection
-      this.rowDataInput = updatedData;
-    } else {
-      // If no row selected, add to end
-      this.rowDataInput = [...this.rowDataInput, newItem];
-    }
-  
-    // Optional: refresh the grid display
-    // this.gridApi.setRowData(this.rowDataInput);
+    this.cdr.detectChanges();
+    const newItem = {entity_type:'SYSTEM', fieldName: '', dataType: '', value: '', description: '' };
+    this.rowDataInput = [...this.rowDataInput, newItem];
   }
+
+  // addRow() {
+  //   const selectedNode = this.gridApi.getSelectedNodes()[0]; // get selected row node
+  //   const newItem = {
+  //     entity_type: 'SYSTEM',
+  //     fieldName: '',
+  //     dataType: '',
+  //     value: '',
+  //     description: ''
+  //   };
+  
+  //   if (selectedNode) {
+  //     // Insert after selected row
+  //     const selectedIndex = selectedNode.rowIndex;
+  //     const updatedData = [...this.rowDataInput];
+  //     updatedData.splice(selectedIndex + 1, 0, newItem); // insert new row after selection
+  //     this.rowDataInput = updatedData;
+  //   } else {
+  //     // If no row selected, add to end
+  //     this.rowDataInput = [...this.rowDataInput, newItem];
+  //   }
+  
+  //   // Optional: refresh the grid display
+  //   // this.gridApi.setRowData(this.rowDataInput);
+  // }
 
   isCellEditable(col: any, row: any): boolean {
     if (row.entity_type !== 'SYSTEM') {
@@ -1134,6 +1154,47 @@ defaultColDef: ColDef = {
   }
       
 }
+
+ngAfterViewInit(): void {
+  // 🔹 Patch only after view is fully initialized
+  if (this.systemData) {
+    this.isClone = true;
+    this.originalVersion = this.systemData.version_number;
+    this.prefillForm(this.systemData);
+  }
+}
+
+resetFormForClone(): void {
+  this.systemForm.reset();
+  this.prefillForm(this.systemData);
+  this.systemForm.enable();
+}
+
+prefillForm(data: any): void {
+  this.systemForm.patchValue({
+    system_name: data.system_name,
+    leanix_id: data.leanix_id,
+    description: data.description,
+    owner: data.owner,
+    owner_email: data.owner_email,
+    version_number: data.version_number,
+    status: data.status,
+    
+  });
+
+ 
+}
+
+checkVersionChange(currentVersion: string): void {
+  if (this.isClone) {
+    if (!currentVersion || currentVersion === this.originalVersion) {
+      this.systemForm.get('version_number')?.setErrors({ versionUnchanged: true });
+    } else {
+      this.systemForm.get('version_number')?.setErrors(null);
+    }
+  }
+}
+
   getUsecaseList() {
     this.usecaseService.getLineageUsecase('SYSTEM',this.systemId).subscribe({
       next: (usecases: any[]) => {
@@ -1392,28 +1453,101 @@ loadDropdownOptions(): void {
   if (isUpdate) {
     payload.systemEntity.system_id = this.systemId;
   }
-
-  const request$ = isUpdate
-    ? this.systemService.updateSystem(payload)
-    : this.systemService.createSystem(payload);
-
-  request$.subscribe({
-    next: (res) => {
-      if (res) {
-        const systemId = isUpdate ? this.systemId : res.systemEntity.system_id;
-        const action = isUpdate ? 'Updated' : 'Created';
-        this.toastNotificationService.success(`System ${action} Successfully. Your System ID is ${systemId}.`);
-
-        if (!isUpdate) {
-          this.router.navigate(['/systems/edit-system', systemId]);
-        }
-      }
-    },
-    error: (err) => {
-      console.error('Error in system operation:', err);
-      this.toastNotificationService.error('An error occurred while saving the system.');
+  else
+  {
+    if (this.isClone && this.systemForm.value.version_number === this.originalVersion) {
+      this.toastNotificationService.error('Please change the version number before saving the cloned system.');
+     
+      return;
     }
-  });
+  }
+
+  // const request$ = isUpdate
+  //   ? this.systemService.updateSystem(payload)
+  //   : this.systemService.createSystem(payload);
+
+  // request$.subscribe({
+  //   next: (res) => {
+  //     if (res) {
+  //       const systemId = isUpdate ? this.systemId : res.systemEntity.system_id;
+  //       const action = isUpdate ? 'Updated' : 'Created';
+  //       this.toastNotificationService.success(`System ${action} Successfully. Your System ID is ${systemId}.`);
+
+  //       if (!isUpdate) {
+  //         this.router.navigate(['/systems/edit-system', systemId]);
+  //       }
+  //     }
+  //   },
+  //   error: (err) => {
+  //     console.error('Error in system operation:', err);
+  //     this.toastNotificationService.error('An error occurred while saving the system.');
+  //   }
+  // });
+
+
+   // Choose appropriate API call
+   let request$: Observable<any>;
+
+   if (this.isClone) {
+     // 🔁 Clone case
+     request$ = this.systemService.cloneSystemDatafields(
+       payload,
+       'systems',
+       this.paentInterfaceId
+     );
+   } else if (isUpdate) {
+     // ✏️ Update case
+     request$ = this.systemService.updateSystem(payload);
+   } else {
+     // 🆕 Create case
+     request$ = this.systemService.createSystem(payload);
+   }
+   
+
+ // ✅ Subscribe only once
+request$.subscribe({
+  next: (res: any) => {
+    if (this.isClone) {
+      // Handle Clone Success
+      this.toastNotificationService.success(
+        `System cloned successfully. Your System ID is ${res.systemEntity.system_id}`
+      );
+      this.toastNotificationService.success('Datafields cloned successfully.');
+      this.router.navigate(['/systems/edit-system', res.systemEntity.system_id]);
+      return;
+    }
+
+    // Handle Create/Update Success
+    const systemID = isUpdate ? this.systemId : res.systemEntity.system_id;
+    const action = isUpdate ? 'Updated' : 'Created';
+    this.toastNotificationService.success(
+      `System ${action} successfully. Your System ID is ${systemID}`
+    );
+
+    // 🔁 If you only need to clone *after* creating, handle it separately:
+    // if (!isUpdate && !this.isClone) {
+    //   this.systemService
+    //     .cloneSystemDatafields(payload, 'systems', this.paentInterfaceId)
+    //     .subscribe({
+    //       next: (cloneRes) => {
+    //         this.toastNotificationService.success('Datafields cloned successfully.');
+    //         this.router.navigate(['/systems/edit-system', cloneRes.systemEntity.system_id]);
+    //       },
+    //       error: () =>
+    //         this.toastNotificationService.error('Failed to clone datafields.')
+    //     });
+    // }
+  },
+  error: (err) => {
+    const action = isUpdate
+      ? 'update'
+      : this.isClone
+      ? 'clone'
+      : 'create';
+    this.toastNotificationService.error(`Failed to ${action} system.`);
+    console.error('❌ API Error:', err);
+  }
+});
 }
 
 
@@ -1559,7 +1693,7 @@ loadDropdownOptions(): void {
   this.dataFieldsModel.criticality = data.criticality;
   this.dataFieldsModel.entity_type = data.entity_type;
   this.dataFieldsModel.usecaseid = this.useCaseId;
-  this.dataFieldsModel.entity_id = data.entity_id;
+  // this.dataFieldsModel.entity_id = data.entity_id;
  
       // alert("Data field added Successfully.");
       if(!data.field_id)
@@ -1710,12 +1844,12 @@ loadDropdownOptions(): void {
           if(interface_type === 'INBOUND')
           {
             // alert("Inbound Interface Saved Successfully for System ID"+ this.systemId);
-            this.toastNotificationService.success("Inbound Interface Saved Successfully for System ID"+ this.systemId);
+            this.toastNotificationService.error("Inbound Interface Deleted Successfully for System ID"+ this.systemId);
           }
           else
           {
             // alert("Outbound Interface Saved Successfully for System ID"+ this.systemId);
-            this.toastNotificationService.success("Outbound Interface Saved Successfully for System ID"+ this.systemId);
+            this.toastNotificationService.error("Outbound Interface Deleted Successfully for System ID"+ this.systemId);
           }
         }
       })
