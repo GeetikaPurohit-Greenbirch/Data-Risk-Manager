@@ -994,8 +994,7 @@ request$.subscribe({
   }
 
   fieldDialog = false;
-  fieldForm!: FormGroup;
-  submitted = false;
+  fieldForm!: FormGroup; 
   isEdit = false;
   selectedField: any;
   selectedRow:any;
@@ -1032,8 +1031,7 @@ request$.subscribe({
 
   openNew() {
     this.isEdit = false;
-    this.fieldDialog = true;
-    this.submitted = false;
+    this.fieldDialog = true;   
      this.selectedRow = null;
      this.fieldForm.reset();
   }
@@ -1047,11 +1045,11 @@ request$.subscribe({
 
   hideDialog() {
     this.fieldDialog = false;
-    this.submitted = false;
+    
   }
 
   saveField() {
-    this.submitted = true;
+   
     if (this.fieldForm.invalid) return;
     this.saveDatafields(this.fieldForm.value);
   }
