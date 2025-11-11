@@ -217,65 +217,71 @@
               <div class="form-dialog-container">
                 <!-- Dialog Form -->
                 <p-dialog header="{{ isEditMode ? 'Edit Field' : 'Add New Field' }}" [(visible)]="showDialog"
-                  [modal]="true" [closable]="true">
+                  [modal]="true" [style]="{width: '660px' }" [closable]="true">
                   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
                     <div class="p-fluid">
-                      <div class="p-field">
-                        <label>Field No.<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_no" />
-                        <small class="p-error"
-                          *ngIf="formGroup.get('field_no')?.invalid && formGroup.get('field_no')?.touched">
-                          Field No. is required and must be numeric
-                        </small>
+                      <div style="display: flex;gap: 16px;">
+                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
+                          <label>Field No.<span class="required">*</span></label>
+                          <input type="text" pInputText formControlName="field_no" />
+                          <small class="p-error"
+                            *ngIf="formGroup.get('field_no')?.invalid && formGroup.get('field_no')?.touched">
+                            Field No. is required and must be numeric
+                          </small>
+                        </div>
+
+                        <div class="p-field" style="flex: 1 1 auto;">
+                          <label>Field Name<span class="required">*</span></label>
+                          <input type="text" pInputText formControlName="field_name" />
+                          <small class="p-error"
+                            *ngIf="formGroup.get('field_name')?.invalid && formGroup.get('field_name')?.touched">
+                            Field Name is required
+                          </small>
+                        </div>
                       </div>
 
-                      <div class="p-field">
-                        <label>Field Name<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_name" />
-                        <small class="p-error"
-                          *ngIf="formGroup.get('field_name')?.invalid && formGroup.get('field_name')?.touched">
-                          Field Name is required
-                        </small>
+                      <div style="display: flex;gap: 16px;">
+                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
+                          <label>Description<span class="required">*</span></label>
+                          <input type="text" pInputText formControlName="field_description" />
+                          <small class="p-error"
+                            *ngIf="formGroup.get('field_description')?.invalid && formGroup.get('field_description')?.touched">
+                            Description is required
+                          </small>
+                        </div>
+
+                        <div class="p-field" style="flex: 1 1 auto;">
+                          <label>Length<span class="required">*</span></label>
+                          <input type="text" pInputText formControlName="field_length" />
+                          <small class="p-error"
+                            *ngIf="formGroup.get('field_length')?.invalid && formGroup.get('field_length')?.touched">
+                            Field No. is required and must be numeric
+                          </small>
+                        </div>
                       </div>
 
-                      <div class="p-field">
-                        <label>Description<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_description" />
-                        <small class="p-error"
-                          *ngIf="formGroup.get('field_description')?.invalid && formGroup.get('field_description')?.touched">
-                          Description is required
-                        </small>
-                      </div>
+                      <div style="display: flex;gap: 16px;">
+                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
+                          <label>Data Type<span class="required">*</span></label>
+                          <p-dropdown [options]="dataTypes" optionLabel="label" optionValue="value"
+                            formControlName="data_type" placeholder="Select Data Type" appendTo="body"
+                            [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
+                          <small class="p-error"
+                            *ngIf="formGroup.get('data_type')?.invalid && formGroup.get('data_type')?.touched">
+                            Data Type is required
+                          </small>
+                        </div>
 
-                      <div class="p-field">
-                        <label>Length<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_length" />
-                        <small class="p-error"
-                          *ngIf="formGroup.get('field_length')?.invalid && formGroup.get('field_length')?.touched">
-                          Field No. is required and must be numeric
-                        </small>
-                      </div>
-
-                      <div class="p-field">
-                        <label>Data Type<span class="required">*</span></label>
-                        <p-dropdown [options]="dataTypes" optionLabel="label" optionValue="value"
-                          formControlName="data_type" placeholder="Select Data Type" appendTo="body" [autoZIndex]="true"
-                          [baseZIndex]="1000"></p-dropdown>
-                        <small class="p-error"
-                          *ngIf="formGroup.get('data_type')?.invalid && formGroup.get('data_type')?.touched">
-                          Data Type is required
-                        </small>
-                      </div>
-
-                      <div class="p-field">
-                        <label>Criticality<span class="required">*</span></label>
-                        <p-dropdown [options]="criticalityOptions" optionLabel="label" optionValue="value"
-                          formControlName="criticality" placeholder="Select Criticality" appendTo="body"
-                          [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
-                        <small class="p-error"
-                          *ngIf="formGroup.get('criticality')?.invalid && formGroup.get('criticality')?.touched">
-                          Criticality is required
-                        </small>
+                        <div class="p-field" style="flex: 1 1 auto;">
+                          <label>Criticality<span class="required">*</span></label>
+                          <p-dropdown [options]="criticalityOptions" optionLabel="label" optionValue="value"
+                            formControlName="criticality" placeholder="Select Criticality" appendTo="body"
+                            [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
+                          <small class="p-error"
+                            *ngIf="formGroup.get('criticality')?.invalid && formGroup.get('criticality')?.touched">
+                            Criticality is required
+                          </small>
+                        </div>
                       </div>
                     </div>
 
