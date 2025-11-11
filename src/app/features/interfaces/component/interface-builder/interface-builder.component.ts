@@ -17,6 +17,7 @@ export class InterfaceBuilderComponent {
   interfaceData: any;
   isClone = false;
   originalVersion = '';
+  paentInterfaceId:any;
 
   statusOptions = ['NEW', 'DRAFT', 'READY_FOR_REVIEW', 'IN_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED'];
   serviceQualityOptions = ['STREAMING', 'PERIODIC', 'AD_HOC'];
@@ -41,6 +42,7 @@ export class InterfaceBuilderComponent {
           this.interfaceData = state.clonedInterface;
           this.isClone = true;
           this.originalVersion = this.interfaceData.interface_version_number;
+          this.paentInterfaceId = this.interfaceData.interface_id;
           this.resetFormForClone();
         }
       });
@@ -159,11 +161,6 @@ export class InterfaceBuilderComponent {
       return;
     }
 
-    if (this.isClone && this.interfaceForm.value.version === this.originalVersion) {
-      this.toast.error('Please change the version number before saving the cloned interface.');
-      return;
-    }
-
     const payload = {
       interfaceEntity: {
         interface_name: this.interfaceForm.value.interfaceName,
@@ -179,8 +176,14 @@ export class InterfaceBuilderComponent {
       }
     };
 
+    if (this.isClone && this.interfaceForm.value.version === this.originalVersion) {
+      this.toast.error('Please change the version number before saving the cloned interface.');
+     
+      return;
+    }
+
     this.interfaceService.createInterface(payload).subscribe({
-      next: (res: any) => {
+      next: (res: any) => {       
         this.toast.success('Interface Created Successfully. Your Interface ID is ' + res.interfaceEntity.interface_id);
         this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
       },

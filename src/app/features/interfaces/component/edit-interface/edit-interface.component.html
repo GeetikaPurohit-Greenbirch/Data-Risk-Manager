@@ -135,142 +135,138 @@
             <!-- Information Box -->
 
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'DataFields' }">
-                Data Fields
-              </button>
+              <button class="inverse"> Data Fields </button>
             </div>
 
-            <div class="datafields-table" *ngIf="showDataFields">
-              <div class="datafields-header" style="padding: 6px;">
-                <button class="btn btn--tertiary btn-sm" (click)="addRow()">Add Row</button>
-              </div>
-              <div class="ngprime-table">
-                <!-- <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData"
-                  [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-                  (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
-                  [suppressColumnVirtualisation]="true" [domLayout]="'autoHeight'">
-                </ag-grid-angular> -->
+            <div class="ngprime-table" *ngIf="showDataFields">
+              <div class="header">
+                <p-toolbar>
+                  <div class="p-toolbar-group-left">
+                    <button class="btn btn--tertiary btn-sm" (click)="openNew()">
+                      <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                      Add New Field</button>
+                    <span class="p-input-icon-left">
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" #globalFilter
+                        (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                    </span>
+                  </div>
 
-                <div class="header" style="margin: 0px;">
-                  <p-toolbar>
-                    <div class="p-toolbar-group-left">
-                      <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" #globalFilter
-                          (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
-                      </span>
+                  <div class="p-toolbar-group-right">
+                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                      placeholder="Choose Columns" display="chip" (onChange)="onColumnsChange($event)">
+                    </p-multiSelect>
+                  </div>
+                </p-toolbar>
+              </div>
+              <!-- Data Table -->
+              <div class="man">
+                <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+                  [showCurrentPageReport]="true" responsiveLayout="scroll" [globalFilterFields]="globalFilterFields"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                  styleClass="p-datatable-gridlines p-datatable-sm p-mt-2">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">{{ col.header }}</th>
+                      <th>Actions</th>
+                    </tr>
+                  </ng-template>
+
+                  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                      <td *ngFor="let col of selectedColumns">{{ row[col.field] }}</td>
+                      <td>
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-info"
+                          (click)="editField(row)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                          (click)="confirmDelete(row)"></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+
+              <!-- Add/Edit Dialog -->
+               <div class="form-dialog-container">
+              <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog" [modal]="true"
+                [style]="{ width: '500px' }" [closable]="true">
+                <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
+                  <div class="p-fluid">
+                    <div class="p-field p-mb-3">
+                      <label for="user_generated_id">Field No.</label>
+                      <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
+                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('user_generated_id')?.invalid && fieldForm.get('user_generated_id')?.touched">
+                        Field No. is required and must be numeric
+                      </small>
                     </div>
 
-                    <div class="p-toolbar-group-right">
-                      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                        placeholder="Choose Columns" display="chip">
-                      </p-multiSelect>
+                    <div class="p-field p-mb-3">
+                      <label for="field_name">Field Name</label>
+                      <input id="field_name" type="text" pInputText formControlName="field_name" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_name')?.invalid && fieldForm.get('field_name')?.touched">
+                        Field Name is required
+                      </small>
                     </div>
-                  </p-toolbar>
-                </div>
 
-                <div class="man" style="margin-top: 4px;">
-                  <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
-                    [globalFilterFields]="globalFilterFields" [rowsPerPageOptions]="[10,25,50]"
-                    [responsiveLayout]="'scroll'" sortMode="multiple" [showCurrentPageReport]="true" editMode="cell"
-                    resizableColumns="true" columnResizeMode="fit"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                    styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
-                    <!-- Dynamic Column Headers -->
-                    <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
-                      <ng-container *ngIf="col.field !== 'actions'">
-                        <ng-template pTemplate="header">
-                          {{ col.header }}
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData>
-                          <ng-container *ngIf="!col.editable; else editableCell">
-                            {{ rowData[col.field] }}
-                          </ng-container>
-                          <ng-template #editableCell>
-                            <!-- <ng-container *ngIf="col.dropdownValues?.length; else inputField">
+                    <div class="p-field p-mb-3">
+                      <label for="field_description">Description</label>
+                      <input id="field_description" pInputText formControlName="field_description" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_description')?.invalid && fieldForm.get('field_description')?.touched">
+                        Description is required
+                      </small>
+                    </div>
 
-                        <p-dropdown 
-                        [options]="col.dropdownValues"
-                        [(ngModel)]="rowData[col.field]"
-                        [showClear]="false"
-                        appendTo="body"
-                        placeholder="Select"
-                        styleClass="custom-table-dropdown"
-                        >
-                      </p-dropdown>
-                      </ng-container> -->
-                            <!-- <input 
-                        *ngIf="col.dropdownValues?.length; else inputField"
-                        pDropdown
-                        [options]="col.dropdownValues"
-                        [(ngModel)]="rowData[col.field]"
-                      /> -->
-                            <ng-template #inputField>
-                              <input type="text" pInputText [(ngModel)]="rowData[col.field]"
-                                class="custom-table-input" />
-                            </ng-template>
-                          </ng-template>
-                        </ng-template>
-                      </ng-container>
-                    </ng-container>
+                    <div class="p-field p-mb-3">
+                      <label for="data_type">Data Type</label>
+                      <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
+                        placeholder="Select Data Type"></p-dropdown>
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('data_type')?.invalid && fieldForm.get('data_type')?.touched">
+                        Data Type is required
+                      </small>
+                    </div>
 
-                    <!-- Actions Column -->
-                    <ng-template pTemplate="header" let-columns>
-                      <tr>
-                        <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
-                          {{ col.header }}
-                          <p-sortIcon [field]="col.field"></p-sortIcon>
-                        </th>
-                        <th>Actions</th>
-                      </tr>
-                    </ng-template>
+                    <div class="p-field p-mb-3">
+                      <label for="field_length">Length</label>
+                      <input id="field_length" type="number" pInputText formControlName="field_length" />
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('field_length')?.invalid && fieldForm.get('field_length')?.touched">
+                        Length is required and must be numeric
+                      </small>
+                    </div>
 
-                    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                      <tr>
-                        <td *ngFor="let col of selectedColumns" [pEditableColumn]="rowData[col.field]" pResizableColumn>
-                          <!-- Dropdown cell -->
-                          <ng-container *ngIf="col.editable; else readOnlyCell">
-                            <ng-container *ngIf="col.dropdownValues; else textCell">
-                              <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                  <p-dropdown [options]="col.dropdownValues" [(ngModel)]="rowData[col.field]"
-                                    appendTo="body" styleClass="custom-dropdown"></p-dropdown>
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                  {{ rowData[col.field] }}
-                                </ng-template>
-                              </p-cellEditor>
-                            </ng-container>
-                          </ng-container>
+                    <div class="p-field p-mb-3">
+                      <label for="criticality">Criticality</label>
+                      <p-dropdown id="criticality" [options]="criticalityOptions" formControlName="criticality"
+                        placeholder="Select Criticality"></p-dropdown>
+                      <small class="p-error"
+                        *ngIf="fieldForm.get('criticality')?.invalid && fieldForm.get('criticality')?.touched">
+                        Criticality is required
+                      </small>
+                    </div>
+                  </div>
 
-                          <!-- Read-only cell -->
-                          <ng-template #readOnlyCell>
-                            {{ rowData[col.field] }}
-                          </ng-template>
-                          <!-- Textbox cell -->
-                          <ng-template #textCell>
-                            <p-cellEditor>
-                              <ng-template pTemplate="input">
-                                <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" />
-                              </ng-template>
-                              <ng-template pTemplate="output">
-                                {{ rowData[col.field] }}
-                              </ng-template>
-                            </p-cellEditor>
-                          </ng-template>
-                        </td>
-                        <td>
-
-                          <button pButton icon="pi pi-save" class="p-button-text p-button-success"
-                            (click)="saveDatafields(rowData)"></button>
-                          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                            (click)="deleteDAtaFields(rowData)"></button>
-                        </td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
-                </div>
+                  <div class="p-dialog-footer">
+                    <button pButton type="button" label="Cancel" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton type="submit" label="Save"></button>
+                  </div>
+                </form>
+              </p-dialog>
               </div>
+
+              <!-- delete confirmation dialog -->
+              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                <p-footer>
+                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
+                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
+
+                </p-footer>
+              </p-dialog>
             </div>
 
           </div>

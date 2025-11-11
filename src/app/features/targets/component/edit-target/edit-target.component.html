@@ -143,7 +143,7 @@
             <!-- TABS CONTAINER -->
             <div class="tab-container">
               <button [ngClass]="{ 'inverse': activeView == 'DataFields' }" (click)="openTab('DataFields')">
-                Data fields
+                Data Fields
               </button>
 
               <button [ngClass]="{ 'inverse': activeView == 'DQAReport' }" (click)="openTab('DQAReport')">
@@ -160,7 +160,7 @@
                       <div class="p-r-10">
                         <button class="btn btn--tertiary btn-sm" (click)="openAddDialog()">
                           <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
-                          Add New Record</button>
+                          Add New Field</button>
                       </div>
                       <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
@@ -177,14 +177,13 @@
                   </p-toolbar>
                 </div>
 
-                <div class="man" style="margin-top: 4px;">
+                <div class="man" >
                   <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
                     [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
-                    [showCurrentPageReport]="true"
+                    [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                     styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
                     <!-- Header -->
-
                     <ng-template pTemplate="header">
                       <tr>
                         <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">
@@ -221,11 +220,6 @@
                   [modal]="true" [closable]="true">
                   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
                     <div class="p-fluid">
-                      <!-- <div class="p-field">
-                        <label>Field ID<span class="required">*</span></label>
-                        <input type="text" pInputText formControlName="field_id" />
-                      </div> -->
-
                       <div class="p-field">
                         <label>Field No.<span class="required">*</span></label>
                         <input type="text" pInputText formControlName="field_no" />
@@ -310,7 +304,7 @@
                   </app-report-builder>
                 </div>
               </div>
-              <!-- </div> -->
+             
             </div>
           </div>
 

@@ -90,8 +90,11 @@ ngOnInit(): void{
     }
   });
 
+  this.getEntityCounts()
+  
+
   setTimeout(() => {
-    this.getSystemList();
+  this.getSystemList();
   this.getSourceList();
   this.getControlList();
   this.getTargetList();
@@ -106,7 +109,8 @@ stats = [
   { icon: '<i class="fa fa-cogs" aria-hidden="true"></i>', title: 'Systems',   bgColor: '#ffe0b2', total: 299, notStarted: 153, expired: 46, complete: 100 },
   { icon: '<i class="fa fa-database" aria-hidden="true"></i>', title: 'Sources', bgColor: '#c8e6c9', total: 33, notStarted: 16, expired: 3, complete: 14 },
   { icon: '<i class="fa fa-sliders" aria-hidden="true"></i>', title: 'Controls',  bgColor: '#f8bbd0', total: 299, notStarted: 153, expired: 46, complete: 100 },
-  { icon: '<i class="fa fa-bullseye" aria-hidden="true"></i>', title: 'Targets', bgColor: '#d1c4e9', total: 299, notStarted: 153, expired: 46, complete: 100 }
+  { icon: '<i class="fa fa-bullseye" aria-hidden="true"></i>', title: 'Targets', bgColor: '#d1c4e9', total: 299, notStarted: 153, expired: 46, complete: 100 },
+  { icon: '<i class="fa fa-bullseye" aria-hidden="true"></i>', title: 'Lineage', bgColor: '#d1c4e9', total: 299, notStarted: 153, expired: 46, complete: 100 }
 ];
 
 displayedColumns: string[] = ['select', 'name', 'description', 'owner', 'sys', 'src', 'int', 'ctrls', 'trgts', 'status', 'actions'];
@@ -183,6 +187,34 @@ private fetchUserRoleAndPrivileges(username: string) {
   });
 }
 
+entityName:any;
+records:any;
+
+// Map table_name to your stat titles
+private tableNameMap: { [key: string]: string } = {
+  controls: 'Controls',
+  lineage: 'Lineage',
+  source: 'Sources',
+  system: 'Systems',
+  target: 'Targets',
+  use_case: 'Use Cases'
+};
+
+getEntityCounts()
+{
+  this.systemService.getEntityCount().subscribe((data: any) => {
+    // this.entityName = data.table_name;
+    // this.records = data.record_count
+
+    data.forEach((item: { table_name: string | number; record_count: number; }) => {
+      const title = this.tableNameMap[item.table_name];
+      const stat = this.stats.find(s => s.title === title);
+      if (stat) {
+        stat.total = item.record_count;
+      }
+    });
+});
+}
 
 getSystemList()
 {

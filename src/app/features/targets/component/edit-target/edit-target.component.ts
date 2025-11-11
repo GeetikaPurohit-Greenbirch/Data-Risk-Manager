@@ -649,16 +649,14 @@ export class EditTargetComponent {
     this.saveDatafields(this.formGroup.value);
   }
   saveDatafields(data: any) {
-    console.log(data, "Target Data Fields");
+    //console.log(data, "Target Data Fields");
 
     this.dataFieldsModel.field_id = data.field_id;
     this.dataFieldsModel.user_generated_id = data.field_no;
     this.dataFieldsModel.field_name = data.field_name;
     this.dataFieldsModel.field_description = data.field_description;
 
-    // this.dataFieldsModel.dqa_c = data.dqa_c;
-    // this.dataFieldsModel.dqa_t = data.dqa_t;
-    // this.dataFieldsModel.dqa_a = data.dqa_a;
+   
     this.dataFieldsModel.data_type = data.data_type;
     this.dataFieldsModel.field_length = data.field_length;
     this.dataFieldsModel.criticality = data.criticality;
@@ -666,21 +664,14 @@ export class EditTargetComponent {
     this.dataFieldsModel.entity_id = this.targetId;
     this.dataFieldsModel.usecaseid = this.useCaseId;
 
-    //  if (this.isEditMode && this.currentRow) {
-    //   Object.assign(this.currentRow, data);
-    // } else {
-    //   this.rowData.push(data);
-    // }
 
     if (!data.field_id && !this.isEditMode && !this.currentRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
-        if (!res) {
+        if (res!=null) {
+          data.field_id=res.field_id;
           this.rowData.push(data);
           this.toastNotificationService.success("Data field added Successfully.");         
           this.showDialog = false;
-        }
-        else {
-
         }
       });
     }

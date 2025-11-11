@@ -44,6 +44,7 @@ export class EditSystemComponent{
   public rowindex = 0;
   public savedUseCase: string | null = null;
   useCaseModel!:number;
+  is_modified_risk_level: boolean = false;
  
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
 
@@ -1737,6 +1738,8 @@ loadDropdownOptions(): void {
                 `${item.interfaceEntity.interface_id} - ${item.interfaceEntity.interface_name}`
             );
           }
+
+          this.is_modified_risk_level = interfaceDataFields[0].is_modified_risk_level;
   
           const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
 
