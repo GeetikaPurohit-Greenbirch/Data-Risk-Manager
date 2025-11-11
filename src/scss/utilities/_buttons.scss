@@ -9,6 +9,21 @@
     &:hover {
       color: #fff;
     }
+
+    // Disabled state for primary
+    &.disabled, &:disabled, &[disabled], &[aria-disabled="true"] {
+      background-color: $btn-primary-disabled-bg;
+      color: $btn-primary-disabled-color;
+      opacity: $btn-disabled-opacity;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      // Prevent hover changes when disabled
+      &:hover {
+        background-color: $btn-primary-disabled-bg;
+        color: $btn-primary-disabled-color;
+      }
+    }
   }
 
   &--secondary {
@@ -18,6 +33,21 @@
     &:hover {
       background-color: #f1f5f9;
       border: 1px solid #f1f5f9;
+    }
+
+    // Disabled state for secondary
+    &.disabled, &:disabled, &[disabled], &[aria-disabled="true"] {
+      background-color: $btn-secondary-disabled-bg;
+      color: $btn-secondary-disabled-color !important;
+      border: 1px solid $btn-secondary-disabled-border;
+      opacity: $btn-disabled-opacity;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      &:hover {
+        background-color: $btn-secondary-disabled-bg;
+        border: 1px solid $btn-secondary-disabled-border;
+      }
     }
   }
 
