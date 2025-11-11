@@ -224,189 +224,189 @@ export class EditSourceComponent implements OnInit {
     },
   ]
 
-  columnDefs: (ColDef | ColGroupDef)[] = [
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID', },
-    { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.', },
-    { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Filed Name', },
-    { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description', },
-    {
-      field: 'data_type', headerName: 'Data Type', editable: true, headerTooltip: 'Data Type',
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
-      },
-    },
-    { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length', },
-    {
-      headerName: 'DQA',
-      resizable: true,
-      headerTooltip: 'DQA',
-      children: [
-        {
-          headerName: 'Completeness',
-          field: 'dqa_c',
-          editable: true,
-          headerTooltip: 'Completeness',
-          //  valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["High", "Medium", "Low"],
-          },
-          //  width:65,
-          //  minWidth: 65,
-          //  maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: '#c10007',
-            fontWeight: '600'
-          },
-        },
-        {
-          headerName: 'C Commentary',
-          field: 'commentary_c',
-          editable: true,
-          headerTooltip: 'C Commentary',
-          // width:100,
-          // minWidth: 100,
-          // maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+  // columnDefs: (ColDef | ColGroupDef)[] = [
+  //   { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID', },
+  //   { field: 'user_generated_id', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.', },
+  //   { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Filed Name', },
+  //   { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description', },
+  //   {
+  //     field: 'data_type', headerName: 'Data Type', editable: true, headerTooltip: 'Data Type',
+  //     cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: {
+  //       values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+  //     },
+  //   },
+  //   { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length', },
+  //   {
+  //     headerName: 'DQA',
+  //     resizable: true,
+  //     headerTooltip: 'DQA',
+  //     children: [
+  //       {
+  //         headerName: 'Completeness',
+  //         field: 'dqa_c',
+  //         editable: true,
+  //         headerTooltip: 'Completeness',
+  //         //  valueGetter: () => 'L', // Always returns 'L'
+  //         cellEditor: 'agSelectCellEditor',
+  //         cellEditorParams: {
+  //           values: ["High", "Medium", "Low"],
+  //         },
+  //         //  width:65,
+  //         //  minWidth: 65,
+  //         //  maxWidth: 65,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
+  //         cellStyle: {
+  //           color: '#c10007',
+  //           fontWeight: '600'
+  //         },
+  //       },
+  //       {
+  //         headerName: 'C Commentary',
+  //         field: 'commentary_c',
+  //         editable: true,
+  //         headerTooltip: 'C Commentary',
+  //         // width:100,
+  //         // minWidth: 100,
+  //         // maxWidth: 100,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
 
-        },
-        {
-          headerName: 'Timeliness',
-          field: 'dqa_t',
-          editable: true,
-          headerTooltip: 'Timeliness',
-          // valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["High", "Medium", "Low"],
-            // values: ["H", "M", "L"],
-          },
-          // width:65,
-          // minWidth: 65,
-          // maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: '#3e63dd',
-            fontWeight: '600'
-          }
-        },
-        {
-          headerName: 'T Commentary',
-          field: 'commentary_t',
-          editable: true,
-          headerTooltip: 'T Commentary',
-          width: 100,
-          minWidth: 100,
-          maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+  //       },
+  //       {
+  //         headerName: 'Timeliness',
+  //         field: 'dqa_t',
+  //         editable: true,
+  //         headerTooltip: 'Timeliness',
+  //         // valueGetter: () => 'L', // Always returns 'L'
+  //         cellEditor: 'agSelectCellEditor',
+  //         cellEditorParams: {
+  //           values: ["High", "Medium", "Low"],
+  //           // values: ["H", "M", "L"],
+  //         },
+  //         // width:65,
+  //         // minWidth: 65,
+  //         // maxWidth: 65,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
+  //         cellStyle: {
+  //           color: '#3e63dd',
+  //           fontWeight: '600'
+  //         }
+  //       },
+  //       {
+  //         headerName: 'T Commentary',
+  //         field: 'commentary_t',
+  //         editable: true,
+  //         headerTooltip: 'T Commentary',
+  //         width: 100,
+  //         minWidth: 100,
+  //         maxWidth: 100,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
 
-        },
-        {
-          headerName: 'Accuracy',
-          field: 'dqa_a',
-          editable: true,
-          headerTooltip: 'Accuracy',
-          // valueGetter: () => 'L', // Always returns 'L'
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ["High", "Medium", "Low"],
-          },
-          // width:65,
-          // minWidth: 65,
-          // maxWidth: 65,
-          resizable: true,
-          suppressSizeToFit: true,
-          cellStyle: {
-            color: 'purple',
-            fontWeight: '600'
-          }
-        },
-        {
-          headerName: 'A Commentary',
-          field: 'commentary_a',
-          editable: true,
-          headerTooltip: 'A Commentary',
-          // width:100,
-          // minWidth: 100,
-          // maxWidth: 100,
-          resizable: true,
-          suppressSizeToFit: true,
+  //       },
+  //       {
+  //         headerName: 'Accuracy',
+  //         field: 'dqa_a',
+  //         editable: true,
+  //         headerTooltip: 'Accuracy',
+  //         // valueGetter: () => 'L', // Always returns 'L'
+  //         cellEditor: 'agSelectCellEditor',
+  //         cellEditorParams: {
+  //           values: ["High", "Medium", "Low"],
+  //         },
+  //         // width:65,
+  //         // minWidth: 65,
+  //         // maxWidth: 65,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
+  //         cellStyle: {
+  //           color: 'purple',
+  //           fontWeight: '600'
+  //         }
+  //       },
+  //       {
+  //         headerName: 'A Commentary',
+  //         field: 'commentary_a',
+  //         editable: true,
+  //         headerTooltip: 'A Commentary',
+  //         // width:100,
+  //         // minWidth: 100,
+  //         // maxWidth: 100,
+  //         resizable: true,
+  //         suppressSizeToFit: true,
 
-        },
-      ],
+  //       },
+  //     ],
 
-    },
-    {
-      field: 'criticality', headerName: 'Criticality', editable: true,
-      cellEditor: 'agSelectCellEditor',
-      headerTooltip: 'Criticality',
-      cellEditorParams: {
-        values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
-      },
-    },
-    {
-      headerName: 'Actions',
-      editable: false,
-      filter: false,
-      sortable: false,
-      minWidth: 80,
-      maxWidth: 100,
-      // flex: 1,
-      pinned: 'right',
-      cellRenderer: (params: any) => {
-        const div = document.createElement('div');
-        div.className = 'model-cell-renderer';
+  //   },
+  //   {
+  //     field: 'criticality', headerName: 'Criticality', editable: true,
+  //     cellEditor: 'agSelectCellEditor',
+  //     headerTooltip: 'Criticality',
+  //     cellEditorParams: {
+  //       values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"]
+  //     },
+  //   },
+  //   {
+  //     headerName: 'Actions',
+  //     editable: false,
+  //     filter: false,
+  //     sortable: false,
+  //     minWidth: 80,
+  //     maxWidth: 100,
+  //     // flex: 1,
+  //     pinned: 'right',
+  //     cellRenderer: (params: any) => {
+  //       const div = document.createElement('div');
+  //       div.className = 'model-cell-renderer';
 
-        const saveDataFields = document.createElement('button');
-        saveDataFields.title = 'Save';
-        saveDataFields.style.border = 'none';
-        saveDataFields.style.padding = '0px';
-        saveDataFields.style.cursor = 'pointer';
-        saveDataFields.style.background = 'transparent';
+  //       const saveDataFields = document.createElement('button');
+  //       saveDataFields.title = 'Save';
+  //       saveDataFields.style.border = 'none';
+  //       saveDataFields.style.padding = '0px';
+  //       saveDataFields.style.cursor = 'pointer';
+  //       saveDataFields.style.background = 'transparent';
 
-        const saveIcon = createElement(icons.Save, {
-          color: '#008236',
-          height: '14px',
-          strokeWidth: 2
-        });
-        saveDataFields.appendChild(saveIcon);
+  //       const saveIcon = createElement(icons.Save, {
+  //         color: '#008236',
+  //         height: '14px',
+  //         strokeWidth: 2
+  //       });
+  //       saveDataFields.appendChild(saveIcon);
 
-        // Pass row data or node to save
-        saveDataFields.addEventListener('click', () => {
-          this.saveDatafields(params.node);
-        });
+  //       // Pass row data or node to save
+  //       saveDataFields.addEventListener('click', () => {
+  //         this.saveDatafields(params.node);
+  //       });
 
-        const deleteDataFields = document.createElement('button');
-        deleteDataFields.title = 'Delete';
-        deleteDataFields.style.border = 'none';
-        deleteDataFields.style.padding = '0px';
-        deleteDataFields.style.cursor = 'pointer';
-        deleteDataFields.style.background = 'transparent';
+  //       const deleteDataFields = document.createElement('button');
+  //       deleteDataFields.title = 'Delete';
+  //       deleteDataFields.style.border = 'none';
+  //       deleteDataFields.style.padding = '0px';
+  //       deleteDataFields.style.cursor = 'pointer';
+  //       deleteDataFields.style.background = 'transparent';
 
-        const deleteIcon = createElement(icons.Trash2, {
-          color: '#c10007',
-          height: '14px',
-          strokeWidth: 2
-        });
-        deleteDataFields.appendChild(deleteIcon);
+  //       const deleteIcon = createElement(icons.Trash2, {
+  //         color: '#c10007',
+  //         height: '14px',
+  //         strokeWidth: 2
+  //       });
+  //       deleteDataFields.appendChild(deleteIcon);
 
-        deleteDataFields.addEventListener('click', () => {
-          this.deleteDAtaFields(params.node);
-        });
+  //       deleteDataFields.addEventListener('click', () => {
+  //         this.deleteDAtaFields(params.node);
+  //       });
 
-        div.appendChild(saveDataFields);
-        div.appendChild(deleteDataFields);
+  //       div.appendChild(saveDataFields);
+  //       div.appendChild(deleteDataFields);
 
-        return div;
-      }
-    },
-  ];
+  //       return div;
+  //     }
+  //   },
+  // ];
 
   // defaultColDef = {
   //   flex: 1,
@@ -435,41 +435,41 @@ export class EditSourceComponent implements OnInit {
 
   cols = [
     { field: 'field_id', header: 'Field ID', editable: false },
-    { field: 'field_name', header: 'Field Name', editable: true },
-    { field: 'entity_type', header: 'Entity Type', editable: true },
-    // { field: 'field_id', header: 'Field ID', editable: false, },
-    { field: 'user_generated_id', header: 'Field No.', editable: true },
-    { field: 'field_name', header: 'Field Name', editable: true, },
-    { field: 'data_type', header: 'Data Type', editable: true, dropdownValues: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
-    { field: 'field_length', header: 'Field Length', editable: true, },
+    { field: 'field_name', header: 'Field Name', editable: false },
+    { field: 'entity_type', header: 'Entity Type', editable: false },
+   
+    { field: 'user_generated_id', header: 'Field No.', editable: false },
+    { field: 'field_name', header: 'Field Name', editable: false, },
+    { field: 'data_type', header: 'Data Type', editable: false },
+    { field: 'field_length', header: 'Field Length', editable: false, },
     {
       field: 'dqa_c',
       header: 'C',
-      editable: true,
+      editable: false,
       type: 'dropdown',
       tooltip: 'C',
       style: { color: '#e8000a', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      //dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
     },
     { field: 'commentary_c', header: 'C Commentary', editable: true },
     {
       field: 'dqa_t',
       header: 'T',
-      editable: true,
+      editable: false,
       type: 'dropdown',
       tooltip: 'T',
       style: { color: '#3e63dd', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      //dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
     },
     { field: 'commentary_t', header: 'T Commentary', editable: true },
     {
       field: 'dqa_a',
       header: 'A',
-      editable: true,
+      editable: false,
       type: 'dropdown',
       tooltip: 'A',
       style: { color: 'purple', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      //dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
     },
     { field: 'commentary_a', header: 'A Commentary', editable: true }
   ];
@@ -484,14 +484,14 @@ export class EditSourceComponent implements OnInit {
     this.getDataFields();
   }
 
-  addRow() {
-    const newItem = { fieldId: '', fieldName: '', fieldDesc: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA: '', criticality: '' };
-    this.rowData = [...this.rowData, newItem];
-  }
+  // addRow() {
+  //   const newItem = { fieldId: '', fieldName: '', fieldDesc: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA: '', criticality: '' };
+  //   this.rowData = [...this.rowData, newItem];
+  // }
 
-  onRowValueChanged(event: any) {
-    console.log('Updated row:', event.data);
-  }
+  // onRowValueChanged(event: any) {
+  //   console.log('Updated row:', event.data);
+  // }
 
   ngOnInit(): void {
     this.selectedColumns = [...this.cols]; // Initially show all columns
@@ -542,7 +542,7 @@ export class EditSourceComponent implements OnInit {
       this.sourceForm.get('quality_of_service')?.valueChanges.subscribe(value => {
         this.toggleFieldsBasedOnQoS(value);
       });
-
+      this.buildForm();
       this.getDataFields();
 
       this.rowDataDQA = [{}];
@@ -893,7 +893,7 @@ request$.subscribe({
 
 
   saveDatafieldsDQA(data: any, interface_type: any) {
-    console.log(data, "Interface Data Fields");
+    console.log(data, "Source Data Fields DQA");
     this.dataFieldsModel.id = data.data.id;
     this.dataFieldsModel.allow_risk_update = this.showGlobalQualityRisk;
     this.dataFieldsModel.entity_id = [this.sourceId];
@@ -931,12 +931,12 @@ request$.subscribe({
 
 
   saveDatafields(data: any) {
-    console.log(data, "Interface Data Fields");
+    console.log(data, "Source Data Fields");
 
     this.dataFieldsModel.field_id = data.field_id;
     this.dataFieldsModel.user_generated_id = data.user_generated_id;
     this.dataFieldsModel.field_name = data.field_name;
-    this.dataFieldsModel.field_description = data.field_description;
+    //this.dataFieldsModel.field_description = data.field_description;
     this.dataFieldsModel.dqa_c = data.dqa_c;
     this.dataFieldsModel.dqa_t = data.dqa_t;
     this.dataFieldsModel.dqa_a = data.dqa_a;
@@ -945,50 +945,131 @@ request$.subscribe({
     this.dataFieldsModel.commentary_c = data.commentary_c;
     this.dataFieldsModel.data_type = data.data_type;
     this.dataFieldsModel.field_length = data.field_length;
-    this.dataFieldsModel.criticality = data.criticality;
+    //this.dataFieldsModel.criticality = data.criticality;
     this.dataFieldsModel.entity_type = 'SOURCE';
     this.dataFieldsModel.entity_id = this.sourceId;
 
-    // alert("Data field added Successfully.");
-    if (!data.field_id) {
-      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe(() => {
-
-        this.toastNotificationService.success("Data field added Successfully.");
-        setTimeout(() => {
-          this.getDataFields(); // refresh
-
-        }, 1000);
+     if (!data.field_id && !this.isEdit && !this.selectedRow) {
+      this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
+        if (res != null) {
+          // data.field_id=res.field_id;
+          // this.rowData.push(data);
+          this.toastNotificationService.success("Data field added Successfully.");
+          this.fieldDialog = false;
+          setTimeout(() => {
+            this.getDataFields();
+          }, 1000);
+        }
       });
     }
     else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
-
+        //Object.assign(this.selectedRow, data);
         this.toastNotificationService.success("Data field updated Successfully.");
+        this.fieldDialog = false;
         setTimeout(() => {
-          this.getDataFields(); // refresh
-
+          this.getDataFields();
         }, 1000);
       });
-    }
-
-
+    }   
   }
 
-  deleteDAtaFields(data: any) {
-    this.datafieldsService.deleteDataFields(data.field_id, 'SOURCE', this.sourceId).subscribe(() => {
-      // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-      this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
-      setTimeout(() => {
-        this.getDataFields(); // refresh
+  // deleteDAtaFields(data: any) {
+  //   this.datafieldsService.deleteDataFields(data.field_id, 'SOURCE', this.sourceId).subscribe(() => {
+  //     // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
+  //     this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
+  //     setTimeout(() => {
+  //       this.getDataFields(); // refresh
 
-      }, 1000);
-    })
-  }
+  //     }, 1000);
+  //   })
+  // }
   onBack() {
     this.router.navigate(['/sources']);
   }
   onBackToLineage()
   {
      this.router.navigate(JSON.parse(this.BacktolineagePath));
+  }
+
+  fieldDialog = false;
+  fieldForm!: FormGroup;
+  submitted = false;
+  isEdit = false;
+  selectedField: any;
+  selectedRow:any;
+  showDeleteDialog = false;
+
+  dataTypeOptions = [
+    { label: 'NUMERIC', value: 'NUMERIC' },
+    { label: 'ALPHANUMERIC', value: 'ALPHANUMERIC' },
+    { label: 'DATE_TIME', value: 'DATE_TIME' },
+  ];
+
+  RiskTypeOptions = [
+    { label: 'High', value: 'High' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'Low', value: 'Low' }    
+  ];
+
+   buildForm() {
+    this.fieldForm = this.fb.group({
+      field_id: [''],
+      user_generated_id: [''],
+      field_name: ['', Validators.required],
+      entity_type: [''],
+      data_type: ['', Validators.required],
+      field_length: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      dqa_c: [''],
+      commentary_c: [''],
+      dqa_t: [''],
+      commentary_t: [''],
+      dqa_a: [''],
+      commentary_a: ['']
+    });
+  }  
+
+  openNew() {
+    this.isEdit = false;
+    this.fieldDialog = true;
+    this.submitted = false;
+     this.selectedRow = null;
+     this.fieldForm.reset();
+  }
+
+  editField(field: any) {
+    this.isEdit = true;
+    this.selectedRow = field;
+    this.fieldForm.patchValue(field);
+    this.fieldDialog = true;
+  }
+
+  hideDialog() {
+    this.fieldDialog = false;
+    this.submitted = false;
+  }
+
+  saveField() {
+    this.submitted = true;
+    if (this.fieldForm.invalid) return;
+    this.saveDatafields(this.fieldForm.value);
+  }
+
+  confirmDelete(row: any) {
+    this.selectedRow = row;
+    this.showDeleteDialog = true;
+  }
+
+  deleteRow() {
+    this.datafieldsService.deleteDataFields(this.selectedRow.field_id, 'SOURCE', this.sourceId).subscribe(() => {
+      this.toastNotificationService.error("Data fields Deleted Successfully.");
+      this.rowData = this.rowData.filter((r: any) => r.field_id !== this.selectedRow.field_id);
+      this.showDeleteDialog = false;
+    })
+  }
+    onColumnsChange(event: any) {
+    // event.value contains selected column objects
+    this.selectedColumns = event.value;
+    this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
   }
 }

@@ -544,6 +544,8 @@ export class EditInterfaceComponent implements OnInit {
     this.isEdit = false;
     this.fieldDialog = true;
     this.submitted = false;
+     this.selectedRow = null;
+     this.fieldForm.reset();
   }
 
   editField(field: any) {
@@ -576,18 +578,24 @@ export class EditInterfaceComponent implements OnInit {
     if (!data.field_id && !this.isEdit && !this.selectedRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
         if (res != null) {
-          data.field_id=res.field_id;
-          this.rowData.push(data);
+          // data.field_id=res.field_id;
+          // this.rowData.push(data);
           this.toastNotificationService.success("Data field added Successfully.");
           this.fieldDialog = false;
+           setTimeout(() => {
+          this.getDataFields();
+        }, 1000);
         }
       });
     }
     else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
-        Object.assign(this.selectedRow, data);
+        //Object.assign(this.selectedRow, data);
         this.toastNotificationService.success("Data field updated Successfully.");
         this.fieldDialog = false;
+         setTimeout(() => {
+          this.getDataFields();
+        }, 1000);
       });
     }
   }

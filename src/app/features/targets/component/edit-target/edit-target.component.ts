@@ -769,8 +769,9 @@ export class EditTargetComponent {
 
   openAddDialog() {
     this.isEditMode = false;
-    //this.formGroup.reset();
+    this.formGroup.reset();
     this.showDialog = true;
+     this.currentRow=null;
   }
 
   openEditDialog(rowData: any) {
@@ -807,18 +808,24 @@ export class EditTargetComponent {
     if (!data.field_id && !this.isEditMode && !this.currentRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
         if (res!=null) {
-          data.field_id=res.field_id;
-          this.rowData.push(data);
+          //data.field_id=res.field_id;
+          // this.rowData.push(data);
           this.toastNotificationService.success("Data field added Successfully.");         
           this.showDialog = false;
+          setTimeout(() => {
+          this.getDataFields();
+        }, 1000);
         }
       });
     }
     else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
-        Object.assign(this.currentRow, this.formGroup.value);
+        //Object.assign(this.currentRow, this.formGroup.value);
         this.toastNotificationService.success("Data field updated Successfully.");       
         this.showDialog = false;
+         setTimeout(() => {
+          this.getDataFields();
+        }, 1000);
       });
     }
   }
