@@ -1,8 +1,3 @@
-img {
-  height: auto;
-  max-width: 100%;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -116,11 +111,6 @@ mat-form-field.half-width {
   justify-content: center;
 }
 
-.create-btn {
-  width: 40%;
-  max-width: 250px;
-}
-
 /* 🔹 Mobile tweak */
 @media (max-width: 768px) {
   mat-form-field.half-width {
@@ -128,16 +118,15 @@ mat-form-field.half-width {
     flex: 1 1 100%;
   }
 
-  .container,
+  /* .container,
   .left-panel {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     width: 100% !important;
-  }
+  } */
 
   .right-panel {
-    /* display: flex; */
     gap: 16px;
     flex-wrap: wrap;
     width: 100% !important;
@@ -147,9 +136,9 @@ mat-form-field.half-width {
     width: 100%;
   }
 
-  .info-box-table {
+  /* .info-box-table {
     width: 100% !important;
-  }
+  } */
 
   .aggrid {
     width: 100% !important;
@@ -158,11 +147,6 @@ mat-form-field.half-width {
   .report-builder {
     width: 100% !important;
     margin: 14px 0 0 0 !important;
-  }
-
-  .create-btn {
-    width: 100% !important;
-    max-width: none;
   }
 
   .lineage-wrapper {

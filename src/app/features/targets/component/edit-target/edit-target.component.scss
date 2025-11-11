@@ -213,42 +213,42 @@
 }
 
 
-.info-box-table {
-    flex: 1 1 auto;
-    overflow-x: auto;
+// .info-box-table {
+//     flex: 1 1 auto;
+//     overflow-x: auto;
 
-    .datafields-header {
-        margin: 0px;
+//     .datafields-header {
+//         margin: 0px;
 
-        button {
-            // border: none;
-            color: white;
-            font-size: 12px;
-            box-shadow: none;
-            width: fit-content;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            padding: .4rem .6rem;
-            color: rgb(62, 99, 221);
-            background-color: transparent;
-            border: 1px solid rgb(62, 99, 221);
+//         button {
+//             // border: none;
+//             color: white;
+//             font-size: 12px;
+//             box-shadow: none;
+//             width: fit-content;
+//             border-radius: 4px;
+//             margin-bottom: 8px;
+//             padding: .4rem .6rem;
+//             color: rgb(62, 99, 221);
+//             background-color: transparent;
+//             border: 1px solid rgb(62, 99, 221);
 
-            &:hover {
-                color: #ffffff;
-                background-color: rgb(58, 92, 204);
-            }
-        }
-    }
-}
+//             &:hover {
+//                 color: #ffffff;
+//                 background-color: rgb(58, 92, 204);
+//             }
+//         }
+//     }
+// }
 
 
 ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 2px 8px !important; /* reduce vertical & horizontal space */
+    padding: 2px 8px !important; 
     line-height: 0.5 rem !important;
   }
   
   ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-    padding: 6px 8px !important; /* smaller header height */
+    padding: 6px 8px !important;
   }
  
 // ==== TABLE GRID STYLE ====
