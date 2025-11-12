@@ -22,7 +22,7 @@ export class DatafieldsService {
     }
 
     public createDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type:any, entity_id:any, usecaseid:any): Observable<any> {
-      const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+usecaseid;
+      const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id;
       console.log(dataFieldsModel)
   
       return this.http.post<Datafields[]>(url, dataFieldsModel);
@@ -75,7 +75,7 @@ export class DatafieldsService {
       }
 
       public getDataFieldsByIdWithUsecase(id:number, entity_type:any, usecaseid:any):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id+'/'+usecaseid;
+        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
         return this.http.get<Datafields[]>(url);
       }
 

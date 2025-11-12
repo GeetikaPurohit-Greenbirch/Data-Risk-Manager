@@ -209,7 +209,7 @@ export class TargetsComponent {
     },
     {
       field: 'methodology_of_transfer',
-      headerName: 'Methodology Of Transfer',
+      header: 'Methodology Of Transfer',
       editable: false,
     },
     { field: 'target_type', header: 'Target Type', editable: false },
