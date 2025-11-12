@@ -202,17 +202,17 @@ export class Concat extends shapes.standard.HeaderedRecord {
                 tabColor: { height: 5, x: 0, y: 0, width: 'calc(w)', fill: '#FF4365', stroke: '#FF4365' },
 
                 // caret toggle icon inside header (click target)
-                // caret: {
-                //   ref: 'header',
-                //   refX: '85%',
-                //   refY: 14,
-                //   width: 12,
-                //   height: 12,
-                //   cursor: 'pointer',
-                //   d: 'M 0 0 L 12 0 L 6 8 z', // ▼
-                //   fill: '#6B7280',
-                //   event: 'element:caret:pointerdown',
-                // },
+                caret: {
+                  ref: 'header',
+                  refX: '85%',
+                  refY: 14,
+                  width: 12,
+                  height: 12,
+                  cursor: 'pointer',
+                  d: 'M 0 0 L 12 0 L 6 8 z', // ▼
+                  fill: '#6B7280',
+                  event: 'element:caret:pointerdown',
+                },
                 buttonsGroups: {
                     stroke: '#7C90A6'
                 },
@@ -236,6 +236,9 @@ export class Concat extends shapes.standard.HeaderedRecord {
                     'xlink:href': '',
                     x: 8, y: -20, width: 14, height: 14
                 },
+                 controlnames: {                    
+                   textWrap: { ellipsis: true, height: 20, width: 120 },
+                },
                 headerLabel2: {
                     x: 35,
                     y: -10,
@@ -243,7 +246,9 @@ export class Concat extends shapes.standard.HeaderedRecord {
                     fontWeight: 50,
                     margin: 10,
                     fontSize: 12,
-                    textWrap: { ellipsis: true, height: 20, width: 120 }
+                    cursor: 'pointer',
+                    textWrap: { ellipsis: true, height: 20, width: 120 },
+                    event: 'element:controlnameclick'
                 },
                 remove_icon: {
                     ref: 'body',
@@ -324,7 +329,8 @@ export class Concat extends shapes.standard.HeaderedRecord {
             { tagName: 'g', selector: 'outPorts', groupSelector: 'out' },
             { tagName: 'image', selector: 'headerIcon2' },
             { tagName: 'text', selector: 'headerLabel2' },
-            { tagName: 'image', selector: 'remove_icon' }
+            { tagName: 'image', selector: 'remove_icon' },
+            { tagName: 'text', selector: 'controlnames' },
 
         ];
     }
@@ -361,14 +367,22 @@ export class Concat extends shapes.standard.HeaderedRecord {
     }
 
     setName2WithTooltip(names: string[], opt?: object) {
-        const visibleText = names.length > 1 ? `${names[0]} (+${names.length - 1})` : names[0] || '';
+        //const visibleText = names.length > 1 ? `${names[0]} (+${names.length - 1})` : names[0] || '';
         const tooltipText = names.join('\n');
-
-        this.attr(['headerLabel2', 'textWrap', 'text'], visibleText, opt);
-        this.attr(['headerLabel2', 'title'], tooltipText, opt); // store tooltip text for Paper to read
+        //console.log("visibleText",visibleText);
+        this.attr(['controlnames', 'textWrap', 'text'], tooltipText, opt);
+        //this.attr(['headerLabel2', 'title'], tooltipText, opt); // store tooltip text for Paper to read
         return this;
     }
 
+    setControlNames(names: string[], opt?: object) {
+       
+        const tooltipText = names.join('\n');       
+        this.attr(['controlnames', 'textWrap', 'text'], tooltipText, opt);       
+        return this;
+    }
+    
+   
     setCaretIcon() {
         return this.attr('caret', {
             ref: 'header',

@@ -59,6 +59,7 @@ export class CreateUseCaseComponent {
     //   reviewer: ['']
     // });
     this.usecaseForm = this.fb.group({
+      use_case_id: [''],
       use_case_name: ['', Validators.required],
       use_case_description: ['', Validators.required],
       use_case_owner: ['', Validators.required],
@@ -119,7 +120,7 @@ export class CreateUseCaseComponent {
     if (this.usecaseForm.valid) {
       console.log('UseCase Data:', this.usecaseForm.value);
 
-      const payload = {
+      const payload : any ={
         useCaseEntity: {
           use_case_name: this.usecaseForm.value.use_case_name,
           use_case_description: this.usecaseForm.value.use_case_description,
@@ -135,6 +136,7 @@ export class CreateUseCaseComponent {
         }
       }
       if (this.usecaseId > 0) {
+        payload.useCaseEntity.use_case_id=this.usecaseForm.value.use_case_id;
         this.usecaseService.updateUseCase(payload).subscribe(res => {
           if (res) {
             this.toastNotificationService.success("Usecase Updated Successfully.");
@@ -183,6 +185,7 @@ export class CreateUseCaseComponent {
       },
       error: (err) => {
         console.error("Failed to fetch lineageId:", err);
+        this.toastNotificationService.error("No lineage found for useCaseId : " + this.usecaseId);
       }
     });
   }

@@ -818,3 +818,57 @@ img {
   font-size: 14px;
   padding: 0.2rem 0.5rem;
 }
+
+.jointjs-popup {
+  position: fixed;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  min-width: 220px;
+  padding: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.jointjs-popup .popup-header {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  span {
+    cursor: pointer;
+    display: inline-block;
+  }
+}
+
+.jointjs-popup .popup-body {
+  font-size: 14px;
+}
+
+.jointjs-popup .popup-body input {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.jointjs-popup .popup-actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.jointjs-popup .popup-actions button {
+  margin-left: 6px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.jointjs-popup .popup-actions button:hover {
+  background-color: #0056b3;
+}

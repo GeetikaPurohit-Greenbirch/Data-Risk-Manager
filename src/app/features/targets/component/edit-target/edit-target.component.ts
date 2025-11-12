@@ -85,7 +85,7 @@ export class EditTargetComponent {
 
   cols = [
     // { field: 'field_id', header: 'Field ID', editable: false },
-    { field: 'field_no', header: 'Field No.', editable: false },
+    { field: 'user_generated_id', header: 'Field No.', editable: false },
     { field: 'field_name', header: 'Field Name', editable: false },
     { field: 'field_description', header: 'Field Description', editable: false },
     { field: 'field_length', header: 'Length', editable: false },

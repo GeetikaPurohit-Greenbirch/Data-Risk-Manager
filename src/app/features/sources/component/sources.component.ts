@@ -202,7 +202,7 @@ export class SourcesComponent {
     },
     {
       field: 'methodology_of_transfer',
-      headerName: 'Methodology Of Transfer',
+      header: 'Methodology Of Transfer',
       editable: false,
     },
     { field: 'source_type', header: 'Source Type', editable: false },
