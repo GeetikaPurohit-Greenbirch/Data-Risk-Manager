@@ -336,13 +336,14 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (selectedItemDetails?.controls?.length > 0) {
                 controlNames = selectedItemDetails.controls.map((c: any) => c.name);
             }
-            const controlNamesText = controlNames.join('\n');
+            //const controlNamesText = controlNames.join('\n');
+            const controlNamesText = controlNames.length > 0 ? `Controls` :  '';
             // if (result.ports.length === 0) {
             newCell = new Concat({
                 position: { x: dropX, y: dropY },
                 size: blockDefinition.size,
                 typeName: blockDefinition.typeName,
-                 id:selectedItemDetails?.id,
+                id:selectedItemDetails?.id,
                 attrs: {
                     label: { text: blockDefinition.label || blockDefinition.typeName },
                     typeName: blockDefinition.typeName,
@@ -357,11 +358,11 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
                     }                 
                 },
             }).setName(selectedValue || blockDefinition.typeName)
-            .setName2WithTooltip(controlNames)              
+            .setName2(controlNamesText) 
             .addPorts(result.noType)
 
             newCell.attr('forksGroups/stroke', 'lightgray');
-            //(newCell as Concat).setCaretIcon()
+            (newCell as Concat).setCaretIcon()
             //(newCell as Concat).setRmoveIcon("assets/images/remove.svg")
 
             if(selectedItemDetails?.type === "target"){
@@ -377,7 +378,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }
-            if (blockDefinition?.cicon && controlNamesText!="") {
+            if (blockDefinition?.cicon && controlNames.length > 0) {
                 (newCell as Concat).setIcon2(blockDefinition.cicon);
                 
             }
