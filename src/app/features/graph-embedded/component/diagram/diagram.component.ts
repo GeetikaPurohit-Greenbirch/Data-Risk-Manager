@@ -30,7 +30,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
 import { L001, L002, L003 } from './diagrams';
 import { map, filter, switchMap, catchError, takeUntil } from 'rxjs/operators';
-import { Subject, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { finalize } from 'rxjs/operators';
@@ -71,8 +71,8 @@ export class DiagramComponent implements AfterViewInit {
   scaleDisplay: number = 100;
   diagramCollapsed = false;
   use_case_id!: string;
-  private freeTransform?: ui.FreeTransform;
 
+  private freeTransform?: ui.FreeTransform;
 
   constructor(
     private dialog: MatDialog,
@@ -100,11 +100,7 @@ export class DiagramComponent implements AfterViewInit {
 
   private destroy$ = new Subject<void>();
 
-
-
   public ngOnInit(): void {
-
-
     this.route.paramMap.pipe(
       // Try both common param names; keep whichever your route uses
       map(params => params.get('usecaseId') ?? params.get('use_case_id') ?? params.get('id')),
@@ -173,7 +169,6 @@ export class DiagramComponent implements AfterViewInit {
     );
   }
 
-
   public showLinkTools(linkView: dia.LinkView) {
     const tools = new dia.ToolsView({
       tools: [
@@ -196,13 +191,9 @@ export class DiagramComponent implements AfterViewInit {
     linkView.addTools(tools);
   }
 
-
   public linkAction(link: Link) {
-
     link.remove();
-
   }
-
 
   public clearHighlights() {
     const allLinks = this.graph.getLinks();
@@ -265,7 +256,6 @@ export class DiagramComponent implements AfterViewInit {
 
     return json;
   }
-
 
   public tracePathNew(element: dia.Element, portId: string): boolean {
     const incomingLinks = this.graph.getConnectedLinks(element, {
@@ -422,50 +412,6 @@ export class DiagramComponent implements AfterViewInit {
       cursor: 'grab'
     });
 
-    // Create tooltip element once
-    const tooltipEl = document.createElement('div');
-    tooltipEl.id = 'jointjs-tooltip';
-    tooltipEl.style.position = 'fixed';
-    tooltipEl.style.background = '#333';
-    tooltipEl.style.color = '#fff';
-    tooltipEl.style.padding = '6px 10px';
-    tooltipEl.style.borderRadius = '6px';
-    tooltipEl.style.fontSize = '12px';
-    tooltipEl.style.whiteSpace = 'pre'; // preserve line breaks
-    tooltipEl.style.pointerEvents = 'none';
-    tooltipEl.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-    tooltipEl.style.zIndex = '9999';
-    tooltipEl.style.display = 'none';
-    document.body.appendChild(tooltipEl);
-
-    // Tooltip events
-    this.paper.on('cell:mouseenter',  (cellView, evt) => {
-      const target = evt.target as SVGElement;
-      const selector = target.getAttribute('joint-selector');
-
-      if (selector === 'headerLabel2') {
-        const tooltipText = cellView.model.attr('headerLabel2/title');
-        if (tooltipText) {
-          tooltipEl.textContent = tooltipText;
-          tooltipEl.style.display = 'block';
-        }
-      }
-    });
-
-    this.paper.on('cell:mousemove', (cellView, evt) => {
-      const target = evt.target as SVGElement;
-      const selector = target.getAttribute('joint-selector');
-
-      if (selector === 'headerLabel2') {
-        tooltipEl.style.left = evt.clientX + 10 + 'px';
-        tooltipEl.style.top = evt.clientY + 10 + 'px';
-      }
-    });
-
-    this.paper.on('cell:mouseleave', () => {
-      tooltipEl.style.display = 'none';
-    });
-
     // Helper to attach FreeTransform to a clicked element
     const attachFreeTransform = (elementView: dia.ElementView) => {
       // Remove an existing FT first
@@ -521,20 +467,19 @@ export class DiagramComponent implements AfterViewInit {
         const parts = nodeId.split("-");
         const type = parts[0]; // "SYS"
         const id = parts[1]; // "21"
-        const isBacktolineage=true;
+        const isBacktolineage = true;
         if (type == "S") {
-          this.router.navigate(['sources/edit-source/', id,isBacktolineage]);
+          this.router.navigate(['sources/edit-source/', id, isBacktolineage]);
         }
         else if (type == "SYS") {
-          
-          this.router.navigate(['systems/edit-system/', id,isBacktolineage]);
+
+          this.router.navigate(['systems/edit-system/', id, isBacktolineage]);
         }
         else if (type == "TGT") {
-          this.router.navigate(['targets/edit-target/', id,isBacktolineage]);
+          this.router.navigate(['targets/edit-target/', id, isBacktolineage]);
         }
       }
     });
-
 
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
@@ -608,9 +553,7 @@ export class DiagramComponent implements AfterViewInit {
 
     this.paper.on('element:action2:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
       console.log("helllllllllooo")
-
     })
-
 
     this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
@@ -621,7 +564,6 @@ export class DiagramComponent implements AfterViewInit {
       evt.preventDefault();
       this.zoom(ox, oy, delta);
     });
-
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
       this.showLinkTools(linkView);
@@ -752,19 +694,88 @@ export class DiagramComponent implements AfterViewInit {
                 console.log(error)
               }
             })
-
-
-            // Add element to graph with the returned selection
-
           });
-
-
         },
         error: (err) => {
           console.error('Failed to fetch sources:', err);
         }
       })
     });
+
+    this.paper.on('element:controlnameclick', async (elementView, evt) => {
+      console.log('cotrolnameclick');
+      const selector = evt.target.closest?.('[joint-selector="headerLabel2"]')
+      // Only trigger when clicking on headerLabel2
+      if (selector) {
+        const model = elementView.model;
+
+        // Safely get mouse coordinates
+        const mouseEvt: MouseEvent | undefined =
+          evt && ('clientX' in evt ? evt : evt.originalEvent);
+        const clientX = mouseEvt?.clientX ?? 0;
+        const clientY = mouseEvt?.clientY ?? 0;
+
+        const nodeId = model.id.toString();
+        if (nodeId) {
+          const parts = nodeId.split("-");
+          const type = parts[0]; // "SYS"
+          const id = parts[1]; // "21"
+
+          let entityType = "";
+          if (type == "S") {
+            entityType = "sources";
+          }
+          else if (type == "SYS") {
+            entityType = "systems";
+          }
+          else if (type == "TGT") {
+            entityType = "targets";
+          }
+
+          // ✅ Await the async data
+          const controlnames = await this.getEntityDataById(entityType, id);
+          // Open popup near the click
+          openJointPopup(model, clientX, clientY, controlnames);
+        }
+      }
+    });
+
+    function openJointPopup(model: any, x: number, y: number, controlnames: any) {
+      // Remove existing popup if open
+      const existing = document.querySelector('.jointjs-popup');
+      if (existing) existing.remove();
+
+      // Create popup container
+      const popup = document.createElement('div');
+      popup.className = 'jointjs-popup';
+      popup.style.left = `${x}px`;
+      popup.style.top = `${y}px`;
+
+      // Add content (customize as needed)
+      popup.innerHTML = `
+          <div class="popup-header">
+          <label>Controls</label> 
+          <span id="popupCancel">X</span>
+          </div>
+          <div class="popup-body">    
+            <div> ${controlnames} </div>
+          </div>
+          
+        `;
+
+      document.body.appendChild(popup);
+
+      popup.querySelector('#popupCancel')?.addEventListener('click', () => popup.remove());
+
+      // Close when clicking outside
+      const closePopup = (e: MouseEvent) => {
+        if (!popup.contains(e.target as Node)) {
+          popup.remove();
+          document.removeEventListener('click', closePopup);
+        }
+      };
+      // setTimeout(() => document.addEventListener('click', closePopup), 0);
+    }
 
 
     const styleId = 'jointjs-dash-animation-style';
@@ -906,6 +917,27 @@ export class DiagramComponent implements AfterViewInit {
   toggleDiagram() {
     this.diagramCollapsed = !this.diagramCollapsed;
   }
+
+  async getEntityDataById(typename: any, entityId: any): Promise<string> {
+    try {
+      const fullData: any = await this.lineageService.getEntityById(typename, entityId).toPromise();
+      const parsedData = JSON.parse(fullData.node);
+
+      if (parsedData?.controls?.length > 0) {
+        const controlNamesHtml = parsedData.controls
+          .map((c: any) => `<li>${c.name}</li>`)
+          .join('');
+        return `<ul>${controlNamesHtml}</ul>`;
+      }
+
+      return '<ul><li>No controls found</li></ul>';
+    } catch (error) {
+      console.error(error);
+      return '<ul><li>Error fetching data</li></ul>';
+    }
+  }
+
+
 }
 
 
