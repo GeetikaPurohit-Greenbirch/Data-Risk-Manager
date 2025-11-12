@@ -369,8 +369,6 @@ export class Concat extends shapes.standard.HeaderedRecord {
         return this;
     }
 
-
-
     setCaretIcon() {
         return this.attr('caret', {
             ref: 'header',

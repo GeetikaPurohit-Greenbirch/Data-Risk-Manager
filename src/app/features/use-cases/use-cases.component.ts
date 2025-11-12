@@ -234,6 +234,7 @@ export class UseCasesComponent {
     { field: 'next_review_date', header: 'Next Review Date', editable: false, },
     { field: 'reviewer', header: 'Reviewer', editable: false, },
     { field: 'permission', header: 'Permission', editable: false, },
+    // { field: 'actions', header: 'Actions', editable: false, },
   ];
   
 

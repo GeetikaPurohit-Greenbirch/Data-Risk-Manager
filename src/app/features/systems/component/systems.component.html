@@ -3,7 +3,7 @@
   <main class="dashboard-container">
     <section class="welcome-banner create">
       <h2>Systems</h2>
-      <button class="button" (click)="addSystemScreen()">
+      <button class="btn btn--primary" (click)="addSystemScreen()">
         <i class="fa fa-cogs" style="margin-right: 8px;"></i>
         Add System
       </button>
@@ -26,8 +26,8 @@
               <div class="p-toolbar-group-left">
                 <span class="p-input-icon-left">
                   <i class="pi pi-search"></i>
-                  <input pInputText type="text" #globalFilter
-                    (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                  <input pInputText type="text" #globalFilter (input)="dt.filterGlobal(globalFilter.value, 'contains')"
+                    placeholder="Global Search" />
                 </span>
               </div>
               <div class="p-toolbar-group-right">
@@ -46,19 +46,20 @@
               <ng-template pTemplate="header">
                 <tr>
                   <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">{{ col.header }}</th>
-                  <th>Actions</th>
+                  <th pFrozenColumn alignFrozen="right" [frozen]="true">Actions</th>
                 </tr>
               </ng-template>
 
               <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
                 <tr>
                   <td *ngFor="let col of selectedColumns">{{ row[col.field] }}</td>
-                  <td>
+
+                  <td pFrozenColumn alignFrozen="right" [frozen]="true">
                     <button pButton icon="pi pi-pencil" class="p-button-text p-button-info"
                       (click)="editSystem(row)"></button>
                     <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
                       (click)="deleteSystem(row)"></button>
-                      <button pButton icon="pi pi-copy" class="p-button-text p-button-primary"
+                    <button pButton icon="pi pi-copy" class="p-button-text p-button-primary"
                       (click)="cloneSystem(row)"></button>
                   </td>
                 </tr>

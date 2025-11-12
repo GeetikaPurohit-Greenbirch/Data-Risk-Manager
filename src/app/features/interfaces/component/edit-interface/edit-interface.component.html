@@ -125,8 +125,8 @@
               </mat-form-field>
 
             </form>
-            <div class="form-grid11">
-              <button class="btn btn--primary btn-md" (click)="onUpdate()">Save</button>
+            <div style="padding-left: 8px;">
+              <button class="btn btn--primary" (click)="onUpdate()">Save</button>
             </div>
           </div>
 
@@ -168,14 +168,14 @@
                   <ng-template pTemplate="header">
                     <tr>
                       <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">{{ col.header }}</th>
-                      <th>Actions</th>
+                      <th pFrozenColumn alignFrozen="right" [frozen]="true">Actions</th>
                     </tr>
                   </ng-template>
 
                   <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
                     <tr>
                       <td *ngFor="let col of selectedColumns">{{ row[col.field] }}</td>
-                      <td>
+                      <td pFrozenColumn alignFrozen="right" [frozen]="true">
                         <button pButton icon="pi pi-pencil" class="p-button-text p-button-info"
                           (click)="editField(row)"></button>
                         <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
@@ -259,9 +259,9 @@
                     </div>
 
                     <div class="p-dialog-footer">
-                      <button class="btn btn--secondary btn-md" type="button" label="Cancel"
+                      <button class="btn btn--secondary" type="button" label="Cancel"
                         (click)="hideDialog()">Cancel</button>
-                      <button class="btn btn--primary btn-md" type="submit" label="Save">Save</button>
+                      <button class="btn btn--primary" type="submit" label="Save">Save</button>
                     </div>
                   </form>
                 </p-dialog>
@@ -271,9 +271,9 @@
               <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
                 <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
                 <p-footer>
-                  <button label="No" class="btn btn--secondary btn-md" style="margin-right: 16px;" (click)="showDeleteDialog = false">No</button>
-                  <button label="Yes" class="btn btn--primary btn-md" (click)="deleteRow()">Yes</button>
-
+                  <button label="No" class="btn btn--secondary" style="margin-right: 16px;"
+                    (click)="showDeleteDialog = false">No</button>
+                  <button label="Yes" class="btn btn--danger" (click)="deleteRow()">Yes</button>
                 </p-footer>
               </p-dialog>
             </div>

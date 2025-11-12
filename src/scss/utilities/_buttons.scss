@@ -59,6 +59,29 @@
       background-color: #f1f5f9;
     }
   }
+
+  // ==== DANGER BUTTON ====
+  &--danger {
+    @include button-variant($btn-danger-bg, $btn-primary-color, darken($btn-danger-bg, 10%));
+    &:hover {
+      color: #fff;
+    }
+
+    // Disabled state for primary
+    &.disabled, &:disabled, &[disabled], &[aria-disabled="true"] {
+      background-color: $btn-danger-disabled-bg;
+      color: $btn-danger-disabled-color;
+      opacity: $btn-disabled-opacity;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      // Prevent hover changes when disabled
+      &:hover {
+        background-color: $btn-danger-disabled-bg;
+        color: $btn-danger-disabled-color;
+      }
+    }
+  }
 }
 
 // ===== IN HTML FILES ====

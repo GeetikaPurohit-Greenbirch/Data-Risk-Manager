@@ -192,7 +192,7 @@
                     <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
                       [globalFilterFields]="globalFilterFields" [rowsPerPageOptions]="[10,25,50]"
                       [responsiveLayout]="'scroll'" sortMode="multiple" [showCurrentPageReport]="true" editMode="cell"
-                      resizableColumns="true" columnResizeMode="fit"
+                      columnResizeMode="fit"
                       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                       styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
 
@@ -200,16 +200,12 @@
                       <ng-template pTemplate="header">
                         <!-- Parent Header -->
                         <tr>
-                          <th [attr.colspan]="cols.length" class="custom-parent-header" pTooltip="DQA">
-                            DQA
-                          </th>
+                          <th [attr.colspan]="cols.length" class="custom-parent-header" pTooltip="DQA">DQA</th>
                         </tr>
 
                         <!-- Child Headers -->
                         <tr>
-                          <th *ngFor="let col of cols" pTooltip="{{ col.tooltip || col.header }}">
-                            {{ col.header }}
-                          </th>
+                          <th *ngFor="let col of cols" pTooltip="{{ col.tooltip || col.header }}">{{ col.header }}</th>
                         </tr>
                       </ng-template>
 
@@ -237,15 +233,9 @@
                       <!-- Actions Column -->
                       <ng-template pTemplate="header" let-columns>
                         <tr>
-                          <th [attr.colspan]="7" class="custom-parent-header">
-                            Data Fields
-                          </th>
-                          <th [attr.colspan]="6" class="custom-parent-header">
-                            DQA
-                          </th>
-                          <th [attr.colspan]="2" class="custom-parent-header">
-                            Action
-                          </th>
+                          <th [attr.colspan]="7" class="custom-parent-header">Data Fields</th>
+                          <th [attr.colspan]="6" class="custom-parent-header">DQA</th>
+                          <th [attr.colspan]="2" class="custom-parent-header">Action</th>
                         </tr>
                         <tr>
                           <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field" pResizableColumn>
@@ -271,20 +261,21 @@
                       </ng-template>
                     </p-table>
                   </div>
+
                   <!-- Add/Edit Dialog -->
                   <div class="form-dialog-container">
                     <p-dialog header="{{ isEdit ? 'Edit Field' : 'Add Field' }}" [(visible)]="fieldDialog"
                       [modal]="true" [style]="{width: '600px' }" [closable]="true">
                       <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
                         <div class="p-fluid">
-                          <div style="display: flex;gap: 16px;">
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                          <div class="p-row">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="user_generated_id">Field No.</label>
                               <input id="user_generated_id" type="number" pInputText formControlName="user_generated_id"
                                 [ngClass]="{ 'ng-invalid ng-dirty': submitted && fieldForm.controls['user_generated_id'].invalid }" />
                             </div>
 
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="field_name">Field Name</label>
                               <input id="field_name" type="text" pInputText formControlName="field_name" />
                               <small class="p-error"
@@ -294,8 +285,8 @@
                             </div>
                           </div>
 
-                          <div style="display: flex;gap: 16px;">
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                          <div class="p-row">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="data_type">Data Type</label>
                               <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
                                 placeholder="Select Data Type"></p-dropdown>
@@ -305,7 +296,7 @@
                               </small>
                             </div>
 
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="field_length">Length</label>
                               <input id="field_length" type="number" pInputText formControlName="field_length" />
                               <small class="p-error"
@@ -315,40 +306,40 @@
                             </div>
                           </div>
 
-                          <div style="display: flex;gap: 16px;">
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                          <div class="p-row">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="Completeness">Completeness</label>
                               <p-dropdown id="Completeness" [options]="RiskTypeOptions" formControlName="dqa_c"
                                 placeholder="Select Completeness"></p-dropdown>
                             </div>
 
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="commentary_c">C Commentary</label>
                               <input id="commentary_c" type="text" pInputText formControlName="commentary_c" />
                             </div>
                           </div>
 
-                          <div style="display: flex;gap: 16px;">
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                          <div class="p-row">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="Completeness">Timeliness</label>
                               <p-dropdown id="Timeliness" [options]="RiskTypeOptions" formControlName="dqa_t"
                                 placeholder="Select Timeliness"></p-dropdown>
                             </div>
 
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="commentary_t">T Commentary</label>
                               <input id="commentary_t" type="text" pInputText formControlName="commentary_t" />
                             </div>
                           </div>
 
-                          <div style="display: flex;gap: 16px;">
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                          <div class="p-row">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="Accuracy">Accuracy</label>
                               <p-dropdown id="Accuracy" [options]="RiskTypeOptions" formControlName="dqa_a"
                                 placeholder="Select Accuracy"></p-dropdown>
                             </div>
 
-                            <div class="p-field p-mb-3" style="flex: 1 1 auto; max-width: 260px;">
+                            <div class="p-field p-mb-3 p-col">
                               <label for="commentary_a">A Commentary</label>
                               <input id="commentary_a" type="text" pInputText formControlName="commentary_a" />
                             </div>

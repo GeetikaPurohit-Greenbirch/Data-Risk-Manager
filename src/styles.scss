@@ -712,6 +712,43 @@ img {
       }
     }
   }
+
+  // ==== MULTISELECT DROPDOWN STYLES ====
+  .p-multiselect-panel {
+    background-color: white;
+
+    .p-multiselect-header {
+      padding: 0.3rem 0.5rem;
+
+      .p-multiselect-filter-container .p-inputtext {
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: .2rem 1.5rem .2rem .5rem;
+      }
+    }
+
+    .p-checkbox .p-checkbox-box {
+      width: 16px;
+      height: 16px;
+
+      .p-icon {
+        width: 0.65rem;
+      }
+    }
+
+    .p-multiselect-items {
+      .p-multiselect-item {
+        color: #666;
+        font-size: 14px;
+        padding: 0.2rem 0.5rem;
+
+        &:not(.p-highlight):not(.p-disabled):hover {
+          color: #000;
+          background: #f1f5f9;
+        }
+      }
+    }
+  }
 }
 
 // ==== FORM DIALOG STYLES ====
@@ -736,6 +773,16 @@ img {
     .p-dialog-content {
       background: transparent;
       padding: .1rem 1.6rem 1.6rem 1.6rem;
+
+      .p-row {
+        gap: 16px;
+        display: flex;
+
+        .p-col {
+          flex: 1 1 auto;
+          max-width: 260px;
+        }
+      }
 
       .p-field {
         margin-bottom: 10px;

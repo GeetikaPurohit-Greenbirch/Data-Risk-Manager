@@ -15,6 +15,9 @@ $btn-secondary-color: red;
 $btn-tertiary-bg: #f8f9fa;
 $btn-tertiary-color: #212529;
 
+$btn-danger-bg: #dc3545;
+$btn-danger-color: #ffffff;
+
 
 // Common
 $font-weight: 400;
@@ -58,3 +61,7 @@ $btn-primary-disabled-color: $btn-primary-color !default;
 $btn-secondary-disabled-bg: transparent !default;
 $btn-secondary-disabled-color: #6c757d !default;
 $btn-secondary-disabled-border: #e9ecef !default;
+
+$btn-disabled-opacity: 0.6 !default;
+$btn-danger-disabled-bg: lighten($btn-danger-bg, 30%) !default;
+$btn-danger-disabled-color: $btn-danger-color !default;

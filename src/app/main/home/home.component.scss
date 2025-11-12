@@ -31,8 +31,8 @@
   padding: 4px;
   margin: 0 auto;
   margin-top: 2rem;
-  margin-top: 2.2rem;
   border-radius: 4px;
+  margin-bottom: 1rem;
   width: calc(100% - 2rem);
   background-color: #ffffff;
 
@@ -127,6 +127,8 @@
 
 ::ng-deep .mdc-data-table__cell {
   font-size: 13px;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 ::ng-deep .mat-tab-labels {

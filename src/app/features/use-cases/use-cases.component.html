@@ -20,15 +20,15 @@
           </ag-grid-angular>
         </div> -->
 
-        
+
         <div class="ngprime-table" *ngIf="showDataFields">
           <div class="header">
             <p-toolbar>
               <div class="p-toolbar-group-left">
                 <span class="p-input-icon-left">
                   <i class="pi pi-search"></i>
-                  <input pInputText type="text" #globalFilter
-                    (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                  <input pInputText type="text" #globalFilter (input)="dt.filterGlobal(globalFilter.value, 'contains')"
+                    placeholder="Global Search" />
                 </span>
               </div>
               <div class="p-toolbar-group-right">
@@ -47,7 +47,7 @@
               <ng-template pTemplate="header">
                 <tr>
                   <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">{{ col.header }}</th>
-                  <th>Actions</th>
+                  <th pFrozenColumn>Actions</th>
                 </tr>
               </ng-template>
 
@@ -59,9 +59,9 @@
                       (click)="editUseCase(row)"></button>
                     <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
                       (click)="deleteUseCase(row)"></button>
-                      <button pButton icon="pi pi-share-alt" class="p-button-text p-button-warning"
+                    <button pButton icon="pi pi-share-alt" class="p-button-text p-button-warning"
                       (click)="openShareComponent(row)"></button>
-                      <button pButton icon="pi pi-send" class="p-button-text p-button-primary"
+                    <button pButton icon="pi pi-send" class="p-button-text p-button-primary"
                       (click)="openLineageComponent(row)"></button>
                   </td>
                 </tr>
