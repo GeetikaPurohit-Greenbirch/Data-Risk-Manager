@@ -285,10 +285,10 @@ export class EditTargetComponent {
   onBuildReport(payload: any) {
     console.log('Report payload:', payload);
     if (this.useCases.length > 0 && !this.targetForm.value.use_case) {
-        alert("Please select the use case first, to generate the report");
+      this.toastNotificationService.error("Please select the use case first, to generate the report");
         return;
       } else if(this.useCases.length == 0){
-        alert("No usecase available in lineage for this target. Not able to generate report.");
+        this.toastNotificationService.error("No usecase available in lineage for this target. Not able to generate report.");
         return;
       }
       else
