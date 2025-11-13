@@ -28,12 +28,9 @@
                 <p>Usecase ID : {{useCaseId}}</p>
                 <p>Usecase Name : {{useCaseName}}</p>
               </div>
-
-              <span class="update-link">
-                <button (click)="selectUseCase('usecase')">
-                  Update Use Case
-                </button>
-              </span>
+              <button class="btn btn--secondary btn-sm" (click)="selectUseCase('usecase')">
+                Update Use Case
+              </button>
             </div>
 
             <form class="usecase-form" [formGroup]="targetForm">
@@ -47,8 +44,7 @@
 
                 <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                   <mat-label>Quality Of Service</mat-label>
-                  <mat-select formControlName="quality_of_service"
-                  (selectionChange)="toggleFieldsBasedOnQoS($event)">
+                  <mat-select formControlName="quality_of_service" (selectionChange)="toggleFieldsBasedOnQoS($event)">
                     <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
                       {{ quality }}
                     </mat-option>
@@ -133,8 +129,8 @@
 
 
               </div>
-              <div class="form-grid">
-                <button (click)="onUpdate()">Save</button>
+              <div class="form-grid11" style="padding-left: 8px;">
+                <button class="btn btn--primary" (click)="onUpdate()">Save</button>
               </div>
             </form>
           </div>
@@ -297,14 +293,16 @@
               </div>
 
               <!-- delete confirmation dialog -->
-              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
-                <p-footer>
-                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
-                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
-
-                </p-footer>
-              </p-dialog>
+              <div class="confirmdelete-container">
+                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                  <p-footer>
+                    <button label="No" class="btn btn--secondary" style="margin-right: 14px;"
+                      (click)="showDeleteDialog = false">No</button>
+                    <button label="Yes" class="btn btn--danger" (click)="deleteRow()">Yes</button>
+                  </p-footer>
+                </p-dialog>
+              </div>
 
               <div [hidden]="!showReport">
                 <div class="report-builder">

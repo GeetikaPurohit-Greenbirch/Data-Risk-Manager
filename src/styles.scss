@@ -813,6 +813,33 @@ img {
   }
 }
 
+// ==== CONFIRM DELETE ====
+.confirmdelete-container {
+  .p-dialog {
+
+    .p-dialog-header {
+      padding: 1.2rem;
+
+      .p-dialog-title {
+        font-weight: 600;
+        font-size: 1.15rem;
+      }
+    }
+
+    .p-dialog-content {
+      padding: 0rem 1.2rem 1rem;
+
+      p {
+        margin: 0rem;
+      }
+    }
+
+    .p-dialog-footer {
+      padding: 1.2rem;
+    }
+  }
+}
+
 // ==== DROPDOWN STYLES ====
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   font-size: 14px;
