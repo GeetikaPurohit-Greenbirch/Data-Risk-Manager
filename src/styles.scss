@@ -846,18 +846,19 @@ img {
 
 .jointjs-popup .popup-body {
   font-size: 14px;
+  ul {
+    li {
+      cursor: pointer;
+      margin-bottom: 2px;
+      &:hover {
+        color: #007bff;
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
-.jointjs-popup .popup-body input {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
 
-.jointjs-popup .popup-actions {
-  margin-top: 8px;
-  text-align: right;
-}
 
 .jointjs-popup .popup-actions button {
   margin-left: 6px;

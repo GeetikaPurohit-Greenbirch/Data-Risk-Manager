@@ -9,6 +9,13 @@
           </button>
         </div>
         {{ controlId > 0 ? 'Edit Control' : 'Add Control' }}
+
+        <div style="display: flex;justify-content: flex-end;">
+          <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
+          Back to lineage
+        </button>
+        </div>
+        
       </h2>
     </section>
     <mat-card>
