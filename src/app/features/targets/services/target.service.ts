@@ -20,6 +20,13 @@ private apiLineageBaseUrl = environment.apiLineageBaseUrl
     return this.http.post<any>(url, payload);
   }
 
+  public mapTargetToUseCase(targetid:any, usecaseid:any): Observable<any> {
+    const url: string = this.apiUrl +'targets_use_case/'+targetid+'/use-cases/'+usecaseid;
+    // console.log(payload)
+
+    return this.http.post<any>(url, {});
+  }
+
     public cloneTargetDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
     const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
     console.log(payload)
@@ -31,6 +38,11 @@ private apiLineageBaseUrl = environment.apiLineageBaseUrl
         const url: string = this.apiUrl + 'targets';
         return this.http.get<Target[]>(url);
       }
+
+      getLinkedUseCase(targetId: number): Observable<any> {
+        const url: string = this.apiUrl + 'targets_use_case/' +targetId +'/use-cases';
+        return this.http.get<Target[]>(url);
+       }
   
       public getTargetById(id:number):Observable<Target[]> {
         const url: string = this.apiUrl + 'targets/id/'+id;

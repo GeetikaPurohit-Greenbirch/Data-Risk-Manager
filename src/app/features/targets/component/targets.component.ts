@@ -9,6 +9,7 @@ import { TargetService } from '../services/target.service';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { ToastnotificationService } from '../../shared-services/toastnotification.service';
 import { createElement, icons } from 'lucide';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-targets',
@@ -212,6 +213,11 @@ export class TargetsComponent {
       header: 'Methodology Of Transfer',
       editable: false,
     },
+    {
+      field: 'use_case_id',
+      header: 'Linked Use Case',
+      editable: false,
+    },
     { field: 'target_type', header: 'Target Type', editable: false },
     { field: 'target_version_number', header: 'Version', editable: false },
     { field: 'target_status', header: 'Status', editable: false },
@@ -282,14 +288,46 @@ export class TargetsComponent {
         const patchedTargets = targets.map((data) => ({
           ...data.targetEntity,
         }));
+ // For each target, get its linked use case(s)
+ const targetRequests = patchedTargets.map(target =>
+  this.targetService.getLinkedUseCase(target.target_id).pipe(
+    map((useCaseRes: any) => {
+      // If API returns multiple, take the first or join names
+      let linkedUseCaseName = '';
+      let linkedUseCaseId = '';
 
-        this.rowData = patchedTargets;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: (err) => {
-        console.error('Error fetching targets:', err);
-      },
+      if (useCaseRes) {
+        // Example: take first linked use case
+        linkedUseCaseId = useCaseRes.use_case_id;
+        // linkedUseCaseName = useCaseRes.use_case_name;
+      }
+
+      // Return merged target data with use case info
+      return {
+        ...target,
+        use_case_id: linkedUseCaseId,
+        // use_case_name: linkedUseCaseName
+      };
+    })
+  )
+);
+
+// Wait until all target-usecase mapping API calls complete
+forkJoin(targetRequests).subscribe({
+  next: (results) => {
+    this.rowData = results; // final enriched list
+    this.dataSource.data = results; // if you're using MatTableDataSource
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  },
+  error: (err) => {
+    console.error('Failed to fetch linked use cases:', err);
+  }
+});
+},
+error: (err) => {
+console.error('Failed to load targets:', err);
+}
     });
   }
 
