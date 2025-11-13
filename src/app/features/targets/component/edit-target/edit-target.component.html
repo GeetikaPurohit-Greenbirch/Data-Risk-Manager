@@ -23,7 +23,7 @@
           </div>
           <!-- Left: Edit Target Form -->
           <div class="left-panel">
-            <div class="usecaseid-container" *ngIf="targetId>0">
+            <!-- <div class="usecaseid-container" *ngIf="targetId>0">
               <div style="display: flex;gap: 1rem;align-items: center;">
                 <p>Usecase ID : {{useCaseId}}</p>
                 <p>Usecase Name : {{useCaseName}}</p>
@@ -34,7 +34,7 @@
                   Update Use Case
                 </button>
               </span>
-            </div>
+            </div> -->
 
             <form class="usecase-form" [formGroup]="targetForm">
               <div class="form-field-group">
@@ -129,6 +129,16 @@
                   <mat-label>Target Entity</mat-label>
                   <input matInput formControlName="target_entity" />
                   <mat-error *ngIf="targetForm.get('target_entity')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                  <mat-label>Select Use Case</mat-label>
+                  <mat-select formControlName="use_case">
+                    <mat-option *ngFor="let usecase of useCases" [value]="usecase.use_case_id">
+                      {{ usecase.use_case_id }} -- {{usecase.use_case_name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="targetForm.get('use_case')?.hasError('required')">Required</mat-error>
                 </mat-form-field>
 
 

@@ -45,6 +45,7 @@ export class EditSystemComponent{
   public savedUseCase: string | null = null;
   useCaseModel!:number;
   is_modified_risk_level: boolean = false;
+  resetRiskBtn : boolean = false;
  
   @ViewChild('paperContainer', { static: false }) paperContainer!: ElementRef;
 
@@ -1133,21 +1134,21 @@ defaultColDef: ColDef = {
 
       this.getUsecaseList();
 
-      // Check if use case already selected and saved
+    //   // Check if use case already selected and saved
       
-    this.savedUseCase = localStorage.getItem('selectedUseCaseSystem');
+    // this.savedUseCase = localStorage.getItem('selectedUseCaseSystem');
       
-    if (!this.savedUseCase) {
-      // Open popup only if no use case saved
-      setTimeout(() => {
-        this.openUsecasePopup();
-      }, 100);
-    } else {
-      // Restore saved use case
-      const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
-      this.useCaseId = useCaseId;
-      this.useCaseName = useCaseName;
-    }
+    // if (!this.savedUseCase) {
+    //   // Open popup only if no use case saved
+    //   setTimeout(() => {
+    //     this.openUsecasePopup();
+    //   }, 100);
+    // } else {
+    //   // Restore saved use case
+    //   const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
+    //   this.useCaseId = useCaseId;
+    //   this.useCaseName = useCaseName;
+    // }
   }
   else{
     this.formLoaded = true; // triggers re-render
@@ -1162,6 +1163,17 @@ ngAfterViewInit(): void {
     this.originalVersion = this.systemData.version_number;
     this.prefillForm(this.systemData);
   }
+}
+
+resetRiskLevels()
+{
+  this.systemService.resetRiskLevel(this.systemId).subscribe(() => {
+  
+    this.toastNotificationService.success("Risk level reset Successfully.");
+    this.is_modified_risk_level = false;
+    this.resetRiskBtn = false;
+   
+  });
 }
 
 resetFormForClone(): void {
@@ -1874,6 +1886,10 @@ request$.subscribe({
           }
 
           this.is_modified_risk_level = interfaceDataFields[0].is_modified_risk_level;
+          if(this.is_modified_risk_level == true)
+          {
+          this.resetRiskBtn = true; 
+        }
   
           const parsedOutboundInterfaces = JSON.parse(interfaceDataFields[0]?.outbound_interfaces || '[]');
 

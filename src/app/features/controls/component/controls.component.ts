@@ -58,7 +58,7 @@ export class ControlsComponent {
   ) {}
 
   columnDefs: (ColDef | ColGroupDef)[] = [
-    { field: 'control_id', headerName: 'Target ID', editable: false },
+    { field: 'control_id', headerName: 'Control ID', editable: false },
     { field: 'control_name', headerName: 'Name', editable: true },
     {
       field: 'control_description',
@@ -164,7 +164,7 @@ export class ControlsComponent {
   globalFilterFields: string[] = [];
 
   cols = [
-    { field: 'control_id', header: 'Target ID', editable: false },
+    { field: 'control_id', header: 'Control ID', editable: false },
     { field: 'control_name', header: 'Name', editable: true },
     {
       field: 'control_description',

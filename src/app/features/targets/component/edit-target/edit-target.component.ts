@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ColDef, ColGroupDef, GridReadyEvent } from 'ag-grid-community';
 // All Community Features
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { filter, forkJoin, Observable } from 'rxjs';
+import { filter, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { TargetService } from '../../services/target.service';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { Datafields } from 'src/app/features/shared-models/datafields.model';
@@ -111,6 +111,7 @@ export class EditTargetComponent {
 
   selectedColumns: any[] = [];
   globalFilterFields: string[] = [];
+  parentUsecaseid : any;
 
   constructor(
     private route: ActivatedRoute,
@@ -126,6 +127,7 @@ export class EditTargetComponent {
     private router: Router,
 
   ) { 
+
   this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe(() => {
@@ -136,6 +138,7 @@ export class EditTargetComponent {
             this.isClone = true;
             this.originalVersion = this.targetData.target_version_number;
             this.paentTargetId = this.targetData.target_id;
+            this.parentUsecaseid = this.targetData.use_case_id;
             this.resetFormForClone();
           }
         });
@@ -281,17 +284,28 @@ export class EditTargetComponent {
 
   onBuildReport(payload: any) {
     console.log('Report payload:', payload);
-
-    this.targetService.downloadSampleReport(this.useCaseId, payload).subscribe({
-      next: (response: Blob) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
-      },
-      error: (err) => {
-        console.error('Error downloading report:', err);
+    if (this.useCases.length > 0 && !this.targetForm.value.use_case) {
+        alert("Please select the use case first, to generate the report");
+        return;
+      } else if(this.useCases.length == 0){
+        alert("No usecase available in lineage for this target. Not able to generate report.");
+        return;
       }
-    });
+      else
+      {
+        // this.targetForm.get('use_case')?.clearValidators();
+        this.targetService.downloadSampleReport(this.targetForm.value.use_case, payload).subscribe({
+          next: (response: Blob) => {
+            const blob = new Blob([response], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          },
+          error: (err) => {
+            console.error('Error downloading report:', err);
+          }
+        });
+      }
+   
   }
 
   onCloseBuilder() {
@@ -330,6 +344,7 @@ export class EditTargetComponent {
       target_owner: ['', Validators.required],
       target_owner_email: ['', [Validators.required, Validators.email]],
       target_entity: ['', Validators.required],
+      use_case: [''],
       // add other form controls as needed
     });
     this.targetId = Number(this.route.snapshot.paramMap.get('id'));
@@ -340,6 +355,16 @@ export class EditTargetComponent {
       this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
     }
 
+
+    // if (!this.isClone) {
+    //   this.targetForm.get('use_case')?.setValidators(Validators.required);
+    // } else {
+    //   this.targetForm.get('use_case')?.clearValidators();
+    // }
+    
+    // Always update after changing validators
+    this.targetForm.get('use_case')?.updateValueAndValidity();
+    
     if (this.targetId > 0) {
       this.loader=true;
       // Step 2: Fetch data from API and patch to form
@@ -347,8 +372,31 @@ export class EditTargetComponent {
         next: (res: any) => {
           const data = res.targetEntity;
           this.targetForm.patchValue(data);
-          this.toggleFieldsBasedOnQoS(data.quality_of_service);
-          this.loader=false;
+          this.toggleFieldsBasedOnQoS(data.quality_of_service); 
+          
+          // 🔹 After getting target details, get linked use case
+          if(!this.isClone)
+          {
+          this.targetService.getLinkedUseCase(this.targetId).subscribe({
+            next: (useCaseRes: any) => {
+              // Assuming API returns an array of use cases
+              if (useCaseRes) {
+                const linkedUseCase = useCaseRes; // or handle multiple if needed
+  
+                // Patch linked use case ID (or name) to the form
+                this.targetForm.patchValue({
+                  use_case: linkedUseCase.use_case_id
+                  // use_case_name: linkedUseCase.use_case_name // optional if you have it
+                });
+              }
+              this.loader = false;
+            },
+            error: (err) => {
+              console.error('Failed to load linked use case:', err);
+              this.loader = false;
+            }
+          });
+        }
         },
         error: (err: any) => {
           console.error('Failed to load target:', err);
@@ -370,24 +418,24 @@ export class EditTargetComponent {
         this.toggleFieldsBasedOnQoS(value);
       });
       //  this.getDataFields();
-     
+      this.getUsecaseList();
 
       // Check if use case already selected and saved
 
-      this.savedUseCase = localStorage.getItem('selectedUseCaseTarget');
+      // this.savedUseCase = localStorage.getItem('selectedUseCaseTarget');
 
-      if (!this.savedUseCase) {
-         this.getUsecaseList();
-        // Open popup only if no use case saved
-        setTimeout(() => {
-          this.openUsecasePopup();
-        }, 100);
-      } else {
-        // Restore saved use case
-        const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
-        this.useCaseId = useCaseId;
-        this.useCaseName = useCaseName;
-      }
+      // if (!this.savedUseCase) {
+      //    this.getUsecaseList();
+      //   // Open popup only if no use case saved
+      //   setTimeout(() => {
+      //     this.openUsecasePopup();
+      //   }, 100);
+      // } else {
+      //   // Restore saved use case
+      //   const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
+      //   this.useCaseId = useCaseId;
+      //   this.useCaseName = useCaseName;
+      // }
       this.openTab('DataFields');
       this.createForm();
     }
@@ -419,6 +467,7 @@ export class EditTargetComponent {
 
   resetFormForClone(): void {
     this.targetForm.reset();
+
     this.prefillForm(this.targetData);
     this.targetForm.enable();
   }
@@ -435,7 +484,8 @@ export class EditTargetComponent {
       target_status: data.target_status,
       target_owner: data.target_owner,
       target_owner_email: data.target_owner_email,
-      target_entity: data.target_entity
+      target_entity: data.target_entity,
+      // use_case: data.use_case_id,
     });
 
    
@@ -510,20 +560,8 @@ export class EditTargetComponent {
 
         this.useCases = usecases;
         // ✅ Extract all use case IDs from API response
-        const apiUseCaseIds = this.useCases.map(u => u.use_case_id);
-
-        // ✅ Check if there's a stored use case in localStorage
-        const storedUseCase = JSON.parse(localStorage.getItem('selectedUseCaseTarget') || 'null');
-
-        if (storedUseCase) {
-          const storedUseCaseId = storedUseCase.useCaseId;
-
-          // ✅ If stored use case ID is NOT found in API response, remove it
-          if (!apiUseCaseIds.includes(storedUseCaseId)) {
-            console.warn(`Use case ID ${storedUseCaseId} not found in API response. Removing from localStorage.`);
-            localStorage.removeItem('selectedUseCaseTarget');
-          }
-        }
+        const apiUseCaseIds = this.useCases.map(u => u.use_case_id);    
+    
       },
       error: err => {
         console.error('Error fetching usecases:', err);
@@ -555,7 +593,7 @@ export class EditTargetComponent {
   }
 
   toggleFieldsBasedOnQoS(event: MatSelectChange): void {
-    const value = event.value;
+    const value = event.value || event;
     if (value === 'STREAMING' || value === 'AD_HOC') {
       this.targetForm.get('frequency_of_update')?.disable({ emitEvent: false });
       this.targetForm.get('schedule_of_update')?.disable({ emitEvent: false });
@@ -660,31 +698,10 @@ export class EditTargetComponent {
       }
     }
 
-    // const request$ = isUpdate
-    //   ? this.targetService.updateTarget(payload)
-    //   : this.targetService.createTarget(payload);
-
-    // request$.subscribe({
-    //   next: (res) => {
-    //     if (res) {
-    //       const targetId = isUpdate ? this.targetId : res.targetEntity.target_id;
-    //       const action = isUpdate ? 'Updated' : 'Created';
-    //       this.toastNotificationService.success(`Target ${action} Successfully. Your Source ID is ${targetId}.`);
-
-    //       if (!isUpdate) {
-    //         this.router.navigate(['/targets/edit-target', targetId]);
-    //       }
-    //     }
-    //   },
-    //   error: (err) => {
-    //     console.error('Error in source operation:', err);
-    //     this.toastNotificationService.error('An error occurred while saving the source.');
-    //   }
-    // });
-
 
     // Choose appropriate API call
           let request$: Observable<any>;
+          let mappingRequest$= this.targetService.mapTargetToUseCase(this.targetId,this.targetForm.value.use_case);
                      
                         if (this.isClone) {
                           // 🔁 Clone case
@@ -701,7 +718,26 @@ export class EditTargetComponent {
                           request$ = this.targetService.createTarget(payload);
                         }
         
-                        request$.subscribe({
+                        request$
+                        .pipe(
+                          switchMap((res: any) => {
+                            const targetId = this.isClone
+                              ? res.targetEntity.target_id
+                              : isUpdate
+                              ? this.targetId
+                              : res.targetEntity.target_id;
+
+                              // 🚫 Skip mapping API if cloning
+                              if (this.isClone) {
+                                return of(res);
+                              }
+
+                            // 🔗 Call mapping API via service
+                            return this.targetService.mapTargetToUseCase(targetId, this.targetForm.value.use_case).pipe(
+                              map(() => res) // keep the original response
+                            );
+                          })
+                        ).subscribe({
                           next: (res: any) => {
                             if (this.isClone) {
                               // Handle Clone Success
@@ -720,19 +756,6 @@ export class EditTargetComponent {
                               `Target ${action} successfully. Your Target ID is ${targetID}`
                             );
                         
-                            // 🔁 If you only need to clone *after* creating, handle it separately:
-                            // if (!isUpdate && !this.isClone) {
-                            //   this.targetService
-                            //     .cloneTargetDatafields(payload, 'targets', this.paentTargetId)
-                            //     .subscribe({
-                            //       next: (cloneRes) => {
-                            //         this.toastNotificationService.success('Datafields cloned successfully.');
-                            //         this.router.navigate(['/targets/edit-target', cloneRes.targetEntity.target_id]);
-                            //       },
-                            //       error: () =>
-                            //         this.toastNotificationService.error('Failed to clone datafields.')
-                            //     });
-                            // }
                           },
                           error: (err) => {
                             const action = isUpdate
