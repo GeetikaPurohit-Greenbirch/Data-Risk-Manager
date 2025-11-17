@@ -256,11 +256,11 @@ export class EditControlComponent {
 
   cols = [
     { field: 'field_id', header: 'Field ID', editable: false },
-    { field: 'field_name', header: 'Field Name', editable: true },
-    { field: 'entity_id', header: 'Entity ID', editable: true },
-    { field: 'entity_type', header: 'Entity Type', editable: true },
-    { field: 'field_length', header: 'Field Length', editable: true, },
-    { field: 'field_description', header: 'Field Description', editable: true, },
+    { field: 'field_name', header: 'Field Name', editable: false },
+    { field: 'entity_id', header: 'Entity ID', editable: false },
+    { field: 'entity_type', header: 'Entity Type', editable: false },
+    { field: 'field_length', header: 'Field Length', editable: false, },
+    { field: 'field_description', header: 'Field Description', editable: false, },
     {
       field: 'post_control_dqa_c',
       header: 'After Control Completeness',
@@ -268,7 +268,7 @@ export class EditControlComponent {
       type: 'dropdown',
       tooltip: 'C',
       style: { color: '#e8000a', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
     {
       field: 'post_control_dqa_t',
@@ -277,7 +277,7 @@ export class EditControlComponent {
       type: 'dropdown',
       tooltip: 'T',
       style: { color: '#3e63dd', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
     {
       field: 'post_control_dqa_a',
@@ -286,7 +286,7 @@ export class EditControlComponent {
       type: 'dropdown',
       tooltip: 'A',
       style: { color: 'purple', fontWeight: 600 },
-      dropdownValues: ['HIGH', 'MEDIUM', 'LOW']
+      dropdownValues: ['High', 'Medium', 'Low']
     },
   ];
 
@@ -606,12 +606,13 @@ export class EditControlComponent {
   saveDatafields(data: any) {
     console.log(data, "Control Data Fields");
 
-    this.dataFieldsModel.id = data.data.id;
+    this.dataFieldsModel.id = data.pcrc_id;
     this.dataFieldsModel.control_id = this.controlId;
-    this.dataFieldsModel.field_id = data.data.field_id;
-    this.dataFieldsModel.post_control_timeliness = data.data.post_control_dqa_t;
-    this.dataFieldsModel.post_control_accuracy = data.data.post_control_dqa_a;
-    this.dataFieldsModel.post_control_completeness = data.data.post_control_dqa_c;
+    this.dataFieldsModel.field_id = data.field_id;
+    // this.dataFieldsModel.field_description = data.field_description;
+    this.dataFieldsModel.post_control_timeliness = data.post_control_dqa_t;
+    this.dataFieldsModel.post_control_accuracy = data.post_control_dqa_a;
+    this.dataFieldsModel.post_control_completeness = data.post_control_dqa_c;
 
     this.datafieldsService.updateControlsDatafields(this.dataFieldsModel).subscribe(() => {
 

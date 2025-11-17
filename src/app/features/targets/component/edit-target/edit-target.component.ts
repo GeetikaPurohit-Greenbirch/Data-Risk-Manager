@@ -728,7 +728,7 @@ export class EditTargetComponent {
                               : res.targetEntity.target_id;
 
                               // 🚫 Skip mapping API if cloning
-                              if (this.isClone) {
+                              if (this.isClone || this.targetForm.value.use_case == '') {
                                 return of(res);
                               }
 
