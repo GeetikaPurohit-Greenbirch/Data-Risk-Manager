@@ -89,8 +89,7 @@ export class LineageComponent implements AfterViewInit {
     const usecaseId = (segments[segments.length - 2] || '');
 
     forkJoin({
-      initialData: this.lineageService
-        .getLineageDetailsByLinkId(linkId, usecaseId)
+      initialData: this.lineageService.getLineageDetailsByLinkId(linkId, usecaseId)
         .pipe(
           catchError(err => {
             console.error('initialData failed:', err);

@@ -277,7 +277,7 @@ export class Concat extends shapes.standard.HeaderedRecord {
             { tagName: 'rect', selector: 'body' },
             { tagName: 'rect', selector: 'header' },
             { tagName: 'rect', selector: 'tabColor' },
-            { tagName: 'path', selector: 'caret' },               // <— caret
+            // { tagName: 'path', selector: 'caret' },               // <— caret
             { tagName: 'image', selector: 'headerIcon' },
             { tagName: 'text', selector: 'headerLabel' },
             {
