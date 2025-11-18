@@ -117,7 +117,7 @@ img {
   h2 {
     gap: 6px;
     display: flex;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     align-items: center;
 
@@ -130,6 +130,7 @@ img {
         background-color: transparent;
 
         & svg {
+          width: 20px;
           color: currentColor;
         }
 

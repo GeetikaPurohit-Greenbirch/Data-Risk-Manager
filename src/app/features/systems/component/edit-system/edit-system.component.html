@@ -9,9 +9,11 @@
           </button>
         </div>
         {{ systemId > 0 ? 'Edit System' : 'Add System' }}
-        <button (click)="onBackToLineage()" class="p-r-10" *ngIf="isBacktolineage">
+        <div style="display: flex;justify-content: flex-end;">
+          <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
           Back to lineage
         </button>
+        </div>
       </h2>
 
     </section>
@@ -23,7 +25,7 @@
       <div class="container">
         <div class="systemedit-container">
           <div class="left-panel">
-            <div class="usecaseid-container" *ngIf="systemId>0">
+            <!-- <div class="usecaseid-container" *ngIf="systemId>0">
               <div style="display: flex;gap: 1rem;align-items: center;">
                 <p>Usecase ID : {{useCaseId}}</p>
                 <p>Usecase Name : {{useCaseName}}</p>
@@ -34,7 +36,7 @@
                   Update Use Case
                 </button>
               </span>
-            </div>
+            </div> -->
 
             <form [formGroup]="systemForm">
               <mat-form-field appearance="outline" class="full-width">
@@ -93,6 +95,7 @@
             </div>
             <p class="riskIndicator" *ngIf="is_modified_risk_level">* Data Risk has been adjusted or overriden. (Globally or Individually)</p>
           </div>
+          <button *ngIf="resetRiskBtn" (click)="resetRiskLevels()" style="width: 10%;" class="btn btn-primary">Reset Risk Levels</button>
 
           <div class="right-panel" *ngIf="systemId>0">
             <!-- TABS CONTAINER -->

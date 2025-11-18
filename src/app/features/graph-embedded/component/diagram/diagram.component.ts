@@ -703,7 +703,7 @@ export class DiagramComponent implements AfterViewInit {
     });
 
     this.paper.on('element:controlnameclick', async (elementView, evt) => {
-      console.log('cotrolnameclick');
+
       const selector = evt.target.closest?.('[joint-selector="headerLabel2"]')
       // Only trigger when clicking on headerLabel2
       if (selector) {
@@ -735,37 +735,45 @@ export class DiagramComponent implements AfterViewInit {
           // ✅ Await the async data
           const controlnames = await this.getEntityDataById(entityType, id);
           // Open popup near the click
-          openJointPopup(model, clientX, clientY, controlnames);
+          openJointPopup(model, clientX, clientY, controlnames, this.router);
         }
       }
     });
 
-    function openJointPopup(model: any, x: number, y: number, controlnames: any) {
-      // Remove existing popup if open
+    function openJointPopup(model: any, x: number, y: number, controlnames: any, router: any) {
       const existing = document.querySelector('.jointjs-popup');
       if (existing) existing.remove();
 
-      // Create popup container
       const popup = document.createElement('div');
       popup.className = 'jointjs-popup';
       popup.style.left = `${x}px`;
       popup.style.top = `${y}px`;
 
-      // Add content (customize as needed)
       popup.innerHTML = `
-          <div class="popup-header">
-          <label>Controls</label> 
-          <span id="popupCancel">X</span>
-          </div>
-          <div class="popup-body">    
-            <div> ${controlnames} </div>
-          </div>
-          
-        `;
+    <div class="popup-header">
+      <label>Controls</label> 
+      <span id="popupCancel">X</span>
+    </div>
+    <div class="popup-body">    
+      <div>${controlnames}</div>
+    </div>
+  `;
 
       document.body.appendChild(popup);
 
       popup.querySelector('#popupCancel')?.addEventListener('click', () => popup.remove());
+
+      // Handle click on any <li>
+      popup.addEventListener('click', (event: any) => {
+        const li = event.target.closest('li');
+        if (li) {
+          const controlId = li.getAttribute('data-id')?.replace('C-', '');
+          if (controlId) {
+            popup.remove();
+            router.navigate(['/controls/edit-control', controlId,true]); // ✅ uses injected router
+          }
+        }
+      });
 
       // Close when clicking outside
       const closePopup = (e: MouseEvent) => {
@@ -774,9 +782,9 @@ export class DiagramComponent implements AfterViewInit {
           document.removeEventListener('click', closePopup);
         }
       };
-      // setTimeout(() => document.addEventListener('click', closePopup), 0);
-    }
 
+      setTimeout(() => document.addEventListener('click', closePopup), 0);
+    }
 
     const styleId = 'jointjs-dash-animation-style';
     if (!document.getElementById(styleId)) {
@@ -918,6 +926,25 @@ export class DiagramComponent implements AfterViewInit {
     this.diagramCollapsed = !this.diagramCollapsed;
   }
 
+  // async getEntityDataById(typename: any, entityId: any): Promise<string> {
+  //   try {
+  //     const fullData: any = await this.lineageService.getEntityById(typename, entityId).toPromise();
+  //     const parsedData = JSON.parse(fullData.node);
+
+  //     if (parsedData?.controls?.length > 0) {
+  //       const controlNamesHtml = parsedData.controls
+  //         .map((c: any) => `<li>${c.name}</li>`)
+  //         .join('');
+  //       return `<ul>${controlNamesHtml}</ul>`;
+  //     }
+
+  //     return '<ul><li>No controls found</li></ul>';
+  //   } catch (error) {
+  //     console.error(error);
+  //     return '<ul><li>Error fetching data</li></ul>';
+  //   }
+  // }
+
   async getEntityDataById(typename: any, entityId: any): Promise<string> {
     try {
       const fullData: any = await this.lineageService.getEntityById(typename, entityId).toPromise();
@@ -925,7 +952,7 @@ export class DiagramComponent implements AfterViewInit {
 
       if (parsedData?.controls?.length > 0) {
         const controlNamesHtml = parsedData.controls
-          .map((c: any) => `<li>${c.name}</li>`)
+          .map((c: any) => `<li class="control-item" data-id="${c.id}">${c.name}</li>`)
           .join('');
         return `<ul>${controlNamesHtml}</ul>`;
       }

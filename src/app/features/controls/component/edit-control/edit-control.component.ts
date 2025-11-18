@@ -58,6 +58,8 @@ export class EditControlComponent {
   activeView!: string; // default view on load
   formLoaded = false;
   dataFieldsModel: Datafields = new Datafields();
+  isBacktolineage=false;
+  BacktolineagePath: any ="";
 
   constructor(
     private route: ActivatedRoute,
@@ -328,6 +330,11 @@ export class EditControlComponent {
       application_date_status: ['', Validators.required],
     });
     this.controlId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
+    if(this.isBacktolineage)
+    {      
+      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    }
 
     if (this.controlId > 0) {
       // Step 2: Fetch data from API and patch to form
@@ -360,7 +367,10 @@ export class EditControlComponent {
     }
   }
 
-
+  onBackToLineage()
+  {
+     this.router.navigate(JSON.parse(this.BacktolineagePath));
+  }
   onChange(attachTo: string, preselectedId?: string): void {
     this.filteredAttachToIdOptions = []; // Clear previous list
     this.controlForm.get('attach_to_id')?.setValue(null); // Reset selection

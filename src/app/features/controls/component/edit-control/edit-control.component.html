@@ -1,15 +1,20 @@
 <div class="main-container">
 
   <main class="dashboard-container">
-    <section class="welcome-banner">
-      <h2>
-        <div class="back-icon">
-          <button (click)="onBack()">
-            <lucide-icon name="chevron-left"></lucide-icon>
-          </button>
-        </div>
-        {{ controlId > 0 ? 'Edit Control' : 'Add Control' }}
-      </h2>
+    <section class="welcome-banner create">
+      <div style="display: flex;justify-content: space-between;width: 100%;">
+        <h2>
+          <div class="back-icon">
+            <button (click)="onBack()">
+              <lucide-icon name="chevron-left"></lucide-icon>
+            </button>
+          </div>
+          {{ controlId > 0 ? 'Edit Control' : 'Add Control' }}
+        </h2>
+        <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
+          Back to lineage
+        </button>
+      </div>
     </section>
     <mat-card>
 

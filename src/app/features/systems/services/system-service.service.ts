@@ -21,6 +21,13 @@ export class SystemServiceService {
     return this.http.post<any>(url, payload);
   }
 
+  public resetRiskLevel(entity_id:any): Observable<any> {
+    const url: string = this.apiUrl + 'systems/reset/'+ entity_id;
+    // console.log(payload)
+
+    return this.http.post<any>(url, {});
+  }
+
 
   public cloneSystemDatafields(payload:any, entity_type:any, parentId:any): Observable<any> {
     const url: string = this.apiUrl +entity_type+ '/clone/'+parentId;
