@@ -363,4 +363,17 @@ console.error('Failed to load targets:', err);
           state: { clonedTarget: clonedData }
         });
       }
+
+      cloneTargetAsInterface(targetData: Target) {
+        // Remove unique IDs (if any) and flag it as cloned
+        const clonedDataasInterface = { ...targetData };
+      
+        // Optional: mark this as a clone for validation later
+        clonedDataasInterface.isClone = true;
+      
+        // Navigate to Interface Builder with prefilled data
+        this.router.navigate(['/interfaces/interface-builder'], {
+          state: { clonedTargetasInterface: clonedDataasInterface }
+        });
+      }
 }

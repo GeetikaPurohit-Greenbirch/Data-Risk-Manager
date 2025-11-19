@@ -39,10 +39,13 @@ export class EditInterfaceComponent implements OnInit {
   frequencyLimit = 1;
   scheduleLimitReached = false;
   interfaceData: any;
-
+  targetData:any;
   isClone = false;
   originalVersion = '';
+  originalVersionTarget = '';
   paentInterfaceId:any;
+  paentTargetId:any;
+  parentUsecaseid : any;
 
   // rowData: any;
   dataFieldsModel: Datafields = new Datafields();
@@ -61,12 +64,22 @@ export class EditInterfaceComponent implements OnInit {
     .subscribe(() => {
       const nav = this.router.getCurrentNavigation();
       const state = nav?.extras?.state as { clonedInterface?: any };
+      const state1 = nav?.extras?.state as { clonedTargetasInterface?: any };
       if (state?.clonedInterface) {
         this.interfaceData = state.clonedInterface;
         this.isClone = true;
         this.originalVersion = this.interfaceData.interface_version_number;
         this.paentInterfaceId = this.interfaceData.interface_id;
         this.resetFormForClone();
+      }
+
+      if (state1?.clonedTargetasInterface) {
+        this.targetData = state1.clonedTargetasInterface;
+        this.isClone = true;
+        this.originalVersionTarget = this.targetData.target_version_number;
+        this.paentTargetId = this.targetData.target_id;
+        this.parentUsecaseid = this.targetData.use_case_id;
+        this.resetFormForCloneTargetasInterface();
       }
     });
   }
@@ -287,6 +300,13 @@ export class EditInterfaceComponent implements OnInit {
       this.isClone = true;
       this.originalVersion = this.interfaceData.interface_version_number;
       this.prefillForm(this.interfaceData);
+
+    }
+    if (this.targetData) {
+      this.isClone = true;
+      this.originalVersionTarget = this.targetData.target_version_number;
+      this.prefillyTargetasInterfaceForm(this.targetData);
+
     }
   }
 
@@ -294,6 +314,27 @@ export class EditInterfaceComponent implements OnInit {
     this.interfaceForm.reset();
     this.prefillForm(this.interfaceData);
     this.interfaceForm.enable();
+  }
+
+  resetFormForCloneTargetasInterface(): void {
+    this.interfaceForm.reset();
+    this.prefillyTargetasInterfaceForm(this.targetData);
+    this.interfaceForm.enable();
+  }
+
+  prefillyTargetasInterfaceForm(data: any): void {
+    this.interfaceForm.patchValue({
+      interface_name: data.target_name,
+      quality_of_service: data.quality_of_service,
+      frequency_of_update: data.frequency_of_update,
+      schedule_of_update: data.schedule_of_update,
+      methodology_of_transfer: data.methodology_of_transfer,
+      interface_type: "",
+      interface_version_number: data.target_version_number, // ✅ correct field name
+      interface_status: data.target_status,
+      interface_owner: data.target_owner,
+      interface_owner_email: data.target_owner_email,
+    });
   }
 
   prefillForm(data: any): void {
@@ -457,19 +498,37 @@ export class EditInterfaceComponent implements OnInit {
        
         return;
       }
+
+      if (this.isClone && this.interfaceForm.value.interface_version_number === this.originalVersionTarget) {
+        this.toastNotificationService.error('Please change the version number before saving the cloned interface.');
+       
+        return;
+      }
     }
 
     // Choose appropriate API call
     let request$: Observable<any>;
            
-              if (this.isClone) {
+              if (this.isClone && this.interfaceData) {
                 // 🔁 Clone case
                 request$ = this.interfaceService.cloneInterfaceDatafields(
                   payload,
                   'interfaces',
-                  this.paentInterfaceId
+                  this.paentInterfaceId,
+                  'INTERFACE'
                 );
-              } else if (isUpdate) {
+              } else if
+              (this.isClone && this.targetData) {
+                // 🔁 Clone case
+                request$ = this.interfaceService.cloneInterfaceDatafields(
+                  payload,
+                  'interfaces',
+                  this.paentTargetId,
+                  'TARGET'
+                );
+              }
+              
+              else if (isUpdate) {
                 // ✏️ Update case
                 request$ = this.interfaceService.updateInterface(payload);
               } else {
