@@ -26,7 +26,7 @@ import { DialogModule } from 'primeng/dialog';
     SharedModule,
     TargetsRoutingModule,
     FormsModule,
-     DialogModule,           // 👈 required for <p-dialog>
+    DialogModule,           // required for <p-dialog>
     TableModule,            // for <p-table>
     ButtonModule,           // for <button pButton>
     InputTextModule,        // for pInputText

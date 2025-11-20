@@ -9,10 +9,10 @@
           </button>
         </div>
         {{ targetId > 0 ? 'Edit Target' : 'Add Target' }}
-         <div style="display: flex;justify-content: flex-end;">
+        <div style="display: flex;justify-content: flex-end;">
           <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
-          Back to lineage
-        </button>
+            Back to lineage
+          </button>
         </div>
       </h2>
     </section>
@@ -49,8 +49,7 @@
 
                 <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
                   <mat-label>Quality Of Service</mat-label>
-                  <mat-select formControlName="quality_of_service"
-                  (selectionChange)="toggleFieldsBasedOnQoS($event)">
+                  <mat-select formControlName="quality_of_service" (selectionChange)="toggleFieldsBasedOnQoS($event)">
                     <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
                       {{ quality }}
                     </mat-option>
@@ -235,11 +234,10 @@
                     <div class="p-fluid">
                       <div style="display: flex;gap: 16px;">
                         <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
-                          <label>Field No.<span class="required">*</span></label>
-                          <input type="text" pInputText formControlName="field_no" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_no')?.invalid && formGroup.get('field_no')?.touched">
-                            Field No. is required and must be numeric
+                          <label>Field No</label>
+                          <input type="text" pInputText formControlName="user_generated_id" />
+                          <small class="p-error" *ngIf="formGroup.get('user_generated_id')?.invalid">
+                            Field No must be numeric
                           </small>
                         </div>
 
@@ -255,20 +253,15 @@
 
                       <div style="display: flex;gap: 16px;">
                         <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
-                          <label>Description<span class="required">*</span></label>
+                          <label>Description</label>
                           <input type="text" pInputText formControlName="field_description" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_description')?.invalid && formGroup.get('field_description')?.touched">
-                            Description is required
-                          </small>
                         </div>
 
                         <div class="p-field" style="flex: 1 1 auto;">
                           <label>Length<span class="required">*</span></label>
                           <input type="text" pInputText formControlName="field_length" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_length')?.invalid && formGroup.get('field_length')?.touched">
-                            Field No. is required and must be numeric
+                          <small class="p-error" *ngIf="formGroup.get('field_length')?.invalid ">
+                            Field Length must be numeric
                           </small>
                         </div>
                       </div>
@@ -306,17 +299,16 @@
                     </div>
                   </form>
                 </p-dialog>
+                <!-- delete confirmation dialog -->
+                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
+                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                  <div class="p-dialog-footer">
+                    <button pButton type="button" class="btn btn--secondary"
+                      (click)="showDeleteDialog = false">No</button>
+                    <button pButton type="button" class="btn btn--primary" (click)="deleteRow()">Yes</button>
+                  </div>
+                </p-dialog>
               </div>
-
-              <!-- delete confirmation dialog -->
-              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
-                <p-footer>
-                  <button pButton label="No" class="p-button-danger p-r-10" (click)="showDeleteDialog = false"></button>
-                  <button pButton label="Yes" class="p-button-success " (click)="deleteRow()"></button>
-
-                </p-footer>
-              </p-dialog>
 
               <div [hidden]="!showReport">
                 <div class="report-builder">

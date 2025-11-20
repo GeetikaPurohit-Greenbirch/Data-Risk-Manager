@@ -781,10 +781,10 @@ export class EditTargetComponent {
   createForm() {
     this.formGroup = this.fb.group({
       field_id: [''],
-      field_no: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      user_generated_id: ['',  Validators.pattern(/^\d+$/)],
       field_name: ['', Validators.required],
-      field_description: ['', Validators.required],
-      field_length: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      field_description: [''],
+      field_length: ['',  Validators.pattern(/^\d+$/)],
       data_type: ['', Validators.required],
       criticality: ['', Validators.required],
     });
@@ -815,7 +815,7 @@ export class EditTargetComponent {
     //console.log(data, "Target Data Fields");
 
     this.dataFieldsModel.field_id = data.field_id;
-    this.dataFieldsModel.user_generated_id = data.field_no;
+    this.dataFieldsModel.user_generated_id = data.user_generated_id;
     this.dataFieldsModel.field_name = data.field_name;
     this.dataFieldsModel.field_description = data.field_description;
 

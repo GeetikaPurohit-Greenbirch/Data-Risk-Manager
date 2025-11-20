@@ -10,7 +10,11 @@ import { EditSystemComponent } from './component/edit-system/edit-system.compone
 import { CreateLineageComponent } from './component/create-lineage/create-lineage.component';
 import { CreateLineageNewComponent } from './component/create-lineage-new/create-lineage-new.component';
 import { icons, LucideAngularModule } from 'lucide-angular';
-
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,11 @@ import { icons, LucideAngularModule } from 'lucide-angular';
               Plus: icons.Plus,
               Trash2: icons.Trash2
             }),
+      DialogModule,           //  required for <p-dialog>
+      TableModule,            // for <p-table>
+      ButtonModule,           // for <button pButton>
+      InputTextModule,        // for pInputText
+      DropdownModule,         // for pDropdown
   ]
 })
 export class SystemsModule { }
