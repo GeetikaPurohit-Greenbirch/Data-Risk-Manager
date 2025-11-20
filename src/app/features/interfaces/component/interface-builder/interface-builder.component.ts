@@ -181,7 +181,7 @@ export class InterfaceBuilderComponent {
     // });
 
     const create$ = this.interfaceService.createInterface(payload);
-    const clone$ = this.interfaceService.cloneInterfaceDatafields(payload, 'INTERFACE', this.paentInterfaceId);
+    const clone$ = this.interfaceService.cloneInterfaceDatafields(payload, 'INTERFACE', this.paentInterfaceId, 'INTERFACE');
   
     forkJoin([create$, clone$]).subscribe({
       next: ([createRes, cloneRes]) => {
