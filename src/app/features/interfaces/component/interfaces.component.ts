@@ -147,6 +147,7 @@ export class InterfacesComponent {
   cols = [
     { field: 'interface_id', header: 'Interface ID' },
     { field: 'interface_name', header: 'Interface Name' },
+    { field: 'interface_description', header: 'Description' },
     { field: 'quality_of_service', header: 'Quality Of Service' },
     { field: 'frequency_of_update', header: 'Frequency Of Update' },
     { field: 'schedule_of_update', header: 'Schedule Of Update' },

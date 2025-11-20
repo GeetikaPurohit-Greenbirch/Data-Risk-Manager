@@ -140,7 +140,9 @@ export class CreateUseCaseComponent {
         this.usecaseService.updateUseCase(payload).subscribe(res => {
           if (res) {
             this.toastNotificationService.success("Usecase Updated Successfully.");
-            this.onBack();
+            this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
+
+            // this.onBack();
           }
         })
       }
@@ -148,8 +150,8 @@ export class CreateUseCaseComponent {
         this.usecaseService.createUsecase(payload).subscribe(res => {
           if (res) {
             this.toastNotificationService.success("UseCase Created Successfully. Your UseCase ID is " + res.useCaseEntity.use_case_id);
-            //this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
-            this.onBack();
+            this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
+            // this.onBack();
           }
         })
       }

@@ -1082,7 +1082,7 @@ defaultColDef: ColDef = {
     this.systemForm = this.fb.group({
       system_name:['', Validators.required],
       leanix_id: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       owner: ['', Validators.required],
       owner_email: ['', [Validators.required, Validators.email]],
       version_number: ['', Validators.required],
@@ -1539,6 +1539,7 @@ request$.subscribe({
     this.toastNotificationService.success(
       `System ${action} successfully. Your System ID is ${systemID}`
     );
+    this.router.navigate(['/systems/edit-system', res.systemEntity.system_id]);
 
     // 🔁 If you only need to clone *after* creating, handle it separately:
     // if (!isUpdate && !this.isClone) {
