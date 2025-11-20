@@ -29,7 +29,7 @@ export class EditTargetComponent {
   targetForm!: FormGroup;
   targetUseCaseForm!: FormGroup;
   showDataFields = true;
-  loader=false;
+  loader = false;
   //showDataQuality = false;
   //showDataFieldsTable = true;
   targetTypeOptions = ['SYSTEM', 'FILE', 'DISPLAY', 'PRINTER']
@@ -53,8 +53,8 @@ export class EditTargetComponent {
   formGroup!: FormGroup;
   currentRow: any = null;
   useCases: any[] = [];
-  isBacktolineage=false;
-  BacktolineagePath: any ="";
+  isBacktolineage = false;
+  BacktolineagePath: any = "";
 
   // ✅ DataFields table data
   // dataFields: any[] = [
@@ -81,7 +81,7 @@ export class EditTargetComponent {
 
   isClone = false;
   originalVersion = '';
-  paentTargetId:any;
+  paentTargetId: any;
 
   cols = [
     // { field: 'field_id', header: 'Field ID', editable: false },
@@ -111,7 +111,7 @@ export class EditTargetComponent {
 
   selectedColumns: any[] = [];
   globalFilterFields: string[] = [];
-  parentUsecaseid : any;
+  parentUsecaseid: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -126,23 +126,23 @@ export class EditTargetComponent {
     private usecaseService: UsecaseService,
     private router: Router,
 
-  ) { 
+  ) {
 
-  this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe(() => {
-          const nav = this.router.getCurrentNavigation();
-          const state = nav?.extras?.state as { clonedTarget?: any };
-          if (state?.clonedTarget) {
-            this.targetData = state.clonedTarget;
-            this.isClone = true;
-            this.originalVersion = this.targetData.target_version_number;
-            this.paentTargetId = this.targetData.target_id;
-            this.parentUsecaseid = this.targetData.use_case_id;
-            this.resetFormForClone();
-          }
-        });
-        
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const nav = this.router.getCurrentNavigation();
+        const state = nav?.extras?.state as { clonedTarget?: any };
+        if (state?.clonedTarget) {
+          this.targetData = state.clonedTarget;
+          this.isClone = true;
+          this.originalVersion = this.targetData.target_version_number;
+          this.paentTargetId = this.targetData.target_id;
+          this.parentUsecaseid = this.targetData.use_case_id;
+          this.resetFormForClone();
+        }
+      });
+
 
   }
 
@@ -286,26 +286,25 @@ export class EditTargetComponent {
     console.log('Report payload:', payload);
     if (this.useCases.length > 0 && !this.targetForm.value.use_case) {
       this.toastNotificationService.error("Please select the use case first, to generate the report");
-        return;
-      } else if(this.useCases.length == 0){
-        this.toastNotificationService.error("No usecase available in lineage for this target. Not able to generate report.");
-        return;
-      }
-      else
-      {
-        // this.targetForm.get('use_case')?.clearValidators();
-        this.targetService.downloadSampleReport(this.targetForm.value.use_case, payload).subscribe({
-          next: (response: Blob) => {
-            const blob = new Blob([response], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            window.open(url, '_blank');
-          },
-          error: (err) => {
-            console.error('Error downloading report:', err);
-          }
-        });
-      }
-   
+      return;
+    } else if (this.useCases.length == 0) {
+      this.toastNotificationService.error("No usecase available in lineage for this target. Not able to generate report.");
+      return;
+    }
+    else {
+      // this.targetForm.get('use_case')?.clearValidators();
+      this.targetService.downloadSampleReport(this.targetForm.value.use_case, payload).subscribe({
+        next: (response: Blob) => {
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url, '_blank');
+        },
+        error: (err) => {
+          console.error('Error downloading report:', err);
+        }
+      });
+    }
+
   }
 
   onCloseBuilder() {
@@ -350,9 +349,8 @@ export class EditTargetComponent {
     this.targetId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
-    if(this.isBacktolineage)
-    {      
-      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    if (this.isBacktolineage) {
+      this.BacktolineagePath = sessionStorage.getItem('BackTolineagePath')?.toString();
     }
 
 
@@ -361,48 +359,47 @@ export class EditTargetComponent {
     // } else {
     //   this.targetForm.get('use_case')?.clearValidators();
     // }
-    
+
     // Always update after changing validators
     this.targetForm.get('use_case')?.updateValueAndValidity();
-    
+
     if (this.targetId > 0) {
-      this.loader=true;
+      this.loader = true;
       // Step 2: Fetch data from API and patch to form
       this.targetService.getTargetById(this.targetId).subscribe({
         next: (res: any) => {
           const data = res.targetEntity;
           this.targetForm.patchValue(data);
-          this.toggleFieldsBasedOnQoS(data.quality_of_service); 
-          
+          this.toggleFieldsBasedOnQoS(data.quality_of_service);
+
           // 🔹 After getting target details, get linked use case
-          if(!this.isClone)
-          {
-          this.targetService.getLinkedUseCase(this.targetId).subscribe({
-            next: (useCaseRes: any) => {
-              // Assuming API returns an array of use cases
-              if (useCaseRes) {
-                const linkedUseCase = useCaseRes; // or handle multiple if needed
-  
-                // Patch linked use case ID (or name) to the form
-                this.targetForm.patchValue({
-                  use_case: linkedUseCase.use_case_id
-                  // use_case_name: linkedUseCase.use_case_name // optional if you have it
-                });
+          if (!this.isClone) {
+            this.targetService.getLinkedUseCase(this.targetId).subscribe({
+              next: (useCaseRes: any) => {
+                // Assuming API returns an array of use cases
+                if (useCaseRes) {
+                  const linkedUseCase = useCaseRes; // or handle multiple if needed
+
+                  // Patch linked use case ID (or name) to the form
+                  this.targetForm.patchValue({
+                    use_case: linkedUseCase.use_case_id
+                    // use_case_name: linkedUseCase.use_case_name // optional if you have it
+                  });
+                }
+                this.loader = false;
+              },
+              error: (err) => {
+                console.error('Failed to load linked use case:', err);
+                this.loader = false;
               }
-              this.loader = false;
-            },
-            error: (err) => {
-              console.error('Failed to load linked use case:', err);
-              this.loader = false;
-            }
-          });
-        }
+            });
+          }
         },
         error: (err: any) => {
           console.error('Failed to load target:', err);
-           this.loader=false;
+          this.loader = false;
         }
-       
+
       });
       // this.generateTimeOptions();
 
@@ -443,17 +440,17 @@ export class EditTargetComponent {
       this.formLoaded = true; // triggers re-render
       this.generateTimeOptions();
       // Watch for changes in serviceQuality
-     // Disable freq/schedule for certain service qualities
-     this.targetForm.get('quality_of_service')?.valueChanges.subscribe(value => {
-      if (value === 'STREAMING' || value === 'AD_HOC') {
-        this.targetForm.get('frequency_of_update')?.disable({ emitEvent: false });
-        this.targetForm.get('schedule_of_update')?.disable({ emitEvent: false });
-      } else {
-        this.targetForm.get('frequency_of_update')?.enable({ emitEvent: false });
-        this.targetForm.get('schedule_of_update')?.enable({ emitEvent: false });
-      }
-    });
-  }
+      // Disable freq/schedule for certain service qualities
+      this.targetForm.get('quality_of_service')?.valueChanges.subscribe(value => {
+        if (value === 'STREAMING' || value === 'AD_HOC') {
+          this.targetForm.get('frequency_of_update')?.disable({ emitEvent: false });
+          this.targetForm.get('schedule_of_update')?.disable({ emitEvent: false });
+        } else {
+          this.targetForm.get('frequency_of_update')?.enable({ emitEvent: false });
+          this.targetForm.get('schedule_of_update')?.enable({ emitEvent: false });
+        }
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -488,7 +485,7 @@ export class EditTargetComponent {
       // use_case: data.use_case_id,
     });
 
-   
+
   }
 
   checkVersionChange(currentVersion: string): void {
@@ -500,7 +497,7 @@ export class EditTargetComponent {
       }
     }
   }
-  
+
   generateTimeOptions(): void {
     this.timeOptions = [];
     for (let hour = 0; hour < 24; hour++) {
@@ -560,8 +557,8 @@ export class EditTargetComponent {
 
         this.useCases = usecases;
         // ✅ Extract all use case IDs from API response
-        const apiUseCaseIds = this.useCases.map(u => u.use_case_id);    
-    
+        const apiUseCaseIds = this.useCases.map(u => u.use_case_id);
+
       },
       error: err => {
         console.error('Error fetching usecases:', err);
@@ -606,10 +603,10 @@ export class EditTargetComponent {
 
   getDataFields() {
     this.datafieldsService.getDataFieldsByIdWithUsecase(this.targetId, 'TARGET', this.useCaseId).subscribe({
-      next: (res: any) => {        
-        if (res!=null && res.length>0) {
+      next: (res: any) => {
+        if (res != null && res.length > 0) {
           this.rowData = [...res]; // triggers change
-        }      
+        }
       },
       error: (err: any) => {
         this.rowData = [];
@@ -689,102 +686,105 @@ export class EditTargetComponent {
     if (isUpdate) {
       payload.targetEntity.target_id = this.targetId;
     }
-    else
-    {
+    else {
       if (this.isClone && this.targetForm.value.target_version_number === this.originalVersion) {
         this.toastNotificationService.error('Please change the version number before saving the cloned target.');
-       
+
         return;
       }
     }
 
 
     // Choose appropriate API call
-          let request$: Observable<any>;
-          let mappingRequest$= this.targetService.mapTargetToUseCase(this.targetId,this.targetForm.value.use_case);
-                     
-                        if (this.isClone) {
-                          // 🔁 Clone case
-                          request$ = this.targetService.cloneTargetDatafields(
-                            payload,
-                            'targets',
-                            this.paentTargetId
-                          );
-                        } else if (isUpdate) {
-                          // ✏️ Update case
-                          request$ = this.targetService.updateTarget(payload);
-                        } else {
-                          // 🆕 Create case
-                          request$ = this.targetService.createTarget(payload);
-                        }
-        
-                        request$
-                        .pipe(
-                          switchMap((res: any) => {
-                            const targetId = this.isClone
-                              ? res.targetEntity.target_id
-                              : isUpdate
-                              ? this.targetId
-                              : res.targetEntity.target_id;
+    let request$: Observable<any>;
+    let mappingRequest$ = this.targetService.mapTargetToUseCase(this.targetId, this.targetForm.value.use_case);
 
-                              // 🚫 Skip mapping API if cloning
-                              if (this.isClone || this.targetForm.value.use_case == '') {
-                                return of(res);
-                              }
+    if (this.isClone) {
+      // 🔁 Clone case
+      request$ = this.targetService.cloneTargetDatafields(
+        payload,
+        'targets',
+        this.paentTargetId
+      );
+    } else if (isUpdate) {
+      // ✏️ Update case
+      request$ = this.targetService.updateTarget(payload);
+    } else {
+      // 🆕 Create case
+      request$ = this.targetService.createTarget(payload);
+    }
 
-                            // 🔗 Call mapping API via service
-                            return this.targetService.mapTargetToUseCase(targetId, this.targetForm.value.use_case).pipe(
-                              map(() => res) // keep the original response
-                            );
-                          })
-                        ).subscribe({
-                          next: (res: any) => {
-                            if (this.isClone) {
-                              // Handle Clone Success
-                              this.toastNotificationService.success(
-                                `Target cloned successfully. Your Target ID is ${res.targetEntity.target_id}`
-                              );
-                              this.toastNotificationService.success('Datafields cloned successfully.');
-                              this.router.navigate(['/targets/edit-target', res.targetEntity.target_id]);
-                              return;
-                            }
-                        
-                            // Handle Create/Update Success
-                            const targetID = isUpdate ? this.targetId : res.targetEntity.target_id;
-                            const action = isUpdate ? 'Updated' : 'Created';
-                            this.toastNotificationService.success(
-                              `Target ${action} successfully. Your Target ID is ${targetID}`
-                            );
-                        
-                          },
-                          error: (err) => {
-                            const action = isUpdate
-                              ? 'update'
-                              : this.isClone
-                              ? 'clone'
-                              : 'create';
-                            this.toastNotificationService.error(`Failed to ${action} target.`);
-                            console.error('❌ API Error:', err);
-                          }
-                        });
+    request$
+      .pipe(
+        switchMap((res: any) => {
+          const targetId = this.isClone
+            ? res.targetEntity.target_id
+            : isUpdate
+              ? this.targetId
+              : res.targetEntity.target_id;
+
+          // 🚫 Skip mapping API if cloning
+          if (this.isClone || this.targetForm.value.use_case == '') {
+            return of(res);
+          }
+
+          // 🔗 Call mapping API via service
+          return this.targetService.mapTargetToUseCase(targetId, this.targetForm.value.use_case).pipe(
+            map(() => res) // keep the original response
+          );
+        })
+      ).subscribe({
+        next: (res: any) => {
+          if (this.isClone) {
+            // Handle Clone Success
+            this.toastNotificationService.success(
+              `Target cloned successfully. Your Target ID is ${res.targetEntity.target_id}`
+            );
+            this.toastNotificationService.success('Datafields cloned successfully.');
+            this.router.navigate(['/targets/edit-target', res.targetEntity.target_id]);
+            return;
+          }
+          else {
+
+            // Handle Create/Update Success
+            const targetID = isUpdate ? this.targetId : res.targetEntity.target_id;
+            const action = isUpdate ? 'Updated' : 'Created';
+            this.toastNotificationService.success(
+              `Target ${action} successfully. Your Target ID is ${targetID}`
+            );
+            if (!isUpdate) {
+              this.router.navigate(['/targets/edit-target', targetID]);
+            }
+          }
+
+        },
+        error: (err) => {
+          const action = isUpdate
+            ? 'update'
+            : this.isClone
+              ? 'clone'
+              : 'create';
+          this.toastNotificationService.error(`Failed to ${action} target.`);
+          console.error('❌ API Error:', err);
+        }
+      });
   }
 
   onBack() {
     this.router.navigate(['/targets']);
   }
 
-  onBackToLineage()
-  {
-     this.router.navigate(JSON.parse(this.BacktolineagePath));
+  onBackToLineage() {
+    this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 
   createForm() {
     this.formGroup = this.fb.group({
       field_id: [''],
-      user_generated_id: ['',  Validators.pattern(/^\d+$/)],
+      user_generated_id: ['', Validators.pattern(/^\d+$/)],
       field_name: ['', Validators.required],
       field_description: [''],
-      field_length: ['',  Validators.pattern(/^\d+$/)],
+      field_length: ['', Validators.pattern(/^\d+$/)],
       data_type: ['', Validators.required],
       criticality: ['', Validators.required],
     });
@@ -794,7 +794,7 @@ export class EditTargetComponent {
     this.isEditMode = false;
     this.formGroup.reset();
     this.showDialog = true;
-     this.currentRow=null;
+    this.currentRow = null;
   }
 
   openEditDialog(rowData: any) {
@@ -819,7 +819,7 @@ export class EditTargetComponent {
     this.dataFieldsModel.field_name = data.field_name;
     this.dataFieldsModel.field_description = data.field_description;
 
-   
+
     this.dataFieldsModel.data_type = data.data_type;
     this.dataFieldsModel.field_length = data.field_length;
     this.dataFieldsModel.criticality = data.criticality;
@@ -830,23 +830,23 @@ export class EditTargetComponent {
 
     if (!data.field_id && !this.isEditMode && !this.currentRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
-        if (res!=null) {
+        if (res != null) {
           //data.field_id=res.field_id;
           // this.rowData.push(data);
-          this.toastNotificationService.success("Data field added Successfully.");         
+          this.toastNotificationService.success("Data field added Successfully.");
           this.showDialog = false;
           setTimeout(() => {
-          this.getDataFields();
-        }, 1000);
+            this.getDataFields();
+          }, 1000);
         }
       });
     }
     else {
       this.datafieldsService.updateInterface(this.dataFieldsModel).subscribe(() => {
         //Object.assign(this.currentRow, this.formGroup.value);
-        this.toastNotificationService.success("Data field updated Successfully.");       
+        this.toastNotificationService.success("Data field updated Successfully.");
         this.showDialog = false;
-         setTimeout(() => {
+        setTimeout(() => {
           this.getDataFields();
         }, 1000);
       });
@@ -861,12 +861,12 @@ export class EditTargetComponent {
     this.showDeleteDialog = true;
   }
 
-  deleteRow() {    
-    this.datafieldsService.deleteDataFields(this.selectedRow.field_id, 'TARGET', this.targetId).subscribe(() => {      
-      this.toastNotificationService.error("Data fields Deleted Successfully.");    
-      this.rowData = this.rowData.filter((r:any) => r.field_id !== this.selectedRow.field_id); 
-        this.showDeleteDialog = false; 
+  deleteRow() {
+    this.datafieldsService.deleteDataFields(this.selectedRow.field_id, 'TARGET', this.targetId).subscribe(() => {
+      this.toastNotificationService.error("Data fields Deleted Successfully.");
+      this.rowData = this.rowData.filter((r: any) => r.field_id !== this.selectedRow.field_id);
+      this.showDeleteDialog = false;
     })
   }
-  
+
 }

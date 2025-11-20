@@ -39,13 +39,13 @@ export class EditInterfaceComponent implements OnInit {
   frequencyLimit = 1;
   scheduleLimitReached = false;
   interfaceData: any;
-  targetData:any;
+  targetData: any;
   isClone = false;
   originalVersion = '';
   originalVersionTarget = '';
-  paentInterfaceId:any;
-  paentTargetId:any;
-  parentUsecaseid : any;
+  paentInterfaceId: any;
+  paentTargetId: any;
+  parentUsecaseid: any;
 
   // rowData: any;
   dataFieldsModel: Datafields = new Datafields();
@@ -57,31 +57,31 @@ export class EditInterfaceComponent implements OnInit {
     private datafieldsService: DatafieldsService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) { 
+  ) {
 
     this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      const nav = this.router.getCurrentNavigation();
-      const state = nav?.extras?.state as { clonedInterface?: any };
-      const state1 = nav?.extras?.state as { clonedTargetasInterface?: any };
-      if (state?.clonedInterface) {
-        this.interfaceData = state.clonedInterface;
-        this.isClone = true;
-        this.originalVersion = this.interfaceData.interface_version_number;
-        this.paentInterfaceId = this.interfaceData.interface_id;
-        this.resetFormForClone();
-      }
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const nav = this.router.getCurrentNavigation();
+        const state = nav?.extras?.state as { clonedInterface?: any };
+        const state1 = nav?.extras?.state as { clonedTargetasInterface?: any };
+        if (state?.clonedInterface) {
+          this.interfaceData = state.clonedInterface;
+          this.isClone = true;
+          this.originalVersion = this.interfaceData.interface_version_number;
+          this.paentInterfaceId = this.interfaceData.interface_id;
+          this.resetFormForClone();
+        }
 
-      if (state1?.clonedTargetasInterface) {
-        this.targetData = state1.clonedTargetasInterface;
-        this.isClone = true;
-        this.originalVersionTarget = this.targetData.target_version_number;
-        this.paentTargetId = this.targetData.target_id;
-        this.parentUsecaseid = this.targetData.use_case_id;
-        this.resetFormForCloneTargetasInterface();
-      }
-    });
+        if (state1?.clonedTargetasInterface) {
+          this.targetData = state1.clonedTargetasInterface;
+          this.isClone = true;
+          this.originalVersionTarget = this.targetData.target_version_number;
+          this.paentTargetId = this.targetData.target_id;
+          this.parentUsecaseid = this.targetData.use_case_id;
+          this.resetFormForCloneTargetasInterface();
+        }
+      });
   }
 
 
@@ -351,7 +351,7 @@ export class EditInterfaceComponent implements OnInit {
       interface_owner_email: data.interface_owner_email,
     });
 
-   
+
   }
 
   checkVersionChange(currentVersion: string): void {
@@ -394,16 +394,16 @@ export class EditInterfaceComponent implements OnInit {
     }
   }
 
-   toggleFieldsBasedOnQoS(event: MatSelectChange): void {
-      const value = event.value;
-      if (value === 'STREAMING' || value === 'AD_HOC') {
-        this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
-        this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
-      } else {
-        this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
-        this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
-      }
+  toggleFieldsBasedOnQoS(event: MatSelectChange): void {
+    const value = event.value;
+    if (value === 'STREAMING' || value === 'AD_HOC') {
+      this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+      this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
+    } else {
+      this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+      this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
     }
+  }
 
 
   getDataFields() {
@@ -491,95 +491,99 @@ export class EditInterfaceComponent implements OnInit {
     if (isUpdate) {
       payload.interfaceEntity.interface_id = this.interfaceId;
     }
-    else
-    {
+    else {
       if (this.isClone && this.interfaceForm.value.interface_version_number === this.originalVersion) {
         this.toastNotificationService.error('Please change the version number before saving the cloned interface.');
-       
+
         return;
       }
 
       if (this.isClone && this.interfaceForm.value.interface_version_number === this.originalVersionTarget) {
         this.toastNotificationService.error('Please change the version number before saving the cloned interface.');
-       
+
         return;
       }
     }
 
     // Choose appropriate API call
     let request$: Observable<any>;
-           
-              if (this.isClone && this.interfaceData) {
-                // 🔁 Clone case
-                request$ = this.interfaceService.cloneInterfaceDatafields(
-                  payload,
-                  'interfaces',
-                  this.paentInterfaceId,
-                  'INTERFACE'
-                );
-              } else if
-              (this.isClone && this.targetData) {
-                // 🔁 Clone case
-                request$ = this.interfaceService.cloneInterfaceDatafields(
-                  payload,
-                  'interfaces',
-                  this.paentTargetId,
-                  'TARGET'
-                );
-              }
-              
-              else if (isUpdate) {
-                // ✏️ Update case
-                request$ = this.interfaceService.updateInterface(payload);
-              } else {
-                // 🆕 Create case
-                request$ = this.interfaceService.createInterface(payload);
-              }
 
-              
-              request$.subscribe({
-                next: (res: any) => {
-                  if (this.isClone) {
-                    // Handle Clone Success
-                    this.toastNotificationService.success(
-                      `Interface cloned successfully. Your Interface ID is ${res.interfaceEntity.interface_id}`
-                    );
-                    this.toastNotificationService.success('Datafields cloned successfully.');
-                    this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
-                    return;
-                  }
-              
-                  // Handle Create/Update Success
-                  const interfaceID = isUpdate ? this.interfaceId : res.interfaceEntity.interface_id;
-                  const action = isUpdate ? 'Updated' : 'Created';
-                  this.toastNotificationService.success(
-                    `Interface ${action} successfully. Your Interface ID is ${interfaceID}`
-                  );
-              
-                  // 🔁 If you only need to clone *after* creating, handle it separately:
-                  // if (!isUpdate && !this.isClone) {
-                  //   this.interfaceService
-                  //     .cloneInterfaceDatafields(payload, 'interfaces', this.paentInterfaceId)
-                  //     .subscribe({
-                  //       next: (cloneRes) => {
-                  //         this.toastNotificationService.success('Datafields cloned successfully.');
-                  //         this.router.navigate(['/interfaces/edit-interface', cloneRes.interfaceEntity.interface_id]);
-                  //       },
-                  //       error: () =>
-                  //         this.toastNotificationService.error('Failed to clone datafields.')
-                  //     });
-                  // }
-                },
-                error: (err) => {
-                  const action = isUpdate
-                    ? 'update'
-                    : this.isClone
-                    ? 'clone'
-                    : 'create';
-                  this.toastNotificationService.error(`Failed to ${action} interface.`);
-                  console.error('❌ API Error:', err);
-                }
-              });
+    if (this.isClone && this.interfaceData) {
+      // 🔁 Clone case
+      request$ = this.interfaceService.cloneInterfaceDatafields(
+        payload,
+        'interfaces',
+        this.paentInterfaceId,
+        'INTERFACE'
+      );
+    } else if
+      (this.isClone && this.targetData) {
+      // 🔁 Clone case
+      request$ = this.interfaceService.cloneInterfaceDatafields(
+        payload,
+        'interfaces',
+        this.paentTargetId,
+        'TARGET'
+      );
+    }
+
+    else if (isUpdate) {
+      // ✏️ Update case
+      request$ = this.interfaceService.updateInterface(payload);
+    } else {
+      // 🆕 Create case
+      request$ = this.interfaceService.createInterface(payload);
+    }
+
+
+    request$.subscribe({
+      next: (res: any) => {
+        if (this.isClone) {
+          // Handle Clone Success
+          this.toastNotificationService.success(
+            `Interface cloned successfully. Your Interface ID is ${res.interfaceEntity.interface_id}`
+          );
+          this.toastNotificationService.success('Datafields cloned successfully.');
+          this.router.navigate(['/interfaces/edit-interface', res.interfaceEntity.interface_id]);
+          return;
+        }
+        else {
+
+          // Handle Create/Update Success
+          const interfaceID = isUpdate ? this.interfaceId : res.interfaceEntity.interface_id;
+          const action = isUpdate ? 'Updated' : 'Created';
+          this.toastNotificationService.success(
+            `Interface ${action} successfully. Your Interface ID is ${interfaceID}`
+          );
+          if (!isUpdate) {
+            this.router.navigate(['/interfaces/edit-interface', interfaceID]);
+          }
+        }
+
+        // 🔁 If you only need to clone *after* creating, handle it separately:
+        // if (!isUpdate && !this.isClone) {
+        //   this.interfaceService
+        //     .cloneInterfaceDatafields(payload, 'interfaces', this.paentInterfaceId)
+        //     .subscribe({
+        //       next: (cloneRes) => {
+        //         this.toastNotificationService.success('Datafields cloned successfully.');
+        //         this.router.navigate(['/interfaces/edit-interface', cloneRes.interfaceEntity.interface_id]);
+        //       },
+        //       error: () =>
+        //         this.toastNotificationService.error('Failed to clone datafields.')
+        //     });
+        // }
+      },
+      error: (err) => {
+        const action = isUpdate
+          ? 'update'
+          : this.isClone
+            ? 'clone'
+            : 'create';
+        this.toastNotificationService.error(`Failed to ${action} interface.`);
+        console.error('❌ API Error:', err);
+      }
+    });
   }
 
 
@@ -603,8 +607,8 @@ export class EditInterfaceComponent implements OnInit {
     this.isEdit = false;
     this.fieldDialog = true;
     this.submitted = false;
-     this.selectedRow = null;
-     this.fieldForm.reset();
+    this.selectedRow = null;
+    this.fieldForm.reset();
   }
 
   editField(field: any) {
@@ -641,9 +645,9 @@ export class EditInterfaceComponent implements OnInit {
           // this.rowData.push(data);
           this.toastNotificationService.success("Data field added Successfully.");
           this.fieldDialog = false;
-           setTimeout(() => {
-          this.getDataFields();
-        }, 1000);
+          setTimeout(() => {
+            this.getDataFields();
+          }, 1000);
         }
       });
     }
@@ -652,7 +656,7 @@ export class EditInterfaceComponent implements OnInit {
         //Object.assign(this.selectedRow, data);
         this.toastNotificationService.success("Data field updated Successfully.");
         this.fieldDialog = false;
-         setTimeout(() => {
+        setTimeout(() => {
           this.getDataFields();
         }, 1000);
       });
@@ -679,7 +683,7 @@ export class EditInterfaceComponent implements OnInit {
       this.showDeleteDialog = false;
     })
   }
-    // called by p-multiSelect (onChange)
+  // called by p-multiSelect (onChange)
   onColumnsChange(event: any) {
     // event.value contains selected column objects
     this.selectedColumns = event.value;

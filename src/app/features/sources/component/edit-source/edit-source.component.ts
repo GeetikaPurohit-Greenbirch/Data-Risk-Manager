@@ -34,14 +34,14 @@ export class EditSourceComponent implements OnInit {
   scheduleLimitReached = false;
   formLoaded = false;
   isLoading = false;
-  isBacktolineage=false;
-  BacktolineagePath: any ="";
+  isBacktolineage = false;
+  BacktolineagePath: any = "";
 
   sourceData: any;
 
   isClone = false;
   originalVersion = '';
-  paentInterfaceId:any;
+  paentInterfaceId: any;
 
   // ✅ DataFields table data
   dataFields: any[] = [
@@ -67,22 +67,22 @@ export class EditSourceComponent implements OnInit {
     private datafieldsService: DatafieldsService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-  ) { 
+  ) {
 
     this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe(() => {
-          const nav = this.router.getCurrentNavigation();
-          const state = nav?.extras?.state as { clonedSource?: any };
-          if (state?.clonedSource) {
-            this.sourceData = state.clonedSource;
-            this.isClone = true;
-            this.originalVersion = this.sourceData.source_version_number;
-            this.paentInterfaceId = this.sourceData.source_id;
-            this.resetFormForClone();
-          }
-        });
-        
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const nav = this.router.getCurrentNavigation();
+        const state = nav?.extras?.state as { clonedSource?: any };
+        if (state?.clonedSource) {
+          this.sourceData = state.clonedSource;
+          this.isClone = true;
+          this.originalVersion = this.sourceData.source_version_number;
+          this.paentInterfaceId = this.sourceData.source_id;
+          this.resetFormForClone();
+        }
+      });
+
   }
 
   columnDefsDQA: (ColDef | ColGroupDef)[] = [
@@ -437,7 +437,7 @@ export class EditSourceComponent implements OnInit {
     { field: 'field_id', header: 'Field ID', editable: false },
     { field: 'field_name', header: 'Field Name', editable: false },
     { field: 'entity_type', header: 'Entity Type', editable: false },
-   
+
     { field: 'user_generated_id', header: 'Field No.', editable: false },
     { field: 'field_name', header: 'Field Name', editable: false, },
     { field: 'data_type', header: 'Data Type', editable: false },
@@ -513,9 +513,8 @@ export class EditSourceComponent implements OnInit {
     });
     this.sourceId = Number(this.route.snapshot.paramMap.get('id'));
     this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
-    if(this.isBacktolineage)
-    {      
-      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    if (this.isBacktolineage) {
+      this.BacktolineagePath = sessionStorage.getItem('BackTolineagePath')?.toString();
     }
     if (this.sourceId > 0) {
       // Step 2: Fetch data from API and patch to form
@@ -595,7 +594,7 @@ export class EditSourceComponent implements OnInit {
       source_owner_email: data.source_owner_email,
     });
 
-   
+
   }
 
   checkVersionChange(currentVersion: string): void {
@@ -770,11 +769,10 @@ export class EditSourceComponent implements OnInit {
     if (isUpdate) {
       payload.sourceEntity.source_id = this.sourceId;
     }
-    else
-    {
+    else {
       if (this.isClone && this.sourceForm.value.source_version_number === this.originalVersion) {
         this.toastNotificationService.error('Please change the version number before saving the cloned source.');
-       
+
         return;
       }
     }
@@ -802,68 +800,74 @@ export class EditSourceComponent implements OnInit {
     // });
 
     // Choose appropriate API call
-          let request$: Observable<any>;
-        
-           if (this.isClone) {
-             // 🔁 Clone case
-             request$ = this.sourceService.cloneSourceDatafields(
-               payload,
-               'sources',
-               this.paentInterfaceId
-             );
-           } else if (isUpdate) {
-             // ✏️ Update case
-             request$ = this.sourceService.updateSource(payload);
-           } else {
-             // 🆕 Create case
-             request$ = this.sourceService.createSource(payload);
-           }
-           
-     // ✅ Subscribe only once
-request$.subscribe({
-  next: (res: any) => {
+    let request$: Observable<any>;
+
     if (this.isClone) {
-      // Handle Clone Success
-      this.toastNotificationService.success(
-        `Source cloned successfully. Your Source ID is ${res.sourceEntity.source_id}`
+      // 🔁 Clone case
+      request$ = this.sourceService.cloneSourceDatafields(
+        payload,
+        'sources',
+        this.paentInterfaceId
       );
-      this.toastNotificationService.success('Datafields cloned successfully.');
-      this.router.navigate(['/sources/edit-source', res.sourceEntity.source_id]);
-      return;
+    } else if (isUpdate) {
+      // ✏️ Update case
+      request$ = this.sourceService.updateSource(payload);
+    } else {
+      // 🆕 Create case
+      request$ = this.sourceService.createSource(payload);
     }
 
-    // Handle Create/Update Success
-    const sourceID = isUpdate ? this.sourceId : res.sourceEntity.source_id;
-    const action = isUpdate ? 'Updated' : 'Created';
-    this.toastNotificationService.success(
-      `Source ${action} successfully. Your Source ID is ${sourceID}`
-    );
-    
+    // ✅ Subscribe only once
+    request$.subscribe({
+      next: (res: any) => {
+        if (this.isClone) {
+          // Handle Clone Success
+          this.toastNotificationService.success(
+            `Source cloned successfully. Your Source ID is ${res.sourceEntity.source_id}`
+          );
+          this.toastNotificationService.success('Datafields cloned successfully.');
+          this.router.navigate(['/sources/edit-source', res.sourceEntity.source_id]);
+          return;
+        }
+        else {
 
-    // 🔁 If you only need to clone *after* creating, handle it separately:
-    // if (!isUpdate && !this.isClone) {
-    //   this.sourceService
-    //     .cloneSourceDatafields(payload, 'sources', this.paentInterfaceId)
-    //     .subscribe({
-    //       next: (cloneRes) => {
-    //         this.toastNotificationService.success('Datafields cloned successfully.');
-    //         this.router.navigate(['/sources/edit-source', cloneRes.sourceEntity.source_id]);
-    //       },
-    //       error: () =>
-    //         this.toastNotificationService.error('Failed to clone datafields.')
-    //     });
-    // }
-  },
-  error: (err) => {
-    const action = isUpdate
-      ? 'update'
-      : this.isClone
-      ? 'clone'
-      : 'create';
-    this.toastNotificationService.error(`Failed to ${action} source.`);
-    console.error('❌ API Error:', err);
-  }
-});
+          // Handle Create/Update Success
+          const sourceID = isUpdate ? this.sourceId : res.sourceEntity.source_id;
+          const action = isUpdate ? 'Updated' : 'Created';
+          this.toastNotificationService.success(
+            `Source ${action} successfully. Your Source ID is ${sourceID}`
+          );
+
+          if (!isUpdate) {
+            this.router.navigate(['/sources/edit-source', sourceID]);
+          }
+        }
+
+
+        // 🔁 If you only need to clone *after* creating, handle it separately:
+        // if (!isUpdate && !this.isClone) {
+        //   this.sourceService
+        //     .cloneSourceDatafields(payload, 'sources', this.paentInterfaceId)
+        //     .subscribe({
+        //       next: (cloneRes) => {
+        //         this.toastNotificationService.success('Datafields cloned successfully.');
+        //         this.router.navigate(['/sources/edit-source', cloneRes.sourceEntity.source_id]);
+        //       },
+        //       error: () =>
+        //         this.toastNotificationService.error('Failed to clone datafields.')
+        //     });
+        // }
+      },
+      error: (err) => {
+        const action = isUpdate
+          ? 'update'
+          : this.isClone
+            ? 'clone'
+            : 'create';
+        this.toastNotificationService.error(`Failed to ${action} source.`);
+        console.error('❌ API Error:', err);
+      }
+    });
   }
 
 
@@ -950,7 +954,7 @@ request$.subscribe({
     this.dataFieldsModel.entity_type = 'SOURCE';
     this.dataFieldsModel.entity_id = this.sourceId;
 
-     if (!data.field_id && !this.isEdit && !this.selectedRow) {
+    if (!data.field_id && !this.isEdit && !this.selectedRow) {
       this.datafieldsService.createDataFields(this.dataFieldsModel).subscribe((res) => {
         if (res != null) {
           // data.field_id=res.field_id;
@@ -972,7 +976,7 @@ request$.subscribe({
           this.getDataFields();
         }, 1000);
       });
-    }   
+    }
   }
 
   // deleteDAtaFields(data: any) {
@@ -988,16 +992,15 @@ request$.subscribe({
   onBack() {
     this.router.navigate(['/sources']);
   }
-  onBackToLineage()
-  {
-     this.router.navigate(JSON.parse(this.BacktolineagePath));
+  onBackToLineage() {
+    this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
 
   fieldDialog = false;
-  fieldForm!: FormGroup; 
+  fieldForm!: FormGroup;
   isEdit = false;
   selectedField: any;
-  selectedRow:any;
+  selectedRow: any;
   showDeleteDialog = false;
 
   dataTypeOptions = [
@@ -1009,10 +1012,10 @@ request$.subscribe({
   RiskTypeOptions = [
     { label: 'High', value: 'High' },
     { label: 'Medium', value: 'Medium' },
-    { label: 'Low', value: 'Low' }    
+    { label: 'Low', value: 'Low' }
   ];
 
-   buildForm() {
+  buildForm() {
     this.fieldForm = this.fb.group({
       field_id: [''],
       user_generated_id: [''],
@@ -1027,13 +1030,13 @@ request$.subscribe({
       dqa_a: [''],
       commentary_a: ['']
     });
-  }  
+  }
 
   openNew() {
     this.isEdit = false;
-    this.fieldDialog = true;   
-     this.selectedRow = null;
-     this.fieldForm.reset();
+    this.fieldDialog = true;
+    this.selectedRow = null;
+    this.fieldForm.reset();
   }
 
   editField(field: any) {
@@ -1045,11 +1048,11 @@ request$.subscribe({
 
   hideDialog() {
     this.fieldDialog = false;
-    
+
   }
 
   saveField() {
-   
+
     if (this.fieldForm.invalid) return;
     this.saveDatafields(this.fieldForm.value);
   }
@@ -1066,7 +1069,7 @@ request$.subscribe({
       this.showDeleteDialog = false;
     })
   }
-    onColumnsChange(event: any) {
+  onColumnsChange(event: any) {
     // event.value contains selected column objects
     this.selectedColumns = event.value;
     this.globalFilterFields = this.selectedColumns.map((c: any) => c.field);
