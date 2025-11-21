@@ -61,8 +61,8 @@ export class LineageService {
         const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}`;
         return this.http.get<LineageRecord>(url);
       } 
-    public getLineageEntitiesByUseCaseId(useCaseId: string) {
-      const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}/grouped`;
+    public getLineageEntitiesByUseCaseId(useCaseId: string,entitytype:string) {
+      const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}/grouped/${entitytype}`;
       return this.http.get<any>(url);
     } 
     
