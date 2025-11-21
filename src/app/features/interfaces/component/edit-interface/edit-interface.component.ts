@@ -239,6 +239,7 @@ export class EditInterfaceComponent implements OnInit {
     //console.log('Editing interface with ID:', this.interfaceId);
     this.interfaceForm = this.fb.group({
       interface_name: ['', Validators.required],
+      interface_description: [''],
       quality_of_service: ['', Validators.required],
       frequency_of_update: ['', Validators.required],
       schedule_of_update: ['', Validators.required],
@@ -325,6 +326,7 @@ export class EditInterfaceComponent implements OnInit {
   prefillyTargetasInterfaceForm(data: any): void {
     this.interfaceForm.patchValue({
       interface_name: data.target_name,
+      interface_description: data.target_description,
       quality_of_service: data.quality_of_service,
       frequency_of_update: data.frequency_of_update,
       schedule_of_update: data.schedule_of_update,
@@ -340,6 +342,7 @@ export class EditInterfaceComponent implements OnInit {
   prefillForm(data: any): void {
     this.interfaceForm.patchValue({
       interface_name: data.interface_name,
+      interface_description: data.interface_description,
       quality_of_service: data.quality_of_service,
       frequency_of_update: data.frequency_of_update,
       schedule_of_update: data.schedule_of_update,
@@ -394,16 +397,16 @@ export class EditInterfaceComponent implements OnInit {
     }
   }
 
-  toggleFieldsBasedOnQoS(event: MatSelectChange): void {
-    const value = event.value;
-    if (value === 'STREAMING' || value === 'AD_HOC') {
-      this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
-      this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
-    } else {
-      this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
-      this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+   toggleFieldsBasedOnQoS(event: MatSelectChange): void {
+      const value = event.value || event;
+      if (value === 'STREAMING' || value === 'AD_HOC') {
+        this.interfaceForm.get('frequency_of_update')?.disable({ emitEvent: false });
+        this.interfaceForm.get('schedule_of_update')?.disable({ emitEvent: false });
+      } else {
+        this.interfaceForm.get('frequency_of_update')?.enable({ emitEvent: false });
+        this.interfaceForm.get('schedule_of_update')?.enable({ emitEvent: false });
+      }
     }
-  }
 
 
   getDataFields() {
@@ -475,6 +478,7 @@ export class EditInterfaceComponent implements OnInit {
     const payload: any = {
       interfaceEntity: {
         interface_name: formValues.interface_name,
+        interface_description: formValues.interface_description,
         quality_of_service: formValues.quality_of_service,
         frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
         schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,

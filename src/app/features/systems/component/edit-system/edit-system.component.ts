@@ -1075,7 +1075,7 @@ export class EditSystemComponent {
     this.systemForm = this.fb.group({
       system_name: ['', Validators.required],
       leanix_id: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       owner: ['', Validators.required],
       owner_email: ['', [Validators.required, Validators.email]],
       version_number: ['', Validators.required],

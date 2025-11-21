@@ -11,6 +11,7 @@ import { Datafields } from 'src/app/features/shared-models/datafields.model';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { MatSelectChange } from '@angular/material/select';
 import { createElement, icons } from 'lucide';
+import { DessertIcon } from 'lucide-angular';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -435,11 +436,11 @@ export class EditSourceComponent implements OnInit {
 
   cols = [
     { field: 'field_id', header: 'Field ID', editable: false },
-    { field: 'field_name', header: 'Field Name', editable: false },
     { field: 'entity_type', header: 'Entity Type', editable: false },
 
     { field: 'user_generated_id', header: 'Field No.', editable: false },
     { field: 'field_name', header: 'Field Name', editable: false, },
+    { field: 'field_description', header: 'Field Description', editable: false, },
     { field: 'data_type', header: 'Data Type', editable: false },
     { field: 'field_length', header: 'Field Length', editable: false, },
     {
@@ -500,6 +501,7 @@ export class EditSourceComponent implements OnInit {
     this.sourceForm = this.fb.group({
       source_name: ['', Validators.required],
       vendor: ['', Validators.required],
+      source_description: [''],
       quality_of_service: ['', Validators.required],
       frequency_of_update: ['', Validators.required],
       schedule_of_update: [[], Validators.required],
@@ -583,6 +585,7 @@ export class EditSourceComponent implements OnInit {
     this.sourceForm.patchValue({
       source_name: data.source_name,
       vendor: data.vendor,
+      description: data.source_description,
       quality_of_service: data.quality_of_service,
       frequency_of_update: data.frequency_of_update,
       schedule_of_update: data.schedule_of_update,
@@ -636,7 +639,7 @@ export class EditSourceComponent implements OnInit {
   }
 
   toggleFieldsBasedOnQoS(event: MatSelectChange): void {
-    const value = event.value;
+    const value = event.value || event;
     if (value === 'STREAMING' || value === 'AD_HOC') {
       this.sourceForm.get('frequency_of_update')?.disable({ emitEvent: false });
       this.sourceForm.get('schedule_of_update')?.disable({ emitEvent: false });
@@ -753,6 +756,7 @@ export class EditSourceComponent implements OnInit {
       sourceEntity: {
         source_name: this.sourceForm.value.source_name,
         vendor: this.sourceForm.value.vendor,
+        source_description: this.sourceForm.value.source_description,
         quality_of_service: this.sourceForm.value.quality_of_service,
         frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
         schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
@@ -941,7 +945,7 @@ export class EditSourceComponent implements OnInit {
     this.dataFieldsModel.field_id = data.field_id;
     this.dataFieldsModel.user_generated_id = data.user_generated_id;
     this.dataFieldsModel.field_name = data.field_name;
-    //this.dataFieldsModel.field_description = data.field_description;
+    this.dataFieldsModel.field_description = data.field_description;
     this.dataFieldsModel.dqa_c = data.dqa_c;
     this.dataFieldsModel.dqa_t = data.dqa_t;
     this.dataFieldsModel.dqa_a = data.dqa_a;
@@ -1020,6 +1024,7 @@ export class EditSourceComponent implements OnInit {
       field_id: [''],
       user_generated_id: [''],
       field_name: ['', Validators.required],
+      field_description: ['', Validators.required],
       entity_type: [''],
       data_type: ['', Validators.required],
       field_length: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],

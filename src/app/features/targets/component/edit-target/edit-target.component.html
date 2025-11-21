@@ -142,7 +142,20 @@
                   <mat-error *ngIf="targetForm.get('use_case')?.hasError('required')">Required</mat-error>
                 </mat-form-field>
 
-
+                <div class="row">   
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                    <textarea
+                      matInput
+                      formControlName="target_description"
+                      rows="1"
+                      cdkTextareaAutosize
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="10">
+                    </textarea>
+                  <mat-error *ngIf="targetForm.get('target_description')?.hasError('required')">Required</mat-error>
+                </mat-form-field>
+                </div>
               </div>
               <div class="form-grid">
                 <button (click)="onUpdate()">Save</button>
