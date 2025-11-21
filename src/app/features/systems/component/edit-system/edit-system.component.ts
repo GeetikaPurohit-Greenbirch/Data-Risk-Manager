@@ -1172,7 +1172,11 @@ resetRiskLevels()
     this.toastNotificationService.success("Risk level reset Successfully.");
     this.is_modified_risk_level = false;
     this.resetRiskBtn = false;
+    
+    setTimeout(() => {
+      this.loadInboundInterfaces(); // refresh
    
+    }, 1000);
   });
 }
 

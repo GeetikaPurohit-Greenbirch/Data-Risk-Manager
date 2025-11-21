@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Lineage } from '../models/usecase.model';
+import { Lineage} from '../models/usecase.model';
 
 interface LineageRecord {
   createdBy: string;
@@ -61,6 +61,10 @@ export class LineageService {
         const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}`;
         return this.http.get<LineageRecord>(url);
       } 
+    public getLineageEntitiesByUseCaseId(useCaseId: string) {
+      const url: string = this.apiUrl + `lineage/entities/json/${useCaseId}/grouped`;
+      return this.http.get<any>(url);
+    } 
     
     public saveLineageById(lineage: Lineage, payload:any): Observable<Lineage> {
         const url: string = this.apiUrl + `lineage/entities/json/${lineage.use_case_id}/${lineage.name}`;

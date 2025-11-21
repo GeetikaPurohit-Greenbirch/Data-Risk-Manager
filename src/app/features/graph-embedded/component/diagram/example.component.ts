@@ -325,7 +325,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             
 
             let targetData: any = []
-            if (selectedItemDetails?.type === "target") {
+            if (selectedItemDetails?.type === "target" && result.in.length>0) {
                 targetData = result.in[0].items
 
             }
@@ -370,11 +370,7 @@ export const loadExample = function (graph: dia.Graph, selectedValue: string, dr
             }
 
             let j= [[],[]]
-
-            //     .setName(selectedValue || blockDefinition.typeName)
-            //     .addPorts(result.ports)
-
-            //  (newCell as Concat).setName(selectedValue || blockDefinition.typeName);
+           
             if (blockDefinition?.sicon) {
                 (newCell as Concat).setIcon(blockDefinition.sicon);
             }

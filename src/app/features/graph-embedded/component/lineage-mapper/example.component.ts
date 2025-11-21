@@ -232,10 +232,10 @@ export const loadExample = function (graph: dia.Graph, selectedValue: any, dropp
             let result = buildTypeHierarchy(selectedItem?.ports || []);
             let targetData: any = []
             let sourceData: any = []
-            if (selectedItem?.type === "target") {
-                targetData = result.in[0].items
+            if (selectedItem?.type === "target" && result.in.length>0) {
+                targetData = result.in[0]?.items || []
             }
-            if(selectedItem?.type === "source"){
+            if(selectedItem?.type === "source" && result.out.length>0){
                 sourceData = result.out[0]?.items || []
             }           
 

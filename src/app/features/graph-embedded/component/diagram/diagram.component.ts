@@ -30,12 +30,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
 import { L001, L002, L003 } from './diagrams';
 import { map, filter, switchMap, catchError, takeUntil } from 'rxjs/operators';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, forkJoin, of } from 'rxjs';
 import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
-import { finalize } from 'rxjs/operators';
-
-
 
 type Records = Constant | Concat | GetDate | Record;
 
@@ -97,39 +94,77 @@ export class DiagramComponent implements AfterViewInit {
     lineage_json: ''
 
   };
+  entities: any;
 
   private destroy$ = new Subject<void>();
 
   public ngOnInit(): void {
+    // this.route.paramMap.pipe(
+    //   // Try both common param names; keep whichever your route uses
+    //   map(params => params.get('usecaseId') ?? params.get('use_case_id') ?? params.get('id')),
+    //   filter((id): id is string => !!id && id.trim().length > 0),
+    //   switchMap((usecaseId: string) =>
+    //     this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
+    //       catchError(err => {
+    //         console.error('Failed to fetch lineages by usecaseId:', err);
+    //         this.errorMsg = 'Could not load lineage data.';
+    //         return of<LineageRecord | null>(null);
+    //       })
+    //     )
+    //   ),
+    //   takeUntil(this.destroy$)
+    // ).subscribe((lineages: LineageRecord | null) => {
+    //   this.lineages = lineages;
+    //   console.log('Fetched lineages:', lineages);
+    //   const useCaseId = lineages?.use_case_id ?? null;
+    //   console.log('Use Case ID:', useCaseId);
+
+    //   this.loadGraphFromJSON(lineages?.lineage_json || {});
+    //   this.loading = false;
+    // });
+    this.getLineageData();
+
+  }
+
+  getLineageData() {
     this.route.paramMap.pipe(
-      // Try both common param names; keep whichever your route uses
       map(params => params.get('usecaseId') ?? params.get('use_case_id') ?? params.get('id')),
       filter((id): id is string => !!id && id.trim().length > 0),
+
       switchMap((usecaseId: string) =>
-        this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
-          catchError(err => {
-            console.error('Failed to fetch lineages by usecaseId:', err);
-            this.errorMsg = 'Could not load lineage data.';
-            return of<LineageRecord | null>(null);
-          })
-        )
+        forkJoin({
+          lineage: this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage:', err);
+              this.errorMsg = 'Could not load lineage data.';
+              return of(null);
+            })
+          ),
+          entities: this.lineageService.getLineageEntitiesByUseCaseId(usecaseId).pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage entities:', err);
+              return of([]); // return empty list on error
+            })
+          )
+        })
       ),
+
       takeUntil(this.destroy$)
-    ).subscribe((lineages: LineageRecord | null) => {
-      this.lineages = lineages;
-      console.log('Fetched lineages:', lineages);
-      const useCaseId = lineages?.use_case_id ?? null;
-      console.log('Use Case ID:', useCaseId);
+    )
+      .subscribe(({ lineage, entities }) => {
+        this.lineages = lineage;
+        this.entities = entities;
 
-      this.loadGraphFromJSON(lineages?.lineage_json || {});
-      this.loading = false;
+        console.log('Fetched lineage:', lineage);
+        console.log('Fetched entities:', entities);
 
+        const useCaseId = lineage?.use_case_id ?? null;
+        console.log('Use Case ID:', useCaseId);
 
-      // If you also need to feed AG Grid or a graph lib, do it here:
-      // this.gridApi?.setRowData(this.lineages);
-      // this.graph.loadFromLineages(this.lineages);
-    });
+        this.loadGraphFromJSON(lineage?.lineage_json || {});
 
+        this.loading = false;
+      });
   }
 
   public onNavigate(link: dia.Link) {
@@ -770,7 +805,7 @@ export class DiagramComponent implements AfterViewInit {
           const controlId = li.getAttribute('data-id')?.replace('C-', '');
           if (controlId) {
             popup.remove();
-            router.navigate(['/controls/edit-control', controlId,true]); // ✅ uses injected router
+            router.navigate(['/controls/edit-control', controlId, true]); // ✅ uses injected router
           }
         }
       });
