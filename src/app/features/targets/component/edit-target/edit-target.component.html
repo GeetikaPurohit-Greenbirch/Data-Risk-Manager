@@ -234,11 +234,10 @@
                     <div class="p-fluid">
                       <div style="display: flex;gap: 16px;">
                         <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
-                          <label>Field No.<span class="required">*</span></label>
-                          <input type="text" pInputText formControlName="field_no" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_no')?.invalid && formGroup.get('field_no')?.touched">
-                            Field No. is required and must be numeric
+                          <label>Field No</label>
+                          <input type="text" pInputText formControlName="user_generated_id" />
+                          <small class="p-error" *ngIf="formGroup.get('user_generated_id')?.invalid">
+                            Field No must be numeric
                           </small>
                         </div>
 
@@ -254,20 +253,15 @@
 
                       <div style="display: flex;gap: 16px;">
                         <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
-                          <label>Description<span class="required">*</span></label>
+                          <label>Description</label>
                           <input type="text" pInputText formControlName="field_description" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_description')?.invalid && formGroup.get('field_description')?.touched">
-                            Description is required
-                          </small>
                         </div>
 
                         <div class="p-field" style="flex: 1 1 auto;">
                           <label>Length<span class="required">*</span></label>
                           <input type="text" pInputText formControlName="field_length" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_length')?.invalid && formGroup.get('field_length')?.touched">
-                            Field No. is required and must be numeric
+                          <small class="p-error" *ngIf="formGroup.get('field_length')?.invalid ">
+                            Field Length must be numeric
                           </small>
                         </div>
                       </div>
@@ -305,17 +299,14 @@
                     </div>
                   </form>
                 </p-dialog>
-              </div>
-
-              <!-- delete confirmation dialog -->
-              <div class="confirmdelete-container">
+                <!-- delete confirmation dialog -->
                 <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
                   <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
-                  <p-footer>
-                    <button label="No" class="btn btn--secondary" style="margin-right: 14px;"
+                  <div class="p-dialog-footer">
+                    <button pButton type="button" class="btn btn--secondary"
                       (click)="showDeleteDialog = false">No</button>
-                    <button label="Yes" class="btn btn--danger" (click)="deleteRow()">Yes</button>
-                  </p-footer>
+                    <button pButton type="button" class="btn btn--primary" (click)="deleteRow()">Yes</button>
+                  </div>
                 </p-dialog>
               </div>
 

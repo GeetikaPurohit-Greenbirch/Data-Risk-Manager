@@ -54,12 +54,15 @@
                 <tr>
                   <td *ngFor="let col of selectedColumns">{{ row[col.field] }}</td>
                   <td>
-                    <button pButton icon="pi pi-pencil" class="p-button-text p-button-info"
+                    <button title="Edit" pButton icon="pi pi-pencil" class="p-button-text p-button-info"
                       (click)="editTarget(row)"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                    <button title="Delete" pButton icon="pi pi-trash" class="p-button-text p-button-danger"
                       (click)="deleteTarget(row)"></button>
-                      <button pButton icon="pi pi-copy" class="p-button-text p-button-primary"
+                      <button title="Copy Target" pButton icon="pi pi-copy" class="p-button-text p-button-primary"
                       (click)="cloneTarget(row)"></button>
+
+                      <button title="Copy Target as Interface" pButton icon="pi pi-copy" class="p-button-text p-button-primary"
+                      (click)="cloneTargetAsInterface(row)"></button>
                   </td>
                 </tr>
               </ng-template>
