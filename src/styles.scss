@@ -8,7 +8,6 @@
 
 @import "scss/main.scss";
 
-
 html,
 body {
   height: 100%;
@@ -18,7 +17,7 @@ body {
   margin: 0;
   overflow: hidden;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   // font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -40,7 +39,6 @@ img {
 //   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 // }
 
-
 //////////// System builder design //////////////////////
 .main-container {
   display: flex;
@@ -52,7 +50,6 @@ img {
 //   overflow-y: auto;
 //   background: #f5f7f9;
 // }
-
 
 .form-grid {
   gap: 10px;
@@ -79,14 +76,14 @@ img {
   display: flex;
   color: white;
   align-items: center;
-  padding: .8rem 1rem;
+  padding: 0.8rem 1rem;
   margin-bottom: 1rem;
   border-radius: 0rem;
   justify-content: space-between;
   background-color: rgb(62, 99, 221);
 
   &.create {
-    padding: .4rem 1rem;
+    padding: 0.4rem 1rem;
   }
 
   // background: linear-gradient(to right, #4f46e5, #6366f1);
@@ -156,7 +153,7 @@ img {
 
       .pi {
         color: #333;
-        font-size: .8rem;
+        font-size: 0.8rem;
       }
 
       .p-inputtext {
@@ -171,7 +168,7 @@ img {
     }
 
     .p-datatable-wrapper {
-      .p-datatable-thead>tr>th {
+      .p-datatable-thead > tr > th {
         font-size: 13px;
         color: #333333;
         white-space: nowrap;
@@ -183,14 +180,13 @@ img {
           min-width: 140px;
         }
 
-
         & svg {
           width: 11px;
           color: currentColor;
         }
       }
 
-      .p-datatable-tbody>tr>td {
+      .p-datatable-tbody > tr > td {
         color: #333;
         font-size: 14px;
         font-weight: 300;
@@ -372,7 +368,7 @@ img {
   font-weight: bold;
 }
 
-//// ag grid /// 
+//// ag grid ///
 .ag-theme-alpine {
   overflow: hidden !important;
   --ag-foreground-color: #333;
@@ -623,12 +619,12 @@ img {
     .p-toolbar {
       border: none;
       background: white;
-      padding: .3rem .5rem;
+      padding: 0.3rem 0.5rem;
 
       .p-input-icon-left {
         .pi {
           top: 60%;
-          font-size: .75rem;
+          font-size: 0.75rem;
         }
 
         .p-inputtext {
@@ -644,7 +640,7 @@ img {
       border: 1px solid #e8e6e4;
 
       .p-icon {
-        width: .86rem;
+        width: 0.86rem;
         // color: #777;
       }
 
@@ -661,14 +657,13 @@ img {
         }
 
         .p-icon {
-          width: .85rem;
+          width: 0.85rem;
         }
       }
     }
   }
 
   .p-datatable {
-
     .p-paginator-bottom {
       &.p-paginator {
         border: none;
@@ -724,7 +719,7 @@ img {
       .p-multiselect-filter-container .p-inputtext {
         width: 100%;
         border: 1px solid #ccc;
-        padding: .2rem 1.5rem .2rem .5rem;
+        padding: 0.2rem 1.5rem 0.2rem 0.5rem;
       }
     }
 
@@ -763,7 +758,7 @@ img {
 
     .p-dialog-header {
       background: transparent;
-      padding: 1.6rem 1.6rem .6rem 1.6rem;
+      padding: 1.6rem 1.6rem 0.6rem 1.6rem;
 
       .p-dialog-title {
         font-weight: 500;
@@ -773,7 +768,7 @@ img {
 
     .p-dialog-content {
       background: transparent;
-      padding: .1rem 1.6rem 1.6rem 1.6rem;
+      padding: 0.1rem 1.6rem 1.6rem 1.6rem;
 
       .p-row {
         gap: 16px;
@@ -795,7 +790,7 @@ img {
 
         small {
           font-size: 10px;
-          color: #ff0000
+          color: #ff0000;
         }
 
         .p-inputtext {
@@ -817,7 +812,6 @@ img {
 // ==== CONFIRM DELETE ====
 .confirmdelete-container {
   .p-dialog {
-
     .p-dialog-header {
       padding: 1.2rem;
 
@@ -848,55 +842,44 @@ img {
 }
 
 .jointjs-popup {
+  padding: 12px;
+  z-index: 10000;
   position: fixed;
+  min-width: 220px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10000;
-  min-width: 220px;
-  padding: 12px;
-  font-family: Arial, sans-serif;
-}
 
-.jointjs-popup .popup-header {
-  font-weight: 600;
-  margin-bottom: 8px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .popup-header {
+    display: flex;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    align-items: center;
+    justify-content: space-between;
 
-  span {
-    cursor: pointer;
-    display: inline-block;
+    span {
+      cursor: pointer;
+      display: inline-block;
+    }
   }
-}
 
-.jointjs-popup .popup-body {
-  font-size: 14px;
-}
-
-.jointjs-popup .popup-body input {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
-
-.jointjs-popup .popup-actions {
-  margin-top: 8px;
-  text-align: right;
-}
-
-.jointjs-popup .popup-actions button {
-  margin-left: 6px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.jointjs-popup .popup-actions button:hover {
-  background-color: #0056b3;
+  .popup-body {
+    font-size: 14px;
+    ul {
+      gap: 2px;
+      display: flex;
+      flex-direction: column;
+      li {
+        font-size: 13px;
+        cursor: pointer;
+        color: #3f51b5;
+        list-style-type: none;
+        &:hover {
+          color: #2196f3;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }

@@ -1,5 +1,4 @@
 <div class="main-container">
-
   <main class="dashboard-container">
     <section class="welcome-banner">
       <h2>
@@ -8,14 +7,17 @@
             <lucide-icon name="chevron-left"></lucide-icon>
           </button>
         </div>
-        {{ systemId > 0 ? 'Edit System' : 'Add System' }}
-        <div style="display: flex;justify-content: flex-end;">
-          <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
+        {{ systemId > 0 ? "Edit System" : "Add System" }}
+        <div style="display: flex; justify-content: flex-end">
+          <button
+            class="btn btn--primary"
+            (click)="onBackToLineage()"
+            *ngIf="isBacktolineage"
+          >
             Back to lineage
           </button>
         </div>
       </h2>
-
     </section>
 
     <mat-card>
@@ -42,50 +44,84 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>System Name</mat-label>
                 <input matInput formControlName="system_name" />
-                <mat-error *ngIf="systemForm.get('system_name')?.hasError('required')">Required</mat-error>
+                <mat-error
+                  *ngIf="systemForm.get('system_name')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>LeanIX ID</mat-label>
                 <input matInput formControlName="leanix_id" />
-                <mat-error *ngIf="systemForm.get('leanix_id')?.hasError('required')">Required</mat-error>
+                <mat-error
+                  *ngIf="systemForm.get('leanix_id')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
-
-              
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner</mat-label>
                 <input matInput formControlName="owner" />
-                <mat-error *ngIf="systemForm.get('owner')?.hasError('required')">Required</mat-error>
+                <mat-error *ngIf="systemForm.get('owner')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Owner Email</mat-label>
                 <input matInput formControlName="owner_email" />
-                <mat-error *ngIf="systemForm.get('owner_email')?.hasError('required')">Required</mat-error>
-                <mat-error *ngIf="systemForm.get('owner_email')?.hasError('email')">Invalid email</mat-error>
+                <mat-error
+                  *ngIf="systemForm.get('owner_email')?.hasError('required')"
+                  >Required</mat-error
+                >
+                <mat-error
+                  *ngIf="systemForm.get('owner_email')?.hasError('email')"
+                  >Invalid email</mat-error
+                >
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Version</mat-label>
                 <input matInput formControlName="version_number" />
-                <mat-error *ngIf="systemForm.get('version_number')?.hasError('required')">Required</mat-error>
+                <mat-error
+                  *ngIf="systemForm.get('version_number')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+              <mat-form-field
+                appearance="outline"
+                class="full-width"
+                *ngIf="formLoaded"
+              >
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
-                  <mat-option *ngFor="let status of statusOptions" [value]="status">
+                  <mat-option
+                    *ngFor="let status of statusOptions"
+                    [value]="status"
+                  >
                     {{ status }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="systemForm.get('status')?.hasError('required')">Required</mat-error>
+                <mat-error
+                  *ngIf="systemForm.get('status')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
-              <mat-form-field appearance="outline" class="full-width" style="width:500px">
+              <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Description</mat-label>
-               <textarea  matInput formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="10">
-              </textarea>
-                <mat-error *ngIf="systemForm.get('description')?.hasError('required')">Required</mat-error>
+                <textarea
+                  matInput
+                  formControlName="description"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="1"
+                >
+                </textarea>
+                <mat-error
+                  *ngIf="systemForm.get('description')?.hasError('required')"
+                  >Required</mat-error
+                >
               </mat-form-field>
               <!-- <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Status</mat-label>
@@ -93,39 +129,63 @@
               </mat-form-field> -->
             </form>
             <div class="form-grid11">
-              <button class="btn btn--primary btn-md" (click)="onUpdate()">Save</button>
+              <button class="btn btn--primary" (click)="onUpdate()">
+                Save
+              </button>
             </div>
-            <p class="riskIndicator" *ngIf="is_modified_risk_level">* Data Risk has been adjusted or overriden.
-              (Globally or Individually)</p>
+            <p class="riskIndicator" *ngIf="is_modified_risk_level">
+              * Data Risk has been adjusted or overriden. (Globally or
+              Individually)
+            </p>
           </div>
-          <button *ngIf="resetRiskBtn" (click)="resetRiskLevels()" style="width: 10%;" class="btn btn-primary">Reset
-            Risk Levels</button>
+          <button
+            class="btn btn--primary"
+            *ngIf="resetRiskBtn"
+            (click)="resetRiskLevels()"
+            style="width: fit-content"
+          >
+            Reset Risk Levels
+          </button>
 
-          <div class="right-panel" *ngIf="systemId>0">
+          <div class="right-panel" *ngIf="systemId > 0">
             <!-- TABS CONTAINER -->
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView === 'interfaces' }" (click)="openTab('interfaces')">
+              <button
+                [ngClass]="{ inverse: activeView === 'interfaces' }"
+                (click)="openTab('interfaces')"
+              >
                 Interfaces
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView === 'input' }" (click)="openTab('input')">
+              <button
+                [ngClass]="{ inverse: activeView === 'input' }"
+                (click)="openTab('input')"
+              >
                 Input DataFields
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView === 'output' }" (click)="openTab('output')">
+              <button
+                [ngClass]="{ inverse: activeView === 'output' }"
+                (click)="openTab('output')"
+              >
                 Output DataFields
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView === 'mapping' }" (click)="openTab('mapping')">
+              <button
+                [ngClass]="{ inverse: activeView === 'mapping' }"
+                (click)="openTab('mapping')"
+              >
                 System Mapping
               </button>
             </div>
             <!-- Information Box -->
-            <div style="height: 100%;">
-              <div *ngIf="activeView=='interfaces'" class="row" style="width: 100%">
+            <div class="container" style="height: 100%; background: #f1f5f9">
+              <div
+                class="row"
+                style="width: 100%"
+                *ngIf="activeView == 'interfaces'"
+              >
                 <div class="info-box-table" class="col-sm-5">
-
-
                   <!-- <div class="padding:10px">
                     <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
                       [rowData]="rowDataInbound" [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef">
@@ -136,31 +196,58 @@
                       <p-toolbar>
                         <div class="p-toolbar-group-left">
                           <div class="p-r-10">
-                            <button class="btn btn--tertiary btn-sm" (click)="openDialog('inbound')">
-                              <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                            <button
+                              class="btn btn--tertiary btn-sm"
+                              (click)="openDialog('inbound')"
+                            >
+                              <lucide-icon
+                                name="plus"
+                                style="width: 16px"
+                              ></lucide-icon>
                               Add Inbound Interface
                             </button>
                           </div>
                           <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" #globalFilter_inbound
-                              (input)="dtInbound.filterGlobal(globalFilter_inbound.value, 'contains')"
-                              placeholder="Global Search" />
+                            <input
+                              pInputText
+                              type="text"
+                              #globalFilter_inbound
+                              (input)="
+                                dtInbound.filterGlobal(
+                                  globalFilter_inbound.value,
+                                  'contains'
+                                )
+                              "
+                              placeholder="Global Search"
+                            />
                           </span>
                         </div>
                       </p-toolbar>
                     </div>
                     <div class="man">
-                      <p-table #dtInbound [value]="rowDataInbound" [paginator]="true" [rows]="10"
-                        [resizableColumns]="true" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
-                        sortMode="multiple" [showCurrentPageReport]="true"
+                      <p-table
+                        #dtInbound
+                        [value]="rowDataInbound"
+                        [paginator]="true"
+                        [rows]="10"
+                        [resizableColumns]="true"
+                        [rowsPerPageOptions]="[10, 25, 50]"
+                        [responsiveLayout]="'scroll'"
+                        sortMode="multiple"
+                        [showCurrentPageReport]="true"
                         [globalFilterFields]="globalFilterFields_inbound"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                        styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
+                        styleClass="p-datatable-gridlines p-datatable-sm"
+                        class="p-dense"
+                      >
                         <!-- Header -->
                         <ng-template pTemplate="header">
                           <tr>
-                            <th *ngFor="let col of cols_Interface" [pSortableColumn]="col.field">
+                            <th
+                              *ngFor="let col of cols_Interface"
+                              [pSortableColumn]="col.field"
+                            >
                               {{ col.header }}
                               <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
@@ -175,12 +262,15 @@
                               {{ rowData[col.field] }}
                             </td>
                             <td>
-                              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                                (click)="confirmDelete(rowData,'inbound')"></button>
+                              <button
+                                pButton
+                                icon="pi pi-trash"
+                                class="p-button-text p-button-danger"
+                                (click)="confirmDelete(rowData, 'inbound')"
+                              ></button>
                             </td>
                           </tr>
                         </ng-template>
-
                       </p-table>
                     </div>
                   </div>
@@ -197,31 +287,58 @@
                       <p-toolbar>
                         <div class="p-toolbar-group-left">
                           <div class="p-r-10">
-                            <button class="btn btn--tertiary btn-sm" (click)="openDialog('outbound')">
-                              <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
+                            <button
+                              class="btn btn--tertiary btn-sm"
+                              (click)="openDialog('outbound')"
+                            >
+                              <lucide-icon
+                                name="plus"
+                                style="width: 16px"
+                              ></lucide-icon>
                               Add Outbound Interface
                             </button>
                           </div>
                           <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" #globalFilter_outbound
-                              (input)="dtoutbound.filterGlobal(globalFilter_outbound.value, 'contains')"
-                              placeholder="Global Search" />
+                            <input
+                              pInputText
+                              type="text"
+                              #globalFilter_outbound
+                              (input)="
+                                dtoutbound.filterGlobal(
+                                  globalFilter_outbound.value,
+                                  'contains'
+                                )
+                              "
+                              placeholder="Global Search"
+                            />
                           </span>
                         </div>
                       </p-toolbar>
                     </div>
                     <div class="man">
-                      <p-table #dtoutbound [value]="rowDataOutbound" [paginator]="true" [rows]="10"
-                        [resizableColumns]="true" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
-                        sortMode="multiple" [showCurrentPageReport]="true"
+                      <p-table
+                        #dtoutbound
+                        [value]="rowDataOutbound"
+                        [paginator]="true"
+                        [rows]="10"
+                        [resizableColumns]="true"
+                        [rowsPerPageOptions]="[10, 25, 50]"
+                        [responsiveLayout]="'scroll'"
+                        sortMode="multiple"
+                        [showCurrentPageReport]="true"
                         [globalFilterFields]="globalFilterFields_outbound"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                        styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
+                        styleClass="p-datatable-gridlines p-datatable-sm"
+                        class="p-dense"
+                      >
                         <!-- Header -->
                         <ng-template pTemplate="header">
                           <tr>
-                            <th *ngFor="let col of cols_Interface" [pSortableColumn]="col.field">
+                            <th
+                              *ngFor="let col of cols_Interface"
+                              [pSortableColumn]="col.field"
+                            >
                               {{ col.header }}
                               <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
@@ -236,32 +353,47 @@
                               {{ rowData[col.field] }}
                             </td>
                             <td>
-                              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                                (click)="confirmDelete(rowData,'outbound')"></button>
+                              <button
+                                pButton
+                                icon="pi pi-trash"
+                                class="p-button-text p-button-danger"
+                                (click)="confirmDelete(rowData, 'outbound')"
+                              ></button>
                             </td>
                           </tr>
                         </ng-template>
-
                       </p-table>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="datafields-table" *ngIf="activeView=='input'">
+
+              <div class="datafields-table" *ngIf="activeView == 'input'">
                 <div class="datafields-header">
                   <div class="checkbox-title">
-                    <label><input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridInbound"
-                        (change)="toggleInboundGrid($event)" />
+                    <label
+                      ><input
+                        type="checkbox"
+                        [(ngModel)]="showGlobalQualityRiskGridInbound"
+                        (change)="toggleInboundGrid($event)"
+                      />
                       Set Global Quality Risk
                     </label>
                   </div>
                 </div>
 
                 <div>
-                  <ag-grid-angular class="ag-theme-alpine responsive-grid" *ngIf="showGlobalQualityRiskGridInbound"
-                    style="width: 100%;height: 100%;" [rowData]="rowDataInboundDQA" [columnDefs]="columnDefsInboundDQA"
-                    [defaultColDef]="defaultColDef" (gridReady)="onInboundGridReady($event)" rowSelection="single"
-                    [domLayout]="'autoHeight'">
+                  <ag-grid-angular
+                    class="ag-theme-alpine responsive-grid"
+                    *ngIf="showGlobalQualityRiskGridInbound"
+                    style="width: 100%; height: 100%"
+                    [rowData]="rowDataInboundDQA"
+                    [columnDefs]="columnDefsInboundDQA"
+                    [defaultColDef]="defaultColDef"
+                    (gridReady)="onInboundGridReady($event)"
+                    rowSelection="single"
+                    [domLayout]="'autoHeight'"
+                  >
                   </ag-grid-angular>
                 </div>
 
@@ -270,36 +402,68 @@
                     <p-toolbar>
                       <div class="p-toolbar-group-left">
                         <div class="p-r-10">
-                          <button class="btn btn--tertiary btn-sm" (click)="openDialog('InputDataField')">
-                            <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
-                            Add New Field</button>
+                          <button
+                            class="btn btn--tertiary btn-sm"
+                            (click)="openDialog('InputDataField')"
+                          >
+                            <lucide-icon
+                              name="plus"
+                              style="width: 16px"
+                            ></lucide-icon>
+                            Add New Field
+                          </button>
                         </div>
                         <span class="p-input-icon-left">
                           <i class="pi pi-search"></i>
-                          <input pInputText type="text" #globalFilter_input
-                            (input)="dt_input.filterGlobal(globalFilter_input.value, 'contains')"
-                            placeholder="Global Search" />
+                          <input
+                            pInputText
+                            type="text"
+                            #globalFilter_input
+                            (input)="
+                              dt_input.filterGlobal(
+                                globalFilter_input.value,
+                                'contains'
+                              )
+                            "
+                            placeholder="Global Search"
+                          />
                         </span>
                       </div>
 
                       <div class="p-toolbar-group-right">
-                        <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                          placeholder="Choose Columns" display="chip">
+                        <p-multiSelect
+                          [options]="cols"
+                          [(ngModel)]="selectedColumns"
+                          optionLabel="header"
+                          placeholder="Choose Columns"
+                          display="chip"
+                        >
                         </p-multiSelect>
                       </div>
                     </p-toolbar>
                   </div>
                   <div class="man">
-                    <p-table #dt_input [value]="rowDataInput" [paginator]="true" [rows]="10" [resizableColumns]="true"
-                      columnResizeMode="expand" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
+                    <p-table
+                      #dt_input
+                      [value]="rowDataInput"
+                      [paginator]="true"
+                      [rows]="10"
+                      [resizableColumns]="true"
+                      columnResizeMode="expand"
+                      [rowsPerPageOptions]="[10, 25, 50]"
+                      [responsiveLayout]="'scroll'"
                       [showCurrentPageReport]="true"
                       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                      styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable" class="p-dense">
+                      styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable"
+                      class="p-dense"
+                    >
                       <!-- ========== HEADER SECTION ========== -->
                       <ng-template pTemplate="header">
                         <!-- Parent Header -->
                         <tr>
-                          <th colspan="8" class="custom-parent-header">Data field Details</th>
+                          <th colspan="8" class="custom-parent-header">
+                            Data field Details
+                          </th>
                           <th colspan="6" class="custom-parent-header">DQA</th>
                           <th class="custom-parent-header">Actions</th>
                         </tr>
@@ -307,13 +471,21 @@
                         <!-- Child Headers -->
                         <tr>
                           <!-- Interface Section -->
-                          <th *ngFor="let col of cols.slice(0, 8)" pResizableColumn pSortableColumn="{{col.field}}">
+                          <th
+                            *ngFor="let col of cols.slice(0, 8)"
+                            pResizableColumn
+                            pSortableColumn="{{ col.field }}"
+                          >
                             {{ col.header }}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                           </th>
 
                           <!-- DQA Section -->
-                          <th *ngFor="let col of cols.slice(8)" pResizableColumn pSortableColumn="{{col.field}}">
+                          <th
+                            *ngFor="let col of cols.slice(8)"
+                            pResizableColumn
+                            pSortableColumn="{{ col.field }}"
+                          >
                             {{ col.header }}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                           </th>
@@ -335,11 +507,19 @@
 
                           <!-- Actions -->
                           <td>
-                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-success"
-                              (click)="openDialog('datafieldInput',rowData)"
-                              [disabled]="rowData.entity_type === 'INTERFACE'"></button>
-                            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                              (click)="confirmDelete(rowData,'datafieldInput')"></button>
+                            <button
+                              pButton
+                              icon="pi pi-pencil"
+                              class="p-button-text p-button-success"
+                              (click)="openDialog('datafieldInput', rowData)"
+                              [disabled]="rowData.entity_type === 'INTERFACE'"
+                            ></button>
+                            <button
+                              pButton
+                              icon="pi pi-trash"
+                              class="p-button-text p-button-danger"
+                              (click)="confirmDelete(rowData, 'datafieldInput')"
+                            ></button>
                           </td>
                         </tr>
                       </ng-template>
@@ -348,19 +528,28 @@
                 </div>
               </div>
 
-              <div class="datafields-table" *ngIf="activeView=='output'">
+              <div class="datafields-table" *ngIf="activeView == 'output'">
                 <div class="checkbox-title">
                   <label>
-                    <input type="checkbox" [(ngModel)]="showGlobalQualityRiskGridOutbound"
-                      (change)="toggleOutboundGrid($event)" />
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="showGlobalQualityRiskGridOutbound"
+                      (change)="toggleOutboundGrid($event)"
+                    />
                     Set Global Quality Risk
                   </label>
                 </div>
 
-                <ag-grid-angular *ngIf="showGlobalQualityRiskGridOutbound" class="ag-theme-alpine"
-                  style="width: 100%; height: 180px; margin-top: 10px;" [rowData]="rowDataoutboundDQA"
-                  [columnDefs]="columnDefsOoutboundDQA" [defaultColDef]="defaultColDef"
-                  (gridReady)="onOutboundGridReady($event)" rowSelection="single">
+                <ag-grid-angular
+                  *ngIf="showGlobalQualityRiskGridOutbound"
+                  class="ag-theme-alpine"
+                  style="width: 100%; height: 180px; margin-top: 10px"
+                  [rowData]="rowDataoutboundDQA"
+                  [columnDefs]="columnDefsOoutboundDQA"
+                  [defaultColDef]="defaultColDef"
+                  (gridReady)="onOutboundGridReady($event)"
+                  rowSelection="single"
+                >
                 </ag-grid-angular>
 
                 <div class="ngprime-table">
@@ -369,30 +558,55 @@
                       <div class="p-toolbar-group-left">
                         <span class="p-input-icon-left">
                           <i class="pi pi-search"></i>
-                          <input pInputText type="text" #globalFilter_output
-                            (input)="dt_output.filterGlobal(globalFilter_output.value, 'contains')"
-                            placeholder="Global Search" />
+                          <input
+                            pInputText
+                            type="text"
+                            #globalFilter_output
+                            (input)="
+                              dt_output.filterGlobal(
+                                globalFilter_output.value,
+                                'contains'
+                              )
+                            "
+                            placeholder="Global Search"
+                          />
                         </span>
                       </div>
 
                       <div class="p-toolbar-group-right">
-                        <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                          placeholder="Choose Columns" display="chip">
+                        <p-multiSelect
+                          [options]="cols"
+                          [(ngModel)]="selectedColumns"
+                          optionLabel="header"
+                          placeholder="Choose Columns"
+                          display="chip"
+                        >
                         </p-multiSelect>
                       </div>
                     </p-toolbar>
                   </div>
                   <div class="man">
-                    <p-table #dt_output [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
-                      columnResizeMode="expand" [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'"
+                    <p-table
+                      #dt_output
+                      [value]="rowData"
+                      [paginator]="true"
+                      [rows]="10"
+                      [resizableColumns]="true"
+                      columnResizeMode="expand"
+                      [rowsPerPageOptions]="[10, 25, 50]"
+                      [responsiveLayout]="'scroll'"
                       [showCurrentPageReport]="true"
                       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                      styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable" class="p-dense">
+                      styleClass="p-datatable-gridlines p-datatable-sm p-datatable-resizable"
+                      class="p-dense"
+                    >
                       <!-- ========== HEADER SECTION ========== -->
                       <ng-template pTemplate="header">
                         <!-- Parent Header -->
                         <tr>
-                          <th colspan="8" class="custom-parent-header">Data field Details</th>
+                          <th colspan="8" class="custom-parent-header">
+                            Data field Details
+                          </th>
                           <th colspan="6" class="custom-parent-header">DQA</th>
                           <th class="custom-parent-header">Actions</th>
                         </tr>
@@ -400,13 +614,21 @@
                         <!-- Child Headers -->
                         <tr>
                           <!-- Interface Section -->
-                          <th *ngFor="let col of cols.slice(0, 8)" pResizableColumn pSortableColumn="{{col.field}}">
+                          <th
+                            *ngFor="let col of cols.slice(0, 8)"
+                            pResizableColumn
+                            pSortableColumn="{{ col.field }}"
+                          >
                             {{ col.header }}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                           </th>
 
                           <!-- DQA Section -->
-                          <th *ngFor="let col of cols.slice(8)" pResizableColumn pSortableColumn="{{col.field}}">
+                          <th
+                            *ngFor="let col of cols.slice(8)"
+                            pResizableColumn
+                            pSortableColumn="{{ col.field }}"
+                          >
                             {{ col.header }}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                           </th>
@@ -428,11 +650,21 @@
 
                           <!-- Actions -->
                           <td>
-                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-success"
-                              (click)="openDialog('datafieldOutput',rowData)"
-                              [disabled]="rowData.entity_type === 'INTERFACE'"></button>
-                            <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                              (click)="confirmDelete(rowData,'datafieldOutput')"></button>
+                            <button
+                              pButton
+                              icon="pi pi-pencil"
+                              class="p-button-text p-button-success"
+                              (click)="openDialog('datafieldOutput', rowData)"
+                              [disabled]="rowData.entity_type === 'INTERFACE'"
+                            ></button>
+                            <button
+                              pButton
+                              icon="pi pi-trash"
+                              class="p-button-text p-button-danger"
+                              (click)="
+                                confirmDelete(rowData, 'datafieldOutput')
+                              "
+                            ></button>
                           </td>
                         </tr>
                       </ng-template>
@@ -441,156 +673,291 @@
                 </div>
               </div>
 
-              <div class="lineage-wrapper" *ngIf="activeView=='mapping'">
+              <div class="lineage-wrapper" *ngIf="activeView == 'mapping'">
                 <div class="tables-wrapper">
-                  <app-create-lineage [inboundFields]="inboundFields" [outboundFields]="outboundFields"
-                    [systemId]="systemId"></app-create-lineage>
+                  <app-create-lineage
+                    [inboundFields]="inboundFields"
+                    [outboundFields]="outboundFields"
+                    [systemId]="systemId"
+                  ></app-create-lineage>
                 </div>
               </div>
             </div>
             <!-- data field form dialog -->
             <div class="form-dialog-container">
-              <p-dialog header="{{ isEdit ? 'Edit Data Field' : 'Add Data Field' }}" [(visible)]="displayDialog"
-                [modal]="true" [closable]="true" [style]="{ width: '660px' }" [draggable]="false" [resizable]="false">
+              <p-dialog
+                header="{{ isEdit ? 'Edit Data Field' : 'Add Data Field' }}"
+                [(visible)]="displayDialog"
+                [modal]="true"
+                [closable]="true"
+                [style]="{ width: '660px' }"
+                [draggable]="false"
+                [resizable]="false"
+              >
                 <form [formGroup]="dataFieldForm" class="p-fluid">
                   <div class="p-fluid">
-                    <div style="display: flex;gap: 16px;">
+                    <div style="display: flex; gap: 16px">
                       <!-- Field No. -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="user_generated_id">Field No</label>
-                        <input pInputText id="user_generated_id" type="text" formControlName="user_generated_id" />
-                        <small class="p-error" *ngIf="dataFieldForm.get('user_generated_id')?.invalid">
+                        <input
+                          pInputText
+                          id="user_generated_id"
+                          type="text"
+                          formControlName="user_generated_id"
+                        />
+                        <small
+                          class="p-error"
+                          *ngIf="
+                            dataFieldForm.get('user_generated_id')?.invalid
+                          "
+                        >
                           Field No must be numeric
                         </small>
                       </div>
 
                       <!-- Field Name -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
-                        <label for="field_name">Field Name<span class="required">*</span></label>
-                        <input pInputText id="field_name" formControlName="field_name" />
-                        <small class="p-error"
-                          *ngIf="dataFieldForm.get('field_name')?.invalid && dataFieldForm.get('field_name')?.touched">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
+                        <label for="field_name"
+                          >Field Name<span class="required">*</span></label
+                        >
+                        <input
+                          pInputText
+                          id="field_name"
+                          formControlName="field_name"
+                        />
+                        <small
+                          class="p-error"
+                          *ngIf="
+                            dataFieldForm.get('field_name')?.invalid &&
+                            dataFieldForm.get('field_name')?.touched
+                          "
+                        >
                           Field Name is required
                         </small>
                       </div>
                     </div>
-                    <div style="display: flex;gap: 16px;">
+                    <div style="display: flex; gap: 16px">
                       <!-- Data Type (Dropdown) -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
-                        <label for="data_type">Data Type<span class="required">*</span></label>
-                        <p-dropdown id="data_type" [options]="dataTypes" formControlName="data_type"
-                          placeholder="Select Data Type"></p-dropdown>
-                        <small class="p-error"
-                          *ngIf="dataFieldForm.get('data_type')?.invalid && dataFieldForm.get('data_type')?.touched">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
+                        <label for="data_type"
+                          >Data Type<span class="required">*</span></label
+                        >
+                        <p-dropdown
+                          id="data_type"
+                          [options]="dataTypes"
+                          formControlName="data_type"
+                          placeholder="Select Data Type"
+                        ></p-dropdown>
+                        <small
+                          class="p-error"
+                          *ngIf="
+                            dataFieldForm.get('data_type')?.invalid &&
+                            dataFieldForm.get('data_type')?.touched
+                          "
+                        >
                           Data Type is required
                         </small>
                       </div>
 
                       <!-- Field Length -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="field_length">Field Length</label>
-                        <input pInputText id="field_length" type="text" formControlName="field_length" />
-                        <small class="p-error" *ngIf="dataFieldForm.get('field_length')?.invalid">
+                        <input
+                          pInputText
+                          id="field_length"
+                          type="text"
+                          formControlName="field_length"
+                        />
+                        <small
+                          class="p-error"
+                          *ngIf="dataFieldForm.get('field_length')?.invalid"
+                        >
                           Field Length must be numeric
                         </small>
                       </div>
                     </div>
-                    <div style="display: flex;gap: 16px;">
+                    <div style="display: flex; gap: 16px">
                       <!-- DQA C -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="dqa_c">DQA - C</label>
-                        <p-dropdown id="dqa_c" [options]="dqaLevels" formControlName="dqa_c"
-                          placeholder="Select C Level"></p-dropdown>
-
+                        <p-dropdown
+                          id="dqa_c"
+                          [options]="dqaLevels"
+                          formControlName="dqa_c"
+                          placeholder="Select C Level"
+                        ></p-dropdown>
                       </div>
 
                       <!-- Commentary C -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="commentary_c">C Commentary</label>
-                        <input pInputText pInputTextarea id="commentary_c" formControlName="commentary_c" />
-
+                        <input
+                          pInputText
+                          pInputTextarea
+                          id="commentary_c"
+                          formControlName="commentary_c"
+                        />
                       </div>
                     </div>
-                    <div style="display: flex;gap: 16px;">
+                    <div style="display: flex; gap: 16px">
                       <!-- DQA T -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="dqa_t">DQA - T</label>
-                        <p-dropdown id="dqa_t" [options]="dqaLevels" formControlName="dqa_t"
-                          placeholder="Select T Level"></p-dropdown>
-
+                        <p-dropdown
+                          id="dqa_t"
+                          [options]="dqaLevels"
+                          formControlName="dqa_t"
+                          placeholder="Select T Level"
+                        ></p-dropdown>
                       </div>
 
                       <!-- Commentary T -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="commentary_t">T Commentary</label>
-                        <input pInputText pInputTextarea id="commentary_t" formControlName="commentary_t" />
-
+                        <input
+                          pInputText
+                          pInputTextarea
+                          id="commentary_t"
+                          formControlName="commentary_t"
+                        />
                       </div>
                     </div>
-                    <div style="display: flex;gap: 16px;">
+                    <div style="display: flex; gap: 16px">
                       <!-- DQA A -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="dqa_a">DQA - A</label>
-                        <p-dropdown id="dqa_a" [options]="dqaLevels" formControlName="dqa_a"
-                          placeholder="Select A Level"></p-dropdown>
-
+                        <p-dropdown
+                          id="dqa_a"
+                          [options]="dqaLevels"
+                          formControlName="dqa_a"
+                          placeholder="Select A Level"
+                        ></p-dropdown>
                       </div>
 
                       <!-- Commentary A -->
-                      <div class="p-field" style="flex: 1 1 auto;width: 300px;">
+                      <div class="p-field" style="flex: 1 1 auto; width: 300px">
                         <label for="commentary_a">A Commentary</label>
-                        <input pInputText pInputTextarea id="commentary_a" formControlName="commentary_a" />
-
+                        <input
+                          pInputText
+                          pInputTextarea
+                          id="commentary_a"
+                          formControlName="commentary_a"
+                        />
                       </div>
                     </div>
                   </div>
 
                   <div class="p-dialog-footer">
-                    <button pButton type="button" class="btn btn--secondary" (click)="closeDialog()">Cancel</button>
-                    <button pButton type="button" class="btn btn--primary" (click)="onSubmit()"
-                      [disabled]="dataFieldForm.invalid">{{ isEdit ? 'Update' : 'Save' }}</button>
+                    <button
+                      pButton
+                      type="button"
+                      class="btn btn--secondary"
+                      (click)="closeDialog()"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      pButton
+                      type="button"
+                      class="btn btn--primary"
+                      (click)="onSubmit()"
+                      [disabled]="dataFieldForm.invalid"
+                    >
+                      {{ isEdit ? "Update" : "Save" }}
+                    </button>
                   </div>
-
                 </form>
               </p-dialog>
 
-              <p-dialog header="{{interfaceHeaderText}}" [(visible)]="displayInteraceDialog" [modal]="true"
-                [closable]="true" [style]="{ width: '400px' }" [draggable]="false" [resizable]="false">
+              <p-dialog
+                header="{{ interfaceHeaderText }}"
+                [(visible)]="displayInteraceDialog"
+                [modal]="true"
+                [closable]="true"
+                [style]="{ width: '400px' }"
+                [draggable]="false"
+                [resizable]="false"
+              >
                 <form [formGroup]="interfaceForm">
-
                   <!-- Interface Name -->
                   <div class="p-fluid">
-                    <div style="display: flex;gap: 16px;">
-                      <div class="p-field" style="flex: 1 1 auto; ">
+                    <div style="display: flex; gap: 16px">
+                      <div class="p-field" style="flex: 1 1 auto">
                         <label for="interface">Interface</label>
-                        <p-dropdown id="interface" [options]="interfaceOptionList" optionLabel="label"
-                          optionValue="value" formControlName="interface" placeholder="Select Interface" appendTo="body"
-                          [autoZIndex]="true" [baseZIndex]="1000">
+                        <p-dropdown
+                          id="interface"
+                          [options]="interfaceOptionList"
+                          optionLabel="label"
+                          optionValue="value"
+                          formControlName="interface"
+                          placeholder="Select Interface"
+                          appendTo="body"
+                          [autoZIndex]="true"
+                          [baseZIndex]="1000"
+                        >
                         </p-dropdown>
-                        <small class="p-error"
-                          *ngIf="interfaceForm.get('interface')?.invalid && interfaceForm.get('interface')?.touched">
+                        <small
+                          class="p-error"
+                          *ngIf="
+                            interfaceForm.get('interface')?.invalid &&
+                            interfaceForm.get('interface')?.touched
+                          "
+                        >
                           Iterface is required
                         </small>
                       </div>
                     </div>
                   </div>
                   <div class="p-dialog-footer">
-                    <button type="button" class="btn btn--secondary"
-                      (click)="displayInteraceDialog = false">Cancel</button>
-                    <button type="button" class="btn btn--primary" (click)="onSubmitInterface()"
-                      [disabled]="interfaceForm.invalid">{{
-                      isEdit ? 'Update' : 'Save' }}</button>
+                    <button
+                      type="button"
+                      class="btn btn--secondary"
+                      (click)="displayInteraceDialog = false"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn--primary"
+                      (click)="onSubmitInterface()"
+                      [disabled]="interfaceForm.invalid"
+                    >
+                      {{ isEdit ? "Update" : "Save" }}
+                    </button>
                   </div>
                 </form>
               </p-dialog>
 
               <!-- delete confirmation dialog -->
-              <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                <p>Are you sure you want to delete <strong>{{ deletedFieldName }}</strong>?</p>
+              <p-dialog
+                header="Confirm Delete"
+                [(visible)]="showDeleteDialog"
+                [modal]="true"
+                [closable]="false"
+              >
+                <p>
+                  Are you sure you want to delete
+                  <strong>{{ deletedFieldName }}</strong
+                  >?
+                </p>
                 <div class="p-dialog-footer">
-                  <button pButton type="button" class="btn btn--secondary"
-                    (click)="showDeleteDialog = false">No</button>
-                  <button pButton type="button" class="btn btn--primary" (click)="deleteRow()">Yes</button>
+                  <button
+                    pButton
+                    type="button"
+                    class="btn btn--secondary"
+                    (click)="showDeleteDialog = false"
+                  >
+                    No
+                  </button>
+                  <button
+                    pButton
+                    type="button"
+                    class="btn btn--primary"
+                    (click)="deleteRow()"
+                  >
+                    Yes
+                  </button>
                 </div>
               </p-dialog>
             </div>
