@@ -40,6 +40,7 @@ export class ReportBuilderComponent {
       timelinessRiskComment: false,
       criticality: false,
       controlId: false,
+      controlName:false,
       controlStatus: false,
       postControlAccuracy: false,
       postControlCompleteness: false,
@@ -103,7 +104,8 @@ export class ReportBuilderComponent {
         timeliness_risk_comment: this.options.attributes.timelinessRiskComment,
   
         criticality: this.options.attributes.criticality,
-        control_id: this.options.attributes.controlId,
+        // control_id: this.options.attributes.controlId,
+        control_name: this.options.attributes.controlName,
         control_status: this.options.attributes.controlStatus,
   
         post_control_risk_accuracy: this.options.attributes.postControlAccuracy,
