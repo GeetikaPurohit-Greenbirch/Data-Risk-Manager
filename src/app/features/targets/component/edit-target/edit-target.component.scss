@@ -109,7 +109,7 @@
         background-color: transparent;
 
         .usecase-form {
-            padding: 1rem;
+            padding: 0rem;
             max-width: 100%;
             border-radius: .5rem;
 
@@ -123,38 +123,17 @@
             gap: 2rem;
             width: 100%;
             display: flex;
-            padding: .6rem;
+            padding: .1rem;
             border-radius: 2px;
-            margin-bottom: 1.6rem;
-            border: 1px solid #e9f2fc;
+            margin-bottom: 1.3rem;
+            // border: 1px solid #e9f2fc;
             justify-content: space-between;
-            background: rgb(245, 250, 255);
+            // background: rgb(245, 250, 255);
 
             p {
                 margin: 0px;
                 font-size: 14px;
                 font-weight: 500;
-            }
-
-            .update-link {
-                display: inline-block;
-
-                button {
-                    cursor: pointer;
-                    font-size: 13px;
-                    padding: 4px 8px;
-                    color: #3e63dd;
-                    font-weight: 500;
-                    border-radius: 4px;
-                    text-decoration: none;
-                    border: 1px solid #3e63dd;
-                    background-color: transparent;
-
-                    &:hover {
-                        color: #ffffff;
-                        background-color: #3e63dd;
-                    }
-                }
             }
         }
     }
@@ -242,15 +221,15 @@
 // }
 
 
-::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 2px 8px !important; 
+::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+    padding: 2px 8px !important;
     line-height: 0.5 rem !important;
-  }
-  
-  ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+}
+
+::ng-deep .p-datatable .p-datatable-thead>tr>th {
     padding: 6px 8px !important;
-  }
- 
+}
+
 // ==== TABLE GRID STYLE ====
 .man {
     ::ng-deep .p-datatable .p-datatable-thead>tr>th {

@@ -1,4 +1,3 @@
-
 import {
   Component,
   ElementRef,
@@ -8,7 +7,7 @@ import {
   PLATFORM_ID,
   Output,
   EventEmitter,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   dia,
@@ -17,12 +16,17 @@ import {
   shapes,
   util,
   format,
-  elementTools
+  elementTools,
 } from '@joint/plus';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Link, Constant, Concat, GetDate, Record } from './shapes.component';
 import { Decorator } from './highlighter.component';
-import { SourceArrowhead, TargetArrowhead, Button, NavigateButton } from './link-tools.component';
+import {
+  SourceArrowhead,
+  TargetArrowhead,
+  Button,
+  NavigateButton,
+} from './link-tools.component';
 import { routerNamespace } from './routers.component';
 import { anchorNamespace } from './anchors.component';
 import { buildTypeHierarchy, loadExample } from './example.component';
@@ -38,26 +42,22 @@ type Records = Constant | Concat | GetDate | Record;
 
 export type LineageRecord = {
   createdBy: string;
-  createdAt: string;   // ISO string
-  updatedAt: string;   // ISO string
+  createdAt: string; // ISO string
+  updatedAt: string; // ISO string
   id: number;
-  name: string;        // e.g. "L005"
+  name: string; // e.g. "L005"
   use_case_id: number; // e.g. 7
   lineage_json: string; // JSON string of the graph
 };
-
-
 
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class DiagramComponent implements AfterViewInit {
-
   @Output() toggle = new EventEmitter<void>();
-
 
   @ViewChild('canvas') canvas!: ElementRef;
   hasGraph: boolean = false;
@@ -77,9 +77,7 @@ export class DiagramComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
-    @Inject(PLATFORM_ID) private platformId: Object,
-
-
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   loading = false;
@@ -91,8 +89,7 @@ export class DiagramComponent implements AfterViewInit {
     id: 0,
     name: '',
     use_case_id: 0,
-    lineage_json: ''
-
+    lineage_json: '',
   };
 
 
@@ -125,13 +122,18 @@ export class DiagramComponent implements AfterViewInit {
     //   this.loading = false;
     // });
     this.getLineageData();
-
   }
 
   getLineageData() {
-    this.route.paramMap.pipe(
-      map(params => params.get('usecaseId') ?? params.get('use_case_id') ?? params.get('id')),
-      filter((id): id is string => !!id && id.trim().length > 0),
+    this.route.paramMap
+      .pipe(
+        map(
+          (params) =>
+            params.get('usecaseId') ??
+            params.get('use_case_id') ??
+            params.get('id')
+        ),
+        filter((id): id is string => !!id && id.trim().length > 0),
 
       switchMap((usecaseId: string) =>
         forkJoin({
@@ -191,27 +193,38 @@ export class DiagramComponent implements AfterViewInit {
     const sourceId = (source?.id ?? source?.cell ?? null) as string | null;
     const targetId = (target?.id ?? target?.cell ?? null) as string | null;
 
-    console.log(link.getSourceElement()?.attributes['typeName'], source, sourceId, target, targetId, 'Navigating with link');
-
+    console.log(
+      link.getSourceElement()?.attributes['typeName'],
+      source,
+      sourceId,
+      target,
+      targetId,
+      'Navigating with link'
+    );
 
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
     const layoutId = (segments[segments.length - 1] || '').toUpperCase();
     const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
-    const sourceType = `source-${link.getSourceElement()?.attributes['typeName'] || `${link.getSourceElement()?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`}`
-    const targetType = `target-${link.getTargetElement()?.attributes['typeName'] || `${link.getTargetElement()?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`}`
+    const sourceType = `source-${link.getSourceElement()?.attributes['typeName'] ||
+      `${link
+        .getSourceElement()
+        ?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`
+      }`;
+    const targetType = `target-${link.getTargetElement()?.attributes['typeName'] ||
+      `${link
+        .getTargetElement()
+        ?.attributes?.attrs?.['label']?.text?.toLowerCase()}s`
+      }`;
 
-    this.router.navigate([
-      '/graph-embedded/lineage-mapping/',
-      useCaseId,
-      layoutId
-    ],
+    this.router.navigate(
+      ['/graph-embedded/lineage-mapping/', useCaseId, layoutId],
       {
         queryParams: {
           linkId: linkId,
           [sourceType]: source.port.split('-')[0],
           [targetType]: target.port.split('-')[0],
-        }
+        },
       }
     );
   }
@@ -225,15 +238,15 @@ export class DiagramComponent implements AfterViewInit {
           distance: '25%',
           action: () => {
             this.linkAction(linkView.model as Link); // ✅ 'this' is now bound correctly
-          }
+          },
         }),
         new NavigateButton({
           distance: '50%',
           action: () => {
             this.onNavigate(linkView.model as Link); // ✅ 'this' is now bound correctly
-          }
-        })
-      ]
+          },
+        }),
+      ],
     });
     linkView.addTools(tools);
   }
@@ -245,7 +258,7 @@ export class DiagramComponent implements AfterViewInit {
   public clearHighlights() {
     const allLinks = this.graph.getLinks();
 
-    allLinks.forEach(link => {
+    allLinks.forEach((link) => {
       // Reset line style
       link.attr('line/stroke', '#000000'); // or default color
       link.attr('line/strokeWidth', 1);
@@ -261,16 +274,16 @@ export class DiagramComponent implements AfterViewInit {
 
   public normalizeTypeName(typeName: string) {
     switch (typeName.toLowerCase()) {
-      case "sources":
-        return "SOURCE";
-      case "systems":
-        return "SYSTEM";
-      case "interfaces":
-        return "INTERFACE";
-      case "targets":
-        return "TARGET";
-      case "control":
-        return "CONTROLS";
+      case 'sources':
+        return 'SOURCE';
+      case 'systems':
+        return 'SYSTEM';
+      case 'interfaces':
+        return 'INTERFACE';
+      case 'targets':
+        return 'TARGET';
+      case 'control':
+        return 'CONTROLS';
       default:
         return typeName.toUpperCase();
     }
@@ -281,9 +294,9 @@ export class DiagramComponent implements AfterViewInit {
 
     // Step 1: Map Concat node IDs to normalized typeNames
     json.cells.forEach((cell: any) => {
-      if (cell.type === "mapping.Concat" && cell.id && cell.attrs?.typeName) {
+      if (cell.type === 'mapping.Concat' && cell.id && cell.attrs?.typeName) {
         const rawTypeNameObj = cell.attrs.typeName;
-        const rawTypeName = Object.values(rawTypeNameObj).join(""); // e.g., {0:'s',1:'y'...} → "systems"
+        const rawTypeName = Object.values(rawTypeNameObj).join(''); // e.g., {0:'s',1:'y'...} → "systems"
         const normalized = this.normalizeTypeName(rawTypeName);
         idToNormalizedTypeName[cell.id] = normalized;
       }
@@ -291,7 +304,7 @@ export class DiagramComponent implements AfterViewInit {
 
     // Step 2: Add normalized typeNames to link source/target
     json.cells.forEach((cell: any) => {
-      if (cell.type === "mapping.Link") {
+      if (cell.type === 'mapping.Link') {
         if (cell.source?.id && idToNormalizedTypeName[cell.source.id]) {
           cell.source.type = idToNormalizedTypeName[cell.source.id];
         }
@@ -306,9 +319,9 @@ export class DiagramComponent implements AfterViewInit {
 
   public tracePathNew(element: dia.Element, portId: string): boolean {
     const incomingLinks = this.graph.getConnectedLinks(element, {
-      inbound: true
+      inbound: true,
     });
-    const filteredLinks = incomingLinks.filter(link => {
+    const filteredLinks = incomingLinks.filter((link) => {
       const target = link.get('target');
       return target?.port === portId;
     });
@@ -319,26 +332,35 @@ export class DiagramComponent implements AfterViewInit {
       if (!sourceElement) continue;
       const sourceAttrs = sourceElement.attributes?.attrs || {};
       const sourceName = sourceAttrs['title']?.text || 'Unnamed';
-      const incomingLinksOfSource = this.graph.getConnectedLinks(sourceElement, {
-        inbound: true
-      });
+      const incomingLinksOfSource = this.graph.getConnectedLinks(
+        sourceElement,
+        {
+          inbound: true,
+        }
+      );
       link.attr({
         line: {
           stroke: '#FF9800',
           strokeWidth: 2,
-          strokeDasharray: '10 5'
-        }
+          strokeDasharray: '10 5',
+        },
       });
       const view = this.paper.findViewByModel(link);
       if (view?.el) {
-        (view.el as SVGElement).style.setProperty('animation', 'dash 1s linear infinite');
+        (view.el as SVGElement).style.setProperty(
+          'animation',
+          'dash 1s linear infinite'
+        );
       }
       if (sourceName === 'FXALL GUI') {
         return true;
       }
       for (const l of incomingLinksOfSource) {
         const nextTargetPort = l.get('target')?.port;
-        const shouldStop = this.tracePathNew(sourceElement as dia.Element, nextTargetPort);
+        const shouldStop = this.tracePathNew(
+          sourceElement as dia.Element,
+          nextTargetPort
+        );
         if (shouldStop) return true;
       }
     }
@@ -346,23 +368,28 @@ export class DiagramComponent implements AfterViewInit {
   }
 
   public zoom(x: number, y: number, delta: number) {
-    this.scroller.zoom(delta * 0.2, { min: 0.4, max: 3, grid: 0.2, ox: x, oy: y });
+    this.scroller.zoom(delta * 0.2, {
+      min: 0.4,
+      max: 3,
+      grid: 0.2,
+      ox: x,
+      oy: y,
+    });
   }
 
   public ngAfterViewInit(): void {
-
     (shapes as any).mapping = (shapes as any).mapping || {};
     (shapes as any).mapping.Concat = Concat;
     const container = this.canvas.nativeElement;
     const width = container.clientWidth || 1000;
     const height = container.clientHeight || 700;
 
-    container.addEventListener('dragover', (e: DragEvent) => e.preventDefault());
+    container.addEventListener('dragover', (e: DragEvent) =>
+      e.preventDefault()
+    );
 
     // --- Initialize Graph, Paper, and Scroller ONCE ---
-    this.graph = new dia.Graph({
-
-    }, { cellNamespace: shapes });
+    this.graph = new dia.Graph({}, { cellNamespace: shapes });
 
     this.paper = new dia.Paper({
       model: this.graph,
@@ -385,33 +412,33 @@ export class DiagramComponent implements AfterViewInit {
       routerNamespace: routerNamespace,
       defaultRouter: {
         name: 'mapping',
-        args: { padding: 30 }
+        args: { padding: 30 },
       },
       defaultConnectionPoint: { name: 'anchor' },
       anchorNamespace: anchorNamespace,
       defaultAnchor: { name: 'mapping' },
       defaultConnector: {
         name: 'jumpover',
-        args: { jump: 'cubic' }
+        args: { jump: 'cubic' },
       },
       highlighting: {
         magnetAvailability: {
           name: 'addClass',
           options: {
-            className: 'record-item-available'
-          }
+            className: 'record-item-available',
+          },
         },
         connecting: {
           name: 'stroke',
           options: {
             padding: 8,
             attrs: {
-              'stroke': 'none',
-              'fill': '#7c68fc',
-              'fill-opacity': 0.2
-            }
-          }
-        }
+              stroke: 'none',
+              fill: '#7c68fc',
+              'fill-opacity': 0.2,
+            },
+          },
+        },
       },
       defaultLink: function () {
         return new Link();
@@ -445,7 +472,6 @@ export class DiagramComponent implements AfterViewInit {
         // otherwise OK
         return true;
       },
-
     });
 
     this.paper.setDimensions(500, 500);
@@ -456,7 +482,7 @@ export class DiagramComponent implements AfterViewInit {
       padding: 0,
       // baseWidth: 500,
       // baseHeight: 500,
-      cursor: 'grab'
+      cursor: 'grab',
     });
 
     // Helper to attach FreeTransform to a clicked element
@@ -468,16 +494,16 @@ export class DiagramComponent implements AfterViewInit {
       this.freeTransform = new ui.FreeTransform({
         cellView: elementView,
         // --- useful options ---
-        allowRotation: false,              // show rotation handle
-        allowOrthogonalResize: true,      // side handles
-        preserveAspectRatio: false,       // set true for fixed aspect ratio
-        useModelGeometry: true,           // respect model's size/angle
+        allowRotation: false, // show rotation handle
+        allowOrthogonalResize: true, // side handles
+        preserveAspectRatio: false, // set true for fixed aspect ratio
+        useModelGeometry: true, // respect model's size/angle
         minWidth: 50,
         minHeight: 30,
         maxWidth: 800,
         maxHeight: 600,
-        rotateAngleGrid: 15,              // snap rotation to 15°
-        scaleGrid: 10                     // snap resize in 10px increments
+        rotateAngleGrid: 15, // snap rotation to 15°
+        scaleGrid: 10, // snap resize in 10px increments
       });
 
       // Render and add to the paper DOM so it tracks the element position
@@ -508,21 +534,18 @@ export class DiagramComponent implements AfterViewInit {
     this.paper.on('element:pointerdblclick', (elementView, evt) => {
       evt.stopPropagation();
       const node = elementView.model;
-      console.log("elementViewNode", node);
+      console.log('elementViewNode', node);
       const nodeId = node.id.toString();
       if (nodeId) {
-        const parts = nodeId.split("-");
+        const parts = nodeId.split('-');
         const type = parts[0]; // "SYS"
         const id = parts[1]; // "21"
         const isBacktolineage = true;
-        if (type == "S") {
+        if (type == 'S') {
           this.router.navigate(['sources/edit-source/', id, isBacktolineage]);
-        }
-        else if (type == "SYS") {
-
+        } else if (type == 'SYS') {
           this.router.navigate(['systems/edit-system/', id, isBacktolineage]);
-        }
-        else if (type == "TGT") {
+        } else if (type == 'TGT') {
           this.router.navigate(['targets/edit-target/', id, isBacktolineage]);
         }
       }
@@ -534,87 +557,117 @@ export class DiagramComponent implements AfterViewInit {
     this.paper.unfreeze(); // Unfreeze the paper after initial setup
 
     // --- Event Listeners for Paper and Graph ---
-    this.paper.on('element:mousewheel', (recordView: dia.ElementView, evt: dia.Event, x: number, y: number, delta: number) => {
-      evt.preventDefault();
-      const record = recordView.model as any;
-      if (!record.isEveryItemInView()) {
-        record.setScrollTop(record.getScrollTop() + delta * 10);
+    this.paper.on(
+      'element:mousewheel',
+      (
+        recordView: dia.ElementView,
+        evt: dia.Event,
+        x: number,
+        y: number,
+        delta: number
+      ) => {
+        evt.preventDefault();
+        const record = recordView.model as any;
+        if (!record.isEveryItemInView()) {
+          record.setScrollTop(record.getScrollTop() + delta * 10);
+        }
       }
-    });
+    );
 
     // Collapse/expand on header or caret click (works with our Concat.toggleCollapse)
-    this.paper.on('element:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
-      const model = view.model as any;
-      if (model.get?.('type') !== 'mapping.Concat') return;
+    this.paper.on(
+      'element:pointerdown',
+      (view: dia.ElementView, evt: dia.Event) => {
+        const model = view.model as any;
+        if (model.get?.('type') !== 'mapping.Concat') return;
 
-      const targetEl = evt.target as Element;
+        const targetEl = evt.target as Element;
 
-      // helper: does the clicked node (or its ancestors) carry a given joint-selector?
+        // helper: does the clicked node (or its ancestors) carry a given joint-selector?
 
-      const hit = (sel: string) => !!targetEl.closest?.(`[joint-selector="${sel}"]`);
+        const hit = (sel: string) =>
+          !!targetEl.closest?.(`[joint-selector="${sel}"]`);
 
-      // treat label/icon as header clicks too (they are siblings of the header rect)
-      const clickedCaret = !!targetEl.closest?.('[joint-selector="caret"]');
+        // treat label/icon as header clicks too (they are siblings of the header rect)
+        const clickedCaret = !!targetEl.closest?.('[joint-selector="caret"]');
 
-      // const clickedHeader = hit('header') || hit('headerLabel') || hit('headerIcon');
+        // const clickedHeader = hit('header') || hit('headerLabel') || hit('headerIcon');
 
-
-      if (clickedCaret) {
-        evt.preventDefault();
-        evt.stopPropagation?.();
-        if (typeof model.toggleCollapse === 'function') {
-          model.toggleCollapse();
-        } else {
-          // fallback collapse/expand (path-form keeps TS happy)
-          const collapsed = !!model.get('collapsed');
-          if (!collapsed) {
-            const sz = model.size();
-            model.set('expandedSize', sz);
-            model.attr('body/display', 'none');
-            model.attr('items/display', 'none');
-            model.attr('footer/display', 'none');
-            model.attr('caret/transform', 'rotate(-90 6 6)');
-            model.resize(sz.width, (model.attr('header/height') as number) || 35);
-            model.set('collapsed', true);
+        if (clickedCaret) {
+          evt.preventDefault();
+          evt.stopPropagation?.();
+          if (typeof model.toggleCollapse === 'function') {
+            model.toggleCollapse();
           } else {
-            model.removeAttr('body/display');
-            model.removeAttr('items/display');
-            model.removeAttr('footer/display');
-            model.removeAttr('caret/transform');
-            const esz = (model.get('expandedSize') as { width: number; height: number }) ?? {
-              width: model.size().width,
-              height: 200
-            };
-            model.resize(esz.width, esz.height);
-            model.set('collapsed', false);
+            // fallback collapse/expand (path-form keeps TS happy)
+            const collapsed = !!model.get('collapsed');
+            if (!collapsed) {
+              const sz = model.size();
+              model.set('expandedSize', sz);
+              model.attr('body/display', 'none');
+              model.attr('items/display', 'none');
+              model.attr('footer/display', 'none');
+              model.attr('caret/transform', 'rotate(-90 6 6)');
+              model.resize(
+                sz.width,
+                (model.attr('header/height') as number) || 35
+              );
+              model.set('collapsed', true);
+            } else {
+              model.removeAttr('body/display');
+              model.removeAttr('items/display');
+              model.removeAttr('footer/display');
+              model.removeAttr('caret/transform');
+              const esz = (model.get('expandedSize') as {
+                width: number;
+                height: number;
+              }) ?? {
+                width: model.size().width,
+                height: 200,
+              };
+              model.resize(esz.width, esz.height);
+              model.set('collapsed', false);
+            }
           }
         }
       }
-    });
+    );
 
-    this.paper.on('element:action1:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
-      const model = view.model as any;
-      const targetId = model.get?.('id');
-      this.toggle.emit(targetId);
-    })
+    this.paper.on(
+      'element:action1:pointerdown',
+      (view: dia.ElementView, evt: dia.Event) => {
+        const model = view.model as any;
+        const targetId = model.get?.('id');
+        this.toggle.emit(targetId);
+      }
+    );
 
-    this.paper.on('element:action2:pointerdown', (view: dia.ElementView, evt: dia.Event) => {
-      console.log("helllllllllooo")
-    })
+    this.paper.on(
+      'element:action2:pointerdown',
+      (view: dia.ElementView, evt: dia.Event) => {
+        console.log('helllllllllooo');
+      }
+    );
 
-    this.paper.on('blank:mousewheel', (evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    this.paper.on(
+      'blank:mousewheel',
+      (evt: dia.Event, ox: number, oy: number, delta: number) => {
+        evt.preventDefault();
+        this.zoom(ox, oy, delta);
+      }
+    );
 
-    this.paper.on('link:mousewheel', (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
-      evt.preventDefault();
-      this.zoom(ox, oy, delta);
-    });
+    this.paper.on(
+      'link:mousewheel',
+      (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
+        evt.preventDefault();
+        this.zoom(ox, oy, delta);
+      }
+    );
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
       this.showLinkTools(linkView);
-    })
+    });
 
     this.paper.on('link:mouseleave', (linkView: dia.LinkView) => {
       linkView.removeTools();
@@ -625,66 +678,65 @@ export class DiagramComponent implements AfterViewInit {
         // Ensure the view is rendered before adding tools
         const cellView = this.paper.findViewByModel(cell);
         if (cellView) {
-          cellView.addTools(new dia.ToolsView({
-            tools: [new elementTools.RecordScrollbar({})]
-          }));
+          cellView.addTools(
+            new dia.ToolsView({
+              tools: [new elementTools.RecordScrollbar({})],
+            })
+          );
         }
       }
     });
 
     this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
       // showLinkTools(linkView);
-    })
-
-    this.paper.on('element:magnet:pointerdblclick', (elementView, evt, magnet) => {
-
-      const model = elementView.model; // dia.Element
-      const itemId = elementView.findAttribute('item-id', magnet);
-      const connectedLinks = this.graph.getConnectedLinks(model, {
-        inbound: true,
-        outbound: true,
-        port: itemId   // 🔥 This is the key part to filter links by specific item/port
-      });
-
-      console.log('Connected Links:', connectedLinks, itemId);
-
-      connectedLinks.forEach((link: dia.Link) => {
-        const target = link.get('target');
-        const source = link.get('source');
-        console.log('Target Port:', target, source, 'on Link:', link.id);
-      })
-      this.clearHighlights()
-      this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
-
-
-      ///below should be uncommentd
-
-
-
-      // const path = this.router.url.split('?')[0].split('#')[0];
-      // const segments = path.split('/').filter(Boolean);
-      // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
-      // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
-
-      // console.log(itemId,model,"modelmodelmodel")
-      //  const selectedField = itemId ? itemId.split('_').pop() : '';
-
-      //    this.router.navigate([
-      //   '/graph-embedded/lineage-mapping/',
-      //   useCaseId,
-      //   layoutId
-      // ],
-      //   {
-      //     queryParams: {
-      //         selectedItem:selectedField,
-      //         targetId: model?.get('id')
-
-      //     }
-      //   }
-      // );
-
     });
 
+    this.paper.on(
+      'element:magnet:pointerdblclick',
+      (elementView, evt, magnet) => {
+        const model = elementView.model; // dia.Element
+        const itemId = elementView.findAttribute('item-id', magnet);
+        const connectedLinks = this.graph.getConnectedLinks(model, {
+          inbound: true,
+          outbound: true,
+          port: itemId, // 🔥 This is the key part to filter links by specific item/port
+        });
+
+        console.log('Connected Links:', connectedLinks, itemId);
+
+        connectedLinks.forEach((link: dia.Link) => {
+          const target = link.get('target');
+          const source = link.get('source');
+          console.log('Target Port:', target, source, 'on Link:', link.id);
+        });
+        this.clearHighlights();
+        this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
+
+        ///below should be uncommentd
+
+        // const path = this.router.url.split('?')[0].split('#')[0];
+        // const segments = path.split('/').filter(Boolean);
+        // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+        // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+
+        // console.log(itemId,model,"modelmodelmodel")
+        //  const selectedField = itemId ? itemId.split('_').pop() : '';
+
+        //    this.router.navigate([
+        //   '/graph-embedded/lineage-mapping/',
+        //   useCaseId,
+        //   layoutId
+        // ],
+        //   {
+        //     queryParams: {
+        //         selectedItem:selectedField,
+        //         targetId: model?.get('id')
+
+        //     }
+        //   }
+        // );
+      }
+    );
 
     // --- Drop Event Listener (now only adds to existing graph) ---
     container.addEventListener('drop', (e: DragEvent) => {
@@ -693,23 +745,25 @@ export class DiagramComponent implements AfterViewInit {
       const block = JSON.parse(e.dataTransfer?.getData('block') || '{}');
 
       // Add the actual drop coordinates to the block data
-      const paperLocalPoint = this.paper.clientToLocalPoint({ x: e.clientX, y: e.clientY });
+      const paperLocalPoint = this.paper.clientToLocalPoint({
+        x: e.clientX,
+        y: e.clientY,
+      });
       block.x = paperLocalPoint.x;
       block.y = paperLocalPoint.y;
       console.log('Dropped block:', block);
 
       this.lineageService.getAllByEntityType(block.typeName).subscribe({
         next: (data: any) => {
-
           const base = (block.label || '').toLowerCase(); // e.g., 'source'
           const nameKey = `${base}_name`; // 'source_name'
-          const idKey = `${base}_id`;   // 'source_id'
+          const idKey = `${base}_id`; // 'source_id'
 
           const items = (data ?? []).map((d: any) => {
             const row = d?.[`${base}Entity`] ?? d; // handle nested or flat
             return {
               label: String(row?.[nameKey] ?? '').trim(),
-              value: row?.[idKey] ?? row?.id ?? row?.source_id // fallback if needed
+              value: row?.[idKey] ?? row?.id ?? row?.source_id, // fallback if needed
             };
           });
 
@@ -717,41 +771,52 @@ export class DiagramComponent implements AfterViewInit {
           const dialogRef = this.dialog.open(NodeDropModalComponent, {
             width: '360px',
             disableClose: true,
-            data: { ...block, data, items }
+            data: { ...block, data, items },
           });
 
           dialogRef.afterClosed().subscribe((selectedValue: string | null) => {
             console.log('Dialog result:', selectedValue);
             if (!selectedValue) return; // User canceled
 
-            const selectedItem = (data ?? []).map((d: any) => {
-              const row = d?.[`${base}Entity`] ?? d;
-              return {
-                ...row
-              };
-            }).filter((item: any) => item?.[`${base}_name`] === selectedValue)[0];
+            const selectedItem = (data ?? [])
+              .map((d: any) => {
+                const row = d?.[`${base}Entity`] ?? d;
+                return {
+                  ...row,
+                };
+              })
+              .filter(
+                (item: any) => item?.[`${base}_name`] === selectedValue
+              )[0];
 
-            this.lineageService.getEntityById(block.typeName, selectedItem?.[`${base}_id`] ?? 0).subscribe({
-              next: (fullData: any) => {
-                console.log(fullData, "fullDat")
-                const parsedData = JSON.parse(fullData.node)
-                loadExample(this.graph, selectedValue, block, selectedItem, parsedData);
-              },
-              error: (error: any) => {
-                console.log(error)
-              }
-            })
+            this.lineageService
+              .getEntityById(block.typeName, selectedItem?.[`${base}_id`] ?? 0)
+              .subscribe({
+                next: (fullData: any) => {
+                  console.log(fullData, 'fullDat');
+                  const parsedData = JSON.parse(fullData.node);
+                  loadExample(
+                    this.graph,
+                    selectedValue,
+                    block,
+                    selectedItem,
+                    parsedData
+                  );
+                },
+                error: (error: any) => {
+                  console.log(error);
+                },
+              });
           });
         },
         error: (err) => {
           console.error('Failed to fetch sources:', err);
-        }
-      })
+        },
+      });
     });
 
     this.paper.on('element:controlnameclick', async (elementView, evt) => {
-
-      const selector = evt.target.closest?.('[joint-selector="headerLabel2"]')
+      const selector = evt.target.closest?.('[joint-selector="headerLabel2"]');
       // Only trigger when clicking on headerLabel2
       if (selector) {
         const model = elementView.model;
@@ -764,19 +829,17 @@ export class DiagramComponent implements AfterViewInit {
 
         const nodeId = model.id.toString();
         if (nodeId) {
-          const parts = nodeId.split("-");
+          const parts = nodeId.split('-');
           const type = parts[0]; // "SYS"
           const id = parts[1]; // "21"
 
-          let entityType = "";
-          if (type == "S") {
-            entityType = "sources";
-          }
-          else if (type == "SYS") {
-            entityType = "systems";
-          }
-          else if (type == "TGT") {
-            entityType = "targets";
+          let entityType = '';
+          if (type == 'S') {
+            entityType = 'sources';
+          } else if (type == 'SYS') {
+            entityType = 'systems';
+          } else if (type == 'TGT') {
+            entityType = 'targets';
           }
 
           // ✅ Await the async data
@@ -787,7 +850,13 @@ export class DiagramComponent implements AfterViewInit {
       }
     });
 
-    function openJointPopup(model: any, x: number, y: number, controlnames: any, router: any) {
+    function openJointPopup(
+      model: any,
+      x: number,
+      y: number,
+      controlnames: any,
+      router: any
+    ) {
       const existing = document.querySelector('.jointjs-popup');
       if (existing) existing.remove();
 
@@ -802,13 +871,14 @@ export class DiagramComponent implements AfterViewInit {
       <span id="popupCancel">X</span>
     </div>
     <div class="popup-body">    
-      <div>${controlnames}</div>
-    </div>
-  `;
+      ${controlnames}
+    </div>`;
 
       document.body.appendChild(popup);
 
-      popup.querySelector('#popupCancel')?.addEventListener('click', () => popup.remove());
+      popup
+        .querySelector('#popupCancel')
+        ?.addEventListener('click', () => popup.remove());
 
       // Handle click on any <li>
       popup.addEventListener('click', (event: any) => {
@@ -851,7 +921,6 @@ export class DiagramComponent implements AfterViewInit {
     }
 
     try {
-
       const path = this.router.url.split('?')[0].split('#')[0];
       const segments = path.split('/').filter(Boolean);
       const layoutId = (segments[segments.length - 1] || '').toUpperCase();
@@ -860,7 +929,7 @@ export class DiagramComponent implements AfterViewInit {
       const presetByPath: any = {
         '/L001': L001,
         '/L002': L002,
-        '/L003': L003
+        '/L003': L003,
         // add more like '/L003': L003
       };
 
@@ -878,7 +947,11 @@ export class DiagramComponent implements AfterViewInit {
         this.hasGraph = true;
         console.log('Loaded preset for path:', path);
       } else {
-        console.log('No preset mapped for path:', path, '— skipping auto-load.');
+        console.log(
+          'No preset mapped for path:',
+          path,
+          '— skipping auto-load.'
+        );
       }
     } catch (err) {
       console.error('Failed to load diagram from route:', err);
@@ -908,24 +981,23 @@ export class DiagramComponent implements AfterViewInit {
     // document.body.removeChild(link);
     // URL.revokeObjectURL(url); // Clean up
 
-
-    this.lineageService.saveLineageById(this.lineages as any, jsonString).subscribe({
-      next: (response) => {
-        console.log("Lineage saved successfully:", response);
-        if (fromNavigation) return; // Skip notification if from navigation
-        this.toastNotificationService.success('Lineage Saved successfully');
-      },
-      error: (err) => {
-        console.error("Failed to save lineage:", err);
-      }
-    });
-
-
+    this.lineageService
+      .saveLineageById(this.lineages as any, jsonString)
+      .subscribe({
+        next: (response) => {
+          console.log('Lineage saved successfully:', response);
+          if (fromNavigation) return; // Skip notification if from navigation
+          this.toastNotificationService.success('Lineage Saved successfully');
+        },
+        error: (err) => {
+          console.error('Failed to save lineage:', err);
+        },
+      });
   }
 
   goBack = () => {
     this.router.navigate(['/graph-embedded']);
-  }
+  };
 
   loadGraphFromFile(e: any) {
     const file = e.target.files[0];
@@ -1128,12 +1200,17 @@ createNode(ent: Entity) {
 
   async getEntityDataById(typename: any, entityId: any): Promise<string> {
     try {
-      const fullData: any = await this.lineageService.getEntityById(typename, entityId).toPromise();
+      const fullData: any = await this.lineageService
+        .getEntityById(typename, entityId)
+        .toPromise();
       const parsedData = JSON.parse(fullData.node);
 
       if (parsedData?.controls?.length > 0) {
         const controlNamesHtml = parsedData.controls
-          .map((c: any) => `<li class="control-item" data-id="${c.id}">${c.name}</li>`)
+          .map(
+            (c: any) =>
+              `<li class="control-item" data-id="${c.id}">${c.name}</li>`
+          )
           .join('');
         return `<ul>${controlNamesHtml}</ul>`;
       }
@@ -1152,5 +1229,3 @@ createNode(ent: Entity) {
   fields?: { field_id: any; field_name: string }[];
   type: string;  // "SOURCE" | "SYSTEM" | "TARGET" | ANY NEW TYPES
 }
-
-
