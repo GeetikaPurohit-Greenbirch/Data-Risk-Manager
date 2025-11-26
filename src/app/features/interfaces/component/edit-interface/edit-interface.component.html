@@ -124,7 +124,6 @@
                   email</mat-error>
               </mat-form-field>
 
-              <div class="row"> 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Description</mat-label>
                   <textarea
@@ -133,11 +132,11 @@
                     rows="1"
                     cdkTextareaAutosize
                     cdkAutosizeMinRows="1"
-                    cdkAutosizeMaxRows="10">
+                    cdkAutosizeMaxRows="1">
                   </textarea>
                 <mat-error *ngIf="interfaceForm.get('interface_description')?.hasError('required')">Required</mat-error>
               </mat-form-field>
-              </div>
+              
             </form>
             <div style="padding-left: 8px;">
               <button class="btn btn--primary" (click)="onUpdate()">Save</button>
