@@ -15,6 +15,7 @@ body {
 
 body {
   margin: 0;
+  padding: 0px;
   overflow: hidden;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
@@ -424,11 +425,11 @@ img {
 }
 
 .diagram-canvas {
-  width: 100% !important;
   height: 600px;
-  background-color: #e0e0e0;
   margin: 0 10px;
   position: relative;
+  width: 100% !important;
+  background-color: #e0e0e0;
 }
 
 .paginator-container {
@@ -459,9 +460,9 @@ img {
 
 .ag-header-group-cell.custom-parent-header {
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: center;
-  text-align: center;
 }
 
 .overlay-loader {
@@ -551,11 +552,11 @@ img {
 ::ng-deep .custom-table-dropdown .p-dropdown {
   width: 100% !important;
   height: 32px !important;
+  font-size: 13px !important;
   min-height: 32px !important;
   border-radius: 4px !important;
-  border: 1px solid #ced4da !important;
-  font-size: 13px !important;
   box-sizing: border-box !important;
+  border: 1px solid #ced4da !important;
 }
 
 /* Align label text vertically */
@@ -583,18 +584,18 @@ img {
   width: 100%;
   height: 32px;
   font-size: 13px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
   padding: 4px 8px;
+  border-radius: 4px;
   box-sizing: border-box;
+  border: 1px solid #ced4da;
 }
 
 .custom-parent-header {
-  text-align: center;
   font-weight: bold;
+  text-align: center;
   background-color: #f1f1f1;
   border-bottom: 2px solid #ccc;
-  border: 1px solid;
+  // border: 1px solid;
 }
 
 .p-r-10 {

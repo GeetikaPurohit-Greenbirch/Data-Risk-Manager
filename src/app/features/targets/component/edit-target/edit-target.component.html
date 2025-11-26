@@ -1,5 +1,4 @@
 <div class="main-container">
-
   <main class="dashboard-container">
     <section class="welcome-banner">
       <h2>
@@ -8,9 +7,13 @@
             <lucide-icon name="chevron-left"></lucide-icon>
           </button>
         </div>
-        {{ targetId > 0 ? 'Edit Target' : 'Add Target' }}
-        <div style="display: flex;justify-content: flex-end;">
-          <button class="btn btn--primary" (click)="onBackToLineage()" *ngIf="isBacktolineage">
+        {{ targetId > 0 ? "Edit Target" : "Add Target" }}
+        <div style="display: flex; justify-content: flex-end">
+          <button
+            class="btn btn--primary"
+            (click)="onBackToLineage()"
+            *ngIf="isBacktolineage"
+          >
             Back to lineage
           </button>
         </div>
@@ -20,7 +23,11 @@
       <div class="container">
         <div class="target-container">
           <div *ngIf="loader" class="overlay-loader">
-            <mat-progress-spinner color="primary" mode="indeterminate" diameter="50">
+            <mat-progress-spinner
+              color="primary"
+              mode="indeterminate"
+              diameter="50"
+            >
             </mat-progress-spinner>
           </div>
           <!-- Left: Edit Target Form -->
@@ -44,39 +51,79 @@
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Target Name</mat-label>
                   <input matInput formControlName="target_name" />
-                  <mat-error *ngIf="targetForm.get('target_name')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="targetForm.get('target_name')?.hasError('required')"
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
+                >
                   <mat-label>Quality Of Service</mat-label>
-                  <mat-select formControlName="quality_of_service" (selectionChange)="toggleFieldsBasedOnQoS($event)">
-                    <mat-option *ngFor="let quality of serviceQualityOptions" [value]="quality">
+                  <mat-select
+                    formControlName="quality_of_service"
+                    (selectionChange)="toggleFieldsBasedOnQoS($event)"
+                  >
+                    <mat-option
+                      *ngFor="let quality of serviceQualityOptions"
+                      [value]="quality"
+                    >
                       {{ quality }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="targetForm.get('quality_of_service')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('quality_of_service')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Frequency Of Update</mat-label>
-                  <input matInput formControlName="frequency_of_update" (input)="onFrequencyChange()" min="1" />
-                  <mat-error *ngIf="targetForm.get('frequency_of_update')?.hasError('required')">
+                  <input
+                    matInput
+                    formControlName="frequency_of_update"
+                    (input)="onFrequencyChange()"
+                    min="1"
+                  />
+                  <mat-error
+                    *ngIf="
+                      targetForm
+                        .get('frequency_of_update')
+                        ?.hasError('required')
+                    "
+                  >
                     Required
                   </mat-error>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
+                >
                   <mat-label>Schedule Of Update</mat-label>
-                  <mat-select formControlName="schedule_of_update" multiple
-                    (selectionChange)="onScheduleSelectionChange($event)">
+                  <mat-select
+                    formControlName="schedule_of_update"
+                    multiple
+                    (selectionChange)="onScheduleSelectionChange($event)"
+                  >
                     <mat-option *ngFor="let time of timeOptions" [value]="time">
                       {{ time }}
                     </mat-option>
                   </mat-select>
-                  <mat-hint *ngIf="scheduleLimitReached" style="color: red;">
+                  <mat-hint *ngIf="scheduleLimitReached" style="color: red">
                     You can only select {{ frequencyLimit }} time(s)
                   </mat-hint>
-                  <mat-error *ngIf="targetForm.get('schedule_of_update')?.hasError('required')">
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('schedule_of_update')?.hasError('required')
+                    "
+                  >
                     Required
                   </mat-error>
                 </mat-form-field>
@@ -85,80 +132,169 @@
                   <mat-label>Methodology Of Transfer</mat-label>
                   <input matInput formControlName="methodology_of_transfer" />
                   <mat-error
-                    *ngIf="targetForm.get('methodology_of_transfer')?.hasError('required')">Required</mat-error>
+                    *ngIf="
+                      targetForm
+                        .get('methodology_of_transfer')
+                        ?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
+                >
                   <mat-label>Target Type</mat-label>
                   <!-- <input matInput formControlName="target_type" /> -->
                   <mat-select formControlName="target_type">
-                    <mat-option *ngFor="let option of targetTypeOptions" [value]="option">{{ option }}</mat-option>
+                    <mat-option
+                      *ngFor="let option of targetTypeOptions"
+                      [value]="option"
+                      >{{ option }}</mat-option
+                    >
                   </mat-select>
-                  <mat-error *ngIf="targetForm.get('target_type')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="targetForm.get('target_type')?.hasError('required')"
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Version</mat-label>
                   <input matInput formControlName="target_version_number" />
-                  <mat-error *ngIf="targetForm.get('target_version_number')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="
+                      targetForm
+                        .get('target_version_number')
+                        ?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
+                >
                   <mat-label>Status</mat-label>
                   <mat-select formControlName="target_status">
-                    <mat-option *ngFor="let status of statusOptions" [value]="status">
+                    <mat-option
+                      *ngFor="let status of statusOptions"
+                      [value]="status"
+                    >
                       {{ status }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="targetForm.get('target_status')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('target_status')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Owner</mat-label>
                   <input matInput formControlName="target_owner" />
-                  <mat-error *ngIf="targetForm.get('target_owner')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="targetForm.get('target_owner')?.hasError('required')"
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Owner Email</mat-label>
                   <input matInput formControlName="target_owner_email" />
-                  <mat-error *ngIf="targetForm.get('target_owner_email')?.hasError('required')">Required</mat-error>
-                  <mat-error *ngIf="targetForm.get('target_owner_email')?.hasError('email')">Invalid email</mat-error>
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('target_owner_email')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('target_owner_email')?.hasError('email')
+                    "
+                    >Invalid email</mat-error
+                  >
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Target Entity</mat-label>
                   <input matInput formControlName="target_entity" />
-                  <mat-error *ngIf="targetForm.get('target_entity')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('target_entity')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
+                >
                   <mat-label>Select Use Case</mat-label>
                   <mat-select formControlName="use_case">
-                    <mat-option *ngFor="let usecase of useCases" [value]="usecase.use_case_id">
-                      {{ usecase.use_case_id }} -- {{usecase.use_case_name}}
+                    <mat-option
+                      *ngFor="let usecase of useCases"
+                      [value]="usecase.use_case_id"
+                    >
+                      {{ usecase.use_case_id }} -- {{ usecase.use_case_name }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="targetForm.get('use_case')?.hasError('required')">Required</mat-error>
+                  <mat-error
+                    *ngIf="targetForm.get('use_case')?.hasError('required')"
+                    >Required</mat-error
+                  >
                 </mat-form-field>
 
-
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="target_description"
+                    rows="1"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="1"
+                  >
+                  </textarea>
+                  <mat-error
+                    *ngIf="
+                      targetForm.get('target_description')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
+                </mat-form-field>
               </div>
-              <div class="form-grid11" style="padding-left: 8px;">
-                <button class="btn btn--primary" (click)="onUpdate()">Save</button>
+              <div class="form-grid11" style="padding-left: 8px">
+                <button class="btn btn--primary" (click)="onUpdate()">
+                  Save
+                </button>
               </div>
             </form>
           </div>
 
           <!-- Right: DataFields Table -->
-          <div class="right-panel" *ngIf="targetId>0">
+          <div class="right-panel" *ngIf="targetId > 0">
             <!-- TABS CONTAINER -->
             <div class="tab-container">
-              <button [ngClass]="{ 'inverse': activeView == 'DataFields' }" (click)="openTab('DataFields')">
+              <button
+                [ngClass]="{ inverse: activeView == 'DataFields' }"
+                (click)="openTab('DataFields')"
+              >
                 Data Fields
               </button>
 
-              <button [ngClass]="{ 'inverse': activeView == 'DQAReport' }" (click)="openTab('DQAReport')">
+              <button
+                [ngClass]="{ inverse: activeView == 'DQAReport' }"
+                (click)="openTab('DQAReport')"
+              >
                 Build DQA Report
               </button>
             </div>
@@ -170,35 +306,67 @@
                   <p-toolbar>
                     <div class="p-toolbar-group-left">
                       <div class="p-r-10">
-                        <button class="btn btn--tertiary btn-sm" (click)="openAddDialog()">
-                          <lucide-icon name="plus" style="width: 16px;"></lucide-icon>
-                          Add New Field</button>
+                        <button
+                          class="btn btn--tertiary btn-sm"
+                          (click)="openAddDialog()"
+                        >
+                          <lucide-icon
+                            name="plus"
+                            style="width: 16px"
+                          ></lucide-icon>
+                          Add New Field
+                        </button>
                       </div>
                       <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" #globalFilter
-                          (input)="dt.filterGlobal(globalFilter.value, 'contains')" placeholder="Global Search" />
+                        <input
+                          pInputText
+                          type="text"
+                          #globalFilter
+                          (input)="
+                            dt.filterGlobal(globalFilter.value, 'contains')
+                          "
+                          placeholder="Global Search"
+                        />
                       </span>
                     </div>
 
                     <div class="p-toolbar-group-right">
-                      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                        placeholder="Choose Columns" display="chip">
+                      <p-multiSelect
+                        [options]="cols"
+                        [(ngModel)]="selectedColumns"
+                        optionLabel="header"
+                        placeholder="Choose Columns"
+                        display="chip"
+                      >
                       </p-multiSelect>
                     </div>
                   </p-toolbar>
                 </div>
 
                 <div class="man">
-                  <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
-                    [rowsPerPageOptions]="[10, 25, 50]" [responsiveLayout]="'scroll'" sortMode="multiple"
-                    [showCurrentPageReport]="true" [globalFilterFields]="globalFilterFields"
+                  <p-table
+                    #dt
+                    [value]="rowData"
+                    [paginator]="true"
+                    [rows]="10"
+                    [resizableColumns]="true"
+                    [rowsPerPageOptions]="[10, 25, 50]"
+                    [responsiveLayout]="'scroll'"
+                    sortMode="multiple"
+                    [showCurrentPageReport]="true"
+                    [globalFilterFields]="globalFilterFields"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                    styleClass="p-datatable-gridlines p-datatable-sm" class="p-dense">
+                    styleClass="p-datatable-gridlines p-datatable-sm"
+                    class="p-dense"
+                  >
                     <!-- Header -->
                     <ng-template pTemplate="header">
                       <tr>
-                        <th *ngFor="let col of selectedColumns" [pSortableColumn]="col.field">
+                        <th
+                          *ngFor="let col of selectedColumns"
+                          [pSortableColumn]="col.field"
+                        >
                           {{ col.header }}
                           <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
@@ -213,14 +381,21 @@
                           {{ rowData[col.field] }}
                         </td>
                         <td>
-                          <button pButton icon="pi pi-pencil" class="p-button-text"
-                            (click)="openEditDialog(rowData)"></button>
-                          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                            (click)="confirmDelete(rowData)"></button>
+                          <button
+                            pButton
+                            icon="pi pi-pencil"
+                            class="p-button-text"
+                            (click)="openEditDialog(rowData)"
+                          ></button>
+                          <button
+                            pButton
+                            icon="pi pi-trash"
+                            class="p-button-text p-button-danger"
+                            (click)="confirmDelete(rowData)"
+                          ></button>
                         </td>
                       </tr>
                     </ng-template>
-
                   </p-table>
                 </div>
               </div>
@@ -228,63 +403,134 @@
               <!-- ==== MODAL AND POPOVER SECTION ==== -->
               <div class="form-dialog-container">
                 <!-- Dialog Form -->
-                <p-dialog header="{{ isEditMode ? 'Edit Field' : 'Add New Field' }}" [(visible)]="showDialog"
-                  [modal]="true" [style]="{width: '660px' }" [closable]="true">
+                <p-dialog
+                  header="{{ isEditMode ? 'Edit Field' : 'Add New Field' }}"
+                  [(visible)]="showDialog"
+                  [modal]="true"
+                  [style]="{ width: '660px' }"
+                  [closable]="true"
+                >
                   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
                     <div class="p-fluid">
-                      <div style="display: flex;gap: 16px;">
-                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
+                      <div style="display: flex; gap: 16px">
+                        <div
+                          class="p-field"
+                          style="flex: 1 1 auto; max-width: 260px"
+                        >
                           <label>Field No</label>
-                          <input type="text" pInputText formControlName="user_generated_id" />
-                          <small class="p-error" *ngIf="formGroup.get('user_generated_id')?.invalid">
+                          <input
+                            type="text"
+                            pInputText
+                            formControlName="user_generated_id"
+                          />
+                          <small
+                            class="p-error"
+                            *ngIf="formGroup.get('user_generated_id')?.invalid"
+                          >
                             Field No must be numeric
                           </small>
                         </div>
 
-                        <div class="p-field" style="flex: 1 1 auto;">
-                          <label>Field Name<span class="required">*</span></label>
-                          <input type="text" pInputText formControlName="field_name" />
-                          <small class="p-error"
-                            *ngIf="formGroup.get('field_name')?.invalid && formGroup.get('field_name')?.touched">
+                        <div class="p-field" style="flex: 1 1 auto">
+                          <label
+                            >Field Name<span class="required">*</span></label
+                          >
+                          <input
+                            type="text"
+                            pInputText
+                            formControlName="field_name"
+                          />
+                          <small
+                            class="p-error"
+                            *ngIf="
+                              formGroup.get('field_name')?.invalid &&
+                              formGroup.get('field_name')?.touched
+                            "
+                          >
                             Field Name is required
                           </small>
                         </div>
                       </div>
 
-                      <div style="display: flex;gap: 16px;">
-                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
+                      <div style="display: flex; gap: 16px">
+                        <div
+                          class="p-field"
+                          style="flex: 1 1 auto; max-width: 260px"
+                        >
                           <label>Description</label>
-                          <input type="text" pInputText formControlName="field_description" />
+                          <input
+                            type="text"
+                            pInputText
+                            formControlName="field_description"
+                          />
                         </div>
 
-                        <div class="p-field" style="flex: 1 1 auto;">
+                        <div class="p-field" style="flex: 1 1 auto">
                           <label>Length<span class="required">*</span></label>
-                          <input type="text" pInputText formControlName="field_length" />
-                          <small class="p-error" *ngIf="formGroup.get('field_length')?.invalid ">
+                          <input
+                            type="text"
+                            pInputText
+                            formControlName="field_length"
+                          />
+                          <small
+                            class="p-error"
+                            *ngIf="formGroup.get('field_length')?.invalid"
+                          >
                             Field Length must be numeric
                           </small>
                         </div>
                       </div>
 
-                      <div style="display: flex;gap: 16px;">
-                        <div class="p-field" style="flex: 1 1 auto; max-width: 260px;">
-                          <label>Data Type<span class="required">*</span></label>
-                          <p-dropdown [options]="dataTypes" optionLabel="label" optionValue="value"
-                            formControlName="data_type" placeholder="Select Data Type" appendTo="body"
-                            [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
-                          <small class="p-error"
-                            *ngIf="formGroup.get('data_type')?.invalid && formGroup.get('data_type')?.touched">
+                      <div style="display: flex; gap: 16px">
+                        <div
+                          class="p-field"
+                          style="flex: 1 1 auto; max-width: 260px"
+                        >
+                          <label
+                            >Data Type<span class="required">*</span></label
+                          >
+                          <p-dropdown
+                            [options]="dataTypes"
+                            optionLabel="label"
+                            optionValue="value"
+                            formControlName="data_type"
+                            placeholder="Select Data Type"
+                            appendTo="body"
+                            [autoZIndex]="true"
+                            [baseZIndex]="1000"
+                          ></p-dropdown>
+                          <small
+                            class="p-error"
+                            *ngIf="
+                              formGroup.get('data_type')?.invalid &&
+                              formGroup.get('data_type')?.touched
+                            "
+                          >
                             Data Type is required
                           </small>
                         </div>
 
-                        <div class="p-field" style="flex: 1 1 auto;">
-                          <label>Criticality<span class="required">*</span></label>
-                          <p-dropdown [options]="criticalityOptions" optionLabel="label" optionValue="value"
-                            formControlName="criticality" placeholder="Select Criticality" appendTo="body"
-                            [autoZIndex]="true" [baseZIndex]="1000"></p-dropdown>
-                          <small class="p-error"
-                            *ngIf="formGroup.get('criticality')?.invalid && formGroup.get('criticality')?.touched">
+                        <div class="p-field" style="flex: 1 1 auto">
+                          <label
+                            >Criticality<span class="required">*</span></label
+                          >
+                          <p-dropdown
+                            [options]="criticalityOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            formControlName="criticality"
+                            placeholder="Select Criticality"
+                            appendTo="body"
+                            [autoZIndex]="true"
+                            [baseZIndex]="1000"
+                          ></p-dropdown>
+                          <small
+                            class="p-error"
+                            *ngIf="
+                              formGroup.get('criticality')?.invalid &&
+                              formGroup.get('criticality')?.touched
+                            "
+                          >
                             Criticality is required
                           </small>
                         </div>
@@ -292,32 +538,70 @@
                     </div>
 
                     <div class="p-dialog-footer p-mt-3">
-                      <button type="button" class="btn btn--secondary" label=""
-                        (click)="showDialog = false">Cancel</button>
-                      <button type="submit" class="btn btn--primary" label="" [disabled]="formGroup.invalid">{{
-                        isEditMode ? 'Update' : 'Save' }}</button>
+                      <button
+                        type="button"
+                        class="btn btn--secondary"
+                        label=""
+                        (click)="showDialog = false"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn--primary"
+                        label=""
+                        [disabled]="formGroup.invalid"
+                      >
+                        {{ isEditMode ? "Update" : "Save" }}
+                      </button>
                     </div>
                   </form>
                 </p-dialog>
                 <!-- delete confirmation dialog -->
-                <p-dialog header="Confirm Delete" [(visible)]="showDeleteDialog" [modal]="true" [closable]="false">
-                  <p>Are you sure you want to delete <strong>{{ selectedRow?.field_name }}</strong>?</p>
+                <p-dialog
+                  header="Confirm Delete"
+                  [(visible)]="showDeleteDialog"
+                  [modal]="true"
+                  [closable]="false"
+                >
+                  <p>
+                    Are you sure you want to delete
+                    <strong>{{ selectedRow?.field_name }}</strong
+                    >?
+                  </p>
                   <div class="p-dialog-footer">
-                    <button pButton type="button" class="btn btn--secondary"
-                      (click)="showDeleteDialog = false">No</button>
-                    <button pButton type="button" class="btn btn--primary" (click)="deleteRow()">Yes</button>
+                    <button
+                      pButton
+                      type="button"
+                      class="btn btn--secondary"
+                      (click)="showDeleteDialog = false"
+                    >
+                      No
+                    </button>
+                    <button
+                      pButton
+                      type="button"
+                      class="btn btn--primary"
+                      (click)="deleteRow()"
+                    >
+                      Yes
+                    </button>
                   </div>
                 </p-dialog>
               </div>
 
               <div [hidden]="!showReport">
                 <div class="report-builder">
-                  <app-report-builder [visible]="reportVisible" [position]="reportPosition" [gridRows]="rowData"
-                    (build)="onBuildReport($event)" (close)="onCloseBuilder()">
+                  <app-report-builder
+                    [visible]="reportVisible"
+                    [position]="reportPosition"
+                    [gridRows]="rowData"
+                    (build)="onBuildReport($event)"
+                    (close)="onCloseBuilder()"
+                  >
                   </app-report-builder>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -326,18 +610,32 @@
             <mat-dialog-content>
               <div class="popup-box row">
                 <div class="col-md-12">
-                  <mat-form-field appearance="outline" class="full-width" *ngIf="formLoaded" style="width: 100%;">
+                  <mat-form-field
+                    appearance="outline"
+                    class="full-width"
+                    *ngIf="formLoaded"
+                    style="width: 100%"
+                  >
                     <mat-label>Select Use Case</mat-label>
                     <mat-select [(ngModel)]="useCaseModel">
-                      <mat-option *ngFor="let uc of useCases" [value]="uc.use_case_id + '|' + uc.use_case_name">
+                      <mat-option
+                        *ngFor="let uc of useCases"
+                        [value]="uc.use_case_id + '|' + uc.use_case_name"
+                      >
                         {{ uc.use_case_name }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-md-12">
-                  <button mat-raised-button color="primary" (click)="confirmUseCase()"
-                    style="height: 43px; margin-top: 6px;">Submit</button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="confirmUseCase()"
+                    style="height: 43px; margin-top: 6px"
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </mat-dialog-content>

@@ -224,7 +224,12 @@ export class EditUsecaseComponent {
         this.toastNotificationService.success("Usecase Updated Successfully.");
         // window.location.reload();
       }
+      setTimeout(() => {
+        this.router.navigate(['/use-cases/edit-usecase', res.useCaseEntity.use_case_id]);
+  
+      }, 300);
     })
+   
   }
 
   saveDatafields(data: any) {

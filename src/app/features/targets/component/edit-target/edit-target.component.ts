@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { createElement, icons } from 'lucide';
+import { validateClaims } from '@okta/okta-auth-js';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -333,6 +334,7 @@ export class EditTargetComponent {
     });
     this.targetForm = this.fb.group({
       target_name: ['', Validators.required],
+      target_description: [''],
       quality_of_service: ['', Validators.required],
       frequency_of_update: [1, Validators.required],
       schedule_of_update: [[], Validators.required],
@@ -472,6 +474,7 @@ export class EditTargetComponent {
   prefillForm(data: any): void {
     this.targetForm.patchValue({
       target_name: data.target_name,
+      target_description: data.target_description,
       quality_of_service: data.quality_of_service,
       frequency_of_update: data.frequency_of_update,
       schedule_of_update: data.schedule_of_update,
@@ -669,6 +672,7 @@ export class EditTargetComponent {
       targetEntity: {
 
         target_name: this.targetForm.value.target_name,
+        target_description : this.targetForm.value.target_description,
         quality_of_service: this.targetForm.value.quality_of_service,
         frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
         schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,

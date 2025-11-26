@@ -39,100 +39,107 @@
                 </button>
               </span>
             </div> -->
-
-            <form [formGroup]="systemForm">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>System Name</mat-label>
-                <input matInput formControlName="system_name" />
-                <mat-error
-                  *ngIf="systemForm.get('system_name')?.hasError('required')"
-                  >Required</mat-error
-                >
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>LeanIX ID</mat-label>
-                <input matInput formControlName="leanix_id" />
-                <mat-error
-                  *ngIf="systemForm.get('leanix_id')?.hasError('required')"
-                  >Required</mat-error
-                >
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Owner</mat-label>
-                <input matInput formControlName="owner" />
-                <mat-error *ngIf="systemForm.get('owner')?.hasError('required')"
-                  >Required</mat-error
-                >
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Owner Email</mat-label>
-                <input matInput formControlName="owner_email" />
-                <mat-error
-                  *ngIf="systemForm.get('owner_email')?.hasError('required')"
-                  >Required</mat-error
-                >
-                <mat-error
-                  *ngIf="systemForm.get('owner_email')?.hasError('email')"
-                  >Invalid email</mat-error
-                >
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Version</mat-label>
-                <input matInput formControlName="version_number" />
-                <mat-error
-                  *ngIf="systemForm.get('version_number')?.hasError('required')"
-                  >Required</mat-error
-                >
-              </mat-form-field>
-
-              <mat-form-field
-                appearance="outline"
-                class="full-width"
-                *ngIf="formLoaded"
-              >
-                <mat-label>Status</mat-label>
-                <mat-select formControlName="status">
-                  <mat-option
-                    *ngFor="let status of statusOptions"
-                    [value]="status"
+            <div class="row" style="width: 100%">
+              <form [formGroup]="systemForm">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>System Name</mat-label>
+                  <input matInput formControlName="system_name" />
+                  <mat-error
+                    *ngIf="systemForm.get('system_name')?.hasError('required')"
+                    >Required</mat-error
                   >
-                    {{ status }}
-                  </mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="systemForm.get('status')?.hasError('required')"
-                  >Required</mat-error
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>LeanIX ID</mat-label>
+                  <input matInput formControlName="leanix_id" />
+                  <mat-error
+                    *ngIf="systemForm.get('leanix_id')?.hasError('required')"
+                    >Required</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Owner</mat-label>
+                  <input matInput formControlName="owner" />
+                  <mat-error
+                    *ngIf="systemForm.get('owner')?.hasError('required')"
+                    >Required</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Owner Email</mat-label>
+                  <input matInput formControlName="owner_email" />
+                  <mat-error
+                    *ngIf="systemForm.get('owner_email')?.hasError('required')"
+                    >Required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="systemForm.get('owner_email')?.hasError('email')"
+                    >Invalid email</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Version</mat-label>
+                  <input matInput formControlName="version_number" />
+                  <mat-error
+                    *ngIf="
+                      systemForm.get('version_number')?.hasError('required')
+                    "
+                    >Required</mat-error
+                  >
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  *ngIf="formLoaded"
                 >
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Description</mat-label>
-                <textarea
-                  matInput
-                  formControlName="description"
-                  cdkTextareaAutosize
-                  cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="1"
-                >
-                </textarea>
-                <mat-error
-                  *ngIf="systemForm.get('description')?.hasError('required')"
-                  >Required</mat-error
-                >
-              </mat-form-field>
-              <!-- <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Status</mat-label>
+                  <mat-select formControlName="status">
+                    <mat-option
+                      *ngFor="let status of statusOptions"
+                      [value]="status"
+                    >
+                      {{ status }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="systemForm.get('status')?.hasError('required')"
+                    >Required</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="description"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="1"
+                  >
+                  </textarea>
+                  <mat-error
+                    *ngIf="systemForm.get('description')?.hasError('required')"
+                    >Required</mat-error
+                  >
+                </mat-form-field>
+                <!-- <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Status</mat-label>
                 <input matInput formControlName="status" />
               </mat-form-field> -->
-            </form>
-            <div class="form-grid11">
+              </form>
+            </div>
+            <div style="padding-left: 8px">
               <button class="btn btn--primary" (click)="onUpdate()">
                 Save
               </button>
             </div>
+            <!-- <div class="form-grid11">
+              <button class="btn btn--primary btn-md" (click)="onUpdate()">Save</button>
+            </div> -->
             <p class="riskIndicator" *ngIf="is_modified_risk_level">
               * Data Risk has been adjusted or overriden. (Globally or
               Individually)
@@ -179,19 +186,25 @@
               </button>
             </div>
             <!-- Information Box -->
-            <div class="container" style="height: 100%; background: #f1f5f9">
+            <div class="container" style="height: 100%">
               <div
-                class="row"
-                style="width: 100%"
+                style="width: 100%; display: flex; gap: 20px"
                 *ngIf="activeView == 'interfaces'"
               >
-                <div class="info-box-table" class="col-sm-5">
+                <div class="info-box-table" style="flex: 1 1 auto">
                   <!-- <div class="padding:10px">
                     <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
                       [rowData]="rowDataInbound" [columnDefs]="inboundColumnDefs" [defaultColDef]="defaultColDef">
                     </ag-grid-angular>
                   </div> -->
-                  <div class="ngprime-table">
+                  <div
+                    class="ngprime-table"
+                    style="
+                      overflow: hidden;
+                      border-radius: 4px;
+                      border: 1px solid rgb(232, 232, 232);
+                    "
+                  >
                     <div class="header">
                       <p-toolbar>
                         <div class="p-toolbar-group-left">
@@ -275,14 +288,21 @@
                     </div>
                   </div>
                 </div>
-                <div class="info-box-table" class="col-sm-5">
+                <div class="info-box-table" style="flex: 1 1 auto">
                   <!-- <div class="padding:10px">
                     <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 400px;"
                       [rowData]="rowDataOutbound" [columnDefs]="outBoundColumnDefs" [defaultColDef]="defaultColDef"
                       (cellValueChanged)="outboundOnCellValueChanged($event)" rowSelection="single">
                     </ag-grid-angular>
                   </div> -->
-                  <div class="ngprime-table">
+                  <div
+                    class="ngprime-table"
+                    style="
+                      overflow: hidden;
+                      border-radius: 4px;
+                      border: 1px solid rgb(232, 232, 232);
+                    "
+                  >
                     <div class="header">
                       <p-toolbar>
                         <div class="p-toolbar-group-left">

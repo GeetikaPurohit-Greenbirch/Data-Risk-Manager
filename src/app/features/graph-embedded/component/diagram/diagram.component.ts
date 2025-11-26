@@ -29,7 +29,7 @@ import {
 } from './link-tools.component';
 import { routerNamespace } from './routers.component';
 import { anchorNamespace } from './anchors.component';
-import { loadExample } from './example.component';
+import { buildTypeHierarchy, loadExample } from './example.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
 import { L001, L002, L003 } from './diagrams';
@@ -91,7 +91,9 @@ export class DiagramComponent implements AfterViewInit {
     use_case_id: 0,
     lineage_json: '',
   };
-  entities: any;
+
+
+
 
   private destroy$ = new Subject<void>();
 
@@ -133,39 +135,47 @@ export class DiagramComponent implements AfterViewInit {
         ),
         filter((id): id is string => !!id && id.trim().length > 0),
 
-        switchMap((usecaseId: string) =>
-          forkJoin({
-            lineage: this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
-              catchError((err) => {
-                console.error('Failed to fetch lineage:', err);
-                this.errorMsg = 'Could not load lineage data.';
-                return of(null);
-              })
-            ),
-            entities: this.lineageService
-              .getLineageEntitiesByUseCaseId(usecaseId)
-              .pipe(
-                catchError((err) => {
-                  console.error('Failed to fetch lineage entities:', err);
-                  return of([]); // return empty list on error
-                })
-              ),
-          })
-        ),
+      switchMap((usecaseId: string) =>
+        forkJoin({
+          lineage: this.lineageService.getLineageByUseCaseId(usecaseId).pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage:', err);
+              this.errorMsg = 'Could not load lineage data.';
+              return of(null);
+            })
+          ),
+          sourceData: this.lineageService.getLineageEntitiesByUseCaseId(usecaseId, 'SOURCE').pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage entities:', err);
+              return of([]); // return empty list on error
+            })
+          ),
+          targetData: this.lineageService.getLineageEntitiesByUseCaseId(usecaseId, 'TARGET').pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage entities:', err);
+              return of([]); // return empty list on error
+            })
+          ),
+          systemData: this.lineageService.getLineageEntitiesByUseCaseId(usecaseId, 'SYSTEM').pipe(
+            catchError(err => {
+              console.error('Failed to fetch lineage entities:', err);
+              return of([]); // return empty list on error
+            })
+          )
+        })
+      ),
 
-        takeUntil(this.destroy$)
-      )
-      .subscribe(({ lineage, entities }) => {
+      takeUntil(this.destroy$)
+    )
+      .subscribe(({ lineage, sourceData, targetData, systemData }) => {
         this.lineages = lineage;
-        this.entities = entities;
 
         console.log('Fetched lineage:', lineage);
-        console.log('Fetched entities:', entities);
+        console.log('Fetched sourceData:', sourceData);
+        console.log('Fetched targetData:', targetData);
+        console.log('Fetched systemData:', systemData);
 
-        const useCaseId = lineage?.use_case_id ?? null;
-        console.log('Use Case ID:', useCaseId);
-
-        this.loadGraphFromJSON(lineage?.lineage_json || {});
+        this.loadGraphFromJSON(lineage?.lineage_json || {}, sourceData, targetData, systemData);
 
         this.loading = false;
       });
@@ -1008,14 +1018,165 @@ export class DiagramComponent implements AfterViewInit {
     }
   }
 
-  loadGraphFromJSON(json: any) {
-    console.log('Loading graph from JSON:', json);
-    if (json != undefined && json != '{}') {
-      this.graph.fromJSON(JSON.parse(json));
-      this.scroller.centerContent();
-      this.hasGraph = true;
+  // loadGraphFromJSON(json: any, sourcedata: any, targetdata: any, systemdata: any) {
+  //   //console.log('Loading graph from JSON:', json);
+  //   if (json != undefined && json != "{}") {
+  //     this.graph.clear();
+  //     let graphJson = JSON.parse(json);
+  //     let sourceJson = JSON.parse(sourcedata[0].entities_json);
+  //     let targetJson = JSON.parse(targetdata[0].entities_json);
+  //     let systemJson = JSON.parse(systemdata[0].entities_json);
+  //     console.log("graphJson", graphJson);
+  //     console.log("sourceJson", sourceJson);
+  //     console.log("targetJson", targetJson);
+  //     console.log("systemJson", systemJson);
+  //     // Example: change label text for system node
+  //     graphJson.cells.forEach((cell: any) => {
+  //       if (cell.id == "S-" + sourceJson[0].entity_id) {
+  //         cell.attrs.headerLabel.textWrap.text = sourceJson[0].entity_name;
+  //       }
+  //       else if (cell.id == "SYS-" + systemJson[0].entity_id) {
+  //         cell.attrs.headerLabel.textWrap.text = systemJson[0].entity_name;
+  //       }
+  //       else if (cell.id == "TGT-" + targetJson[0].entity_id) {
+  //         cell.attrs.headerLabel.textWrap.text = targetJson[0].entity_name;
+  //         if (cell.items.length > 0) {           
+  //             cell.items = [
+  //               targetJson[0].fields.map((f: { field_id: any; field_name: any }) => ({
+  //                 id: `in__port_${f.field_id}`,
+  //                 icon: " ",
+  //                 type: "TARGET",
+  //                 label: f.field_name
+  //               }))
+  //             ];          
+  //         }
+  //       }
+  //     });
+
+  //     this.graph.fromJSON(graphJson);
+  //     this.scroller.centerContent();
+  //     this.hasGraph = true;
+  //   }
+  // }
+
+
+
+loadGraphFromJSON(json: any, sourcedata: any[], targetdata: any[], systemdata: any[]) {
+
+  if (!json || json === "{}") return;
+
+  this.graph.clear();
+
+  const graphJson = JSON.parse(json);
+
+  // Convert backend → usable entity arrays
+  const allEntities: Entity[] = [
+    ...JSON.parse(sourcedata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "SOURCE" })),
+    ...JSON.parse(systemdata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "SYSTEM" })),
+    ...JSON.parse(targetdata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "TARGET" }))
+  ];
+
+  // Lookup map: key = CellId (e.g., S-10, SYS-3, TGT-21)
+  const entityMap = new Map<string, Entity>();
+
+  for (const e of allEntities) {
+    const prefix = this.getPrefix(e.type);
+    entityMap.set(`${prefix}-${e.entity_id}`, e);
+  }
+
+  // --- auto-delete stale nodes ---
+  const validIds = new Set([...entityMap.keys()]);
+
+  graphJson.cells = graphJson.cells.filter((cell: any) => {
+    if (cell.type === "mapping.Link") return true; // keep all links for now
+    return validIds.has(cell.id); // keep only nodes that exist in backend
+  });
+
+  // --- auto-create missing nodes ---
+  for (const [cellId, ent] of entityMap.entries()) {
+    const exists = graphJson.cells.some((c: any) => c.id === cellId);
+
+    if (!exists) {
+      graphJson.cells.push(this.createNode(ent));
     }
   }
+
+  // --- update node names + items dynamically ---
+  graphJson.cells.forEach((cell: any) => {
+    if (cell.type === "mapping.Link") return;
+
+     const ent = entityMap.get(cell.id);
+     if (!ent) return;
+
+    // Update name on node
+    if (cell.attrs?.headerLabel?.textWrap) {
+      cell.attrs.headerLabel.textWrap.text = ent.entity_name;
+    }
+
+    // If target → update fields as ports  
+
+    if (ent.type === "TARGET" && Array.isArray(ent.fields)) {    
+      if (cell.items.length > 0) {           
+              cell.items = [
+                ent.fields.map((f: { field_id: any; field_name: any }) => ({
+                  id: `in__port_${f.field_id}`,
+                  icon: " ",
+                  type: "TARGET",
+                  label: f.field_name
+                }))
+              ];          
+          }      
+    }
+  });
+
+  // --- Finally load into JointJS ---
+  this.graph.fromJSON(graphJson);
+  this.scroller.centerContent();
+  this.hasGraph = true;
+}
+
+/* ----------------------------------------------
+   Helper: Generate prefix based on TYPE
+   ---------------------------------------------- */
+getPrefix(type: string) {
+  switch (type) {
+    case "SOURCE": return "S";
+    case "SYSTEM": return "SYS";
+    case "TARGET": return "TGT";
+    default: return type.toUpperCase().substring(0, 3); // dynamic entity type support
+  }
+}
+
+/* ----------------------------------------------
+   Helper: Auto-create a new JointJS node
+   ---------------------------------------------- */
+createNode(ent: Entity) {
+  const prefix = this.getPrefix(ent.type!);
+
+  return {
+    id: `${prefix}-${ent.entity_id}`,
+    type: "custom.Node",     // your node type here
+    position: { x: 100, y: 100 }, // default placement, can randomize
+    size: { width: 160, height: 60 },
+
+    attrs: {
+      headerLabel: {
+        textWrap: { text: ent.entity_name }
+      }
+    },
+
+    items:
+      ent.type === "TARGET" && ent.fields
+        ? ent.fields.map((f: any) => ({
+            id: `in__port_${f.field_id}`,
+            icon: "",
+            type: "TARGET",
+            label: f.field_name
+          }))
+        : []
+  };
+}
+
 
   onZoomSliderChange(e: any) {
     const newScale = e.value / 100;
@@ -1035,24 +1196,7 @@ export class DiagramComponent implements AfterViewInit {
     this.diagramCollapsed = !this.diagramCollapsed;
   }
 
-  // async getEntityDataById(typename: any, entityId: any): Promise<string> {
-  //   try {
-  //     const fullData: any = await this.lineageService.getEntityById(typename, entityId).toPromise();
-  //     const parsedData = JSON.parse(fullData.node);
-
-  //     if (parsedData?.controls?.length > 0) {
-  //       const controlNamesHtml = parsedData.controls
-  //         .map((c: any) => `<li>${c.name}</li>`)
-  //         .join('');
-  //       return `<ul>${controlNamesHtml}</ul>`;
-  //     }
-
-  //     return '<ul><li>No controls found</li></ul>';
-  //   } catch (error) {
-  //     console.error(error);
-  //     return '<ul><li>Error fetching data</li></ul>';
-  //   }
-  // }
+  
 
   async getEntityDataById(typename: any, entityId: any): Promise<string> {
     try {
@@ -1077,4 +1221,11 @@ export class DiagramComponent implements AfterViewInit {
       return '<ul><li>Error fetching data</li></ul>';
     }
   }
+}
+
+  interface Entity {
+  entity_id: string | number;
+  entity_name: string;
+  fields?: { field_id: any; field_name: string }[];
+  type: string;  // "SOURCE" | "SYSTEM" | "TARGET" | ANY NEW TYPES
 }

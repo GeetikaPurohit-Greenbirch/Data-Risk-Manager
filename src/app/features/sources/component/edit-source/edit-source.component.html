@@ -133,6 +133,19 @@
                 <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('required')">Required</mat-error>
                 <mat-error *ngIf="sourceForm.get('source_owner_email')?.hasError('email')">Invalid email</mat-error>
               </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="source_description"
+                    rows="1"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="10">
+                  </textarea>
+                <mat-error *ngIf="sourceForm.get('source_description')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
             </form>
             <div class="form-grid">
               <button (click)="onUpdate()">Save</button>
@@ -288,6 +301,15 @@
 
                           <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
+                              <label for="field_name">Field Description</label>
+                              <input id="field_name" type="text" pInputText formControlName="field_description" />
+                              <small class="p-error"
+                                *ngIf="fieldForm.get('field_description')?.invalid && fieldForm.get('field_description')?.touched">
+                                Field Description is required
+                              </small>
+                            </div>
+
+                            <div class="p-field p-mb-3 p-col">
                               <label for="data_type">Data Type</label>
                               <p-dropdown id="data_type" [options]="dataTypeOptions" formControlName="data_type"
                                 placeholder="Select Data Type"></p-dropdown>
@@ -297,6 +319,10 @@
                               </small>
                             </div>
 
+                          </div>
+
+                          <div class="p-row">
+                            
                             <div class="p-field p-mb-3 p-col">
                               <label for="field_length">Length</label>
                               <input id="field_length" type="number" pInputText formControlName="field_length" />
@@ -305,41 +331,44 @@
                                 Length is required and must be numeric
                               </small>
                             </div>
-                          </div>
 
-                          <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
                               <label for="Completeness">Completeness</label>
                               <p-dropdown id="Completeness" [options]="RiskTypeOptions" formControlName="dqa_c"
                                 placeholder="Select Completeness"></p-dropdown>
                             </div>
 
+                          </div>
+
+                          <div class="p-row">
+                            
                             <div class="p-field p-mb-3 p-col">
                               <label for="commentary_c">C Commentary</label>
                               <input id="commentary_c" type="text" pInputText formControlName="commentary_c" />
                             </div>
-                          </div>
 
-                          <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
                               <label for="Completeness">Timeliness</label>
                               <p-dropdown id="Timeliness" [options]="RiskTypeOptions" formControlName="dqa_t"
                                 placeholder="Select Timeliness"></p-dropdown>
                             </div>
 
+                            
+                          </div>
+
+                          <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
                               <label for="commentary_t">T Commentary</label>
                               <input id="commentary_t" type="text" pInputText formControlName="commentary_t" />
                             </div>
-                          </div>
 
-                          <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
                               <label for="Accuracy">Accuracy</label>
                               <p-dropdown id="Accuracy" [options]="RiskTypeOptions" formControlName="dqa_a"
                                 placeholder="Select Accuracy"></p-dropdown>
                             </div>
-
+                          </div>
+                          <div class="p-row">
                             <div class="p-field p-mb-3 p-col">
                               <label for="commentary_a">A Commentary</label>
                               <input id="commentary_a" type="text" pInputText formControlName="commentary_a" />

@@ -1,36 +1,28 @@
- 
-  .block-palette {
+.block-palette {
+  gap: 4px;
   display: flex;
+  padding: 10px 4px;
   flex-direction: column;
-  gap: 12px;
-  padding: 10px;
 
-}
+  .block-item {
+    gap: 10px;
+    cursor: grab;
+    display: flex;
+    padding: 6px 10px;
+    border-radius: 3px;
+    align-items: center;
+    transition: background 0.2s;
 
-
-
-
-
-.block-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: grab;
-  padding: 6px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #e0e0e0;
+    &:hover {
+      background: #f1f5f9;
+    }
   }
-}
 
-.icon {
-  font-size: 20px;
-}
+  .icon {
+    font-size: 16px;
+  }
 
-.label {
-  font-size: 14px;
+  .label {
+    font-size: 14px;
+  }
 }

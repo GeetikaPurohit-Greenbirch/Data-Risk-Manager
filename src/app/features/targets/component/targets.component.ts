@@ -193,6 +193,8 @@ export class TargetsComponent {
     { field: 'target_id', header: 'Target ID', editable: false },
     { field: 'target_name', header: 'Name', editable: false },
     { field: 'vendor', header: 'Vendor', editable: false },
+    { field: 'target_description', header: 'Description', editable: false },
+
     {
       field: 'quality_of_service',
       header: 'Quality Of Service',

@@ -185,6 +185,7 @@ export class SourcesComponent {
     { field: 'source_id', header: 'Source ID', editable: false },
     { field: 'source_name', header: 'Name', editable: false },
     { field: 'vendor', header: 'Vendor', editable: false },
+    { field: 'source_description', header: 'Description', editable: false },
     {
       field: 'quality_of_service',
       header: 'Quality Of Service',

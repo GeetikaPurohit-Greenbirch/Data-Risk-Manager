@@ -129,7 +129,6 @@ export function buildTypeHierarchy(raw: Port[]): Hierarchy {
     };
 }
 
-
 const getColorByTab = (type: string) => {
     switch (type) {
         case 'Source':
