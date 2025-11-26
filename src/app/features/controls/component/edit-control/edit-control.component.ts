@@ -60,6 +60,8 @@ export class EditControlComponent {
   dataFieldsModel: Datafields = new Datafields();
   isBacktolineage=false;
   BacktolineagePath: any ="";
+  showGlobalQualityRisk = false;
+  rowDataDQA: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -244,6 +246,112 @@ export class EditControlComponent {
   //   filter: true,
   //   suppressSizeToFit: true
   // };
+
+  columnDefsDQA: (ColDef | ColGroupDef)[] = [
+    {
+      headerName: 'DQA',
+      headerClass: 'custom-parent-header',
+      resizable: true,
+      headerTooltip: 'DQA',
+      children: [
+        {
+          headerName: 'After Control Completeness',
+          field: 'default_dqa_c',
+          editable: true,
+          headerTooltip: 'Completeness',
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["High", "Medium", "Low"],
+          },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: '#c10007',
+            fontWeight: '600'
+          },
+        },
+               {
+          headerName: 'After Control Timeliness',
+          field: 'default_dqa_t',
+          editable: true,
+          headerTooltip: 'Timeliness',
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["High", "Medium", "Low"],
+          },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: false,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: '#3e63dd',
+            fontWeight: '600'
+          }
+        },
+          {
+          headerName: 'After Control Accuracy',
+          field: 'default_dqa_a',
+          editable: true,
+          headerTooltip: 'Accuracy',
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["High", "Medium", "Low"],
+          },
+          // width:65,
+          // minWidth: 65,
+          // maxWidth: 65,
+          resizable: true,
+          suppressSizeToFit: true,
+          cellStyle: {
+            color: 'purple',
+            fontWeight: '600'
+          }
+        },
+        
+      ],
+    },
+
+    {
+      headerName: 'Actions',
+      editable: false,
+      filter: false,
+      sortable: false,
+      minWidth: 80,
+      maxWidth: 100,
+      // flex: 1,
+      pinned: 'right',
+      cellRenderer: (params: any) => {
+        const div = document.createElement('div');
+        div.className = 'model-cell-renderer';
+
+        const saveDataFields = document.createElement('button');
+        saveDataFields.title = 'Save';
+        saveDataFields.style.border = 'none';
+        saveDataFields.style.padding = '0px';
+        saveDataFields.style.cursor = 'pointer';
+        saveDataFields.style.background = 'transparent';
+
+        const saveIcon = createElement(icons.Save, {
+          color: '#008236',
+          height: '14px',
+          strokeWidth: 2
+        });
+        saveDataFields.appendChild(saveIcon);
+
+        // Pass row data or node to save
+        saveDataFields.addEventListener('click', () => {
+          this.saveDatafieldsDQA(params.node, 'OUTBOUND');
+        });
+        div.appendChild(saveDataFields);
+        return div;
+      }
+    },
+  ]
+
   defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
@@ -365,6 +473,8 @@ export class EditControlComponent {
     else {
       this.formLoaded = true; // triggers re-render
     }
+
+    this.rowDataDQA = [{}];
   }
 
   onBackToLineage()
@@ -429,7 +539,91 @@ export class EditControlComponent {
       // Force refresh with setRowData
 
     });
+    this.getDatafieldsDQA();
   }
+
+  getDataFields() {
+    this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
+      next: (res: any) => {
+        this.rowData = [...res]; // triggers change
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowData);
+        }
+
+        this.cdr.detectChanges(); // trigger Angular change detection
+
+        error: (err: any) => {
+          console.error('Failed to load control:', err);
+        }
+      }
+      // Force refresh with setRowData
+
+    });
+  }
+
+  getDatafieldsDQA() {
+    this.datafieldsService.getDataFieldsDQA(this.controlId, 'CONTROL').subscribe({
+      next: (res: any) => {
+        this.rowDataDQA = [res]; // triggers change
+        this.showGlobalQualityRisk = res.allow_risk_update;
+        console.log('rowDataoutboundDQA:', this.rowDataDQA);
+
+        if (this.gridApi) {
+          this.gridApi.setRowData([]); // Clear first to ensure refresh
+          this.gridApi.setRowData(this.rowDataDQA);
+        }
+
+        this.cdr.detectChanges(); // trigger Angular change detection
+
+      },
+      error: (err: any) => {
+        console.error('Failed to load interface:', err);
+      }
+      // Force refresh with setRowData
+
+    });
+
+  }
+
+
+  saveDatafieldsDQA(data: any, interface_type: any) {
+    console.log(data, "Control Data Fields DQA");
+    this.dataFieldsModel.id = data.data.id;
+    this.dataFieldsModel.allow_risk_update = this.showGlobalQualityRisk;
+    this.dataFieldsModel.entity_id = [this.controlId];
+    this.dataFieldsModel.entity_type = "CONTROL";
+    this.dataFieldsModel.default_dqa_t = data.data.default_dqa_t;
+    this.dataFieldsModel.default_dqa_a = data.data.default_dqa_a;
+    this.dataFieldsModel.default_dqa_c = data.data.default_dqa_c;
+    this.dataFieldsModel.default_commentary_t = "";
+    this.dataFieldsModel.default_commentary_a = "";
+    this.dataFieldsModel.default_commentary_c = "";
+
+    // alert("Data field added Successfully.");
+    if (!data.data.id) {
+      this.datafieldsService.createGlobalRisk(this.dataFieldsModel).subscribe(() => {
+
+        this.toastNotificationService.success("Global Risk Added Successfully.");
+        setTimeout(() => {
+          this.getControlsDatafields('datafields'); // refresh
+
+        }, 1000);
+      });
+    }
+    else {
+      this.datafieldsService.updateGlobalRisk(this.dataFieldsModel).subscribe(() => {
+
+        this.toastNotificationService.success("Global Risk updated Successfully.");
+        setTimeout(() => {
+          this.getControlsDatafields('datafields');
+
+        }, 1000);
+      });
+    }
+
+  }
+
 
   interfaceOptionList: string[] = [];
 
