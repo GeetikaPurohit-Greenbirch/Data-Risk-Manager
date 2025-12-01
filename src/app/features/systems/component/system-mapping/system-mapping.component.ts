@@ -110,70 +110,90 @@ export class SystemMappingComponent implements AfterViewInit {
         let dependencies: Dependency[] | undefined;
         let showDependencyTool = true;
 
-        let inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
-        let outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
-        tasks = [...inboundTasks, ...outboundTasks];  // merged
-        dependencies = [];
-        showDependencyTool = showDependencyTool;
+
 
         forkJoin([
             this.datafieldsService.getMappings(this.systemId),
-            //this.datafieldsService.saveSystemMappingJSON(this.systemId)
+            this.datafieldsService.getSystemMappingJSON(this.systemId),
+            //this.datafieldsService.getSystemMappingFieldData(this.systemId)
         ]).subscribe({
-            next: ([fieldMappings]) => {
-                if (fieldMappings) {
-                    console.log("mapping json", fieldMappings);
-                    fieldMappings.forEach(mapping => {
-                        const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
-                        const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
-                        if (pField && cField) {
-                            dependencies?.push({
-                                id: util.uuid(),   // generate unique ID
-                                source: pField.id!,
-                                target: cField.id!
-                            });
-                        }
-                    });
-                    const kanban = new Kanban({
-                        paper,
-                        topLeft: {
-                            x: 20,
-                            y: 50
-                        },
-                        tasks: tasks || defaultTasks,
-                        columns,
-                        dependencies: dependencies || defaultDependencies,
-                        showDependencyTool
-                    });
-
-                    paper.unfreeze({
-                        cellVisibility: (cell: dia.Cell) => {
-                            return kanban.showDependencyTool ? true : cell.isElement();
-                        }
-                    } as unknown as dia.Paper.UnfreezeOptions & {
-                        cellVisibility: (cell: dia.Cell) => boolean;
-                    });
-
-                    const cmd = new dia.CommandManager({
-                        graph,
-                        stackLimit: 20,
-                        cmdBeforeAdd: function (_cmdName, cell, _graph, options = {}) {
-                            if (HeaderShape.isHeader(cell)) return false;
-                            return !options.ignoreCommandManager;
-                        }
-                    });
-
-
-                    cmd.on('stack', () => this.saveJson = saveMap());
-
-                    function saveMap() {
-                        return JSON.stringify({
-                            tasks: kanban.tasks,
-                            dependencies: kanban.dependencies,
-                            showDependencyTool: kanban.showDependencyTool
-                        })
+            next: ([fieldMappings, jsonData]) => {
+                 console.log("fieldMappings", fieldMappings);
+                if (fieldMappings!=null && fieldMappings.length>0) {
+                   
+                    // fieldMappings.forEach(mapping => {
+                    //     const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
+                    //     const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
+                    //     if (pField && cField) {
+                    //         dependencies?.push({
+                    //             id: util.uuid(),   // generate unique ID
+                    //             source: pField.id!,
+                    //             target: cField.id!
+                    //         });
+                    //     }
+                    // });
+                    // console.log("jsonData", jsonData);
+                    if (jsonData) {
+                        const mappingJSON = JSON.parse(jsonData.mapping_json);
+                        console.log("mappingJSON", mappingJSON);
+                        tasks = mappingJSON.tasks;  // merged
+                        dependencies = mappingJSON.dependencies;
+                        showDependencyTool = showDependencyTool;
+                    }
+                    else {
+                        let inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
+                        let outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
+                        tasks = [...inboundTasks, ...outboundTasks];  // merged
+                        dependencies = [];
+                        showDependencyTool = showDependencyTool;
                     }
                 }
+                else {
+                    let inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
+                    let outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
+                    tasks = [...inboundTasks, ...outboundTasks];  // merged
+                    dependencies = [];
+                    showDependencyTool = showDependencyTool;
+                }
+                const kanban = new Kanban({
+                    paper,
+                    topLeft: {
+                        x: 20,
+                        y: 50
+                    },
+                    tasks: tasks || defaultTasks,
+                    columns,
+                    dependencies: dependencies || defaultDependencies,
+                    showDependencyTool
+                });
+
+                paper.unfreeze({
+                    cellVisibility: (cell: dia.Cell) => {
+                        return kanban.showDependencyTool ? true : cell.isElement();
+                    }
+                } as unknown as dia.Paper.UnfreezeOptions & {
+                    cellVisibility: (cell: dia.Cell) => boolean;
+                });
+
+                const cmd = new dia.CommandManager({
+                    graph,
+                    stackLimit: 20,
+                    cmdBeforeAdd: function (_cmdName, cell, _graph, options = {}) {
+                        if (HeaderShape.isHeader(cell)) return false;
+                        return !options.ignoreCommandManager;
+                    }
+                });
+
+                cmd.on('stack', () => this.saveJson = saveMap());
+
+                function saveMap() {
+                    return JSON.stringify({
+                        tasks: kanban.tasks,
+                        dependencies: kanban.dependencies,
+                        showDependencyTool: kanban.showDependencyTool
+                    })
+                }
+
             },
             error: (err) => {
                 console.error("Error:", err);
@@ -220,7 +240,7 @@ export class SystemMappingComponent implements AfterViewInit {
                 });
 
                 //console.log("Final Mappings Payload:", formattedLinks);
-               
+
                 const jsonPayload = {
                     system_id: systemId,
                     mapping_json: this.saveJson
@@ -228,7 +248,7 @@ export class SystemMappingComponent implements AfterViewInit {
 
                 forkJoin([
                     this.datafieldsService.saveFieldMapping(formattedLinks),
-                    //this.datafieldsService.saveSystemMappingJSON(jsonPayload)
+                    this.datafieldsService.saveSystemMappingJSON(jsonPayload)
                 ]).subscribe({
                     next: () => this.toastNotificationService.success("System mappings saved successfully!"),
                     error: () => this.toastNotificationService.error("Failed to save mappings.")

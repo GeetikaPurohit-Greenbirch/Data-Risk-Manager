@@ -2174,7 +2174,7 @@ export class EditSystemComponent {
   dataFieldForm!: FormGroup;
 
   dataTypes = ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'];
-  dqaLevels = ['HIGH', 'MEDIUM', 'LOW'];
+  dqaLevels = ['High', 'Medium', 'Low'];
 
   buildForm() {
     this.dataFieldForm = this.fb.group({

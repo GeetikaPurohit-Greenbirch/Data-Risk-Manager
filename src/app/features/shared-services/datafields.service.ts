@@ -138,19 +138,19 @@ export class DatafieldsService {
     return this.http.get<Datafields[]>(url);
   }
 
-  public getSystemMappingFieldData(systemId: any): Observable<any[]> {
-    const url: string = this.apiUrl + 'api/system-interface-mapping-json/' + systemId;
+  public getSystemMappingFieldData(id: any): Observable<any[]> {
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/' + id;
     return this.http.get<any[]>(url);
   }
 
   public getSystemMappingJSON(systemId: any): Observable<any> {
-    const url: string = this.apiUrl + 'api/system-interface-mapping-json/System/' + systemId;
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/system/' + systemId;
     return this.http.get<any>(url);
   }
 
   public saveSystemMappingJSON(Datafields: any): Observable<any> {
     console.log("SystemMappingJSON",Datafields);
-    const url: string = this.lineageUrl + 'api/system-interface-mapping-json/system/' + Datafields.system_id;
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/system/' + Datafields.system_id;
     return this.http.put(url, Datafields, {
       headers: {
         'Content-Type': 'application/json'
@@ -159,7 +159,7 @@ export class DatafieldsService {
     });
   }
   public deleteSystemMappingJSON(mappingId: number): Observable<any> {
-    const url: string = this.lineageUrl + 'api/system-interface-mapping-json/id' + mappingId;
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/' + mappingId;
     return this.http.delete<any[]>(url, {
       headers: {
         'Content-Type': 'application/json'

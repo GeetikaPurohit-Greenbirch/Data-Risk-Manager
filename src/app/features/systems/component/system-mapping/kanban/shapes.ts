@@ -143,7 +143,7 @@ export class Dependency extends shapes.standard.Link {
                 line: {
                     stroke: color,
                     strokeDasharray: '5,5',
-                    targetMarker: { d: 'M 0 0 7 5 7 -5' }
+                    targetMarker: { d: 'M 0 0 7 5 7 -5' }                     
                 }
             },
 
