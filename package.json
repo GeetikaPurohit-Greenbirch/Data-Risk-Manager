@@ -25,6 +25,7 @@
     "@angular/router": "^17.3.12",
     "@auth0/auth0-angular": "^2.2.3",
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@joint/core": "^4.2.1",
     "@joint/plus": "file:joint-plus.tgz",
     "@jsplumb/browser-ui": "^6.2.10",
     "@ngx-translate/core": "^16.0.4",

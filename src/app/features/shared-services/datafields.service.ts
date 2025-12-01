@@ -14,126 +14,157 @@ export class DatafieldsService {
 
   constructor(private http: HttpClient) { }
 
-   public createDataFields(dataFieldsModel: Datafields): Observable<any> {
-      const url: string = this.apiUrl + 'fields';
-      console.log(dataFieldsModel)
-  
-      return this.http.post<Datafields[]>(url, dataFieldsModel);
-    }
+  public createDataFields(dataFieldsModel: Datafields): Observable<any> {
+    const url: string = this.apiUrl + 'fields';
+    console.log(dataFieldsModel)
 
-    public createDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type:any, entity_id:any, usecaseid:any): Observable<any> {
-      const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id;
-      console.log(dataFieldsModel)
-  
-      return this.http.post<Datafields[]>(url, dataFieldsModel);
-    }
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
-    public createGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
-      const url: string = this.apiUrl + 'entity-risk-config';
-      console.log(dataFieldsModel)
-  
-      return this.http.post<Datafields[]>(url, dataFieldsModel);
-    }
+  public createDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type: any, entity_id: any, usecaseid: any): Observable<any> {
+    const url: string = this.apiUrl + 'fields/' + entity_type + '/' + entity_id;
+    console.log(dataFieldsModel)
+
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
+
+  public createGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+    const url: string = this.apiUrl + 'entity-risk-config';
+    console.log(dataFieldsModel)
+
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
   public updateInterface(dataFieldsModel: Datafields): Observable<any> {
-        const url: string = this.apiUrl + 'fields';
-        console.log(dataFieldsModel)
-    
-        return this.http.post<Datafields[]>(url, dataFieldsModel);
-      }
+    const url: string = this.apiUrl + 'fields';
+    console.log(dataFieldsModel)
 
-      public updateDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type:any, entity_id:any, usecaseid:any): Observable<any> {
-        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+usecaseid;
-        console.log(dataFieldsModel)
-    
-        return this.http.post<Datafields[]>(url, dataFieldsModel);
-      }
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
-      public updateControlsDatafields(dataFieldsModel: Datafields): Observable<any> {
-        const url: string = this.apiUrl + 'controls/field';
-        console.log(dataFieldsModel)
-    
-        return this.http.post<Datafields[]>(url, dataFieldsModel);
-      }
+  public updateDataFieldsWithUsecase(dataFieldsModel: Datafields, entity_type: any, entity_id: any, usecaseid: any): Observable<any> {
+    const url: string = this.apiUrl + 'fields/' + entity_type + '/' + entity_id + '/' + usecaseid;
+    console.log(dataFieldsModel)
 
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
-      public updateGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
-        const url: string = this.apiUrl + 'entity-risk-config';
-        console.log(dataFieldsModel)
-    
-        return this.http.post<Datafields[]>(url, dataFieldsModel);
-      }
+  public updateControlsDatafields(dataFieldsModel: Datafields): Observable<any> {
+    const url: string = this.apiUrl + 'controls/field';
+    console.log(dataFieldsModel)
 
-   public getDataFieldsById(id:number, entity_type:any):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
-        return this.http.get<Datafields[]>(url);
-      }
-
-      public getControlsDatafields(control_id:any): Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'controls/field/id/'+control_id;
-        return this.http.get<Datafields[]>(url);
-      }
-
-      public getDataFieldsByIdWithUsecase(id:number, entity_type:any, usecaseid:any):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+id;
-        return this.http.get<Datafields[]>(url);
-      }
-
-      public getDataFieldsDQA(id:number, entity_type:any):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'entity-risk-config/'+entity_type+'/'+id;
-        return this.http.get<Datafields[]>(url);
-      }
-
-  public deleteDataFields(id:number, entity_type:string, entity_id:number):Observable<Datafields[]> {
-        const url: string = this.apiUrl + 'fields/'+entity_type+'/'+entity_id+'/'+id;
-        return this.http.delete<Datafields[]>(url);
-      }
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
 
-      ///// Save field mappings /////
+  public updateGlobalRisk(dataFieldsModel: Datafields): Observable<any> {
+    const url: string = this.apiUrl + 'entity-risk-config';
+    console.log(dataFieldsModel)
 
-      public saveFieldMapping(Datafields: any): Observable<any> {
-        const url: string = this.lineageUrl + 'mapping/fields';
-        console.log(Datafields)
-    
-        // return this.http.post<Datafields[]>(url, Datafields);
-        return this.http.post(url, Datafields, {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
-        });   
-      }
+    return this.http.post<Datafields[]>(url, dataFieldsModel);
+  }
 
-      public deleteAllSystemMapping(systemId:number): Observable<any> {
-        const url: string = this.lineageUrl + 'mapping/fields/system/'+systemId;
-        return this.http.delete<any[]>(url,{
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
-        });    
-      }
+  public getDataFieldsById(id: number, entity_type: any): Observable<Datafields[]> {
+    const url: string = this.apiUrl + 'fields/' + entity_type + '/' + id;
+    return this.http.get<Datafields[]>(url);
+  }
+
+  public getControlsDatafields(control_id: any): Observable<Datafields[]> {
+    const url: string = this.apiUrl + 'controls/field/id/' + control_id;
+    return this.http.get<Datafields[]>(url);
+  }
+
+  public getDataFieldsByIdWithUsecase(id: number, entity_type: any, usecaseid: any): Observable<Datafields[]> {
+    const url: string = this.apiUrl + 'fields/' + entity_type + '/' + id;
+    return this.http.get<Datafields[]>(url);
+  }
+
+  public getDataFieldsDQA(id: number, entity_type: any): Observable<Datafields[]> {
+    const url: string = this.apiUrl + 'entity-risk-config/' + entity_type + '/' + id;
+    return this.http.get<Datafields[]>(url);
+  }
+
+  public deleteDataFields(id: number, entity_type: string, entity_id: number): Observable<Datafields[]> {
+    const url: string = this.apiUrl + 'fields/' + entity_type + '/' + entity_id + '/' + id;
+    return this.http.delete<Datafields[]>(url);
+  }
 
 
-      public getMappings(systemId:any):Observable<any[]> {
-        const url: string = this.lineageUrl + 'mapping/fields/'+ systemId;
-        return this.http.get<any[]>(url);
+  ///// Save field mappings /////
 
-      }
+  public saveFieldMapping(Datafields: any): Observable<any> {
+    const url: string = this.lineageUrl + 'mapping/fields';
+    console.log(Datafields)
 
-      public deleteFieldMapping(mappingId: number): Observable<any> {
-        const url: string = this.lineageUrl + 'mapping/fields/id/'+mappingId;
-        return this.http.delete<any[]>(url,{
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
-        });      
-      }
+    // return this.http.post<Datafields[]>(url, Datafields);
+    return this.http.post(url, Datafields, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+    });
+  }
 
-      public getTargetReportdata(use_case_id:number, target_id:any):Observable<Datafields[]> {
-        const url: string = this.lineageUrl + 'reports/target/'+use_case_id+'/'+target_id;
-        return this.http.get<Datafields[]>(url);
-      }
+  public deleteAllSystemMapping(systemId: number): Observable<any> {
+    const url: string = this.lineageUrl + 'mapping/fields/system/' + systemId;
+    return this.http.delete<any[]>(url, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+    });
+  }
+
+
+  public getMappings(systemId: any): Observable<any[]> {
+    const url: string = this.lineageUrl + 'mapping/fields/' + systemId;
+    return this.http.get<any[]>(url);
+
+  }
+
+
+  public deleteFieldMapping(mappingId: number): Observable<any> {
+    const url: string = this.lineageUrl + 'mapping/fields/id/' + mappingId;
+    return this.http.delete<any[]>(url, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json' // 👈 this prevents JSON parsing error
+    });
+  }
+
+  public getTargetReportdata(use_case_id: number, target_id: any): Observable<Datafields[]> {
+    const url: string = this.lineageUrl + 'reports/target/' + use_case_id + '/' + target_id;
+    return this.http.get<Datafields[]>(url);
+  }
+
+  public getSystemMappingFieldData(systemId: any): Observable<any[]> {
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/' + systemId;
+    return this.http.get<any[]>(url);
+  }
+
+  public getSystemMappingJSON(systemId: any): Observable<any> {
+    const url: string = this.apiUrl + 'api/system-interface-mapping-json/System/' + systemId;
+    return this.http.get<any>(url);
+  }
+
+  public saveSystemMappingJSON(Datafields: any): Observable<any> {
+    console.log("SystemMappingJSON",Datafields);
+    const url: string = this.lineageUrl + 'api/system-interface-mapping-json/system/' + Datafields.system_id;
+    return this.http.put(url, Datafields, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json'
+    });
+  }
+  public deleteSystemMappingJSON(mappingId: number): Observable<any> {
+    const url: string = this.lineageUrl + 'api/system-interface-mapping-json/id' + mappingId;
+    return this.http.delete<any[]>(url, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'text' as 'json' 
+    });
+  }
 }

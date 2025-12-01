@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
+import { SystemMappingComponent } from './component/system-mapping/system-mapping.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,9 @@ import { DialogModule } from 'primeng/dialog';
     SystemBuilderComponent,
     EditSystemDialogComponent,
     EditSystemComponent,
-    CreateLineageComponent,
-    CreateLineageNewComponent
+    // CreateLineageComponent,
+    // CreateLineageNewComponent,
+    SystemMappingComponent
   ],
   imports: [
     CommonModule,

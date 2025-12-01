@@ -17,6 +17,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateLineageComponent } from '../create-lineage/create-lineage.component';
 import { UsecaseService } from 'src/app/features/use-cases/services/usecase.service';
 import { icons, createElement } from 'lucide';
+import { SystemMappingComponent } from '../system-mapping/system-mapping.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -1710,21 +1711,21 @@ export class EditSystemComponent {
   // }
 
   openLineagePopup() {
-    const dialogRef = this.dialog.open(CreateLineageComponent, {
-      width: '94vw',       // adjust width
-      height: '84vh',      // adjust height
-      data: {
-        inboundFields: this.inboundFields,
-        outboundFields: this.outboundFields,
-        systemId: this.systemId
-      }
-    });
+    // const dialogRef = this.dialog.open(SystemMappingComponent, {
+    //   width: '94vw',       // adjust width
+    //   height: '84vh',      // adjust height
+    //   // data: {
+    //   //   inboundFields: this.inboundFields,
+    //   //   outboundFields: this.outboundFields,
+    //   //   systemId: this.systemId
+    //   // }
+    // });
 
-    // 👇 you can also listen when it closes
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Lineage dialog closed', result);
-      this.openTab('interfaces');
-    });
+    // // 👇 you can also listen when it closes
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('Lineage dialog closed', result);
+    //   this.openTab('interfaces');
+    // });
   }
 
   // addInterface() {

@@ -457,7 +457,9 @@ export class EditControlComponent {
           this.attachTo = data.attach_to;
           this.attachToId = data.attach_to_id;
           this.onChange(data.attach_to, data.attach_to_id); // Load options & set selected value
+          this.getDatafieldsDQA();
           this.getControlsDatafields('datafields');
+          
         },
         error: (err: any) => {
           console.error('Failed to load control:', err);
