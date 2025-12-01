@@ -174,7 +174,7 @@
               </div>
               <!-- Conditional rendering of the AG Grid -->
 
-              <div style="margin: 10px">
+              <div style="margin: 0px">
                 <ag-grid-angular *ngIf="showGlobalQualityRisk" class="ag-theme-alpine"
                   style="width: 100%; min-height: 200px; max-height: 200px; overflow-y: auto;" [rowData]="rowDataDQA"
                   [columnDefs]="columnDefsDQA" [defaultColDef]="defaultColDef" rowSelection="single"
@@ -203,7 +203,7 @@
                     </p-toolbar>
                   </div>
 
-                  <div class="man">
+                  <div class="man" style="overflow-x: auto;max-width: 1150px;min-width: 100%;">
                     <p-table #dt [value]="rowData" [paginator]="true" [rows]="10" [resizableColumns]="true"
                       [globalFilterFields]="globalFilterFields" [rowsPerPageOptions]="[10,25,50]"
                       [responsiveLayout]="'scroll'" sortMode="multiple" [showCurrentPageReport]="true" editMode="cell"
