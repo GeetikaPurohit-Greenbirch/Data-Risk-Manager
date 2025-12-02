@@ -1584,31 +1584,29 @@ export class EditSystemComponent {
           this.showGlobalQualityRiskGridOutbound = res.allow_risk_update;
           console.log('rowDataoutboundDQA:', this.rowDataoutboundDQA);
 
-          if (this.gridApiout && this.showGlobalQualityRiskGridOutbound) {
-            //this.gridApiout.setRowData([]); // Clear first to ensure refresh
+          if (this.gridApiout && typeof this.gridApiout.setRowData === 'function' && this.showGlobalQualityRiskGridOutbound) {
             this.gridApiout.setRowData(this.rowDataoutboundDQA);
+          } else {
+            // fallback - set bound rowData and let ag-grid refresh when ready
+            this.rowDataoutboundDQA = this.rowDataoutboundDQA;
           }
-
-          //this.cdr.detectChanges(); // trigger Angular change detection
-
-
         },
         error: (err: any) => {
           console.error('Failed to load interface:', err);
-
         }
-        // Force refresh with setRowData
-
+       
       });
     }
     else if (interface_type == 'INBOUND') {
       this.datafieldsService.getDataFieldsDQA(this.systemId, 'SYSTEM').subscribe({
         next: (res: any) => {
           this.rowDataInboundDQA = [res]; // triggers change
-          this.showGlobalQualityRiskGridInbound = res.allow_risk_update;
-          if (this.gridApiIn && this.showGlobalQualityRiskGridInbound) {
-            //this.gridApiIn.setRowData([]); // Clear first to ensure refresh
+          this.showGlobalQualityRiskGridInbound = res.allow_risk_update;         
+           if (this.gridApiIn && typeof this.gridApiIn.setRowData === 'function' && this.showGlobalQualityRiskGridInbound) {
             this.gridApiIn.setRowData(this.rowDataInboundDQA);
+          } else {
+            // fallback - set bound rowData and let ag-grid refresh when ready
+            this.rowDataInboundDQA = this.rowDataInboundDQA;
           }
           //this.cdr.detectChanges(); // trigger Angular change detection
         },

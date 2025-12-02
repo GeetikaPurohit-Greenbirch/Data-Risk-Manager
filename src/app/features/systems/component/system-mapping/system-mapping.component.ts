@@ -6,7 +6,7 @@ import { Task as TaskShape, Header as HeaderShape, Dependency as DependencyShape
 import { Dependency, Task, TaskState } from './kanban/models';
 import { DatafieldsService } from 'src/app/features/shared-services/datafields.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 
 
 @Component({
@@ -106,54 +106,61 @@ export class SystemMappingComponent implements AfterViewInit {
                 return new DependencyShape();
             }
         });
-        let tasks: Task[] | undefined;
-        let dependencies: Dependency[] | undefined;
+
+        let tasks: Task[] = [];
+        let dependencies: Dependency[] = [];
         let showDependencyTool = true;
-
-
 
         forkJoin([
             this.datafieldsService.getMappings(this.systemId),
-            this.datafieldsService.getSystemMappingJSON(this.systemId),
-            //this.datafieldsService.getSystemMappingFieldData(this.systemId)
-        ]).subscribe({
-            next: ([fieldMappings, jsonData]) => {
-                 console.log("fieldMappings", fieldMappings);
-                if (fieldMappings!=null && fieldMappings.length>0) {
-                   
-                    // fieldMappings.forEach(mapping => {
-                    //     const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
-                    //     const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
-                    //     if (pField && cField) {
-                    //         dependencies?.push({
-                    //             id: util.uuid(),   // generate unique ID
-                    //             source: pField.id!,
-                    //             target: cField.id!
-                    //         });
-                    //     }
-                    // });
-                    // console.log("jsonData", jsonData);
-                    if (jsonData) {
-                        const mappingJSON = JSON.parse(jsonData.mapping_json);
-                        console.log("mappingJSON", mappingJSON);
-                        tasks = mappingJSON.tasks;  // merged
-                        dependencies = mappingJSON.dependencies;
-                        showDependencyTool = showDependencyTool;
+            // ★★★ Handle 404 safely here ★★★
+            this.datafieldsService.getSystemMappingJSON(this.systemId).pipe(
+                catchError(err => {
+                    if (err.status === 404) {
+                        console.warn("Mapping JSON not found → fallback");
+                        return of(null);       // return empty
                     }
-                    else {
-                        let inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
-                        let outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
-                        tasks = [...inboundTasks, ...outboundTasks];  // merged
-                        dependencies = [];
-                        showDependencyTool = showDependencyTool;
-                    }
-                }
-                else {
-                    let inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
-                    let outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
-                    tasks = [...inboundTasks, ...outboundTasks];  // merged
+                    console.error("Mapping JSON error:", err);
+                    return of(null);
+                })
+            )
+        ])
+            .subscribe(([fieldMappings, jsonData]) => {
+
+                // === Prepare default task list ===
+                const inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
+                const outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
+
+                const newtask = [...inboundTasks, ...outboundTasks];
+                console.log("allTask", newtask);
+
+                if (fieldMappings && fieldMappings.length > 0 && jsonData && jsonData.mapping_json) {
+                    // Mapping JSON exists → load it
+                    const mappingJSON = JSON.parse(jsonData.mapping_json);
+                    console.log("existing task", mappingJSON.tasks);
+                    console.log("existing dependency", mappingJSON.dependencies);
+                    tasks = syncTasks(newtask,mappingJSON.tasks);  
+                    console.log("updated tasks", tasks);       
+                    
+                    fieldMappings.forEach(mapping => {
+                        const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
+                        const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
+                        if (pField && cField) {
+                            dependencies?.push({
+                                id: util.uuid(),   // generate unique ID
+                                source: pField.id!,
+                                target: cField.id!
+                            });
+                        }
+                    });
+                    console.log("new dependency", dependencies);
+                    dependencies = dependencies;
+                    showDependencyTool = showDependencyTool
+                } else {
+                    // No JSON → fallback to calculated mappings
+                    tasks = [...inboundTasks, ...outboundTasks];
                     dependencies = [];
-                    showDependencyTool = showDependencyTool;
+                    showDependencyTool = showDependencyTool
                 }
                 const kanban = new Kanban({
                     paper,
@@ -194,12 +201,24 @@ export class SystemMappingComponent implements AfterViewInit {
                     })
                 }
 
-            },
-            error: (err) => {
-                console.error("Error:", err);
-                this.toastNotificationService.error("Failed to save mappings.");
-            }
-        });
+                function syncTasks(newTasks: Task[], existingTasks: Task[]): Task[] {
+
+                    // Create lookup map for efficiency
+                    const newTaskMap = new Map(newTasks.map(t => [t.fieldId, t]));
+
+                    // STEP 1: Keep only tasks that exist in newTasks
+                    const filtered = existingTasks.filter(e => newTaskMap.has(e.fieldId));
+
+                    // STEP 2: Add tasks that do not exist in existingTasks
+                    const existingFieldIds = new Set(existingTasks.map(t => t.fieldId));
+
+                    const missing = newTasks.filter(n => !existingFieldIds.has(n.fieldId));
+
+                    // STEP 3: Return merged updated list
+                    return [...filtered, ...missing];
+                }
+
+            });
     }
 
     saveMappings() {

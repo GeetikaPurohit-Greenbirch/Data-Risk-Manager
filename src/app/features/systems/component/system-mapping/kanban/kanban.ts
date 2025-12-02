@@ -392,6 +392,7 @@ export class Kanban {
                 id: el.id,
                 state: this.columns[el.get('stackIndex')].state,
                 name: el.attr('headerText/text'),
+                fieldId:el.fieldId
                 // description: el.attr('bodyText/text')
             });
         });
