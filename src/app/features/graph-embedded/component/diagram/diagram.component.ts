@@ -1061,80 +1061,6 @@ export class DiagramComponent implements AfterViewInit {
 
 
 
-  // loadGraphFromJSON(json: any, sourcedata: any[], targetdata: any[], systemdata: any[]) {
-
-  //   if (!json || json === "{}") return;
-
-  //   this.graph.clear();
-
-  //   const graphJson = JSON.parse(json);
-
-  //   // Convert backend → usable entity arrays
-  //   const allEntities: Entity[] = [
-  //     ...JSON.parse(sourcedata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "SOURCE" })),
-  //     ...JSON.parse(systemdata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "SYSTEM" })),
-  //     ...JSON.parse(targetdata[0].entities_json || "[]").map((e: any) => ({ ...e, type: "TARGET" }))
-  //   ];
-
-  //   // Lookup map: key = CellId (e.g., S-10, SYS-3, TGT-21)
-  //   const entityMap = new Map<string, Entity>();
-
-  //   for (const e of allEntities) {
-  //     const prefix = this.getPrefix(e.type);
-  //     entityMap.set(`${prefix}-${e.entity_id}`, e);
-  //   }
-
-  //   // --- auto-delete stale nodes ---
-  //   const validIds = new Set([...entityMap.keys()]);
-
-  //   graphJson.cells = graphJson.cells.filter((cell: any) => {
-  //     if (cell.type === "mapping.Link") return true; // keep all links for now
-  //     return validIds.has(cell.id); // keep only nodes that exist in backend
-  //   });
-
-  //   // --- auto-create missing nodes ---
-  //   for (const [cellId, ent] of entityMap.entries()) {
-  //     const exists = graphJson.cells.some((c: any) => c.id === cellId);
-
-  //     if (!exists) {
-  //       graphJson.cells.push(this.createNode(ent));
-  //     }
-  //   }
-
-  //   // --- update node names + items dynamically ---
-  //   graphJson.cells.forEach((cell: any) => {
-  //     if (cell.type === "mapping.Link") return;
-
-  //      const ent = entityMap.get(cell.id);
-  //      if (!ent) return;
-
-  //     // Update name on node
-  //     if (cell.attrs?.headerLabel?.textWrap) {
-  //       cell.attrs.headerLabel.textWrap.text = ent.entity_name;
-  //     }
-
-  //     // If target → update fields as ports  
-
-  //     if (ent.type === "TARGET" && Array.isArray(ent.fields)) {    
-  //       if (cell.items.length > 0) {           
-  //               cell.items = [
-  //                 ent.fields.map((f: { field_id: any; field_name: any }) => ({
-  //                   id: `in__port_${f.field_id}`,
-  //                   icon: " ",
-  //                   type: "TARGET",
-  //                   label: f.field_name
-  //                 }))
-  //               ];          
-  //           }      
-  //     }
-  //   });
-
-  //   // --- Finally load into JointJS ---
-  //   this.graph.fromJSON(graphJson);
-  //   this.scroller.centerContent();
-  //   this.hasGraph = true;
-  // }
-
   loadGraphFromJSON(json: any, sourcedata: any[], targetdata: any[], systemdata: any[]) {
 
     if (!json || json === "{}") return;
@@ -1167,7 +1093,7 @@ export class DiagramComponent implements AfterViewInit {
       ...targetEntities
     ];
 
-    // --- build entity id map ---
+    // Lookup map: key = CellId (e.g., S-10, SYS-3, TGT-21)
     const entityMap = new Map<string, Entity>();
 
     for (const e of allEntities) {
@@ -1175,46 +1101,137 @@ export class DiagramComponent implements AfterViewInit {
       entityMap.set(`${prefix}-${e.entity_id}`, e);
     }
 
-    // remove stale nodes
+    // --- auto-delete stale nodes ---
     const validIds = new Set([...entityMap.keys()]);
 
     graphJson.cells = graphJson.cells.filter((cell: any) => {
-      if (cell.type === "mapping.Link") return true;
-      return validIds.has(cell.id);
+      if (cell.type === "mapping.Link") return true; // keep all links for now
+      return validIds.has(cell.id); // keep only nodes that exist in backend
     });
 
-    // add missing nodes
+    // --- auto-create missing nodes ---
     for (const [cellId, ent] of entityMap.entries()) {
       const exists = graphJson.cells.some((c: any) => c.id === cellId);
-      if (!exists) graphJson.cells.push(this.createNode(ent));
+
+      if (!exists) {
+        graphJson.cells.push(this.createNode(ent));
+      }
     }
 
-    // update node label + ports
+    // --- update node names + items dynamically ---
     graphJson.cells.forEach((cell: any) => {
       if (cell.type === "mapping.Link") return;
 
-      const ent = entityMap.get(cell.id);
-      if (!ent) return;
+       const ent = entityMap.get(cell.id);
+       if (!ent) return;
 
+      // Update name on node
       if (cell.attrs?.headerLabel?.textWrap) {
         cell.attrs.headerLabel.textWrap.text = ent.entity_name;
       }
 
-      if (ent.type === "TARGET" && Array.isArray(ent.fields)) {
-        cell.items = ent.fields.map(f => ({
-          id: `in__port_${f.field_id}`,
-          icon: " ",
-          type: "TARGET",
-          label: f.field_name
-        }));
+      // If target → update fields as ports  
+
+      if (ent.type === "TARGET" && Array.isArray(ent.fields)) {    
+        if (cell.items.length > 0) {           
+                cell.items = [
+                  ent.fields.map((f: { field_id: any; field_name: any }) => ({
+                    id: `in__port_${f.field_id}`,
+                    icon: " ",
+                    type: "TARGET",
+                    label: f.field_name
+                  }))
+                ];          
+            }      
       }
     });
 
-    // load graph
+    // --- Finally load into JointJS ---
     this.graph.fromJSON(graphJson);
     this.scroller.centerContent();
     this.hasGraph = true;
   }
+
+  // loadGraphFromJSON(json: any, sourcedata: any[], targetdata: any[], systemdata: any[]) {
+
+  //   if (!json || json === "{}") return;
+
+  //   this.graph.clear();
+
+  //   const graphJson = JSON.parse(json);
+
+  //   if (!Array.isArray(graphJson.cells)) {
+  //     graphJson.cells = [];
+  //   }
+
+  //   const getEntities = (arr: any[]) => {
+  //     if (!arr || arr.length === 0 || !arr[0] || !arr[0].entities_json) return [];
+  //     try {
+  //       return JSON.parse(arr[0].entities_json);
+  //     } catch (e) {
+  //       console.error("Invalid entities_json:", arr[0].entities_json);
+  //       return [];
+  //     }
+  //   };
+
+  //   const sourceEntities = getEntities(sourcedata).map((e: any) => ({ ...e, type: "SOURCE" }));
+  //   const systemEntities = getEntities(systemdata).map((e: any) => ({ ...e, type: "SYSTEM" }));
+  //   const targetEntities = getEntities(targetdata).map((e: any) => ({ ...e, type: "TARGET" }));
+
+  //   const allEntities: Entity[] = [
+  //     ...sourceEntities,
+  //     ...systemEntities,
+  //     ...targetEntities
+  //   ];
+
+  //   // --- build entity id map ---
+  //   const entityMap = new Map<string, Entity>();
+
+  //   for (const e of allEntities) {
+  //     const prefix = this.getPrefix(e.type);
+  //     entityMap.set(`${prefix}-${e.entity_id}`, e);
+  //   }
+
+  //   // remove stale nodes
+  //   const validIds = new Set([...entityMap.keys()]);
+
+  //   graphJson.cells = graphJson.cells.filter((cell: any) => {
+  //     if (cell.type === "mapping.Link") return true;
+  //     return validIds.has(cell.id);
+  //   });
+
+  //   // add missing nodes
+  //   for (const [cellId, ent] of entityMap.entries()) {
+  //     const exists = graphJson.cells.some((c: any) => c.id === cellId);
+  //     if (!exists) graphJson.cells.push(this.createNode(ent));
+  //   }
+
+  //   // update node label + ports
+  //   graphJson.cells.forEach((cell: any) => {
+  //     if (cell.type === "mapping.Link") return;
+
+  //     const ent = entityMap.get(cell.id);
+  //     if (!ent) return;
+
+  //     if (cell.attrs?.headerLabel?.textWrap) {
+  //       cell.attrs.headerLabel.textWrap.text = ent.entity_name;
+  //     }
+
+  //     if (ent.type === "TARGET" && Array.isArray(ent.fields)) {
+  //       cell.items = ent.fields.map(f => ({
+  //         id: `in__port_${f.field_id}`,
+  //         icon: " ",
+  //         type: "TARGET",
+  //         label: f.field_name
+  //       }));
+  //     }
+  //   });
+
+  //   // load graph
+  //   this.graph.fromJSON(graphJson);
+  //   this.scroller.centerContent();
+  //   this.hasGraph = true;
+  // }
 
   /* ----------------------------------------------
      Helper: Generate prefix based on TYPE
