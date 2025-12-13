@@ -62,6 +62,8 @@ export class LineageComponent implements AfterViewInit {
 
   source: any = null;
   target: any = null;
+  sourcejson: any = null;
+  targetjson: any = null;
   initialData: any = null;
 
   private destroy$ = new Subject<void>();
@@ -92,13 +94,18 @@ export class LineageComponent implements AfterViewInit {
       initialData: this.lineageService.getLineageDetailsByLinkId(linkId, usecaseId)
         .pipe(
           catchError(err => {
-            console.error('initialData failed:', err);
+            console.log('initialData failed:', err);
             return of(null); // ← make forkJoin continue
           })
         ),
       source: this.lineageService.getEntityById(sourceQP.type, +sourceQP.value),
       target: this.lineageService.getEntityById(targetQP.type, +targetQP.value)
     }).subscribe(({ initialData, source, target }) => {
+
+      console.log("source", source);
+      console.log("target", target)
+      console.log("initialData", initialData);
+
       this.source = source;
       this.target = target;
       this.initialData = initialData;
@@ -117,9 +124,30 @@ export class LineageComponent implements AfterViewInit {
         try {
           const sourceParsed = JSON.parse(source.node);
           const targetParsed = JSON.parse(target.node);
+
+          let sourceJson = {
+            ...sourceParsed,
+            ports: sourceParsed.ports.map((p: { id: any; }) => ({
+              ...p,
+              fieldId: p.id,
+              id: util.uuid(),   // generate unique ID
+            }))
+          };
+
+          let targetJson = {
+            ...targetParsed,
+            ports: targetParsed.ports.map((p: { id: any; }) => ({
+              ...p,
+              fieldId: p.id,
+              id: util.uuid(),   // generate unique ID
+            }))
+          };
+
+          this.sourcejson = sourceJson;
+          this.targetjson = targetJson;
           // this.paper.freeze();
-          loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceParsed, true);
-          loadExample(this.graph, { x: 700, y: 90 }, this.target, targetParsed, true);
+          loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceJson, true);
+          loadExample(this.graph, { x: 700, y: 90 }, this.target, targetJson, true);
           // this.paper.unfreeze();
           // this.scroller.centerContent();
         } catch (e) {
@@ -936,7 +964,15 @@ export class LineageComponent implements AfterViewInit {
   saveGraph() {
     const json = this.graph.toJSON();
     const ddata = this.enrichLinksWithNormalizedTypeName(json);
-    const jsonString = JSON.stringify(ddata, null, 2); // Pretty print
+
+    console.log("Save: data", ddata);
+    console.log("Save sourcejson", this.sourcejson);
+
+
+    const resultData = this.normalizeLinkPorts(ddata, this.sourcejson, this.targetjson);
+    console.log("resultdata", resultData);
+
+    const jsonString = JSON.stringify(resultData, null, 2); // Pretty print
 
     const path = this.router.url.split('?')[0].split('#')[0];
     const segments = path.split('/').filter(Boolean);
@@ -952,6 +988,35 @@ export class LineageComponent implements AfterViewInit {
         console.error('Failed to save lineage:', err);
       }
     });
+  }
+
+  normalizeLinkPorts(resultData: any, sourceData: any, targetData: any) {
+    const sourcePortMap = new Map(
+      sourceData.ports.map((p: { id: any; fieldId: any; }) => [p.id, p.fieldId])
+    );
+
+    const targetPortMap = new Map(
+      targetData.ports.map((p: { id: any; fieldId: any; }) => [p.id, p.fieldId])
+    );
+
+    resultData.cells.forEach((cell: { type: string; source: { port: unknown; }; target: { port: unknown; }; }) => {
+      if (cell.type === "mapping.Link") {
+
+        // SOURCE PORT NORMALIZATION
+        const srcPort = cell.source?.port;
+        if (sourcePortMap.has(srcPort)) {
+          cell.source.port = sourcePortMap.get(srcPort);
+        }
+
+        // TARGET PORT NORMALIZATION
+        const tgtPort = cell.target?.port;
+        if (targetPortMap.has(tgtPort)) {
+          cell.target.port = targetPortMap.get(tgtPort);
+        }
+      }
+    });
+
+    return resultData;
   }
 
   loadGraphFromFile(e: any) {
@@ -976,11 +1041,39 @@ export class LineageComponent implements AfterViewInit {
   loadGraphFromJSON(json: any, sourcedata: any, targetdata: any) {
     this.graph.clear();
     let graphJson = JSON.parse(json);
-    let sourceJson = JSON.parse(sourcedata.node);
-    let targetJson = JSON.parse(targetdata.node);
+    let sourceJsonNode = JSON.parse(sourcedata.node);
+    let targetJsonNode = JSON.parse(targetdata.node);
     console.log("graphJson", graphJson);
-    console.log("sourceJson", sourceJson);
-    console.log("targetJson", targetJson);
+    console.log("sourceNode", sourceJsonNode);
+    console.log("targetNode", targetJsonNode);
+
+
+    let sourceJson = {
+      ...sourceJsonNode,
+      ports: sourceJsonNode.ports.map((p: { id: any; }) => ({
+        ...p,
+        fieldId: p.id,
+        id: util.uuid(),   // generate unique ID
+      }))
+    };
+
+    let targetJson = {
+      ...targetJsonNode,
+      ports: targetJsonNode.ports.map((p: { id: any; }) => ({
+        ...p,
+        fieldId: p.id,
+        id: util.uuid(),   // generate unique ID
+      }))
+    };
+
+    // Build fieldId → portId map from sourceJson
+    const sourceFieldToPortMap = new Map<number, string>(
+      sourceJson.ports.map((p: any) => [p.fieldId, p.id])
+    );
+    const targetFieldToPortMap = new Map<number, string>(
+      targetJson.ports.map((p: any) => [p.fieldId, p.id])
+    );
+
     // Example: change label text for system node
     graphJson.cells.forEach((cell: any) => {
       if (cell.id == sourceJson.id) {
@@ -993,7 +1086,41 @@ export class LineageComponent implements AfterViewInit {
         let newItems = this.getPortItems(targetJson);
         cell.items = newItems;
       }
+
+      // Update mapping.Link cells
+      if (cell.type === 'mapping.Link') {
+
+        if (cell.source) {
+          const oldFieldId = cell.source.port; // backend fieldId
+          const sourcePortId = sourceJson.ports.find(
+            (p: { fieldId: any; group: string; }) => p.fieldId === oldFieldId && p.group === 'out')?.id;
+
+          if (sourceFieldToPortMap.has(oldFieldId)) {
+            cell.source = {
+              ...cell.source,
+              port: sourcePortId,   // replace port with source node id
+              fieldId: oldFieldId    // add matched fieldId
+            };
+          }
+        }
+        if (cell.target) {
+          const oldFieldId = cell.target.port; // backend fieldId
+          const targetPortId = targetJson.ports.find(
+            (p: { fieldId: any; group: string; }) => p.fieldId === oldFieldId && p.group === 'in')?.id;
+
+          if (targetFieldToPortMap.has(oldFieldId)) {
+            cell.target = {
+              ...cell.target,
+              port: targetPortId,   // replace port with source node id
+              fieldId: oldFieldId    // add matched fieldId
+            };
+          }
+        }
+      }
+
     });
+
+    console.log("updated graphjson",graphJson);
 
     // Load modified JSON into JointJS graph
     this.graph.fromJSON(graphJson);

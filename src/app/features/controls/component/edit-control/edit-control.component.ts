@@ -58,8 +58,8 @@ export class EditControlComponent {
   activeView!: string; // default view on load
   formLoaded = false;
   dataFieldsModel: Datafields = new Datafields();
-  isBacktolineage=false;
-  BacktolineagePath: any ="";
+  isBacktolineage = false;
+  BacktolineagePath: any = "";
   showGlobalQualityRisk = false;
   rowDataDQA: any;
 
@@ -77,168 +77,168 @@ export class EditControlComponent {
   ) { }
 
 
-  columnDefs: (ColDef | ColGroupDef)[] = [
-    { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
-    { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name' },
-    { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID' },
-    // { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-    { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type' },
-    { field: 'field_length', headerName: 'Field Length', editable: false, headerTooltip: 'Field Length' },
-    { field: 'field_description', headerName: 'Field Description', editable: false, headerTooltip: 'Field Description' },
+  // columnDefs: (ColDef | ColGroupDef)[] = [
+  //   { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
+  //   { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name' },
+  //   { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID' },
+  //   // { field: 'interface_name', headerName: 'Entity Name', editable: false, },
+  //   { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type' },
+  //   { field: 'field_length', headerName: 'Field Length', editable: false, headerTooltip: 'Field Length' },
+  //   { field: 'field_description', headerName: 'Field Description', editable: false, headerTooltip: 'Field Description' },
 
 
-    // { field: 'data_type', headerName: 'Data Type', editable: true,
-    //   cellEditor: 'agSelectCellEditor',
-    //   cellEditorParams: {
-    //     values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
-    //   },
-    // },
-    // {
-    //   headerName: 'Before Control Completeness',
-    //   field: 'dqa_c',
-    //   editable: false,
-    //   // valueGetter: () => 'L', // Always returns 'L'
-    //   cellEditor: 'agSelectCellEditor',
-    //   cellEditorParams: {
-    //     values: ["H", "M", "L"],
-    //   },
-    //   // width:65,
-    //   // minWidth: 65,
-    //   // maxWidth: 65,
-    //   resizable: true,
-    //   suppressSizeToFit: true,
-    //   cellStyle: {
-    //     color: 'red',
-    //     fontWeight: 'bold'
-    //   },
-    // },
-    // { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
-    {
-      field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["High", "Medium", "Low"],
-      },
-      cellStyle: {
-        color: 'red',
-        fontWeight: '600'
-      },
-    },
-    // {
-    //   headerName: 'Before Control Timeliness',
-    //   field: 'dqa_t',
-    //   editable: false,
-    //   // valueGetter: () => 'L', // Always returns 'L'
-    //   cellEditor: 'agSelectCellEditor',
-    //   cellEditorParams: {
-    //     values: ["H", "M", "L"],
-    //   },
-    //   // width:65,
-    //   // minWidth: 65,
-    //   // maxWidth: 65,
-    //   resizable: true,
-    //   suppressSizeToFit: true,
-    //   cellStyle: {
-    //     color: 'blue',
-    //     fontWeight: 'bold'
-    //   }
-    // },
-    // { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
-    {
-      field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["High", "Medium", "Low"],
-      },
-      cellStyle: {
-        color: 'blue',
-        fontWeight: '600'
-      },
-    },
-    // {
-    //   headerName: 'After Control Accuracy',
-    //   field: 'dqa_a',
-    //   editable: false,
-    //   // valueGetter: () => 'L', // Always returns 'L'
-    //   cellEditor: 'agSelectCellEditor',
-    //   cellEditorParams: {
-    //     values: ["H", "M", "L"],
-    //   },
-    //   // width:65,
-    //   // minWidth: 65,
-    //   // maxWidth: 65,
-    //   resizable: true,
-    //   suppressSizeToFit: true,
-    //   cellStyle: {
-    //     color: 'purple',
-    //     fontWeight: 'bold'
-    //   }
-    // },
-    // { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
-    {
-      field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ["High", "Medium", "Low"],
-      },
-      cellStyle: {
-        color: 'purple',
-        fontWeight: '600'
-      },
-    },
-    {
-      headerName: 'Actions',
-      editable: false,
-      filter: false,
-      sortable: false,
-      minWidth: 80,
-      maxWidth: 100,
-      // flex: 1,
-      pinned: 'right',
-      cellRenderer: (params: any) => {
-        const div = document.createElement('div');
-        div.className = 'model-cell-renderer';
+  //   // { field: 'data_type', headerName: 'Data Type', editable: true,
+  //   //   cellEditor: 'agSelectCellEditor',
+  //   //   cellEditorParams: {
+  //   //     values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
+  //   //   },
+  //   // },
+  //   // {
+  //   //   headerName: 'Before Control Completeness',
+  //   //   field: 'dqa_c',
+  //   //   editable: false,
+  //   //   // valueGetter: () => 'L', // Always returns 'L'
+  //   //   cellEditor: 'agSelectCellEditor',
+  //   //   cellEditorParams: {
+  //   //     values: ["H", "M", "L"],
+  //   //   },
+  //   //   // width:65,
+  //   //   // minWidth: 65,
+  //   //   // maxWidth: 65,
+  //   //   resizable: true,
+  //   //   suppressSizeToFit: true,
+  //   //   cellStyle: {
+  //   //     color: 'red',
+  //   //     fontWeight: 'bold'
+  //   //   },
+  //   // },
+  //   // { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
+  //   {
+  //     field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
+  //     cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: {
+  //       values: ["High", "Medium", "Low"],
+  //     },
+  //     cellStyle: {
+  //       color: 'red',
+  //       fontWeight: '600'
+  //     },
+  //   },
+  //   // {
+  //   //   headerName: 'Before Control Timeliness',
+  //   //   field: 'dqa_t',
+  //   //   editable: false,
+  //   //   // valueGetter: () => 'L', // Always returns 'L'
+  //   //   cellEditor: 'agSelectCellEditor',
+  //   //   cellEditorParams: {
+  //   //     values: ["H", "M", "L"],
+  //   //   },
+  //   //   // width:65,
+  //   //   // minWidth: 65,
+  //   //   // maxWidth: 65,
+  //   //   resizable: true,
+  //   //   suppressSizeToFit: true,
+  //   //   cellStyle: {
+  //   //     color: 'blue',
+  //   //     fontWeight: 'bold'
+  //   //   }
+  //   // },
+  //   // { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
+  //   {
+  //     field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
+  //     cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: {
+  //       values: ["High", "Medium", "Low"],
+  //     },
+  //     cellStyle: {
+  //       color: 'blue',
+  //       fontWeight: '600'
+  //     },
+  //   },
+  //   // {
+  //   //   headerName: 'After Control Accuracy',
+  //   //   field: 'dqa_a',
+  //   //   editable: false,
+  //   //   // valueGetter: () => 'L', // Always returns 'L'
+  //   //   cellEditor: 'agSelectCellEditor',
+  //   //   cellEditorParams: {
+  //   //     values: ["H", "M", "L"],
+  //   //   },
+  //   //   // width:65,
+  //   //   // minWidth: 65,
+  //   //   // maxWidth: 65,
+  //   //   resizable: true,
+  //   //   suppressSizeToFit: true,
+  //   //   cellStyle: {
+  //   //     color: 'purple',
+  //   //     fontWeight: 'bold'
+  //   //   }
+  //   // },
+  //   // { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
+  //   {
+  //     field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
+  //     cellEditor: 'agSelectCellEditor',
+  //     cellEditorParams: {
+  //       values: ["High", "Medium", "Low"],
+  //     },
+  //     cellStyle: {
+  //       color: 'purple',
+  //       fontWeight: '600'
+  //     },
+  //   },
+  //   {
+  //     headerName: 'Actions',
+  //     editable: false,
+  //     filter: false,
+  //     sortable: false,
+  //     minWidth: 80,
+  //     maxWidth: 100,
+  //     // flex: 1,
+  //     pinned: 'right',
+  //     cellRenderer: (params: any) => {
+  //       const div = document.createElement('div');
+  //       div.className = 'model-cell-renderer';
 
-        const saveDataFields = document.createElement('button');
-        saveDataFields.title = 'Save';
-        saveDataFields.style.border = 'none';
-        saveDataFields.style.padding = '0px';
-        saveDataFields.style.cursor = 'pointer';
-        saveDataFields.style.background = 'transparent';
+  //       const saveDataFields = document.createElement('button');
+  //       saveDataFields.title = 'Save';
+  //       saveDataFields.style.border = 'none';
+  //       saveDataFields.style.padding = '0px';
+  //       saveDataFields.style.cursor = 'pointer';
+  //       saveDataFields.style.background = 'transparent';
 
-        const saveIcon = createElement(icons.Save, {
-          color: '#008236',
-          height: '14px',
-          strokeWidth: 2
-        });
-        saveDataFields.appendChild(saveIcon);
+  //       const saveIcon = createElement(icons.Save, {
+  //         color: '#008236',
+  //         height: '14px',
+  //         strokeWidth: 2
+  //       });
+  //       saveDataFields.appendChild(saveIcon);
 
-        // Pass row data or node to save
-        saveDataFields.addEventListener('click', () => {
-          this.saveDatafields(params.node);
-        });
+  //       // Pass row data or node to save
+  //       saveDataFields.addEventListener('click', () => {
+  //         this.saveDatafields(params.node);
+  //       });
 
-        const deleteDataFields = document.createElement('button');
-        deleteDataFields.className = 'fa fa-trash';
-        deleteDataFields.style.color = 'red';
-        deleteDataFields.style.border = '1px solid lightGrey';
-        deleteDataFields.style.borderRadius = '5px';
-        deleteDataFields.style.lineHeight = '20px';
-        deleteDataFields.style.height = '24px';
-        deleteDataFields.style.cursor = 'pointer';
-        deleteDataFields.title = 'Delete';
+  //       const deleteDataFields = document.createElement('button');
+  //       deleteDataFields.className = 'fa fa-trash';
+  //       deleteDataFields.style.color = 'red';
+  //       deleteDataFields.style.border = '1px solid lightGrey';
+  //       deleteDataFields.style.borderRadius = '5px';
+  //       deleteDataFields.style.lineHeight = '20px';
+  //       deleteDataFields.style.height = '24px';
+  //       deleteDataFields.style.cursor = 'pointer';
+  //       deleteDataFields.title = 'Delete';
 
-        deleteDataFields.addEventListener('click', () => {
-          // this.deleteDAtaFields(params.node);
-        });
+  //       deleteDataFields.addEventListener('click', () => {
+  //         // this.deleteDAtaFields(params.node);
+  //       });
 
-        div.appendChild(saveDataFields);
-        // div.appendChild(deleteDataFields);
+  //       div.appendChild(saveDataFields);
+  //       // div.appendChild(deleteDataFields);
 
-        return div;
-      }
-    },
-  ];
+  //       return div;
+  //     }
+  //   },
+  // ];
 
   // defaultColDef = {
   //   flex: 1,
@@ -273,7 +273,8 @@ export class EditControlComponent {
             fontWeight: '600'
           },
         },
-               {
+        { field: 'default_commentary_c', headerName: 'Completeness Comment', editable: true, resizable: true, headerTooltip: 'Completeness Comment' },
+        {
           headerName: 'After Control Timeliness',
           field: 'default_dqa_t',
           editable: true,
@@ -292,7 +293,8 @@ export class EditControlComponent {
             fontWeight: '600'
           }
         },
-          {
+        { field: 'default_commentary_t', headerName: 'Timeliness Comment', editable: true, resizable: true, headerTooltip: 'Timeliness Comment' },
+        {
           headerName: 'After Control Accuracy',
           field: 'default_dqa_a',
           editable: true,
@@ -311,7 +313,8 @@ export class EditControlComponent {
             fontWeight: '600'
           }
         },
-        
+        { field: 'default_commentary_a', headerName: 'Accuracy Comment', editable: true, resizable: true, headerTooltip: 'Accuracy Comment' },
+
       ],
     },
 
@@ -378,6 +381,7 @@ export class EditControlComponent {
       style: { color: '#e8000a', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
+    { field: 'post_control_dqa_c_comment', header: 'Completeness Comment', editable: false },
     {
       field: 'post_control_dqa_t',
       header: 'After Control Timeliness',
@@ -387,6 +391,7 @@ export class EditControlComponent {
       style: { color: '#3e63dd', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
+    { field: 'post_control_dqa_t_comment', header: 'Timeliness Comment', editable: false },
     {
       field: 'post_control_dqa_a',
       header: 'After Control Accuracy',
@@ -396,6 +401,7 @@ export class EditControlComponent {
       style: { color: 'purple', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
+    { field: 'post_control_dqa_a_comment', header: 'Accuracy Comment', editable: false },
   ];
 
   selectedColumns: any[] = [];
@@ -439,9 +445,8 @@ export class EditControlComponent {
     });
     this.controlId = Number(this.route.snapshot.paramMap.get('id'));
     this.isBacktolineage = Boolean(this.route.snapshot.paramMap.get('isBacktolineage'));
-    if(this.isBacktolineage)
-    {      
-      this.BacktolineagePath=sessionStorage.getItem('BackTolineagePath')?.toString();
+    if (this.isBacktolineage) {
+      this.BacktolineagePath = sessionStorage.getItem('BackTolineagePath')?.toString();
     }
 
     if (this.controlId > 0) {
@@ -459,7 +464,7 @@ export class EditControlComponent {
           this.onChange(data.attach_to, data.attach_to_id); // Load options & set selected value
           this.getDatafieldsDQA();
           this.getControlsDatafields('datafields');
-          
+
         },
         error: (err: any) => {
           console.error('Failed to load control:', err);
@@ -479,9 +484,8 @@ export class EditControlComponent {
     this.rowDataDQA = [{}];
   }
 
-  onBackToLineage()
-  {
-     this.router.navigate(JSON.parse(this.BacktolineagePath));
+  onBackToLineage() {
+    this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
   onChange(attachTo: string, preselectedId?: string): void {
     this.filteredAttachToIdOptions = []; // Clear previous list
@@ -598,9 +602,9 @@ export class EditControlComponent {
     this.dataFieldsModel.default_dqa_t = data.data.default_dqa_t;
     this.dataFieldsModel.default_dqa_a = data.data.default_dqa_a;
     this.dataFieldsModel.default_dqa_c = data.data.default_dqa_c;
-    this.dataFieldsModel.default_commentary_t = "";
-    this.dataFieldsModel.default_commentary_a = "";
-    this.dataFieldsModel.default_commentary_c = "";
+    this.dataFieldsModel.default_commentary_a = data.data.default_commentary_a;
+    this.dataFieldsModel.default_commentary_t = data.data.default_commentary_t;
+    this.dataFieldsModel.default_commentary_c = data.data.default_commentary_c;
 
     // alert("Data field added Successfully.");
     if (!data.data.id) {

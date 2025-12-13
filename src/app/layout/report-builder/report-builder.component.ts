@@ -44,7 +44,10 @@ export class ReportBuilderComponent {
       controlStatus: false,
       postControlAccuracy: false,
       postControlCompleteness: false,
-      postControlTimeliness: false
+      postControlTimeliness: false,
+      postControlAccuracyComment: false,
+      postControlCompletenessComment: false,
+      postControlTimelinessComment: false
     }
   };
   
@@ -110,7 +113,10 @@ export class ReportBuilderComponent {
   
         post_control_risk_accuracy: this.options.attributes.postControlAccuracy,
         post_control_risk_completeness: this.options.attributes.postControlCompleteness,
-        post_control_risk_timeliness: this.options.attributes.postControlTimeliness
+        post_control_risk_timeliness: this.options.attributes.postControlTimeliness,
+        post_control_risk_accuracyComment: this.options.attributes.postControlAccuracyComment,
+        post_control_risk_completenessComment: this.options.attributes.postControlCompletenessComment,
+        post_control_risk_timelinessComment: this.options.attributes.postControlTimelinessComment
       }
     };
   

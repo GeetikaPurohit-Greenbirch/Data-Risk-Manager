@@ -105,5 +105,9 @@ export class LineageService {
           const url: string = this.apiUrl + `lineage/fields/json/source/${useCaseId}/${targetFieldId}`;
         return this.http.get<any>(url);
     }
+    public getLineage_chain(useCaseId:string,targetFieldId:string){
+          const url: string = this.apiUrl + `lineage/fields/json/builder/${useCaseId}/${targetFieldId}`;
+        return this.http.get<any>(url);
+    }
 
 }

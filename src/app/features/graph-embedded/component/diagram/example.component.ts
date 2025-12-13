@@ -8,6 +8,7 @@ import { blockDefinitions } from './block-definitions';
 
 type Port = {
     id: string;
+    fieldId:string;
     name: string;
     group?: 'in' | 'out';
     type?: 'interface' | 'system' | string;

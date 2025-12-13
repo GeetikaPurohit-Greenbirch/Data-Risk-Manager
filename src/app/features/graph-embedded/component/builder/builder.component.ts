@@ -45,8 +45,14 @@ export class BuilderComponent implements OnInit {
     { field: 'timelinessRisk', header: 'Timeliness Risk' },
     { field: 'timelinessRiskComment', header: 'Timeliness Commentary' },
     { field: 'accuracyRisk', header: 'Accuracy Risk' },
-    { field: 'accuracyRiskComment', header: 'Accuracy Commentary' },
+    { field: 'accuracyRiskComment', header: 'Accuracy Commentary' },    
     { field: 'criticality', header: 'Criticality' },
+    { field: 'postControlRiskAccuracy', header: 'Risk Accuracy' },
+    { field: 'postControlRiskAccuracyComment', header: 'Risk Accuracy Comment' },
+    { field: 'postControlRiskTimeliness', header: 'Risk Timeliness' },
+    { field: 'postControlRiskTimelinessComment', header: 'Risk Timeliness Comment' },
+    { field: 'postControlRiskCompleteness', header: 'Risk Completeness' },
+    { field: 'postControlRiskCompletenessComment', header: 'Risk Completeness Comment' },
     { field: 'actions', header: 'Actions' }
   ];
 

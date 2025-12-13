@@ -34,7 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NodeDropModalComponent } from 'src/app/node-drop-modal/node-drop-modal.component';
 import { L001, L002, L003 } from './diagrams';
 import { map, filter, switchMap, catchError, takeUntil } from 'rxjs/operators';
-import { Observable, Subject, forkJoin, of } from 'rxjs';
+import { Observable, Subject, firstValueFrom, forkJoin, of } from 'rxjs';
 import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 
@@ -317,10 +317,59 @@ export class DiagramComponent implements AfterViewInit {
     return json;
   }
 
-  public tracePathNew(element: dia.Element, portId: string): boolean {
-    const incomingLinks = this.graph.getConnectedLinks(element, {
-      inbound: true,
-    });
+  // public tracePathNew(element: dia.Element, portId: string): boolean {
+  //   const incomingLinks = this.graph.getConnectedLinks(element, {
+  //     inbound: true,
+  //   });
+  //   const filteredLinks = incomingLinks.filter((link) => {
+  //     const target = link.get('target');
+  //     return target?.port === portId;
+  //   });
+  //   for (const link of incomingLinks) {
+  //     const source = link.get('source');
+  //     if (!source?.id || !source?.port) continue;
+  //     const sourceElement = this.graph.getCell(source.id);
+  //     if (!sourceElement) continue;
+  //     const sourceAttrs = sourceElement.attributes?.attrs || {};
+  //     const sourceName = sourceAttrs['title']?.text || 'Unnamed';
+  //     const incomingLinksOfSource = this.graph.getConnectedLinks(
+  //       sourceElement,
+  //       {
+  //         inbound: true,
+  //       }
+  //     );
+  //     link.attr({
+  //       line: {
+  //         stroke: '#FF9800',
+  //         strokeWidth: 2,
+  //         strokeDasharray: '10 5',
+  //       },
+  //     });
+  //     const view = this.paper.findViewByModel(link);
+  //     if (view?.el) {
+  //       (view.el as SVGElement).style.setProperty(
+  //         'animation',
+  //         'dash 1s linear infinite'
+  //       );
+  //     }
+  //     if (sourceName === 'FXALL GUI') {
+  //       return true;
+  //     }
+  //     for (const l of incomingLinksOfSource) {
+  //       const nextTargetPort = l.get('target')?.port;
+  //       const shouldStop = this.tracePathNew(
+  //         sourceElement as dia.Element,
+  //         nextTargetPort
+  //       );
+  //       if (shouldStop) return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+  public tracePathNew(incomingLinks: Link[], portId: string): boolean {
+    // const incomingLinks = this.graph.getConnectedLinks(element, {
+    //   inbound: true,
+    // });
     const filteredLinks = incomingLinks.filter((link) => {
       const target = link.get('target');
       return target?.port === portId;
@@ -358,7 +407,7 @@ export class DiagramComponent implements AfterViewInit {
       for (const l of incomingLinksOfSource) {
         const nextTargetPort = l.get('target')?.port;
         const shouldStop = this.tracePathNew(
-          sourceElement as dia.Element,
+          incomingLinksOfSource,
           nextTargetPort
         );
         if (shouldStop) return true;
@@ -551,6 +600,8 @@ export class DiagramComponent implements AfterViewInit {
       }
     });
 
+
+
     // this.scroller.render();
     this.canvas.nativeElement.appendChild(this.scroller.el); // Append scroller to canvas
     this.scroller.center();
@@ -691,52 +742,118 @@ export class DiagramComponent implements AfterViewInit {
       // showLinkTools(linkView);
     });
 
-    this.paper.on(
-      'element:magnet:pointerdblclick',
-      (elementView, evt, magnet) => {
-        const model = elementView.model; // dia.Element
-        const itemId = elementView.findAttribute('item-id', magnet);
-        const connectedLinks = this.graph.getConnectedLinks(model, {
-          inbound: true,
-          outbound: true,
-          port: itemId, // 🔥 This is the key part to filter links by specific item/port
-        });
+    // this.paper.on(
+    //   'element:magnet:pointerclick',
+    //   (elementView, evt, magnet) => {
+    //     const model = elementView.model; // dia.Element
+    //     const itemId = elementView.findAttribute('item-id', magnet);
+    //     const connectedLinks = this.graph.getConnectedLinks(model, {
+    //       inbound: true,
+    //       outbound: true,
+    //       port: itemId, // 🔥 This is the key part to filter links by specific item/port
+    //     });
 
-        console.log('Connected Links:', connectedLinks, itemId);
+    //     console.log('Connected Links:', connectedLinks, itemId);
 
-        connectedLinks.forEach((link: dia.Link) => {
-          const target = link.get('target');
-          const source = link.get('source');
-          console.log('Target Port:', target, source, 'on Link:', link.id);
-        });
+    //     connectedLinks.forEach((link: dia.Link) => {
+    //       const target = link.get('target');
+    //       const source = link.get('source');
+    //       console.log('Target Port:', target, source, 'on Link:', link.id);
+    //     });
+    //     this.clearHighlights();
+    //     this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
+
+    //     ///below should be uncommentd
+
+    //     // const path = this.router.url.split('?')[0].split('#')[0];
+    //     // const segments = path.split('/').filter(Boolean);
+    //     // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
+    //     // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
+
+    //     // console.log(itemId,model,"modelmodelmodel")
+    //     //  const selectedField = itemId ? itemId.split('_').pop() : '';
+
+    //     //    this.router.navigate([
+    //     //   '/graph-embedded/lineage-mapping/',
+    //     //   useCaseId,
+    //     //   layoutId
+    //     // ],
+    //     //   {
+    //     //     queryParams: {
+    //     //         selectedItem:selectedField,
+    //     //         targetId: model?.get('id')
+
+    //     //     }
+    //     //   }
+    //     // );
+    //   }
+    // );
+
+
+    this.paper.on('element:magnet:pointerclick', async (elementView, evt, magnet) => {
+
+      const model = elementView.model as dia.Element;
+      const itemId = elementView.findAttribute('item-id', magnet);
+
+      const connectedLinks = this.graph.getConnectedLinks(model, {
+        inbound: true,
+        outbound: true,
+        port: itemId,
+      });
+
+      console.log('Connected Links:', connectedLinks, itemId);
+
+      const targetItemIdStr = itemId ? itemId.split('_').pop() : '';
+
+      const path = this.router.url.split('?')[0].split('#')[0];
+      const segments = path.split('/').filter(Boolean);
+      const usecaseId = segments[segments.length - 2] || '';
+
+      const targetItemId = targetItemIdStr ? targetItemIdStr : '';
+
+      const response = await firstValueFrom(
+        this.lineageService.getLineage_chain(usecaseId, targetItemId)
+      );
+
+      console.log('Lineage_chain:', response);
+
+      const selectedLinks: dia.Link[] = [];
+
+      if (response) {
+        for (let item of response) {
+          const lineageArray = JSON.parse(item.lineage_chain)
+            .sort((a: { order: number; }, b: { order: number; }) => a.order - b.order);
+
+          for (let node of lineageArray) {
+            console.log(node);
+
+            let previousNodeid = 0;
+
+            if (node.entityType && (node.entityType == "SOURCE" || node.entityType == "SYSTEM")) {
+              previousNodeid = node.entityId;
+            }
+            // else if (node.entityType && node.entityType == "SYSTEM") {
+            //   previousNodeid = node.attachedSystemId;
+            // }
+           
+             // Match link whose source.id ends with attached_system_id
+            const matchedLink = connectedLinks.find((l: dia.Link) => {
+              const sourceId = l.get('source').id; // e.g. "SYS-1640"
+              const sysId = sourceId.split('-').pop(); // "1640"
+              return sysId === String(previousNodeid);
+            });
+
+            if (matchedLink && !selectedLinks.includes(matchedLink)) {
+              selectedLinks.push(matchedLink);
+            }
+          }
+        }
+        console.log("Selected Links:", selectedLinks);
         this.clearHighlights();
-        this.tracePathNew(elementView.model as dia.Element, itemId ?? '');
+        this.tracePathNew(selectedLinks, itemId ?? '');
+      }      
+    });
 
-        ///below should be uncommentd
-
-        // const path = this.router.url.split('?')[0].split('#')[0];
-        // const segments = path.split('/').filter(Boolean);
-        // const layoutId = (segments[segments.length - 1] || '').toUpperCase();
-        // const useCaseId = (segments[segments.length - 2] || '').toUpperCase();
-
-        // console.log(itemId,model,"modelmodelmodel")
-        //  const selectedField = itemId ? itemId.split('_').pop() : '';
-
-        //    this.router.navigate([
-        //   '/graph-embedded/lineage-mapping/',
-        //   useCaseId,
-        //   layoutId
-        // ],
-        //   {
-        //     queryParams: {
-        //         selectedItem:selectedField,
-        //         targetId: model?.get('id')
-
-        //     }
-        //   }
-        // );
-      }
-    );
 
     // --- Drop Event Listener (now only adds to existing graph) ---
     container.addEventListener('drop', (e: DragEvent) => {
@@ -964,6 +1081,7 @@ export class DiagramComponent implements AfterViewInit {
   }
 
   saveGraph(fromNavigation: boolean = false) {
+    this.clearHighlights();
     const json = this.graph.toJSON();
 
     const ddata = this.enrichLinksWithNormalizedTypeName(json);
@@ -1122,8 +1240,8 @@ export class DiagramComponent implements AfterViewInit {
     graphJson.cells.forEach((cell: any) => {
       if (cell.type === "mapping.Link") return;
 
-       const ent = entityMap.get(cell.id);
-       if (!ent) return;
+      const ent = entityMap.get(cell.id);
+      if (!ent) return;
 
       // Update name on node
       if (cell.attrs?.headerLabel?.textWrap) {
@@ -1132,17 +1250,17 @@ export class DiagramComponent implements AfterViewInit {
 
       // If target → update fields as ports  
 
-      if (ent.type === "TARGET" && Array.isArray(ent.fields)) {    
-        if (cell.items.length > 0) {           
-                cell.items = [
-                  ent.fields.map((f: { field_id: any; field_name: any }) => ({
-                    id: `in__port_${f.field_id}`,
-                    icon: " ",
-                    type: "TARGET",
-                    label: f.field_name
-                  }))
-                ];          
-            }      
+      if (ent.type === "TARGET" && Array.isArray(ent.fields)) {
+        if (cell.items.length > 0) {
+          cell.items = [
+            ent.fields.map((f: { field_id: any; field_name: any }) => ({
+              id: `in__port_${f.field_id}`,
+              icon: " ",
+              type: "TARGET",
+              label: f.field_name
+            }))
+          ];
+        }
       }
     });
 
