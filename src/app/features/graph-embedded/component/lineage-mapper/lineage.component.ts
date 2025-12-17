@@ -7,7 +7,8 @@ import {
   ViewChild,
   Inject,
   PLATFORM_ID,
-  ViewEncapsulation
+  ViewEncapsulation,
+  effect
 } from '@angular/core';
 import {
   dia,
@@ -31,6 +32,8 @@ import { L001, L002, L003 } from '../diagram/diagrams';
 import { LineageService } from '../../services/lineage.service';
 import { catchError } from 'rxjs/operators';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import { DataTransferService } from 'src/app/features/shared-services/data-transfer.service';
+
 
 type Records = Constant | Concat | GetDate | Record;
 
@@ -57,6 +60,7 @@ export class LineageComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
+    private dataTransferService: DataTransferService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -67,6 +71,27 @@ export class LineageComponent implements AfterViewInit {
   initialData: any = null;
 
   private destroy$ = new Subject<void>();
+  
+  public ngOnInit(): void {
+    // This is a good place for initial setup that doesn't require DOM access
+
+    const selectedItem = this.route.snapshot.queryParamMap.get('selectedItem') || '';
+    const targetId = this.route.snapshot.queryParamMap.get('targetId') || '';
+
+    if (selectedItem && targetId) {
+
+      // this.getTargetToSourceMapping(targetId, selectedItem)
+
+      const data = this.dataTransferService.getData();
+      console.log("transfer data",data);
+      if (data) {
+        this.getTargetToSourceFieldMapping(selectedItem, data.graphJson);
+      }
+
+    } else {
+      this.loadData();
+    }
+  }
 
   private getFirstQueryParamWithType(keys: string[]): { type: string; value: string } {
     const pm: ParamMap = this.route.snapshot.queryParamMap;
@@ -158,306 +183,431 @@ export class LineageComponent implements AfterViewInit {
     });
   }
 
-  public widthByType(type: string): number {
-    switch (type.toLowerCase()) {
-      case 'sources':
-        return 0;      // leftmost
-      case 'systems':
-        return 300;    // middle
-      case 'targets':
-        return 600;    // rightmost
-      default:
-        return 0;      // fallback
-    }
-  }
+  public loadMappingForTargetField = (sourceType: any, sourceId: any, targetType: any, targetId: any, graphJson: any) => {
 
-  public getUniqueEntitiesExcludingInterface(data: any) {
-    const uniqueEntities = new Map();
+    let linkIds: any;
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const usecaseId = (segments[segments.length - 2] || '');
 
-    data.nodes.forEach((node: any) => {
-      if (node.entity_type !== "INTERFACE") {
-        const key = node.entity_id + "-" + node.entity_type;
-        if (!uniqueEntities.has(key)) {
-          uniqueEntities.set(key, {
-            entity_id: node.entity_id,
-            entity_type: node.entity_type,
-            entity_name: node.entity_name || null
-          });
-        }
-      } else {
-        const key = node.attached_system_id + "-" + 'SYSTEM';
-        if (!uniqueEntities.has(key)) {
-          uniqueEntities.set(key, {
-            entity_id: node.attached_system_id,
-            entity_type: "SYSTEM",
-            entity_name: node.entity_name || null
-          });
-        }
+    let sourceIdnew = (sourceType.toLowerCase() == "source" ? "S-" : sourceType.toLowerCase() == "target" ? "TGT-" : "SYS-");
+    let targetIdnew = (targetType.toLowerCase() == "source" ? "S-" : targetType.toLowerCase() == "target" ? "TGT-" : "SYS-");
 
+    let sourceTypenew = (sourceType.toLowerCase() == "source" ? "sources" : sourceType.toLowerCase() == "target" ? "targets" : "systems");
+    let targetTypenew = (targetType.toLowerCase() == "source" ? "sources" : targetType.toLowerCase() == "target" ? "targets" : "systems");
+
+    sourceIdnew = sourceIdnew + sourceId;
+    targetIdnew = targetIdnew + targetId;
+
+    if (graphJson) {
+      const links = graphJson.cells
+        .filter((c: any) => c.type === 'mapping.Link')
+        .map((c: any) => ({
+          id: c.id,
+          sourceId: c.source.id,
+          sourceType: c.source.type,
+          sourcePort: c.source.port,
+          targetId: c.target.id,
+          targetType: c.target.type,
+          targetPort: c.target.port
+        }));
+
+      console.log("links", links);
+
+      linkIds = links.filter((link: { sourceId: string; sourceType: any; targetId: string; targetType: any; }) =>
+        (link.sourceId == sourceIdnew) &&
+        (link.sourceType == sourceType) &&
+        (link.targetId == targetIdnew) &&
+        (link.targetType == targetType)
+      ).map((l: { id: any; }) => l.id);
+
+      if (linkIds && linkIds.length > 0) {
+        console.log("linkId", linkIds[0]);
+        forkJoin({
+          initialData: this.lineageService.getLineageDetailsByLinkId(linkIds[0], usecaseId)
+            .pipe(
+              catchError(err => {
+                console.log('initialData failed:', err);
+                return of(null); // ← make forkJoin continue
+              })
+            ),
+          source: this.lineageService.getEntityById(sourceTypenew, sourceId),
+          target: this.lineageService.getEntityById(targetTypenew, targetId)
+        }).subscribe(({ initialData, source, target }) => {
+
+          console.log("source1", source);
+          console.log("target2", target)
+          console.log("initialData3", initialData);
+
+          this.source = source;
+          this.target = target;
+          this.initialData = initialData;
+
+          // If we have lineage_json, use it; otherwise fall back to rendering source/target
+          const lineageStr =
+            initialData?.lineage_json && typeof initialData.lineage_json === 'string'
+              ? initialData.lineage_json.trim()
+              : '';
+
+          if (lineageStr.length > 0) {
+            // NOTE: loadGraphFromJSON does JSON.parse internally—pass the string
+            this.loadGraphFromJSON(lineageStr, source, target);
+          } else {
+            // Fall back (same behavior as when lineage_json has no length)
+            try {
+              const sourceParsed = JSON.parse(source.node);
+              const targetParsed = JSON.parse(target.node);
+
+              let sourceJson = {
+                ...sourceParsed,
+                ports: sourceParsed.ports.map((p: { id: any; }) => ({
+                  ...p,
+                  fieldId: p.id,
+                  id: util.uuid(),   // generate unique ID
+                }))
+              };
+
+              let targetJson = {
+                ...targetParsed,
+                ports: targetParsed.ports.map((p: { id: any; }) => ({
+                  ...p,
+                  fieldId: p.id,
+                  id: util.uuid(),   // generate unique ID
+                }))
+              };
+
+              this.sourcejson = sourceJson;
+              this.targetjson = targetJson;
+              // this.paper.freeze();
+              loadExample(this.graph, { x: 100, y: 90 }, this.source, sourceJson, true);
+              loadExample(this.graph, { x: 700, y: 90 }, this.target, targetJson, true);
+              // this.paper.unfreeze();
+              // this.scroller.centerContent();
+            } catch (e) {
+              console.error('Failed to parse node JSON:', e);
+              // this.toastNotificationService?.error?.('Invalid node JSON from API.');
+            }
+          }
+        });
       }
-    });
+    }
 
-    return Array.from(uniqueEntities.values());
   }
+
+  // public widthByType(type: string): number {
+  //   switch (type.toLowerCase()) {
+  //     case 'sources':
+  //       return 0;      // leftmost
+  //     case 'systems':
+  //       return 300;    // middle
+  //     case 'targets':
+  //       return 600;    // rightmost
+  //     default:
+  //       return 0;      // fallback
+  //   }
+  // }
+
+  // public getUniqueEntitiesExcludingInterface(data: any) {
+  //   const uniqueEntities = new Map();
+
+  //   data.nodes.forEach((node: any) => {
+  //     if (node.entity_type !== "INTERFACE") {
+  //       const key = node.entity_id + "-" + node.entity_type;
+  //       if (!uniqueEntities.has(key)) {
+  //         uniqueEntities.set(key, {
+  //           entity_id: node.entity_id,
+  //           entity_type: node.entity_type,
+  //           entity_name: node.entity_name || null
+  //         });
+  //       }
+  //     } else {
+  //       const key = node.attached_system_id + "-" + 'SYSTEM';
+  //       if (!uniqueEntities.has(key)) {
+  //         uniqueEntities.set(key, {
+  //           entity_id: node.attached_system_id,
+  //           entity_type: "SYSTEM",
+  //           entity_name: node.entity_name || null
+  //         });
+  //       }
+
+  //     }
+  //   });
+
+  //   return Array.from(uniqueEntities.values());
+  // }
 
   // 2) Fetch all entities in parallel and load them; WAIT for all to complete
-  public async fetchEntitiesFromMapping(result: any[]) {
-    const typeMap: any = {
-      TARGET: 'targets',
-      SYSTEM: 'systems',
-      INTERFACE: 'systems',
-      SOURCE: 'sources',
-    };
+  // public async fetchEntitiesFromMapping(result: any[]) {
+  //   const typeMap: any = {
+  //     TARGET: 'targets',
+  //     SYSTEM: 'systems',
+  //     INTERFACE: 'systems',
+  //     SOURCE: 'sources',
+  //   };
 
-    // layout bookkeeping
-    const typeCounters: any = { sources: 0, systems: 0, targets: 0 };
-    const xMap: any = { sources: 100, systems: 400, targets: 700 };
-    const yStart = 90;
-    const yStep = 220;
+  //   // layout bookkeeping
+  //   const typeCounters: any = { sources: 0, systems: 0, targets: 0 };
+  //   const xMap: any = { sources: 100, systems: 400, targets: 700 };
+  //   const yStart = 90;
+  //   const yStep = 220;
 
-    for (const entity of result) {
-      const apiType =
-        typeMap[entity.entity_type] ||
-        ((entity.entity_type?.toLowerCase?.() || '').concat('s'));
+  //   for (const entity of result) {
+  //     const apiType =
+  //       typeMap[entity.entity_type] ||
+  //       ((entity.entity_type?.toLowerCase?.() || '').concat('s'));
 
-      // ensure counters/x exist for unseen types
-      if (!(apiType in typeCounters)) typeCounters[apiType] = 0;
-      if (!(apiType in xMap)) xMap[apiType] = 100; // default column if new type appears
+  //     // ensure counters/x exist for unseen types
+  //     if (!(apiType in typeCounters)) typeCounters[apiType] = 0;
+  //     if (!(apiType in xMap)) xMap[apiType] = 100; // default column if new type appears
 
-      const x = xMap[apiType];
-      const y = yStart + typeCounters[apiType] * yStep;
+  //     const x = xMap[apiType];
+  //     const y = yStart + typeCounters[apiType] * yStep;
 
-      try {
-        const data = await firstValueFrom(
-          this.lineageService.getEntityById(apiType, entity.entity_id)
-        );
-        const parsed = JSON.parse(data.node);
+  //     try {
+  //       const data = await firstValueFrom(
+  //         this.lineageService.getEntityById(apiType, entity.entity_id)
+  //       );
+  //       const parsed = JSON.parse(data.node);
 
-        // one-at-a-time: render after fetching, then increment Y for this type
-        await loadExample(this.graph, { x, y }, data, parsed, false);
+  //       let parsedJson = {
+  //         ...parsed,
+  //         ports: parsed.ports.map((p: { id: any; }) => ({
+  //           ...p,
+  //           fieldId: p.id,
+  //           id: util.uuid(),   // generate unique ID
+  //         }))
+  //       };
 
-        typeCounters[apiType] += 1;
-      } catch (err) {
-        console.error(`Failed to fetch entity for ${apiType} (${entity.entity_id}):`, err);
-        // optional: still bump so gaps don't collapse on failures
-        // typeCounters[apiType] += 1;
-      }
-    }
-  }
-
-
-  buildFieldToEntityMap(nodes: any) {
-    const map = new Map<number, { nodeId: string; portId: string; entityType: string }>();
-    for (const n of nodes) {
-      map.set(n.field_id, {
-        nodeId: String(n.entity_id), // cell id is the entity_id
-        portId: String(n.field_id),  // port id is the field_id
-        entityType: n.entity_type
-      });
-    }
-    return map;
-  }
-
-  /**
-   * Create JointJS Link cells from mapping response.
-   * Pass your Link constructor (e.g., `Link`) if it isn't globally available.
-   */
-  createLinksFromResponse(
-    resp: any,
-    LinkCtor: any /* e.g., Link class */
-  ) {
-    const fieldMap = this.buildFieldToEntityMap(resp.nodes);
-    const links: any[] = [];
-    const missing: any[] = [];
-
-    for (const edge of resp.edges) {
-      const from = fieldMap.get(edge.from_field_id);
-      const to = fieldMap.get(edge.to_field_id);
-
-      if (!from || !to) {
-        // Capture missing mappings for debugging
-        missing.push(edge);
-        continue;
-      }
-
-      // Build the link exactly like your example
-      const link = new LinkCtor({
-        source: { id: from.nodeId, port: from.portId },
-        target: { id: to.nodeId, port: to.portId }
-      });
-
-      links.push(link);
-    }
-
-    // Optional: log or return missing for diagnostics
-    if (missing.length) {
-      console.warn('Missing field mappings for edges:', missing);
-    }
-
-    return links;
-  }
-
-  /**
- * Create visual links between nodes in the graph from API response.
- * @param resp - The response containing edges (and possibly nodes)
- * @param LinkCtor - Optional custom JointJS link class to use
- */
-  createLinksFromResponseNew(resp: any, LinkCtor: any) {
-    if (!this.graph) {
-      console.error('Graph not initialized — cannot create links.');
-      return [];
-    }
-
-    const res_edges = resp?.edges || [];
-    const nodes = resp?.nodes || [];
-    const createdLinks: dia.Link[] = [];
-
-    const edges = res_edges.filter(
-      (item: { from_field_id: number }) => item.from_field_id === resp?.start.field_id
-    );
-
-    if (!edges.length) {
-      console.warn('No edges found in response.');
-      return [];
-    }
-
-    //let edge= edges.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
-
-    console.log(`Creating ${edges.length} link(s) from response...`);
-
-    for (const edge of edges) {
-      try {
-
-        const fromNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
-        const toNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.to_field_id);
-
-        if (!fromNode || !toNode) {
-          console.warn('Invalid edge — missing node IDs:', edge);
-          continue;
-        }
-        let fromNodeId = (fromNode.entity_type.toLowerCase() == "source" ? "S-" : fromNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
-        let toNodeId = (toNode.entity_type.toLowerCase() == "source" ? "S-" : toNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
-
-        fromNodeId = (fromNode.entity_type.toLowerCase() == "source" || fromNode.entity_type.toLowerCase() == "target" || fromNode.entity_type.toLowerCase() == "system") ? fromNodeId + fromNode.entity_id : fromNodeId + fromNode.attached_system_id;
-        toNodeId = (toNode.entity_type.toLowerCase() == "source" || toNode.entity_type.toLowerCase() == "target" || toNode.entity_type.toLowerCase() == "system") ? toNodeId + toNode.entity_id : toNodeId + toNode.attached_system_id;
-
-        // const sourceElement = this.graph.getCell(fromNodeId.toString());
-        // const targetElement = this.graph.getCell(toNodeId.toString());
+  //       // one-at-a-time: render after fetching, then increment Y for this type
+  //       await loadExample(this.graph, { x, y }, data, parsedJson, false);
 
 
-        const sourceElement = this.graph.getCell(toNodeId.toString());
-        const targetElement = this.graph.getCell(fromNodeId.toString());
-
-        if (!sourceElement || !targetElement) {
-          console.warn('Skipped edge — node not found in graph:', edge);
-          continue;
-        }
-
-        // Optional: support port-level connections if present
-        // const sourcePort = edge.from_field_id ? edge.from_field_id.toString() : undefined;
-        // const targetPort = edge.to_field_id ? edge.to_field_id.toString() : undefined;
-
-        const sourcePort = edge.to_field_id;
-        const targetPort = edge.from_field_id;
-
-        const link = new LinkCtor({});
-        link.source({ id: sourceElement.id, port: sourcePort });
-        link.target({ id: targetElement.id, port: targetPort });
-
-        // const link = new LinkCtor({
-        //   source: { id: targetElement.id, port: targetPort },
-        //   target: { id: sourceElement.id, port: sourcePort }
-        // });
+  //       typeCounters[apiType] += 1;
+  //     } catch (err) {
+  //       console.error(`Failed to fetch entity for ${apiType} (${entity.entity_id}):`, err);
+  //       // optional: still bump so gaps don't collapse on failures
+  //       //typeCounters[apiType] += 1;
+  //     }
+  //   }
+  // }
 
 
-        this.graph.addCell(link);
-        createdLinks.push(link);
-      } catch (err) {
-        console.error('Failed to create link for edge:', edge, err);
-      }
-    }
+  // buildFieldToEntityMap(nodes: any) {
+  //   const map = new Map<number, { nodeId: string; portId: string; entityType: string }>();
+  //   for (const n of nodes) {
+  //     map.set(n.field_id, {
+  //       nodeId: String(n.entity_id), // cell id is the entity_id
+  //       portId: String(n.field_id),  // port id is the field_id
+  //       entityType: n.entity_type
+  //     });
+  //   }
+  //   return map;
+  // }
+  
+  // createLinksFromResponse(
+  //   resp: any,
+  //   LinkCtor: any /* e.g., Link class */
+  // ) {
+  //   const fieldMap = this.buildFieldToEntityMap(resp.nodes);
+  //   const links: any[] = [];
+  //   const missing: any[] = [];
 
-    console.log(`✅ Created ${createdLinks.length}/${edges.length} link(s).`);
-    return createdLinks;
-  }
+  //   for (const edge of resp.edges) {
+  //     const from = fieldMap.get(edge.from_field_id);
+  //     const to = fieldMap.get(edge.to_field_id);
 
-  createLinksFromEdges(edges: any, fieldIdToNodePortMap: any) {
-    const links: dia.Link[] = [];
+  //     if (!from || !to) {
+  //       // Capture missing mappings for debugging
+  //       missing.push(edge);
+  //       continue;
+  //     }
 
-    edges.forEach((edge: any) => {
-      const from = fieldIdToNodePortMap[edge.from_field_id];
-      const to = fieldIdToNodePortMap[edge.to_field_id];
+  //     // Build the link exactly like your example
+  //     const link = new LinkCtor({
+  //       source: { id: from.nodeId, port: from.portId },
+  //       target: { id: to.nodeId, port: to.portId }
+  //     });
 
-      if (from && to) {
-        const link = new Link({
-          source: { id: from.nodeId, port: from.portId },
-          target: { id: to.nodeId, port: to.portId }
-        });
-        links.push(link);
-      } else {
-        console.warn('Missing mapping for edge:', edge);
-      }
-    });
+  //     links.push(link);
+  //   }
 
-    return links;
-  }
+  //   // Optional: log or return missing for diagnostics
+  //   if (missing.length) {
+  //     console.warn('Missing field mappings for edges:', missing);
+  //   }
+
+  //   return links;
+  // }  
+
+  // createLinksFromResponseNew(resp: any, LinkCtor: any) {
+  //   if (!this.graph) {
+  //     console.error('Graph not initialized — cannot create links.');
+  //     return [];
+  //   }
+
+  //   const res_edges = resp?.edges || [];
+  //   const nodes = resp?.nodes || [];
+  //   const createdLinks: dia.Link[] = [];
+
+  //   const edges = res_edges.filter(
+  //     (item: { from_field_id: number }) => item.from_field_id === resp?.start.field_id
+  //   );
+
+  //   if (!edges.length) {
+  //     console.warn('No edges found in response.');
+  //     return [];
+  //   }
+
+  //   console.log(`Creating ${edges.length} link(s) from response...`);
+
+  //   for (const edge of edges) {
+  //     try {
+
+  //       const fromNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.from_field_id);
+  //       const toNode = nodes.find((item: { field_id: number; }) => item.field_id === edge.to_field_id);
+
+  //       if (!fromNode || !toNode) {
+  //         console.warn('Invalid edge — missing node IDs:', edge);
+  //         continue;
+  //       }
+  //       let fromNodeId = (fromNode.entity_type.toLowerCase() == "source" ? "S-" : fromNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
+  //       let toNodeId = (toNode.entity_type.toLowerCase() == "source" ? "S-" : toNode.entity_type.toLowerCase() == "target" ? "TGT-" : "SYS-");
+
+  //       fromNodeId = (fromNode.entity_type.toLowerCase() == "source" || fromNode.entity_type.toLowerCase() == "target" || fromNode.entity_type.toLowerCase() == "system") ? fromNodeId + fromNode.entity_id : fromNodeId + fromNode.attached_system_id;
+  //       toNodeId = (toNode.entity_type.toLowerCase() == "source" || toNode.entity_type.toLowerCase() == "target" || toNode.entity_type.toLowerCase() == "system") ? toNodeId + toNode.entity_id : toNodeId + toNode.attached_system_id;
+
+  //       // const sourceElement = this.graph.getCell(fromNodeId.toString());
+  //       // const targetElement = this.graph.getCell(toNodeId.toString());
+
+
+  //       const sourceElement = this.graph.getCell(toNodeId.toString());
+  //       const targetElement = this.graph.getCell(fromNodeId.toString());
+
+  //       if (!sourceElement || !targetElement) {
+  //         console.warn('Skipped edge — node not found in graph:', edge);
+  //         continue;
+  //       }
+
+  //       const sourcePort = edge.to_field_id;
+  //       const targetPort = edge.from_field_id;
+
+  //       const link = new LinkCtor({});
+  //       link.source({ id: sourceElement.id, port: sourcePort });
+  //       link.target({ id: targetElement.id, port: targetPort });
+
+  //       this.graph.addCell(link);
+  //       createdLinks.push(link);
+  //     } catch (err) {
+  //       console.error('Failed to create link for edge:', edge, err);
+  //     }
+  //   }
+
+  //   console.log(`✅ Created ${createdLinks.length}/${edges.length} link(s).`);
+  //   return createdLinks;
+  // }
+
+  // createLinksFromEdges(edges: any, fieldIdToNodePortMap: any) {
+  //   const links: dia.Link[] = [];
+
+  //   edges.forEach((edge: any) => {
+  //     const from = fieldIdToNodePortMap[edge.from_field_id];
+  //     const to = fieldIdToNodePortMap[edge.to_field_id];
+
+  //     if (from && to) {
+  //       const link = new Link({
+  //         source: { id: from.nodeId, port: from.portId },
+  //         target: { id: to.nodeId, port: to.portId }
+  //       });
+  //       links.push(link);
+  //     } else {
+  //       console.warn('Missing mapping for edge:', edge);
+  //     }
+  //   });
+
+  //   return links;
+  // }
 
 
   // 3) Now make the mapping flow async, await the API response, then await diagram load, THEN add links
-  public async getTargetToSourceMapping(targetId: string, sourceId: string) {
+  // public async getTargetToSourceMapping(targetId: string, sourceId: string) {
+  //   try {
+
+  //     const path = this.router.url.split('?')[0].split('#')[0];
+  //     const segments = path.split('/').filter(Boolean);
+  //     const lineageId = (segments[segments.length - 1] || '');
+  //     const usecaseId = (segments[segments.length - 2] || '');
+
+  //     const response = await firstValueFrom(
+  //       this.lineageService.getTargetToSourceMapping(usecaseId, sourceId)
+  //     );
+
+  //     console.log('Target to Source Mapping:', response);
+
+
+
+  //     const uniqueEntities = this.getUniqueEntitiesExcludingInterface(response).reverse();
+  //     console.log('Unique Entities to Fetch:', uniqueEntities);
+
+  //     // Wait until all nodes are placed
+  //     await this.fetchEntitiesFromMapping(uniqueEntities);
+
+     
+  //     this.createLinksFromResponseNew(response, Link);
+  //   } catch (err) {
+  //     console.error('Failed to get target to source mapping:', err);
+  //     this.toastNotificationService.error('Failed to fetch target to source mapping');
+  //   }
+  // }
+
+  public async getTargetToSourceFieldMapping(targetFieldId: string, graphJson: any) {
     try {
 
       const path = this.router.url.split('?')[0].split('#')[0];
       const segments = path.split('/').filter(Boolean);
-      const lineageId = (segments[segments.length - 1] || '');
       const usecaseId = (segments[segments.length - 2] || '');
 
       const response = await firstValueFrom(
-        this.lineageService.getTargetToSourceMapping(usecaseId, sourceId)
+        this.lineageService.getLineage_chain(usecaseId, targetFieldId)
       );
 
-      console.log('Target to Source Mapping:', response);
+      console.log('Lineage_chain for load:', response);
+      let entityList = [];
+      if (response) {
+        for (let item of response) {
+          const lineageArray = JSON.parse(item.lineage_chain)
+            .sort((a: { order: number; }, b: { order: number; }) => a.order - b.order);
 
-      const uniqueEntities = this.getUniqueEntitiesExcludingInterface(response).reverse();
-      console.log('Unique Entities to Fetch:', uniqueEntities);
+          let sEntityType: any, sEntityId: any, tEntityType: any, tEntityId: any;
 
-      // Wait until all nodes are placed
-      await this.fetchEntitiesFromMapping(uniqueEntities);
+          for (let node of lineageArray) {
+            console.log(node);
 
-      // If you have a fieldIdToNodePortMap, build links from edges:
-      // const links = this.createLinksFromEdges(response.edges, fieldIdToNodePortMap);
+            if (node.entityType && (node.entityType == "SYSTEM")) {
+              sEntityType = node.entityType;
+              sEntityId = node.entityId;              
+              break;
+            }
 
-      // Example: manual link creation (replace ids/ports with real ones)
-      // const links = this.createLinksFromResponse(response, Link); // <-- pass your Link class
-      // links.forEach(l => this.graph.addCell(l));
+            if (node.entityType && (node.entityType == "SOURCE")) {
+              sEntityType = node.entityType;
+              sEntityId = node.entityId;              
+              break;
+            }
 
-      // console.log(links, this.graph.getCells(), 'cells after add');
-      // console.log(this.graph.getLinks(), 'links after add');
+            if (node.entityType && (node.entityType == "TARGET")) {
+              tEntityType = node.entityType;
+              tEntityId = node.entityId;              
+            }
+          }         
+          this.loadMappingForTargetField(sEntityType, sEntityId, tEntityType, tEntityId, graphJson);
 
+        }
 
-      this.createLinksFromResponseNew(response, Link);
+      }
     } catch (err) {
       console.error('Failed to get target to source mapping:', err);
       this.toastNotificationService.error('Failed to fetch target to source mapping');
     }
-  }
-
-
-  public ngOnInit(): void {
-    // This is a good place for initial setup that doesn't require DOM access
-
-    const selectedItem = this.route.snapshot.queryParamMap.get('selectedItem') || '';
-    const targetId = this.route.snapshot.queryParamMap.get('targetId') || '';
-
-    if (selectedItem && targetId) {
-
-      this.getTargetToSourceMapping(targetId, selectedItem)
-
-    } else {
-      this.loadData();
-    }
-
-
   }
 
   public showLinkTools(linkView: dia.LinkView) {
@@ -1120,7 +1270,7 @@ export class LineageComponent implements AfterViewInit {
 
     });
 
-    console.log("updated graphjson",graphJson);
+    console.log("updated graphjson", graphJson);
 
     // Load modified JSON into JointJS graph
     this.graph.fromJSON(graphJson);

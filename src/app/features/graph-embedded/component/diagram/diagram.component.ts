@@ -37,6 +37,7 @@ import { map, filter, switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, firstValueFrom, forkJoin, of } from 'rxjs';
 import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
+import {  DataTransferService } from 'src/app/features/shared-services/data-transfer.service';
 
 type Records = Constant | Concat | GetDate | Record;
 
@@ -77,6 +78,7 @@ export class DiagramComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private lineageService: LineageService,
     private toastNotificationService: ToastnotificationService,
+    private dataTransferService: DataTransferService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -174,6 +176,8 @@ export class DiagramComponent implements AfterViewInit {
         console.log('Fetched sourceData:', sourceData);
         console.log('Fetched targetData:', targetData);
         console.log('Fetched systemData:', systemData);
+
+
 
         this.loadGraphFromJSON(lineage?.lineage_json || {}, sourceData, targetData, systemData);
 
@@ -835,8 +839,8 @@ export class DiagramComponent implements AfterViewInit {
             // else if (node.entityType && node.entityType == "SYSTEM") {
             //   previousNodeid = node.attachedSystemId;
             // }
-           
-             // Match link whose source.id ends with attached_system_id
+
+            // Match link whose source.id ends with attached_system_id
             const matchedLink = connectedLinks.find((l: dia.Link) => {
               const sourceId = l.get('source').id; // e.g. "SYS-1640"
               const sysId = sourceId.split('-').pop(); // "1640"
@@ -851,7 +855,7 @@ export class DiagramComponent implements AfterViewInit {
         console.log("Selected Links:", selectedLinks);
         this.clearHighlights();
         this.tracePathNew(selectedLinks, itemId ?? '');
-      }      
+      }
     });
 
 
@@ -1262,8 +1266,8 @@ export class DiagramComponent implements AfterViewInit {
           ];
         }
       }
-    });
-
+    });    
+    this.dataTransferService.setData({ graphJson: graphJson });
     // --- Finally load into JointJS ---
     this.graph.fromJSON(graphJson);
     this.scroller.centerContent();
