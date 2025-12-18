@@ -1594,15 +1594,15 @@ export class EditSystemComponent {
         error: (err: any) => {
           console.error('Failed to load interface:', err);
         }
-       
+
       });
     }
     else if (interface_type == 'INBOUND') {
       this.datafieldsService.getDataFieldsDQA(this.systemId, 'SYSTEM').subscribe({
         next: (res: any) => {
           this.rowDataInboundDQA = [res]; // triggers change
-          this.showGlobalQualityRiskGridInbound = res.allow_risk_update;         
-           if (this.gridApiIn && typeof this.gridApiIn.setRowData === 'function' && this.showGlobalQualityRiskGridInbound) {
+          this.showGlobalQualityRiskGridInbound = res.allow_risk_update;
+          if (this.gridApiIn && typeof this.gridApiIn.setRowData === 'function' && this.showGlobalQualityRiskGridInbound) {
             this.gridApiIn.setRowData(this.rowDataInboundDQA);
           } else {
             // fallback - set bound rowData and let ag-grid refresh when ready
@@ -2326,6 +2326,25 @@ export class EditSystemComponent {
     }
 
     const formValue = this.interfaceForm.value;
+
+    if (this.interfaceType.toLocaleUpperCase() == "INBOUND") {
+      const exists = this.rowDataInbound.some((item: { interface: string; }) =>
+        item.interface.includes(formValue.interface)
+      );
+      if (exists) {
+        this.toastNotificationService.error("this interface already exists");
+        return;
+      }
+    }
+    else {
+      const exists = this.rowDataOutbound.some((item: { interface: string; }) =>
+        item.interface.includes(formValue.interface)
+      );
+      if (exists) {
+        this.toastNotificationService.error("this interface already exists");
+        return;
+      }
+    }
 
     this.saveInboundInterface(formValue, this.interfaceType.toLocaleUpperCase());
 
