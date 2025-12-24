@@ -260,19 +260,24 @@ export class SystemMappingComponent implements AfterViewInit {
 
                 //console.log("Final Mappings Payload:", formattedLinks);
 
+                 const fieldMappingPayload = {
+                    system_id: systemId,
+                    mapping_model_list: formattedLinks
+                };
+
                 const jsonPayload = {
                     system_id: systemId,
                     mapping_json: this.saveJson
                 };
 
                 forkJoin([
-                    this.datafieldsService.saveFieldMapping(formattedLinks),
+                    this.datafieldsService.saveFieldMapping(fieldMappingPayload),
                     this.datafieldsService.saveSystemMappingJSON(jsonPayload)
                 ]).subscribe({
                     next: () => this.toastNotificationService.success("System mappings saved successfully!"),
                     error: () => this.toastNotificationService.error("Failed to save mappings.")
                 });
-            }
+            }           
         }
     }
 
