@@ -1216,6 +1216,10 @@ export class LineageComponent implements AfterViewInit {
       }))
     };
 
+   this.sourcejson = sourceJson;
+   this.targetjson = targetJson;
+    
+
     // Build fieldId → portId map from sourceJson
     const sourceFieldToPortMap = new Map<number, string>(
       sourceJson.ports.map((p: any) => [p.fieldId, p.id])
