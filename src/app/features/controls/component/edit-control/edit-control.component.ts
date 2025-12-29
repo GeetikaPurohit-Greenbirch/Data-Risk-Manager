@@ -77,176 +77,6 @@ export class EditControlComponent {
   ) { }
 
 
-  // columnDefs: (ColDef | ColGroupDef)[] = [
-  //   { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
-  //   { field: 'field_name', headerName: 'Field Name', editable: false, headerTooltip: 'Field Name' },
-  //   { field: 'entity_id', headerName: 'Entity ID', editable: false, headerTooltip: 'Entity ID' },
-  //   // { field: 'interface_name', headerName: 'Entity Name', editable: false, },
-  //   { field: 'entity_type', headerName: 'Entity Type', editable: false, headerTooltip: 'Entity Type' },
-  //   { field: 'field_length', headerName: 'Field Length', editable: false, headerTooltip: 'Field Length' },
-  //   { field: 'field_description', headerName: 'Field Description', editable: false, headerTooltip: 'Field Description' },
-
-
-  //   // { field: 'data_type', headerName: 'Data Type', editable: true,
-  //   //   cellEditor: 'agSelectCellEditor',
-  //   //   cellEditorParams: {
-  //   //     values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME']
-  //   //   },
-  //   // },
-  //   // {
-  //   //   headerName: 'Before Control Completeness',
-  //   //   field: 'dqa_c',
-  //   //   editable: false,
-  //   //   // valueGetter: () => 'L', // Always returns 'L'
-  //   //   cellEditor: 'agSelectCellEditor',
-  //   //   cellEditorParams: {
-  //   //     values: ["H", "M", "L"],
-  //   //   },
-  //   //   // width:65,
-  //   //   // minWidth: 65,
-  //   //   // maxWidth: 65,
-  //   //   resizable: true,
-  //   //   suppressSizeToFit: true,
-  //   //   cellStyle: {
-  //   //     color: 'red',
-  //   //     fontWeight: 'bold'
-  //   //   },
-  //   // },
-  //   // { field: 'commentary_p', headerName: 'Completeness Commentary', editable: false },
-  //   {
-  //     field: 'post_control_dqa_c', headerName: 'After Control Completeness', editable: true, headerTooltip: 'Post Control Completeness',
-  //     cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: {
-  //       values: ["High", "Medium", "Low"],
-  //     },
-  //     cellStyle: {
-  //       color: 'red',
-  //       fontWeight: '600'
-  //     },
-  //   },
-  //   // {
-  //   //   headerName: 'Before Control Timeliness',
-  //   //   field: 'dqa_t',
-  //   //   editable: false,
-  //   //   // valueGetter: () => 'L', // Always returns 'L'
-  //   //   cellEditor: 'agSelectCellEditor',
-  //   //   cellEditorParams: {
-  //   //     values: ["H", "M", "L"],
-  //   //   },
-  //   //   // width:65,
-  //   //   // minWidth: 65,
-  //   //   // maxWidth: 65,
-  //   //   resizable: true,
-  //   //   suppressSizeToFit: true,
-  //   //   cellStyle: {
-  //   //     color: 'blue',
-  //   //     fontWeight: 'bold'
-  //   //   }
-  //   // },
-  //   // { field: 'commentary_t', headerName: 'Timeliness Commentary', editable: false },
-  //   {
-  //     field: 'post_control_dqa_t', headerName: 'After Control Timeliness', editable: true, headerTooltip: 'Post Control Timliness',
-  //     cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: {
-  //       values: ["High", "Medium", "Low"],
-  //     },
-  //     cellStyle: {
-  //       color: 'blue',
-  //       fontWeight: '600'
-  //     },
-  //   },
-  //   // {
-  //   //   headerName: 'After Control Accuracy',
-  //   //   field: 'dqa_a',
-  //   //   editable: false,
-  //   //   // valueGetter: () => 'L', // Always returns 'L'
-  //   //   cellEditor: 'agSelectCellEditor',
-  //   //   cellEditorParams: {
-  //   //     values: ["H", "M", "L"],
-  //   //   },
-  //   //   // width:65,
-  //   //   // minWidth: 65,
-  //   //   // maxWidth: 65,
-  //   //   resizable: true,
-  //   //   suppressSizeToFit: true,
-  //   //   cellStyle: {
-  //   //     color: 'purple',
-  //   //     fontWeight: 'bold'
-  //   //   }
-  //   // },
-  //   // { field: 'commentary_a', headerName: 'Accuracy Commentary', editable: false },
-  //   {
-  //     field: 'post_control_dqa_a', headerName: 'After Control Accuracy', editable: true, headerTooltip: 'Post Control Accuracy',
-  //     cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: {
-  //       values: ["High", "Medium", "Low"],
-  //     },
-  //     cellStyle: {
-  //       color: 'purple',
-  //       fontWeight: '600'
-  //     },
-  //   },
-  //   {
-  //     headerName: 'Actions',
-  //     editable: false,
-  //     filter: false,
-  //     sortable: false,
-  //     minWidth: 80,
-  //     maxWidth: 100,
-  //     // flex: 1,
-  //     pinned: 'right',
-  //     cellRenderer: (params: any) => {
-  //       const div = document.createElement('div');
-  //       div.className = 'model-cell-renderer';
-
-  //       const saveDataFields = document.createElement('button');
-  //       saveDataFields.title = 'Save';
-  //       saveDataFields.style.border = 'none';
-  //       saveDataFields.style.padding = '0px';
-  //       saveDataFields.style.cursor = 'pointer';
-  //       saveDataFields.style.background = 'transparent';
-
-  //       const saveIcon = createElement(icons.Save, {
-  //         color: '#008236',
-  //         height: '14px',
-  //         strokeWidth: 2
-  //       });
-  //       saveDataFields.appendChild(saveIcon);
-
-  //       // Pass row data or node to save
-  //       saveDataFields.addEventListener('click', () => {
-  //         this.saveDatafields(params.node);
-  //       });
-
-  //       const deleteDataFields = document.createElement('button');
-  //       deleteDataFields.className = 'fa fa-trash';
-  //       deleteDataFields.style.color = 'red';
-  //       deleteDataFields.style.border = '1px solid lightGrey';
-  //       deleteDataFields.style.borderRadius = '5px';
-  //       deleteDataFields.style.lineHeight = '20px';
-  //       deleteDataFields.style.height = '24px';
-  //       deleteDataFields.style.cursor = 'pointer';
-  //       deleteDataFields.title = 'Delete';
-
-  //       deleteDataFields.addEventListener('click', () => {
-  //         // this.deleteDAtaFields(params.node);
-  //       });
-
-  //       div.appendChild(saveDataFields);
-  //       // div.appendChild(deleteDataFields);
-
-  //       return div;
-  //     }
-  //   },
-  // ];
-
-  // defaultColDef = {
-  //   flex: 1,
-  //   resizable: true,
-  //   filter: true,
-  //   suppressSizeToFit: true
-  // };
-
   columnDefsDQA: (ColDef | ColGroupDef)[] = [
     {
       headerName: 'DQA',
@@ -381,7 +211,7 @@ export class EditControlComponent {
       style: { color: '#e8000a', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
-    { field: 'post_control_dqa_c_comment', header: 'Completeness Comment', editable: false },
+    { field: 'post_control_dqa_c_comment', header: 'Completeness Comment', editable: true },
     {
       field: 'post_control_dqa_t',
       header: 'After Control Timeliness',
@@ -391,7 +221,7 @@ export class EditControlComponent {
       style: { color: '#3e63dd', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
-    { field: 'post_control_dqa_t_comment', header: 'Timeliness Comment', editable: false },
+    { field: 'post_control_dqa_t_comment', header: 'Timeliness Comment', editable: true },
     {
       field: 'post_control_dqa_a',
       header: 'After Control Accuracy',
@@ -401,36 +231,17 @@ export class EditControlComponent {
       style: { color: 'purple', fontWeight: 600 },
       dropdownValues: ['High', 'Medium', 'Low']
     },
-    { field: 'post_control_dqa_a_comment', header: 'Accuracy Comment', editable: false },
+    { field: 'post_control_dqa_a_comment', header: 'Accuracy Comment', editable: true },
   ];
 
   selectedColumns: any[] = [];
   globalFilterFields: string[] = [];
 
-  onGridReady(params: any) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    this.gridApi.sizeColumnsToFit();
-  }
-
-  addRow() {
-    const newItem = { fieldName: '', dataType: '', value: '', description: '' };
-    this.rowData = [...this.rowData, newItem];
-  }
-
-  onRowValueChanged(event: any) {
-    console.log('Updated row:', event.data);
-  }
-
-  onDeleteRecord() {
-
-  }
-
 
   ngOnInit(): void {
     this.selectedColumns = [...this.cols]; // Initially show all columns
     this.globalFilterFields = this.cols.map(c => c.field);
-    console.log('Editing control with ID:', this.controlId);
+
     this.controlForm = this.fb.group({
       control_name: ['', Validators.required],
       control_description: ['', Validators.required],
@@ -471,10 +282,6 @@ export class EditControlComponent {
         }
       });
 
-      setTimeout(() => {
-        this.cdr.detectChanges(); // ensure UI updates  
-      }, 100);
-
       this.formLoaded = true; // triggers re-render
     }
     else {
@@ -487,6 +294,7 @@ export class EditControlComponent {
   onBackToLineage() {
     this.router.navigate(JSON.parse(this.BacktolineagePath));
   }
+
   onChange(attachTo: string, preselectedId?: string): void {
     this.filteredAttachToIdOptions = []; // Clear previous list
     this.controlForm.get('attach_to_id')?.setValue(null); // Reset selection
@@ -519,58 +327,10 @@ export class EditControlComponent {
   }
 
 
-  // Handle changes in cell values
-  onCellValueChanged(event: any): void {
-    console.log('Cell Value Changed:', event);
-  }
-
-  addDatafields(view: string) {
-    this.activeView = view;
-    this.showDataFields = true;
-    // alert(this.attachTo +','+ this.attachToId);
-    this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
-      next: (res: any) => {
-        this.rowData = [...res]; // triggers change
-        if (this.gridApi) {
-          this.gridApi.setRowData([]); // Clear first to ensure refresh
-          this.gridApi.setRowData(this.rowData);
-        }
-
-        this.cdr.detectChanges(); // trigger Angular change detection
-
-        error: (err: any) => {
-          console.error('Failed to load interface:', err);
-        }
-      }
-      // Force refresh with setRowData
-
-    });
-    this.getDatafieldsDQA();
-  }
-
-  getDataFields() {
-    this.datafieldsService.getDataFieldsById(this.attachToId, this.attachTo).subscribe({
-      next: (res: any) => {
-        this.rowData = [...res]; // triggers change
-        if (this.gridApi) {
-          this.gridApi.setRowData([]); // Clear first to ensure refresh
-          this.gridApi.setRowData(this.rowData);
-        }
-
-        this.cdr.detectChanges(); // trigger Angular change detection
-
-        error: (err: any) => {
-          console.error('Failed to load control:', err);
-        }
-      }
-      // Force refresh with setRowData
-
-    });
-  }
-
   getDatafieldsDQA() {
     this.datafieldsService.getDataFieldsDQA(this.controlId, 'CONTROL').subscribe({
       next: (res: any) => {
+        console.log(res)
         this.rowDataDQA = [res]; // triggers change
         this.showGlobalQualityRisk = res.allow_risk_update;
         console.log('rowDataoutboundDQA:', this.rowDataDQA);
@@ -579,9 +339,6 @@ export class EditControlComponent {
           this.gridApi.setRowData([]); // Clear first to ensure refresh
           this.gridApi.setRowData(this.rowDataDQA);
         }
-
-        this.cdr.detectChanges(); // trigger Angular change detection
-
       },
       error: (err: any) => {
         console.error('Failed to load interface:', err);
@@ -591,7 +348,6 @@ export class EditControlComponent {
     });
 
   }
-
 
   saveDatafieldsDQA(data: any, interface_type: any) {
     console.log(data, "Control Data Fields DQA");
@@ -644,15 +400,10 @@ export class EditControlComponent {
           this.gridApi.setRowData([]); // Clear first to ensure refresh
           this.gridApi.setRowData(this.rowData);
         }
-
-        this.cdr.detectChanges(); // trigger Angular change detection
-
         error: (err: any) => {
           console.error('Failed to load Controls:', err);
         }
       }
-      // Force refresh with setRowData
-
     });
 
   }
@@ -720,7 +471,7 @@ export class EditControlComponent {
               this.gridApi.setRowData(this.rowData);
             }
           }
-          this.cdr.detectChanges(); // trigger Angular change detection
+          //this.cdr.detectChanges(); // trigger Angular change detection
         } catch (e) {
           console.error('Error parsing interface data:', e);
         }
@@ -730,21 +481,6 @@ export class EditControlComponent {
       }
     });
   }
-
-
-
-  // ✅ Add a new DataField row
-  addField(): void {
-    const newId = this.dataFields.length + 1;
-    const newField = {
-      fieldId: newId,
-      fieldName: '',
-      dataType: ''
-    };
-    this.dataFields = [...this.dataFields, newField]; // Reassign array
-  }
-
-  // ✅ Trigger update/save logic
 
   onUpdate(): void {
     console.log('Form data:', this.controlForm.value);
@@ -772,7 +508,6 @@ export class EditControlComponent {
 
       }
     }
-
 
     const isUpdate = this.controlId > 0;
     if (isUpdate) {
@@ -802,7 +537,6 @@ export class EditControlComponent {
     });
   }
 
-
   saveDatafields(data: any) {
     console.log(data, "Control Data Fields");
 
@@ -813,6 +547,9 @@ export class EditControlComponent {
     this.dataFieldsModel.post_control_timeliness = data.post_control_dqa_t;
     this.dataFieldsModel.post_control_accuracy = data.post_control_dqa_a;
     this.dataFieldsModel.post_control_completeness = data.post_control_dqa_c;
+    this.dataFieldsModel.post_control_timeliness_comment = data.post_control_dqa_t_comment;
+    this.dataFieldsModel.post_control_accuracy_comment = data.post_control_dqa_a_comment;
+    this.dataFieldsModel.post_control_completeness_comment = data.post_control_dqa_c_comment;
 
     this.datafieldsService.updateControlsDatafields(this.dataFieldsModel).subscribe(() => {
 
@@ -824,9 +561,6 @@ export class EditControlComponent {
     });
   }
 
-  deleteDAtaFields(data: any, id: number) {
-
-  }
   onBack() {
     this.router.navigate(['/controls']);
   }

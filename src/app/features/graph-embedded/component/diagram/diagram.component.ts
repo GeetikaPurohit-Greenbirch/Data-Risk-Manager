@@ -842,24 +842,15 @@ export class DiagramComponent implements AfterViewInit {
     //     // );
     //   }
     // );
-
+    let selectedLinks: dia.Link[] = [];  
 
     this.paper.on('element:magnet:pointerclick', async (elementView, evt, magnet) => {
 
       const model = elementView.model as dia.Element;
       const itemId = elementView.findAttribute('item-id', magnet);
-
-
-      console.log("all links", this.graph.getLinks());
       const alllinks = this.graph.getLinks();
-
-      // const connectedLinks = this.graph.getConnectedLinks(model, {
-      //   inbound: true,
-      //   outbound: true,
-      //   port: itemId,
-      // });
-
-      // console.log('Connected Links:', connectedLinks, itemId);
+      console.log("all links", alllinks);
+      selectedLinks = [];
 
       const targetItemIdStr = itemId ? itemId.split('_').pop() : '';
 
@@ -875,72 +866,59 @@ export class DiagramComponent implements AfterViewInit {
 
       console.log('Lineage_chain:', response);
 
-      const selectedLinks: dia.Link[] = [];
-
       if (response) {
         for (let item of response) {
           let lineageArray = JSON.parse(item.lineage_chain)
-            .sort((a: { order: number; }, b: { order: number; }) => a.order - b.order);
-
-          lineageArray = lineageArray.filter((n: any) => { return n.entityType !== "INTERFACE" });       
+            .sort((a: { order: number; }, b: { order: number; }) => a.order - b.order)
+            .filter((n: any) => n.entityType !== 'INTERFACE');
 
           for (let node of lineageArray) {
-            console.log(node);
-            let nextSourceId = '';
+            console.log(node);         
 
-            let previousNodeid = 0;
-
-            if (node.entityType && (node.entityType == "SOURCE" || node.entityType == "SYSTEM")) {
-              previousNodeid = node.entityId;
-            }          
-
-            // Match link whose source.id ends with attached_system_id
-            const sourceLink = alllinks.find((l: dia.Link) => {
-              const source = l.get('source').id; // e.g. "SYS-1640"
-              const sourceId = source.split('-').pop(); // "1640"
-
-              nextSourceId = l.get('target').id; // e.g. "SYS-1640"
-
-              return sourceId === String(previousNodeid);
-            });
-
-            const targetLink = alllinks.find((l: dia.Link) => {
-              const SourceId = l.get('source').id; // e.g. "SYS-1640"              
-              return SourceId === nextSourceId
-            });
-
-            if (sourceLink && !selectedLinks.includes(sourceLink)) {
-              selectedLinks.push(sourceLink);
-              if (targetLink && !selectedLinks.includes(targetLink)) {
-                selectedLinks.push(targetLink);
-              }
-            }
-
+            if (node.entityType !== 'SOURCE' && node.entityType !== 'SYSTEM') {
+              continue;
+            }           
+            const currentSourceId = node.entityType == 'SYSTEM' ? `SYS-${node.entityId}` : `S-${node.entityId}`;
+            console.log("currentSourceId",currentSourceId);
+            traceLinks(currentSourceId,alllinks);   
           }
         }
-        console.log("Selected Links:", selectedLinks);
-        this.clearHighlights();
-        //this.tracePathNew(selectedLinks, linkTargetId ?? '');
 
-        for (const link of selectedLinks) {
-          link.attr({
-            line: {
-              stroke: '#FF9800',
-              strokeWidth: 2,
-              strokeDasharray: '10 5',
-            },
-          });
-          const view = this.paper.findViewByModel(link);
-          if (view?.el) {
-            (view.el as SVGElement).style.setProperty(
-              'animation',
-              'dash 1s linear infinite'
-            );
-          }
+      }
+
+      console.log("Selected Links:", selectedLinks);
+      this.clearHighlights();
+
+      for (const link of selectedLinks) {
+        link.attr({
+          line: {
+            stroke: '#FF9800',
+            strokeWidth: 2,
+            strokeDasharray: '10 5',
+          },
+        });
+        const view = this.paper.findViewByModel(link);
+        if (view?.el) {
+          (view.el as SVGElement).style.setProperty(
+            'animation',
+            'dash 1s linear infinite'
+          );
         }
       }
+
     });
 
+    function traceLinks(currentSourceId: string,alllinks:any) {
+    
+      const link = alllinks.find((l: { get: (arg0: string) => { (): any; new(): any; id: string; }; }) => l.get('source').id === currentSourceId);
+      if (!link) return;
+
+      if (!selectedLinks.includes(link)) {
+        selectedLinks.push(link);
+      }
+
+      traceLinks(link.get('target').id,alllinks);
+    };
 
     // --- Drop Event Listener (now only adds to existing graph) ---
     container.addEventListener('drop', (e: DragEvent) => {

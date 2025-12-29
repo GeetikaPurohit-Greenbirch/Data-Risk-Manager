@@ -12,18 +12,12 @@ export class LoginComponent implements OnInit {
     public auth: AuthService,
   ) {}
 
-  ngOnInit() {
-    // // 👇 Subscribe to user observable
-    // this.auth.user$.subscribe(user => {
-    //   if (user) {
-    //     console.log('Logged in User Info:', user);
+  ngOnInit() {   
+    if ((window as any).PLAYWRIGHT_E2E) {
+      console.log('E2E mode: skipping Auth redirect');
+      return;
+    }
 
-    //     // Example: Save email dynamically
-    //     if (user.email) {
-    //       this.userService.setCurrentUserEmail(user.email);
-    //     }
-    //   }
-    // });
     this.login();
   }
 

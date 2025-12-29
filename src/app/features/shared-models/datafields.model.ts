@@ -26,5 +26,8 @@ export class Datafields {
     post_control_timeliness!:string;
     post_control_accuracy!:string;
     post_control_completeness!:string;
+    post_control_timeliness_comment!:string;
+    post_control_accuracy_comment!:string;
+    post_control_completeness_comment!:string;
     control_id!:any;
 }

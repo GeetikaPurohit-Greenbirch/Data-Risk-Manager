@@ -8,5 +8,7 @@ export const environment = {
     domain: 'dev-e4q8v4ezgegswlh6.us.auth0.com',
     clientId: '3p8QkfnRZqdewRwL9AASo7xpNslOL2n7',
     audience: 'https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/',
+    AUTH_EMAIL:"manish.pandey@greenbirch.net",
+    AUTH_PASSWORD:"GreenBirch@123",
   }
 };

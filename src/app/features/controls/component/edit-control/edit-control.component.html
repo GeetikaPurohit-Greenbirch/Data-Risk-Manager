@@ -1,5 +1,4 @@
 <div class="main-container">
-
   <main class="dashboard-container">
     <section class="welcome-banner create">
       <div style="display: flex;justify-content: space-between;width: 100%;">
@@ -107,7 +106,7 @@
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="controlForm.get('application_date_status')?.hasError('required')">Required</mat-error>
-              </mat-form-field>             
+              </mat-form-field>
             </form>
             <div class="form-grid11">
               <button class="btn btn--primary btn-md" (click)="onUpdate()">Save</button>
@@ -136,14 +135,14 @@
 
             <div style="margin: 10px">
               <ag-grid-angular *ngIf="showGlobalQualityRisk" class="ag-theme-alpine"
-                style="width: 100%; min-height: 200px; max-height: 200px; " [rowData]="rowDataDQA"
+                style="width: 100%; min-height: 150px; max-height: 150px; " [rowData]="rowDataDQA"
                 [columnDefs]="columnDefsDQA" [defaultColDef]="defaultColDef" rowSelection="single"
                 [domLayout]="'autoHeight'">
               </ag-grid-angular>
             </div>
 
             <div class="ngprime-table">
-              <div class="datafields-table11" style="height: 100%;min-height: 260px">              
+              <div class="datafields-table11" style="height: 100%;min-height: 260px">
                 <div class="header">
                   <p-toolbar>
                     <div class="p-toolbar-group-left">
@@ -171,7 +170,7 @@
 
 
                     <!-- Dynamic Column Headers -->
-                    <ng-container *ngFor="let col of selectedColumns" pResizableColumn>
+                    <ng-container *ngFor="let col of selectedColumns" >
                       <ng-container *ngIf="col.field !== 'actions'">
                         <ng-template pTemplate="header">
                           {{ col.header }}
@@ -214,9 +213,6 @@
                                 <ng-template pTemplate="input">
                                   <p-dropdown [options]="col.dropdownValues" [(ngModel)]="rowData[col.field]"
                                     appendTo="body" styleClass="custom-dropdown"></p-dropdown>
-                                  <!-- <ng-template #readonly>
-                                <span>{{ rowData[col.field] }}</span>
-                              </ng-template> -->
                                 </ng-template>
                                 <ng-template pTemplate="output">
                                   {{ rowData[col.field] }}
@@ -234,9 +230,6 @@
                             <p-cellEditor>
                               <ng-template pTemplate="input">
                                 <input pInputText [(ngModel)]="rowData[col.field]" class="custom-input" />
-                                <!-- <ng-template #readonly>
-                                <span>{{ rowData[col.field] }}</span>
-                              </ng-template> -->
                               </ng-template>
                               <ng-template pTemplate="output">
                                 {{ rowData[col.field] }}
@@ -245,10 +238,8 @@
                           </ng-template>
                         </td>
                         <td>
-
-                          <button pButton icon="pi pi-save" class="p-button-text p-button-success"
+                          <button pButton icon="pi pi-save" pTooltip="Save" class="p-button-text p-button-success"
                             (click)="saveDatafields(rowData)"></button>
-                          <!-- <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="deleteDAtaFields(rowData)"></button> -->
                         </td>
                       </tr>
                     </ng-template>
@@ -256,7 +247,7 @@
                 </div>
               </div>
             </div>
-         
+
           </div>
         </div>
       </div>

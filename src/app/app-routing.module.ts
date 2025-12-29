@@ -5,13 +5,21 @@ import { CallbackComponent } from './auth/callback/callback.component';
 import { HomeComponent } from './main/home/home.component';
 import { CreateUserComponent } from './features/shared/create-user/create-user.component';
 import { UserListComponent } from './features/shared/user-list/user-list.component';
+import { AuthGuard } from '@auth0/auth0-angular';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   // { path: '**', redirectTo: 'login' }, // Redirect all unknown routes to login
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+
   { path: 'callback', component: CallbackComponent },
-  { path: 'home', component: HomeComponent,  },
+  // { path: 'home', component: HomeComponent },
+  {
+    path: 'home',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./main/home/home.component').then(m => m.HomeComponent)
+  },
   {path:'create-user', component:CreateUserComponent},
   {path:'user-list', component:UserListComponent},
   
