@@ -85,13 +85,13 @@ export class EditTargetComponent {
   paentTargetId: any;
 
   cols = [
-    // { field: 'field_id', header: 'Field ID', editable: false },
-    { field: 'user_generated_id', header: 'Field No.', editable: false },
-    { field: 'field_name', header: 'Field Name', editable: false },
-    { field: 'field_description', header: 'Field Description', editable: false },
-    { field: 'field_length', header: 'Length', editable: false },
-    { field: 'data_type', header: 'Data Type', editable: false },
-    { field: 'criticality', header: 'Criticality', editable: false }
+    { field: 'field_id', header: 'Field ID' },
+    { field: 'user_generated_id', header: 'Field No.' },
+    { field: 'field_name', header: 'Field Name' },
+    { field: 'field_description', header: 'Field Description' },
+    { field: 'field_length', header: 'Length' },
+    { field: 'data_type', header: 'Data Type' },
+    { field: 'criticality', header: 'Criticality' }
 
   ];
   // Dropdown options
@@ -143,121 +143,7 @@ export class EditTargetComponent {
           this.resetFormForClone();
         }
       });
-
-
   }
-
-
-  // columnDefs: (ColDef | ColGroupDef)[] = [
-  //   { field: 'field_id', headerName: 'Field ID', editable: false, headerTooltip: 'Field ID' },
-  //   { field: 'field_no', headerName: 'Field No.', editable: true, headerTooltip: 'Field No.' },
-  //   { field: 'field_name', headerName: 'Field Name', editable: true, headerTooltip: 'Field Name' },
-  //   { field: 'field_description', headerName: 'Field Description', editable: true, headerTooltip: 'Field Description' },
-  //   {
-  //     field: 'data_type', headerName: 'Data Type', editable: true,
-  //     cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: { values: ['NUMERIC', 'ALPHANUMERIC', 'DATE_TIME'] },
-  //     headerTooltip: 'Data Type'
-  //   },
-  //   { field: 'field_length', headerName: 'Length', editable: true, headerTooltip: 'Length' },
-  //   // {
-  //   //   headerName: 'DQA',
-  //   //   field: 'dqa',
-  //   //   resizable: true,
-  //   //   headerTooltip: 'DQA',
-  //   //   children: [
-  //   //     { headerName: 'Completeness', field: 'dqa_c', editable: false, headerTooltip: 'Completeness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-  //   //     { headerName: 'Timeliness', field: 'dqa_t', editable: false, headerTooltip: 'Timeliness', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } },
-  //   //     { headerName: 'Accuracy', field: 'dqa_a', editable: false, headerTooltip: 'Accuracy', cellEditor: 'agSelectCellEditor', cellEditorParams: { values: ["H", "M", "L"] } }
-  //   //   ]
-  //   // },
-  //   {
-  //     field: 'criticality', headerName: 'Criticality', editable: true, headerTooltip: 'Criticality', cellEditor: 'agSelectCellEditor',
-  //     cellEditorParams: { values: ["MAJOR", "MINOR", "INSIGNIFICANT", "CRITICAL"] }
-  //   },
-
-  //   {
-  //     headerName: 'Actions',
-  //     editable: false,
-  //     filter: false,
-  //     sortable: false,
-  //     minWidth: 100,
-  //     flex: 1,
-  //     headerTooltip: 'Actions',
-  //     cellRenderer: (params: any) => {
-  //       const div = document.createElement('div');
-  //       div.className = 'model-cell-renderer';
-
-  //       const saveDataFields = document.createElement('button');
-  //       saveDataFields.className = 'fa fa-save';
-  //       saveDataFields.style.color = 'green';
-  //       saveDataFields.style.border = '1px solid lightGrey';
-  //       saveDataFields.style.borderRadius = '5px';
-  //       saveDataFields.style.lineHeight = '20px';
-  //       saveDataFields.style.height = '24px';
-  //       saveDataFields.style.cursor = 'pointer';
-  //       saveDataFields.title = 'Save';
-
-  //       // Pass row data or node to save
-  //       saveDataFields.addEventListener('click', () => {
-  //         this.saveDatafields(params.node);
-  //       });
-
-  //       const deleteDataFields = document.createElement('button');
-  //       deleteDataFields.className = 'fa fa-trash';
-  //       deleteDataFields.style.color = 'red';
-  //       deleteDataFields.style.border = '1px solid lightGrey';
-  //       deleteDataFields.style.borderRadius = '5px';
-  //       deleteDataFields.style.lineHeight = '20px';
-  //       deleteDataFields.style.height = '24px';
-  //       deleteDataFields.style.cursor = 'pointer';
-  //       deleteDataFields.title = 'Delete';
-
-  //       deleteDataFields.addEventListener('click', () => {
-  //         this.deleteDAtaFields(params.node);
-  //       });
-
-  //       div.appendChild(saveDataFields);
-  //       div.appendChild(deleteDataFields);
-
-  //       return div;
-  //     }
-  //   },
-  // ];
-
-  // defaultColDef = {
-  //   flex: 1,
-  //   resizable: true,
-  //   sortable: true,
-  //   filter: true,
-  //   suppressSizeToFit: true
-  // };
-
-
-
-
-  // onGridReady(params: any) {
-  //   this.gridApi = params.api;
-  //   this.gridColumnApi = params.columnApi;
-  //   this.gridApi.sizeColumnsToFit();
-  //   this.getDataFields();
-  // }
-
-
-  // onHeaderCellClicked(event: any) {
-  //   // event.column.getColDef().headerName gives the header text
-  //   const clickedHeader = event?.column?.getColDef()?.headerName;
-  //   if (clickedHeader === 'DQA') {
-  //     // position the floating panel near mouse
-  //     const mouseEvent = event.event as MouseEvent;
-  //     const offsetX = 10; // small offset so it doesn't cover cursor
-  //     const offsetY = 10;
-  //     this.reportPosition = { x: mouseEvent.clientX + offsetX, y: mouseEvent.clientY + offsetY };
-  //     this.reportVisible = true;
-  //   }
-  // }
-
-  // selectedUseCaseId: string | null = null;
 
   openTab(tab: string) {
     if (tab == 'DataFields') {
@@ -314,14 +200,6 @@ export class EditTargetComponent {
     this.openTab('DataFields');
   }
 
-  // addRow() {
-  //   const newItem = { fieldId: '', fieldNo: '', fieldName: '', description: '', dataType: '', fieldLength: '', criticality: '' };
-  //   this.rowData = [...this.rowData, newItem];
-  // }
-
-  // onRowValueChanged(event: any) {
-  //   console.log('Updated row:', event.data);
-  // }
 
   ngOnInit(): void {
 
@@ -355,12 +233,6 @@ export class EditTargetComponent {
       this.BacktolineagePath = sessionStorage.getItem('BackTolineagePath')?.toString();
     }
 
-
-    // if (!this.isClone) {
-    //   this.targetForm.get('use_case')?.setValidators(Validators.required);
-    // } else {
-    //   this.targetForm.get('use_case')?.clearValidators();
-    // }
 
     // Always update after changing validators
     this.targetForm.get('use_case')?.updateValueAndValidity();
@@ -403,11 +275,6 @@ export class EditTargetComponent {
         }
 
       });
-      // this.generateTimeOptions();
-
-      // setTimeout(() => {
-      //   this.cdr.detectChanges(); // ensure UI updates  
-      // }, 100);
 
       this.formLoaded = true; // triggers re-render
 
@@ -419,22 +286,6 @@ export class EditTargetComponent {
       //  this.getDataFields();
       this.getUsecaseList();
 
-      // Check if use case already selected and saved
-
-      // this.savedUseCase = localStorage.getItem('selectedUseCaseTarget');
-
-      // if (!this.savedUseCase) {
-      //    this.getUsecaseList();
-      //   // Open popup only if no use case saved
-      //   setTimeout(() => {
-      //     this.openUsecasePopup();
-      //   }, 100);
-      // } else {
-      //   // Restore saved use case
-      //   const { useCaseId, useCaseName } = JSON.parse(this.savedUseCase);
-      //   this.useCaseId = useCaseId;
-      //   this.useCaseName = useCaseName;
-      // }
       this.openTab('DataFields');
       this.createForm();
     }
@@ -516,9 +367,6 @@ export class EditTargetComponent {
     }, 100);
   }
 
-
-
-
   openUsecasePopup() {
     this.dialogRef = this.dialog.open(this.useCasePopup, {
       disableClose: false, // optional, prevent closing without selection
@@ -569,8 +417,6 @@ export class EditTargetComponent {
     });
   }
 
-
-
   onFrequencyChange(): void {
     const freq = +this.targetForm.get('frequency_of_update')?.value || 1;
     this.frequencyLimit = freq;
@@ -617,43 +463,6 @@ export class EditTargetComponent {
       }
     });
   }
-  // Force refresh with setRowData
-
-
-
-  // addDatafields(view: string) {
-  //   this.activeView = view;
-  //   this.showDataFieldsTable = true;
-  //   this.showDataFields = true;
-  //   this.showReport = false;
-  //   this.getDataFields();
-  // }
-
-  // showDQA(view: string) {
-  //   this.activeView = view;
-  //   this.showDataFieldsTable = true;
-  //   this.showDataFields = false;
-  //   this.showReport = true;
-  // }
-
-  // Handle changes in cell values
-  // onCellValueChanged(event: any): void {
-  //   console.log('Cell Value Changed:', event);
-  // }
-
-
-  // ✅ Add a new DataField row
-  // addField(): void {
-  //   const newId = this.dataFields.length + 1;
-  //   const newField = {
-  //     fieldId: newId,
-  //     fieldName: '',
-  //     dataType: ''
-  //   };
-  //   this.dataFields = [...this.dataFields, newField]; // Reassign array
-  // }
-
-  // ✅ Trigger update/save logic 
 
   onUpdate(): void {
     console.log('Form data:', this.targetForm.value);
@@ -672,7 +481,7 @@ export class EditTargetComponent {
       targetEntity: {
 
         target_name: this.targetForm.value.target_name,
-        target_description : this.targetForm.value.target_description,
+        target_description: this.targetForm.value.target_description,
         quality_of_service: this.targetForm.value.quality_of_service,
         frequency_of_update: isStreamingOrAdHoc ? null : formValues.frequency_of_update,
         schedule_of_update: isStreamingOrAdHoc ? null : formValues.schedule_of_update,
@@ -790,7 +599,7 @@ export class EditTargetComponent {
       field_description: [''],
       field_length: ['', Validators.pattern(/^\d+$/)],
       data_type: ['', Validators.required],
-      criticality: ['', Validators.required],
+      criticality: [''],
     });
   }
 

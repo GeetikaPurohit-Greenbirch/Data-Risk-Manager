@@ -38,6 +38,7 @@ import { Observable, Subject, firstValueFrom, forkJoin, of } from 'rxjs';
 import { LineageService } from '../../services/lineage.service';
 import { ToastnotificationService } from 'src/app/features/shared-services/toastnotification.service';
 import { DataTransferService } from 'src/app/features/shared-services/data-transfer.service';
+import { blockDefinitions } from './block-definitions';
 
 type Records = Constant | Concat | GetDate | Record;
 
@@ -842,7 +843,7 @@ export class DiagramComponent implements AfterViewInit {
     //     // );
     //   }
     // );
-    let selectedLinks: dia.Link[] = [];  
+    let selectedLinks: dia.Link[] = [];
 
     this.paper.on('element:magnet:pointerclick', async (elementView, evt, magnet) => {
 
@@ -873,14 +874,14 @@ export class DiagramComponent implements AfterViewInit {
             .filter((n: any) => n.entityType !== 'INTERFACE');
 
           for (let node of lineageArray) {
-            console.log(node);         
+            console.log(node);
 
             if (node.entityType !== 'SOURCE' && node.entityType !== 'SYSTEM') {
               continue;
-            }           
+            }
             const currentSourceId = node.entityType == 'SYSTEM' ? `SYS-${node.entityId}` : `S-${node.entityId}`;
-            console.log("currentSourceId",currentSourceId);
-            traceLinks(currentSourceId,alllinks);   
+            console.log("currentSourceId", currentSourceId);
+            traceLinks(currentSourceId, alllinks);
           }
         }
 
@@ -908,8 +909,8 @@ export class DiagramComponent implements AfterViewInit {
 
     });
 
-    function traceLinks(currentSourceId: string,alllinks:any) {
-    
+    function traceLinks(currentSourceId: string, alllinks: any) {
+
       const link = alllinks.find((l: { get: (arg0: string) => { (): any; new(): any; id: string; }; }) => l.get('source').id === currentSourceId);
       if (!link) return;
 
@@ -917,7 +918,7 @@ export class DiagramComponent implements AfterViewInit {
         selectedLinks.push(link);
       }
 
-      traceLinks(link.get('target').id,alllinks);
+      traceLinks(link.get('target').id, alllinks);
     };
 
     // --- Drop Event Listener (now only adds to existing graph) ---
@@ -1330,91 +1331,77 @@ export class DiagramComponent implements AfterViewInit {
     });
     this.dataTransferService.setData({ graphJson: graphJson });
     // --- Finally load into JointJS ---
-    this.graph.fromJSON(graphJson);
-    this.scroller.centerContent();
-    this.hasGraph = true;
+
+    this.injectControlLabel(graphJson).subscribe(updatedGraph => {
+      this.graph.fromJSON(updatedGraph);
+      this.scroller.centerContent();
+      this.hasGraph = true;
+    });   
   }
 
-  // loadGraphFromJSON(json: any, sourcedata: any[], targetdata: any[], systemdata: any[]) {
 
-  //   if (!json || json === "{}") return;
+  injectControlLabel(graphJson: any) {
+    if (!graphJson?.cells?.length) {
+      return of(graphJson);
+    }
 
-  //   this.graph.clear();
+    const requests = graphJson.cells.map((cell: any) => {
+      if (
+        cell.type === 'mapping.Concat' &&
+        (cell.typeName === 'sources' || cell.typeName === 'systems')
+      ) {
+        const entityId = Number(cell.id.split('-').pop());
+        const blockDefinition: any = blockDefinitions.find((b: any) => b.typeName === cell.typeName);
 
-  //   const graphJson = JSON.parse(json);
+        return this.lineageService
+          .getEntityById(cell.typeName, entityId)
+          .pipe(
+            map((fullData: any) => {
+              const parsedData = JSON.parse(fullData.node);
 
-  //   if (!Array.isArray(graphJson.cells)) {
-  //     graphJson.cells = [];
-  //   }
+              if (parsedData?.controls?.length > 0) {
+                cell.attrs = cell.attrs || {};
 
-  //   const getEntities = (arr: any[]) => {
-  //     if (!arr || arr.length === 0 || !arr[0] || !arr[0].entities_json) return [];
-  //     try {
-  //       return JSON.parse(arr[0].entities_json);
-  //     } catch (e) {
-  //       console.error("Invalid entities_json:", arr[0].entities_json);
-  //       return [];
-  //     }
-  //   };
+                cell.attrs.headerLabel2 = {
+                  x: 35,
+                  y: -10,
+                  fontFamily: 'Sans-serif',
+                  fontWeight: 500,
+                  fontSize: 12,
+                  cursor: 'pointer',
+                  textWrap: {
+                    text: 'Controls',
+                    ellipsis: true,
+                    height: 20,
+                    width: 120
+                  },
+                  event: 'element:controlnameclick'
+                };
 
-  //   const sourceEntities = getEntities(sourcedata).map((e: any) => ({ ...e, type: "SOURCE" }));
-  //   const systemEntities = getEntities(systemdata).map((e: any) => ({ ...e, type: "SYSTEM" }));
-  //   const targetEntities = getEntities(targetdata).map((e: any) => ({ ...e, type: "TARGET" }));
+                cell.attrs.headerIcon2 = {
+                  'xlink:href': blockDefinition.cicon,
+                  x: 8,
+                  y: -20,
+                  width: 14,
+                  height: 14
+                };
+              }
 
-  //   const allEntities: Entity[] = [
-  //     ...sourceEntities,
-  //     ...systemEntities,
-  //     ...targetEntities
-  //   ];
+              return cell;
+            }),
+            catchError(() => of(cell))
+          );
+      }
 
-  //   // --- build entity id map ---
-  //   const entityMap = new Map<string, Entity>();
+      return of(cell);
+    });
 
-  //   for (const e of allEntities) {
-  //     const prefix = this.getPrefix(e.type);
-  //     entityMap.set(`${prefix}-${e.entity_id}`, e);
-  //   }
+    return forkJoin(requests).pipe(
+      map(() => graphJson)
+    );
+  }
 
-  //   // remove stale nodes
-  //   const validIds = new Set([...entityMap.keys()]);
 
-  //   graphJson.cells = graphJson.cells.filter((cell: any) => {
-  //     if (cell.type === "mapping.Link") return true;
-  //     return validIds.has(cell.id);
-  //   });
-
-  //   // add missing nodes
-  //   for (const [cellId, ent] of entityMap.entries()) {
-  //     const exists = graphJson.cells.some((c: any) => c.id === cellId);
-  //     if (!exists) graphJson.cells.push(this.createNode(ent));
-  //   }
-
-  //   // update node label + ports
-  //   graphJson.cells.forEach((cell: any) => {
-  //     if (cell.type === "mapping.Link") return;
-
-  //     const ent = entityMap.get(cell.id);
-  //     if (!ent) return;
-
-  //     if (cell.attrs?.headerLabel?.textWrap) {
-  //       cell.attrs.headerLabel.textWrap.text = ent.entity_name;
-  //     }
-
-  //     if (ent.type === "TARGET" && Array.isArray(ent.fields)) {
-  //       cell.items = ent.fields.map(f => ({
-  //         id: `in__port_${f.field_id}`,
-  //         icon: " ",
-  //         type: "TARGET",
-  //         label: f.field_name
-  //       }));
-  //     }
-  //   });
-
-  //   // load graph
-  //   this.graph.fromJSON(graphJson);
-  //   this.scroller.centerContent();
-  //   this.hasGraph = true;
-  // }
 
   /* ----------------------------------------------
      Helper: Generate prefix based on TYPE

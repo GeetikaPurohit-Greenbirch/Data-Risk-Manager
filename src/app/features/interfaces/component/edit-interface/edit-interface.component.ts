@@ -206,32 +206,14 @@ export class EditInterfaceComponent implements OnInit {
   buildForm() {
     this.fieldForm = this.fb.group({
       field_id: [''],
-      user_generated_id: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      user_generated_id: ['', Validators.pattern(/^[0-9]+$/)],
       field_name: ['', Validators.required],
-      field_description: ['', Validators.required],
+      field_description: [''],
       data_type: ['', Validators.required],
-      field_length: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
-      criticality: ['', Validators.required],
+      field_length: ['', Validators.pattern(/^[0-9]+$/)],
+      criticality: [''],
     });
   }
-
-
-
-  // onGridReady(params: any) {
-  //   this.gridApi = params.api;
-  //   this.gridColumnApi = params.columnApi;
-  //   this.gridApi.sizeColumnsToFit();
-  //   this.getDataFields();
-  // }
-
-  // addRow() {
-  //   const newItem = { fieldId: '', fieldName: '', dataType: '', fieldLength: '', dqaC: '', dqaT: '', dqaA: '', criticality: '' };
-  //   this.rowData = [...this.rowData, newItem];
-  // }
-
-  // onRowValueChanged(event: any) {
-  //   console.log('Updated row:', event.data);
-  // }
 
   ngOnInit(): void {
     this.selectedColumns = [...this.cols]; // Initially show all columns
@@ -263,12 +245,7 @@ export class EditInterfaceComponent implements OnInit {
           console.error('Failed to load interface:', err);
         }
       });
-      // this.generateTimeOptions();
-
-      // setTimeout(() => {
-      //   this.cdr.detectChanges(); // ensure UI updates  
-      // }, 100);
-
+     
       this.formLoaded = true; // triggers re-render
 
       // Watch for changes in quality_of_service
@@ -443,23 +420,7 @@ export class EditInterfaceComponent implements OnInit {
     this.showDataQuality = true;
   }
 
-  // Handle changes in cell values
-  // onCellValueChanged(event: any): void {
-  //   console.log('Cell Value Changed:', event);
-  // }
-
-
-  // ✅ Add a new DataField row
-  // addField(): void {
-  //   const newId = this.dataFields.length + 1;
-  //   const newField = {
-  //     fieldId: newId,
-  //     fieldName: '',
-  //     dataType: ''
-  //   };
-  //   this.dataFields = [...this.dataFields, newField]; // Reassign array
-  // }
-
+  
   // ✅ Trigger update/save logic
   onUpdate(): void {
     console.log('Form data:', this.interfaceForm.value);
@@ -564,19 +525,7 @@ export class EditInterfaceComponent implements OnInit {
           }
         }
 
-        // 🔁 If you only need to clone *after* creating, handle it separately:
-        // if (!isUpdate && !this.isClone) {
-        //   this.interfaceService
-        //     .cloneInterfaceDatafields(payload, 'interfaces', this.paentInterfaceId)
-        //     .subscribe({
-        //       next: (cloneRes) => {
-        //         this.toastNotificationService.success('Datafields cloned successfully.');
-        //         this.router.navigate(['/interfaces/edit-interface', cloneRes.interfaceEntity.interface_id]);
-        //       },
-        //       error: () =>
-        //         this.toastNotificationService.error('Failed to clone datafields.')
-        //     });
-        // }
+       
       },
       error: (err) => {
         const action = isUpdate
@@ -591,18 +540,6 @@ export class EditInterfaceComponent implements OnInit {
   }
 
 
-
-
-  // deleteDAtaFields(data: any) {
-  //   this.datafieldsService.deleteDataFields(data.field_id, 'INTERFACE', this.interfaceId).subscribe(() => {
-  //     // alert("Datafields Deleted Successfully. Deleted datafiled ID is "+ data.data.field_id);
-  //     this.toastNotificationService.error("Datafields Deleted Successfully. Deleted datafiled ID is " + data.field_id);
-  //     setTimeout(() => {
-  //       this.getDataFields(); // refresh
-
-  //     }, 1000);
-  //   })
-  // }
   onBack() {
     this.router.navigate(['/interfaces']);
   }
