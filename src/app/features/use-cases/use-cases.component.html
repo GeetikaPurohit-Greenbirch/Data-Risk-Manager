@@ -11,17 +11,8 @@
 
     <!-- ✅ Table Section -->
     <div class="table-container">
-      <div class="system-table-container">
-        <!-- <div class="grid-table">
-          <ag-grid-angular class="ag-theme-alpine responsive-grid" style="width: 100%; height: 100%;"
-            [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [pagination]="true"
-            [paginationPageSize]="pageSize" (cellValueChanged)="onCellValueChanged($event)" rowSelection="single"
-            [suppressColumnVirtualisation]="true" [domLayout]="'autoHeight'" >
-          </ag-grid-angular>
-        </div> -->
-
-
-        <div class="ngprime-table" *ngIf="showDataFields">
+      <div class="system-table-container">    
+        <div class="ngprime-table" >
           <div class="header">
             <p-toolbar>
               <div class="p-toolbar-group-left">
@@ -68,14 +59,7 @@
               </ng-template>
             </p-table>
           </div>
-        </div>
-
-        <!-- ✅ Paginator -->
-        <!-- <div class="paginator-container">
-          <mat-paginator [length]="rowData?.length" [pageSize]="pageSize" [pageSizeOptions]="[rowData?.length,5, 10, 50]"
-            (page)="onPageChange($event)" (click)="patchAllLabel()">
-          </mat-paginator>
-        </div> -->
+        </div>     
       </div>
     </div>
   </main>
