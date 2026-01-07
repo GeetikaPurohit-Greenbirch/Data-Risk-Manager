@@ -87,7 +87,7 @@ export class SystemMappingComponent implements AfterViewInit {
                 if (!source || !target) return element.getBBox().rightMiddle();
                 const sourceStack = source.get('stackIndex');
                 const targetStack = target.get('stackIndex');
-                const offset = 30;
+                const offset = 0;
                 if (sourceStack === targetStack) {
                     return element.getBBox().rightMiddle();
                 } else if (sourceStack > targetStack) {
@@ -139,9 +139,9 @@ export class SystemMappingComponent implements AfterViewInit {
                     const mappingJSON = JSON.parse(jsonData.mapping_json);
                     console.log("existing task", mappingJSON.tasks);
                     console.log("existing dependency", mappingJSON.dependencies);
-                    tasks = syncTasks(newtask,mappingJSON.tasks);  
-                    console.log("updated tasks", tasks);       
-                    
+                    tasks = syncTasks(newtask, mappingJSON.tasks);
+                    console.log("updated tasks", tasks);
+
                     fieldMappings.forEach(mapping => {
                         const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
                         const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
@@ -181,7 +181,7 @@ export class SystemMappingComponent implements AfterViewInit {
                 } as unknown as dia.Paper.UnfreezeOptions & {
                     cellVisibility: (cell: dia.Cell) => boolean;
                 });
-
+                
                 const cmd = new dia.CommandManager({
                     graph,
                     stackLimit: 20,
@@ -260,7 +260,7 @@ export class SystemMappingComponent implements AfterViewInit {
 
                 //console.log("Final Mappings Payload:", formattedLinks);
 
-                 const fieldMappingPayload = {
+                const fieldMappingPayload = {
                     system_id: systemId,
                     mapping_model_list: formattedLinks
                 };
@@ -277,7 +277,7 @@ export class SystemMappingComponent implements AfterViewInit {
                     next: () => this.toastNotificationService.success("System mappings saved successfully!"),
                     error: () => this.toastNotificationService.error("Failed to save mappings.")
                 });
-            }           
+            }
         }
     }
 
