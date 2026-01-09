@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 test.describe('Use Cases List – API Validation', () => {
 
@@ -18,8 +18,8 @@ test.describe('Use Cases List – API Validation', () => {
             response.status() === 200
         );
 
-        console.log("usecaseApi", usecaseApi);
-        console.log("permissionApi", permissionApi);
+        // console.log("usecaseApi", usecaseApi);
+        // console.log("permissionApi", permissionApi);
 
         // 3️⃣ Navigate to Use Cases page
         await page.goto('/use-cases');
@@ -43,3 +43,41 @@ test.describe('Use Cases List – API Validation', () => {
     });
 
 });
+
+test.describe('Create Use Case', () => {
+
+  test('should create a new use case successfully', async ({ page }) => {
+
+    // Spy API
+    const createApi = page.waitForResponse(resp =>
+      resp.url().includes('/use_cases') &&
+      resp.request().method() === 'POST' &&
+      resp.status() === 200
+    );
+
+    await page.goto('/use-cases/create-use-case');
+
+    await fillUseCaseForm(page);
+
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    const response = await createApi;
+    const body = await response.json();
+
+    expect(body.useCaseEntity.use_case_id).toBeTruthy();
+
+    // After save, it navigates to edit page
+    await expect(page).toHaveURL(/\/use-cases\/edit-usecase\/\d+/);
+  });
+});
+
+export async function fillUseCaseForm(page: Page) {
+  await page.getByLabel('Use Case Name').fill('E2E Test Use Case');
+  await page.getByLabel('Use Case Description').fill('E2E Description');
+  await page.getByLabel('Use Case Owner').fill('E2E Owner');
+  await page.getByLabel('Owner Email').fill('e2e@test.com');
+  await page.getByLabel('Version Number - Current').fill('1.0');
+
+  await page.getByLabel('Use Case Status').click();
+  await page.getByRole('option', { name: 'NEW' }).click();
+}

@@ -2,86 +2,44 @@
   "cookies": [
     {
       "name": "did",
-      "value": "s%3Av0%3Acfb6e719-125f-4c9d-91ff-d744bd2d3201%3A37a9a98bf1ef4476ca17a2c70fe0a360b9714ef740cdde99998d787670ef28d9.cxXOhAm7OIlG9KLtTv4OcfFEtqWB2GSHLaDOCSo7iOI",
+      "value": "s%3Av0%3A7ebe77ca-547e-43ca-8d3a-d086ac4caaf4%3A37a9a98bf1ef4476ca17a2c70fe0a360b9714ef740cdde99998d787670ef28d9.AtcCoTxHawXa2XupTBk4f0f1PLcbWh%2BQ7SAoVLl7jng",
       "domain": "dev-e4q8v4ezgegswlh6.us.auth0.com",
       "path": "/",
-      "expires": 1798550643.524456,
+      "expires": 1799512410.898551,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "auth0",
+      "value": "s%3AcqbxAuvMTAoBn2HIrd9XK4syI8qcqln0.eKK4cJudRfxk0ZiqCCT9nda%2F7xD3P6f4uK1p7rbvRFU",
+      "domain": "dev-e4q8v4ezgegswlh6.us.auth0.com",
+      "path": "/",
+      "expires": 1768214010.898696,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "did_compat",
-      "value": "s%3Av0%3Acfb6e719-125f-4c9d-91ff-d744bd2d3201%3A37a9a98bf1ef4476ca17a2c70fe0a360b9714ef740cdde99998d787670ef28d9.cxXOhAm7OIlG9KLtTv4OcfFEtqWB2GSHLaDOCSo7iOI",
+      "value": "s%3Av0%3A7ebe77ca-547e-43ca-8d3a-d086ac4caaf4%3A37a9a98bf1ef4476ca17a2c70fe0a360b9714ef740cdde99998d787670ef28d9.AtcCoTxHawXa2XupTBk4f0f1PLcbWh%2BQ7SAoVLl7jng",
       "domain": "dev-e4q8v4ezgegswlh6.us.auth0.com",
       "path": "/",
-      "expires": 1798550643.524991,
+      "expires": 1799512410.898791,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
-    },
-    {
-      "name": "auth0",
-      "value": "s%3AOrhBaMTTBukExlXUI7G801wIcoxFNZNw.4jYqlftD4IqcYuUwlxShjPM%2BGLYAdoUDycZvURUiLC8",
-      "domain": "dev-e4q8v4ezgegswlh6.us.auth0.com",
-      "path": "/",
-      "expires": 1767252272.290488,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
     },
     {
       "name": "auth0_compat",
-      "value": "s%3AOrhBaMTTBukExlXUI7G801wIcoxFNZNw.4jYqlftD4IqcYuUwlxShjPM%2BGLYAdoUDycZvURUiLC8",
+      "value": "s%3AcqbxAuvMTAoBn2HIrd9XK4syI8qcqln0.eKK4cJudRfxk0ZiqCCT9nda%2F7xD3P6f4uK1p7rbvRFU",
       "domain": "dev-e4q8v4ezgegswlh6.us.auth0.com",
       "path": "/",
-      "expires": 1767252272.290646,
+      "expires": 1768214010.898943,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
-    },
-    {
-      "name": "_legacy_auth0.3p8QkfnRZqdewRwL9AASo7xpNslOL2n7.is.authenticated",
-      "value": "true",
-      "domain": "localhost",
-      "path": "/",
-      "expires": 1767079472,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "auth0.3p8QkfnRZqdewRwL9AASo7xpNslOL2n7.is.authenticated",
-      "value": "true",
-      "domain": "localhost",
-      "path": "/",
-      "expires": 1767079472,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
     }
   ],
-  "origins": [
-    {
-      "origin": "http://localhost:4203",
-      "localStorage": [
-        {
-          "name": "@@auth0spajs@@::3p8QkfnRZqdewRwL9AASo7xpNslOL2n7::@@user@@",
-          "value": "{\"id_token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ikc0S3dQcC1rdkswcEgwdl9kUkxkciJ9.eyJuaWNrbmFtZSI6Im1hbmlzaC5wYW5kZXkiLCJuYW1lIjoibWFuaXNoLnBhbmRleUBncmVlbmJpcmNoLm5ldCIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci80YjBkMDU1MjM1YjczZGFjZmI2YWIyNTc2YmRhNDVmMD9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRm1hLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDI1LTEyLTI5VDA3OjIzOjU5Ljc4M1oiLCJlbWFpbCI6Im1hbmlzaC5wYW5kZXlAZ3JlZW5iaXJjaC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9kZXYtZTRxOHY0ZXpnZWdzd2xoNi51cy5hdXRoMC5jb20vIiwiYXVkIjoiM3A4UWtmblJacWRld1J3TDlBQVNvN3hwTnNsT0wybjciLCJzdWIiOiJhdXRoMHw2ODliNTNhY2I1MTQzMTJmNDE0Y2JjMDkiLCJpYXQiOjE3NjY5OTMwNjgsImV4cCI6MTc2NzAyOTA2OCwic2lkIjoiRlRfSkdvQWJWNmxFNVU0M3l5ejN4aTJDWWxoOVZaVmgiLCJhY3IiOiJodHRwOi8vc2NoZW1hcy5vcGVuaWQubmV0L3BhcGUvcG9saWNpZXMvMjAwNy8wNi9tdWx0aS1mYWN0b3IiLCJhbXIiOlsibWZhIl0sIm5vbmNlIjoiVkRsak1uRkJNVTVMWVc1MFZsTlpURkEzYjFkWVZtWTRSR1pwZFRkQ1JUSmliR3RtV1hjNVJ5NXlSZz09In0.TaCg5DfzuuV-rPVGIEfeuuG_WWD7_FTwUm6uNn7AuYalyaTWt7LwVxCMpWUT5q1KLJUaK2-BkAFYcdCk-IdGAqnWceeH8jIEUTdTDazifK9sXYnZVLOkeHi3ObkvolASqorvxOy6y5LvnMyUpf8zQMu1YJv-NPDflFuEUv7UYsi6tXLGx1j88m1ikO48T7ASlfBK7JrQY8YHijHSFMluP8KEDz7lz83y7znvM65H5LaulgiZw624DLNFlpaeqkJLtvtgX46lZpf8NgvV0kjsXGqVV2EXSbmIlJcZKGVmMDlxIflN8-0zAg5cL3_P-whvBAL_MN2hLvNwfhlwvLLWlQ\",\"decodedToken\":{\"encoded\":{\"header\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ikc0S3dQcC1rdkswcEgwdl9kUkxkciJ9\",\"payload\":\"eyJuaWNrbmFtZSI6Im1hbmlzaC5wYW5kZXkiLCJuYW1lIjoibWFuaXNoLnBhbmRleUBncmVlbmJpcmNoLm5ldCIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci80YjBkMDU1MjM1YjczZGFjZmI2YWIyNTc2YmRhNDVmMD9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRm1hLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDI1LTEyLTI5VDA3OjIzOjU5Ljc4M1oiLCJlbWFpbCI6Im1hbmlzaC5wYW5kZXlAZ3JlZW5iaXJjaC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9kZXYtZTRxOHY0ZXpnZWdzd2xoNi51cy5hdXRoMC5jb20vIiwiYXVkIjoiM3A4UWtmblJacWRld1J3TDlBQVNvN3hwTnNsT0wybjciLCJzdWIiOiJhdXRoMHw2ODliNTNhY2I1MTQzMTJmNDE0Y2JjMDkiLCJpYXQiOjE3NjY5OTMwNjgsImV4cCI6MTc2NzAyOTA2OCwic2lkIjoiRlRfSkdvQWJWNmxFNVU0M3l5ejN4aTJDWWxoOVZaVmgiLCJhY3IiOiJodHRwOi8vc2NoZW1hcy5vcGVuaWQubmV0L3BhcGUvcG9saWNpZXMvMjAwNy8wNi9tdWx0aS1mYWN0b3IiLCJhbXIiOlsibWZhIl0sIm5vbmNlIjoiVkRsak1uRkJNVTVMWVc1MFZsTlpURkEzYjFkWVZtWTRSR1pwZFRkQ1JUSmliR3RtV1hjNVJ5NXlSZz09In0\",\"signature\":\"TaCg5DfzuuV-rPVGIEfeuuG_WWD7_FTwUm6uNn7AuYalyaTWt7LwVxCMpWUT5q1KLJUaK2-BkAFYcdCk-IdGAqnWceeH8jIEUTdTDazifK9sXYnZVLOkeHi3ObkvolASqorvxOy6y5LvnMyUpf8zQMu1YJv-NPDflFuEUv7UYsi6tXLGx1j88m1ikO48T7ASlfBK7JrQY8YHijHSFMluP8KEDz7lz83y7znvM65H5LaulgiZw624DLNFlpaeqkJLtvtgX46lZpf8NgvV0kjsXGqVV2EXSbmIlJcZKGVmMDlxIflN8-0zAg5cL3_P-whvBAL_MN2hLvNwfhlwvLLWlQ\"},\"header\":{\"alg\":\"RS256\",\"typ\":\"JWT\",\"kid\":\"G4KwPp-kvK0pH0v_dRLdr\"},\"claims\":{\"__raw\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ikc0S3dQcC1rdkswcEgwdl9kUkxkciJ9.eyJuaWNrbmFtZSI6Im1hbmlzaC5wYW5kZXkiLCJuYW1lIjoibWFuaXNoLnBhbmRleUBncmVlbmJpcmNoLm5ldCIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci80YjBkMDU1MjM1YjczZGFjZmI2YWIyNTc2YmRhNDVmMD9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRm1hLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDI1LTEyLTI5VDA3OjIzOjU5Ljc4M1oiLCJlbWFpbCI6Im1hbmlzaC5wYW5kZXlAZ3JlZW5iaXJjaC5uZXQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9kZXYtZTRxOHY0ZXpnZWdzd2xoNi51cy5hdXRoMC5jb20vIiwiYXVkIjoiM3A4UWtmblJacWRld1J3TDlBQVNvN3hwTnNsT0wybjciLCJzdWIiOiJhdXRoMHw2ODliNTNhY2I1MTQzMTJmNDE0Y2JjMDkiLCJpYXQiOjE3NjY5OTMwNjgsImV4cCI6MTc2NzAyOTA2OCwic2lkIjoiRlRfSkdvQWJWNmxFNVU0M3l5ejN4aTJDWWxoOVZaVmgiLCJhY3IiOiJodHRwOi8vc2NoZW1hcy5vcGVuaWQubmV0L3BhcGUvcG9saWNpZXMvMjAwNy8wNi9tdWx0aS1mYWN0b3IiLCJhbXIiOlsibWZhIl0sIm5vbmNlIjoiVkRsak1uRkJNVTVMWVc1MFZsTlpURkEzYjFkWVZtWTRSR1pwZFRkQ1JUSmliR3RtV1hjNVJ5NXlSZz09In0.TaCg5DfzuuV-rPVGIEfeuuG_WWD7_FTwUm6uNn7AuYalyaTWt7LwVxCMpWUT5q1KLJUaK2-BkAFYcdCk-IdGAqnWceeH8jIEUTdTDazifK9sXYnZVLOkeHi3ObkvolASqorvxOy6y5LvnMyUpf8zQMu1YJv-NPDflFuEUv7UYsi6tXLGx1j88m1ikO48T7ASlfBK7JrQY8YHijHSFMluP8KEDz7lz83y7znvM65H5LaulgiZw624DLNFlpaeqkJLtvtgX46lZpf8NgvV0kjsXGqVV2EXSbmIlJcZKGVmMDlxIflN8-0zAg5cL3_P-whvBAL_MN2hLvNwfhlwvLLWlQ\",\"nickname\":\"manish.pandey\",\"name\":\"manish.pandey@greenbirch.net\",\"picture\":\"https://s.gravatar.com/avatar/4b0d055235b73dacfb6ab2576bda45f0?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fma.png\",\"updated_at\":\"2025-12-29T07:23:59.783Z\",\"email\":\"manish.pandey@greenbirch.net\",\"email_verified\":true,\"iss\":\"https://dev-e4q8v4ezgegswlh6.us.auth0.com/\",\"aud\":\"3p8QkfnRZqdewRwL9AASo7xpNslOL2n7\",\"sub\":\"auth0|689b53acb514312f414cbc09\",\"iat\":1766993068,\"exp\":1767029068,\"sid\":\"FT_JGoAbV6lE5U43yyz3xi2CYlh9VZVh\",\"acr\":\"http://schemas.openid.net/pape/policies/2007/06/multi-factor\",\"amr\":[\"mfa\"],\"nonce\":\"VDljMnFBMU5LYW50VlNZTFA3b1dYVmY4RGZpdTdCRTJibGtmWXc5Ry5yRg==\"},\"user\":{\"nickname\":\"manish.pandey\",\"name\":\"manish.pandey@greenbirch.net\",\"picture\":\"https://s.gravatar.com/avatar/4b0d055235b73dacfb6ab2576bda45f0?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fma.png\",\"updated_at\":\"2025-12-29T07:23:59.783Z\",\"email\":\"manish.pandey@greenbirch.net\",\"email_verified\":true,\"sub\":\"auth0|689b53acb514312f414cbc09\"}}}"
-        },
-        {
-          "name": "@@auth0spajs@@::3p8QkfnRZqdewRwL9AASo7xpNslOL2n7::https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/::openid profile email offline_access",
-          "value": "{\"body\":{\"access_token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ikc0S3dQcC1rdkswcEgwdl9kUkxkciJ9.eyJpc3MiOiJodHRwczovL2Rldi1lNHE4djRlemdlZ3N3bGg2LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2ODliNTNhY2I1MTQzMTJmNDE0Y2JjMDkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtZTRxOHY0ZXpnZWdzd2xoNi51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LWU0cTh2NGV6Z2Vnc3dsaDYudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc2Njk5MzA2OCwiZXhwIjoxNzY5NTg1MDY4LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG9mZmxpbmVfYWNjZXNzIiwiYXpwIjoiM3A4UWtmblJacWRld1J3TDlBQVNvN3hwTnNsT0wybjcifQ.NowIerJL3j2fsd4z6tKspKdh9Hc4X1zUklkznuSgcs7uT4jrYjUMj1HgiUS09nWKZyKGS-zK5CcXEmQrsr9V7GsiMP6QeSoHAJEJyiHCb0jwJnq6pCiG8Kq9IB-VcnSeLJQl4RIymONQtSHQttgs8gPTjOKNR7-WH7wjJoQ0BBs8h6ke7WxmZfwITROChuLMCjXOgkafHWEUNrGabZTU81ngVLfx_CqzHMykCEQWbkGXBCNq1rX_6VDyYQPz4oI7eXyKpsAIXwEVknaU6E_NfpRBYMir5gG7_xfPExrlP5_3s4J2dGjvX4L7SRsn1A0kCTZTsWxUIpnSoYYBkkc86A\",\"refresh_token\":\"v1.MeCTg3qOWuyEa-p7jeXszH8v7_uON4UHtwdcTMVYntDB9kkQ_9BO34q7gMLlaBUICXElfKDDy9opX-IQlUrPkY4\",\"scope\":\"openid profile email offline_access\",\"expires_in\":2592000,\"token_type\":\"Bearer\",\"audience\":\"https://dev-e4q8v4ezgegswlh6.us.auth0.com/api/v2/\",\"oauthTokenScope\":\"openid profile email offline_access\",\"client_id\":\"3p8QkfnRZqdewRwL9AASo7xpNslOL2n7\"},\"expiresAt\":1769585072}"
-        },
-        {
-          "name": "userID",
-          "value": "manish.pandey@greenbirch.net"
-        },
-        {
-          "name": "userName",
-          "value": "manish.pandey"
-        }
-      ]
-    }
-  ]
+  "origins": []
 }

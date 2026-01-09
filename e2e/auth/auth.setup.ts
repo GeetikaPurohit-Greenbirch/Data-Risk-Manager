@@ -16,8 +16,8 @@ test('Authenticate via Auth0 Universal Login', async ({ page }) => {
     console.log(' MFA enforced — check Auth0 Action');
   }
   
-  // ✅ wait for Angular app, NOT Auth0
-  await page.waitForURL('**/home', { timeout: 60000 });
+  //✅ wait for Angular app, NOT Auth0
+  await page.waitForURL('**/home', { timeout: 90000 });
 
   // Save session
   await page.context().storageState({

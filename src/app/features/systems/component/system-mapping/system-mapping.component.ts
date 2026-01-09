@@ -30,7 +30,7 @@ export class SystemMappingComponent implements AfterViewInit {
 
         const paper = new dia.Paper({
             el: document.getElementById('paper-container'),
-            width: 1100,
+            width: 'calc(100vw)',
             height: 800,
             model: graph,
             background: { color: '#F3F7F6' },
@@ -128,8 +128,8 @@ export class SystemMappingComponent implements AfterViewInit {
             .subscribe(([fieldMappings, jsonData]) => {
 
                 // === Prepare default task list ===
-                const inboundTasks = mapToTasks(this.inboundFields, TaskState.Source);
-                const outboundTasks = mapToTasks(this.outboundFields, TaskState.Target);
+                const inboundTasks = mapToTasks(this.inboundFields, TaskState.InBound);
+                const outboundTasks = mapToTasks(this.outboundFields, TaskState.OutBound);
 
                 const newtask = [...inboundTasks, ...outboundTasks];
                 console.log("allTask", newtask);
@@ -143,8 +143,8 @@ export class SystemMappingComponent implements AfterViewInit {
                     console.log("updated tasks", tasks);
 
                     fieldMappings.forEach(mapping => {
-                        const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.Source);
-                        const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.Target);
+                        const pField = tasks?.find(f => f.fieldId === mapping.p_field_id && f.state == TaskState.InBound);
+                        const cField = tasks?.find(f => f.fieldId === mapping.c_field_id && f.state == TaskState.OutBound);
                         if (pField && cField) {
                             dependencies?.push({
                                 id: util.uuid(),   // generate unique ID
@@ -181,7 +181,7 @@ export class SystemMappingComponent implements AfterViewInit {
                 } as unknown as dia.Paper.UnfreezeOptions & {
                     cellVisibility: (cell: dia.Cell) => boolean;
                 });
-                
+
                 const cmd = new dia.CommandManager({
                     graph,
                     stackLimit: 20,
@@ -217,6 +217,27 @@ export class SystemMappingComponent implements AfterViewInit {
                     // STEP 3: Return merged updated list
                     return [...filtered, ...missing];
                 }
+
+                // function syncTasks(newTasks: Task[], existingTasks: Task[]): Task[] {
+                //     // Map new tasks by a stable identifier (example: id)
+                //     const newTaskMap = new Map(newTasks.map(t => [t.fieldId, t]));
+
+                //     const retval= existingTasks
+                //         .filter(e => newTaskMap.has(e.fieldId)) // keep only existing ones
+                //         .map(e => {
+                //             const updated = newTaskMap.get(e.fieldId)!;
+
+                //             return {
+                //                 id:updated.id,              // keep UI-specific fields
+                //                 fieldId: updated.fieldId,
+                //                 state: updated.state,
+                //                 name: updated.name
+                //                 // copy more fields if required
+                //             };
+                //         });
+                //         console.log("retval",retval);
+                //         return retval;
+                // }
 
             });
     }
@@ -299,6 +320,8 @@ export class SystemMappingComponent implements AfterViewInit {
 
 }
 export function mapToTasks(data: any[], state: TaskState): Task[] {
+
+    const fieldType=TaskState.InBound==state?"InBound":"OutBound";
     return data.map(item => {
         const name =
             `Interface: ${item.interface}\n` +
@@ -309,7 +332,8 @@ export function mapToTasks(data: any[], state: TaskState): Task[] {
             id: id as dia.Cell.ID,
             state: state,
             name,
-            fieldId: item.fieldId
+            fieldId: item.fieldId,
+            fieldType: fieldType
             // description: item.dataType
         } as Task;
     });

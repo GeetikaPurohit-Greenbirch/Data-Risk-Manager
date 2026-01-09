@@ -70,7 +70,7 @@ export class Task extends dia.Element {
                     strokeWidth: 2,
                     rx: 4,
                     ry: 4,
-                    stroke: '#DDDDDD'
+                    stroke: '#DDDDDD'                    
                 },
 
                 header: {
@@ -89,7 +89,7 @@ export class Task extends dia.Element {
                     textVerticalAnchor: 'top',
                     textAnchor: 'start',
                     fontSize: 11,
-                    fill: '#333',
+                    fill: '#FFF',
 
                     textWrap: {
                         maxLineCount: 3,

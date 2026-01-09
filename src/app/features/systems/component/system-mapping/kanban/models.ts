@@ -1,9 +1,9 @@
 import { dia } from '@joint/plus';
 
 export enum TaskState {
-    Source,
-    Target,
-    System
+    InBound,
+    OutBound,
+    UnUsedField,
 }
 
 export interface Task {
@@ -11,6 +11,7 @@ export interface Task {
     state: TaskState;
     name?: string;
     fieldId?:number;
+    fieldType?:string;
     // description?: string;
 }
 

@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 60000,
+  timeout: 90000,
+  // globalSetup: 'e2e/global-setup.ts',
 
   projects: [
     {

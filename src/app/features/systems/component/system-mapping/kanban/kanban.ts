@@ -39,9 +39,9 @@ export class Kanban {
         this.columns = options.columns;
         this.paper = options.paper;
         this.taskMargin = options.taskMargin || 15;
-        this.taskWidth = options.taskWidth || 400;
+        this.taskWidth = options.taskWidth || 380;
         this.taskHeight = options.taskHeight || 65;
-        this.columnMargin = options.columnMargin || 250;
+        this.columnMargin = options.columnMargin || 140;
         this.showDependencyTool = options.showDependencyTool || false;
 
         this.createHeader();
@@ -90,7 +90,7 @@ export class Kanban {
         paper.on('element:pointerup', (elementView) => {
             if (!TaskShape.isTask(elementView.model)) return;
             const task = this.tasks.find(d => d.id == elementView.model.id);
-            if (task != null && task.state == TaskState.Source) {
+            if (task != null && task.state == TaskState.InBound) {
                 this.selectTask(elementView);
             }
         });
@@ -123,13 +123,13 @@ export class Kanban {
         //     this.addTask(element.get('stackIndex'));
         // });
 
-        paper.on('element:pointerdblclick', (taskView, evt) => {
-            console.log("pointerdblclick");
-            if (!TaskShape.isTask(taskView.model)) return;
-            const targetSelector = taskView.findAttribute('joint-selector', evt.target);
-            const editHeader = ('header' === targetSelector) || ('headerText' === targetSelector);
-            this.editTask(taskView, editHeader);
-        });
+        // paper.on('element:pointerdblclick', (taskView, evt) => {
+        //     console.log("pointerdblclick");
+        //     if (!TaskShape.isTask(taskView.model)) return;
+        //     const targetSelector = taskView.findAttribute('joint-selector', evt.target);
+        //     const editHeader = ('header' === targetSelector) || ('headerText' === targetSelector);
+        //     this.editTask(taskView, editHeader);
+        // });
     }
 
     protected createHeader() {
@@ -179,7 +179,9 @@ export class Kanban {
     }
 
     protected createTaskElement(task: Task, size: dia.Size, index?: number) {
-        const { id, state, name } = task;
+        const { id, state, name,fieldType } = task;
+        const bg_color=fieldType=="InBound"? '#4666E5':'#F9A03F';
+        console.log("task",task);
         return new TaskShape({
             id,
             size,
@@ -193,8 +195,14 @@ export class Kanban {
                 // bodyText: {
                 //     text: description
                 // }
+                 body: {
+                    fill: bg_color,                                
+                },
+
             },
             stackIndex: this.getStackIndexFromState(state),
+            fieldId:task.fieldId,
+            fieldType:task.fieldType,
             stackElementIndex: index
         });
     }
@@ -249,80 +257,80 @@ export class Kanban {
 
     // Public Methods
 
-    editTask(taskView: dia.ElementView, editHeader: boolean = false) {
+    // editTask(taskView: dia.ElementView, editHeader: boolean = false) {
 
-        const { paper } = this;
-        const { model: task } = taskView;
+    //     const { paper } = this;
+    //     const { model: task } = taskView;
 
-        this.unselectTask();
+    //     this.unselectTask();
 
-        const bbox = task.getBBox();
-        this.textarea = document.createElement('textarea');
-        const textarea = this.textarea;
-        // Position, Size & Styling
-        textarea.style.position = 'absolute';
-        textarea.style.boxSizing = 'border-box';
-        textarea.style.transformOrigin = '0 0';
-        textarea.style.textAlign = 'start';
-        textarea.style.alignContent = 'center';
-        textarea.style.textAlign = 'left';
-        textarea.style.letterSpacing = '0';
-        textarea.style.resize = 'none';
-        textarea.style.lineHeight = '1.5em';
-        // Content
-        let textPath: dia.Path;
-        if (editHeader) {
-            textPath = 'headerText/text';
-            textarea.style.padding = `${15}px ${20}px`;
-            textarea.style.transform = V.matrixToTransformString(paper.matrix().translate(bbox.x, bbox.y));
-            textarea.style.width = `${bbox.width}px`;
-            textarea.style.height = `${50}px`;
-            textarea.style.fontSize = task.attr('headerText/fontSize') + 'px';
-            textarea.style.fontFamily = task.attr('headerText/fontFamily');
-            textarea.style.fontWeight = task.attr('headerText/fontWeight');
-            textarea.style.color = task.attr('headerText/fill');
-            textarea.style.overflowY = 'hidden';
-            textarea.wrap = 'off';
-        } else {
-            textPath = 'bodyText/text';
-            const headerHeight = 40;
-            textarea.style.padding = `${10}px ${20}px`;
-            textarea.style.transform = V.matrixToTransformString(paper.matrix().translate(bbox.x, bbox.y + headerHeight));
-            textarea.style.width = `${bbox.width}px`;
-            textarea.style.height = `${bbox.height - headerHeight}px`;
-            textarea.style.fontSize = task.attr('bodyText/fontSize') + 'px';
-            textarea.style.fontFamily = task.attr('bodyText/fontFamily');
-            textarea.style.fontWeight = task.attr('bodyText/fontWeight');
-            textarea.style.color = task.attr('bodyText/fill');
-        }
-        textarea.value = task.attr(textPath);
-        // Append the this.textarea to the paper
-        paper.el.appendChild(textarea);
-        textarea.focus();
-        // Select all text
-        textarea.setSelectionRange(0, textarea.value.length);
-        // Attach Event Listeners
-        textarea.addEventListener('blur', () => {
-            task.startBatch('text');
-            task.attr(textPath, textarea.value);
-            task.attr('root/title', this.createTitle(task.attr('headerText/text'), task.attr('bodyText/text')));
-            task.stopBatch('text');
-            textarea.remove();
-        });
-        textarea.addEventListener('keyup', (evt) => {
-            if (evt.key === 'Enter' && (!evt.shiftKey || textarea.wrap === 'off')) {
-                const index = textarea.selectionEnd;
-                textarea.value = textarea.value.slice(0, index - 1) + textarea.value.slice(index);
-                textarea.blur();
-                this.selectTask(taskView);
-            }
-            if (evt.key === 'Escape') {
-                textarea.value = task.attr(textPath);
-                textarea.blur();
-                this.selectTask(taskView);
-            }
-        });
-    }
+    //     const bbox = task.getBBox();
+    //     this.textarea = document.createElement('textarea');
+    //     const textarea = this.textarea;
+    //     // Position, Size & Styling
+    //     textarea.style.position = 'absolute';
+    //     textarea.style.boxSizing = 'border-box';
+    //     textarea.style.transformOrigin = '0 0';
+    //     textarea.style.textAlign = 'start';
+    //     textarea.style.alignContent = 'center';
+    //     textarea.style.textAlign = 'left';
+    //     textarea.style.letterSpacing = '0';
+    //     textarea.style.resize = 'none';
+    //     textarea.style.lineHeight = '1.5em';
+    //     // Content
+    //     let textPath: dia.Path;
+    //     if (editHeader) {
+    //         textPath = 'headerText/text';
+    //         textarea.style.padding = `${15}px ${20}px`;
+    //         textarea.style.transform = V.matrixToTransformString(paper.matrix().translate(bbox.x, bbox.y));
+    //         textarea.style.width = `${bbox.width}px`;
+    //         textarea.style.height = `${50}px`;
+    //         textarea.style.fontSize = task.attr('headerText/fontSize') + 'px';
+    //         textarea.style.fontFamily = task.attr('headerText/fontFamily');
+    //         textarea.style.fontWeight = task.attr('headerText/fontWeight');
+    //         textarea.style.color = task.attr('headerText/fill');
+    //         textarea.style.overflowY = 'hidden';
+    //         textarea.wrap = 'off';
+    //     } else {
+    //         textPath = 'bodyText/text';
+    //         const headerHeight = 40;
+    //         textarea.style.padding = `${10}px ${20}px`;
+    //         textarea.style.transform = V.matrixToTransformString(paper.matrix().translate(bbox.x, bbox.y + headerHeight));
+    //         textarea.style.width = `${bbox.width}px`;
+    //         textarea.style.height = `${bbox.height - headerHeight}px`;
+    //         textarea.style.fontSize = task.attr('bodyText/fontSize') + 'px';
+    //         textarea.style.fontFamily = task.attr('bodyText/fontFamily');
+    //         textarea.style.fontWeight = task.attr('bodyText/fontWeight');
+    //         textarea.style.color = task.attr('bodyText/fill');
+    //     }
+    //     textarea.value = task.attr(textPath);
+    //     // Append the this.textarea to the paper
+    //     paper.el.appendChild(textarea);
+    //     textarea.focus();
+    //     // Select all text
+    //     textarea.setSelectionRange(0, textarea.value.length);
+    //     // Attach Event Listeners
+    //     textarea.addEventListener('blur', () => {
+    //         task.startBatch('text');
+    //         task.attr(textPath, textarea.value);
+    //         task.attr('root/title', this.createTitle(task.attr('headerText/text'), task.attr('bodyText/text')));
+    //         task.stopBatch('text');
+    //         textarea.remove();
+    //     });
+    //     textarea.addEventListener('keyup', (evt) => {
+    //         if (evt.key === 'Enter' && (!evt.shiftKey || textarea.wrap === 'off')) {
+    //             const index = textarea.selectionEnd;
+    //             textarea.value = textarea.value.slice(0, index - 1) + textarea.value.slice(index);
+    //             textarea.blur();
+    //             this.selectTask(taskView);
+    //         }
+    //         if (evt.key === 'Escape') {
+    //             textarea.value = task.attr(textPath);
+    //             textarea.blur();
+    //             this.selectTask(taskView);
+    //         }
+    //     });
+    // }
 
     // addTask(stackIndex: number) {
     //     const stack = this.layoutView.model.stacks[stackIndex];
@@ -387,12 +395,13 @@ export class Kanban {
         const tasks: Task[] = [];
         const taskElements = util.sortBy(graph.getElements(), (el) => el.get('stackElementIndex'));
         taskElements.forEach(el => {
-            if (!TaskShape.isTask(el)) return;
+            if (!TaskShape.isTask(el)) return;           
             tasks.push({
                 id: el.id,
                 state: this.columns[el.get('stackIndex')].state,
                 name: el.attr('headerText/text'),
-                fieldId:el.fieldId
+                fieldId: el.attributes.fieldId,
+                fieldType:el.attributes.fieldType,
                 // description: el.attr('bodyText/text')
             });
         });
